@@ -9,6 +9,7 @@
 #include "../math/matrix.h"
 
 class Layer {
+public:
     int outSize;
     int inSize;
     std::string activation;
@@ -16,18 +17,19 @@ class Layer {
     Matrix weights;
     Vector biases;
     Vector data;
+
     Vector aVector;
 
-public:
     Layer(int inSize, int outSize, const std::string& activation = "linear");
+
+    ~Layer();
 
     Vector forward(const Vector& input);
 
     std::pair<Vector, Matrix> backward(const Vector& delta, const Matrix& previousWeights,
                                        bool isLastLayer = false, DTYPE learningRate = 0.01);
 
-private:
-    Vector calculateDerivatives();
+    Vector calculateDerivatives() const;
 };
 
 #endif //NNLIB_LAYER_H

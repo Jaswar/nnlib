@@ -5,7 +5,7 @@ project(nnlib)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES math/matrix.cpp math/matrix.h main.cpp exceptions/size_mismatch_exception.cpp exceptions/size_mismatch_exception.h utils/allocation.cpp utils/allocation.h math/vector.cpp math/vector.h ann/network.cpp ann/network.h ann/layer.cpp ann/layer.h ann/activation.cpp ann/activation.h utils/read.cpp utils/read.h gpu/verify.cuh gpu/verify.cu math/convert.cpp math/convert.h utils/onehot_encode.cpp utils/onehot_encode.h)
+set(SOURCE_FILES math/matrix.cpp math/matrix.h main.cpp exceptions/size_mismatch_exception.cpp exceptions/size_mismatch_exception.h utils/allocation.cpp utils/allocation.h math/vector.cpp math/vector.h ann/network.cpp ann/network.h ann/layer.cpp ann/layer.h ann/activation.cpp ann/activation.h utils/read.cpp utils/read.h gpu/verify.cuh gpu/verify.cu math/convert.cpp math/convert.h utils/onehot_encode.cpp utils/onehot_encode.h gpu/backpropagation.cu gpu/backpropagation.cuh gpu/allocation_gpu.cu gpu/allocation_gpu.cuh)
 
 add_executable(nnlib ${SOURCE_FILES})
 
@@ -14,6 +14,9 @@ if (CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
 
     set(CMAKE_CUDA_STANDARD 14)
+
+    # Add flag to specify the architecture of the GPU (compute capability)
+    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -gencode arch=compute_50,code=sm_50")
 
     set_target_properties(nnlib PROPERTIES
             CUDA_SEPARABLE_COMPILATION ON)

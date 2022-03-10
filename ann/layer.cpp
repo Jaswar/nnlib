@@ -5,6 +5,9 @@
 #include <utility>
 #include "layer.h"
 #include "activation.h"
+#include "../gpu/backpropagation.cuh"
+#include "../gpu/verify.cuh"
+#include "../gpu/allocation_gpu.cuh"
 
 DTYPE getRandomValue() {
     return ((DTYPE) rand() / RAND_MAX) * 2 - 1;
@@ -38,7 +41,10 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
           data(inSize),
-          aVector(outSize) {}
+          aVector(outSize) {
+}
+
+Layer::~Layer() = default;
 
 Vector Layer::forward(const Vector& input) {
     aVector = weights * input + biases;
@@ -57,41 +63,11 @@ Vector Layer::forward(const Vector& input) {
 
 std::pair<Vector, Matrix> Layer::backward(const Vector& delta, const Matrix& previousWeights,
                                           bool isLastLayer, DTYPE learningRate) {
-    const Vector& derivatives = calculateDerivatives();
-    if (!isLastLayer) {
-        Vector newDelta = Vector(outSize);
-        for (int i = 0; i < outSize; i++) {
-            DTYPE coreGradient = 0;
-            for (int j = 0; j < delta.n; j++) {
-                coreGradient += delta[j] * derivatives[i] * previousWeights[j][i];
-            }
-
-            biases[i] -= learningRate * coreGradient;
-
-            for (int j = 0; j < inSize; j++) {
-                weights[i][j] -= learningRate * coreGradient * data[j];
-            }
-
-            newDelta[i] = coreGradient;
-        }
-
-        return {newDelta, weights};
-    } else {
-        Vector newDelta = delta;
-        for (int i = 0; i < outSize; i++) {
-            DTYPE coreGradient = delta[i] * derivatives[i];
-
-            biases[i] -= learningRate * coreGradient;
-
-            for (int j = 0; j < inSize; j++) {
-                weights[i][j] -= learningRate * coreGradient * data[j];
-            }
-        }
-        return {newDelta, weights};
-    }
+    const Vector& newDelta = backpropagation(*this, delta, previousWeights, isLastLayer, learningRate);
+    return {newDelta, weights};
 }
 
-Vector Layer::calculateDerivatives() {
+Vector Layer::calculateDerivatives() const {
     if (activation == "relu") {
         return ReLUDerivative(aVector);
     } else if (activation == "sigmoid") {
