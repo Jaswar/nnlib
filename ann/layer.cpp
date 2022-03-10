@@ -10,7 +10,9 @@
 #include "../gpu/allocation_gpu.cuh"
 
 DTYPE getRandomValue() {
-    return ((DTYPE) rand() / RAND_MAX) * 2 - 1;
+    // TODO: For large networks, the values at neurons can grow very large rendering them useless
+    // A fix can lower the initial weights and biases.
+    return (((DTYPE) rand() / RAND_MAX) * 2 - 1) / 5;
 }
 
 Vector initializeBiases(int outSize) {

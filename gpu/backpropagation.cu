@@ -30,7 +30,7 @@ void performBackpropagation(DTYPE* biases, DTYPE* weights, DTYPE* data, DTYPE* d
             weights[index * inSize + j] -= learningRate * coreGradient * data[j];
         }
 
-        newDelta[index] = delta[index];
+        newDelta[index] = coreGradient;
     } else {
         DTYPE coreGradient = 0;
         for (int j = 0; j < deltaSize; j++) {
@@ -111,6 +111,8 @@ Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previous
             for (int j = 0; j < layer.inSize; j++) {
                 layer.weights[i][j] -= learningRate * coreGradient * layer.data[j];
             }
+
+            newDelta.data[i] = coreGradient;
         }
         return newDelta;
     }

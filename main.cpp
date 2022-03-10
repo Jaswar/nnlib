@@ -18,10 +18,10 @@ int main() {
     std::cout << y << std::endl;
 
     Network network = Network(10);
-    network.add(14);
-    network.add(7);
+    network.add(128);
+    network.add(7, "sigmoid");
 
-    network.train(X, y, 25, 0.007);
+    network.train(X, y, 25, 0.004);
 
     return 0;
 }
