@@ -75,6 +75,16 @@ Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previous
     DTYPE* newDelta = allocate1DArray(layer.outSize);
     copy1DFromDeviceToHost(newDeltaDevice, newDelta, layer.outSize);
 
+    free1DArrayDevice(biasesDevice);
+    free1DArrayDevice(weightsDevice);
+    free1DArrayDevice(dataDevice);
+    free1DArrayDevice(derivativesDevice);
+
+    free1DArrayDevice(deltaDevice);
+    free1DArrayDevice(previousWeightsDevice);
+
+    free1DArrayDevice(newDeltaDevice);
+
     return Vector(newDelta, layer.outSize);
 }
 
