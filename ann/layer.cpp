@@ -41,7 +41,8 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
           data(inSize),
-          aVector(outSize) {
+          aVector(outSize),
+          devicePointers(inSize, outSize) {
 }
 
 Layer::~Layer() = default;
@@ -63,6 +64,9 @@ Vector Layer::forward(const Vector& input) {
 
 std::pair<Vector, Matrix> Layer::backward(const Vector& delta, const Matrix& previousWeights,
                                           bool isLastLayer, DTYPE learningRate) {
+    devicePointers.allocatePreviousWeights(previousWeights.n, previousWeights.m);
+    devicePointers.allocateDelta(delta.n);
+
     const Vector& newDelta = backpropagation(*this, delta, previousWeights, isLastLayer, learningRate);
     return {newDelta, weights};
 }

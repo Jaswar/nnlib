@@ -4,17 +4,19 @@
 
 #include "allocation_gpu.cuh"
 #include "verify.cuh"
+#include "assert.cuh"
+#include <stdio.h>
 
 #ifdef HAS_CUDA
 
 DTYPE* allocate1DArrayDevice(int n) {
     DTYPE* allocated;
-    cudaMalloc(&allocated, n * sizeof(DTYPE));
+    gpuCheckError( cudaMalloc(&allocated, n * sizeof(DTYPE)) );
     return allocated;
 }
 
 void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, int n) {
-    cudaMemcpy(device, host, n * sizeof(DTYPE), cudaMemcpyHostToDevice);
+    gpuCheckError( cudaMemcpy(device, host, n * sizeof(DTYPE), cudaMemcpyHostToDevice) );
 }
 
 void copy2DFromHostToDevice(DTYPE** host, DTYPE* device, int n, int m) {
@@ -24,21 +26,21 @@ void copy2DFromHostToDevice(DTYPE** host, DTYPE* device, int n, int m) {
             temp[i * m + j] = host[i][j];
         }
     }
-    cudaMemcpy(device, temp, n * m * sizeof(DTYPE), cudaMemcpyHostToDevice);
+    gpuCheckError( cudaMemcpy(device, temp, n * m * sizeof(DTYPE), cudaMemcpyHostToDevice) );
     free(temp);
 }
 
 void free1DArrayDevice(DTYPE* device) {
-    cudaFree(device);
+    gpuCheckError( cudaFree(device) );
 }
 
 void copy1DFromDeviceToHost(DTYPE* device, DTYPE* host, int n) {
-    cudaMemcpy(host, device, n * sizeof(DTYPE), cudaMemcpyDeviceToHost);
+    gpuCheckError( cudaMemcpy(host, device, n * sizeof(DTYPE), cudaMemcpyDeviceToHost) );
 }
 
 void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, int n, int m) {
     DTYPE* temp = allocate1DArray(n * m);
-    copy1DFromDeviceToHost(device, temp, n * m);
+    gpuCheckError( cudaMemcpy(temp, device, n * m * sizeof(DTYPE), cudaMemcpyDeviceToHost) );
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {

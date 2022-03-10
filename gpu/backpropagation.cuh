@@ -13,6 +13,4 @@
 Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previousWeights,
                 bool isLastLayer, DTYPE learningRate);
 
-void test();
-
 #endif //NNLIB_BACKPROPAGATION_CUH
