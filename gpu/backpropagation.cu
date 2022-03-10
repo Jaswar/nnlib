@@ -30,7 +30,7 @@ void performBackpropagation(DTYPE* biases, DTYPE* weights, DTYPE* data, DTYPE* d
             weights[index * inSize + j] -= learningRate * coreGradient * data[j];
         }
 
-        newDelta[index] = coreGradient;
+        newDelta[index] = delta[index];
     } else {
         DTYPE coreGradient = 0;
         for (int j = 0; j < deltaSize; j++) {
@@ -67,7 +67,6 @@ Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previous
                                                  devicePointers.data, devicePointers.derivatives, devicePointers.delta,
                                                  devicePointers.previousWeights, devicePointers.newDelta,
                                                  layer.inSize, layer.outSize, delta.n, learningRate, isLastLayer);
-    cudaDeviceSynchronize();
 
 
     copy2DFromDeviceToHost(devicePointers.weights, layer.weights.data, layer.outSize, layer.inSize);
