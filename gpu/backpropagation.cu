@@ -53,9 +53,7 @@ Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previous
     const LayerDevicePointers& devicePointers = layer.devicePointers;
 
 
-    // TODO: avoid copying. if cuda is available store weights and biases in gpu directly, do not store them twice
-    copy2DFromHostToDevice(layer.weights.data, devicePointers.weights, layer.weights.n, layer.weights.m);
-    copy1DFromHostToDevice(layer.biases.data, devicePointers.biases, layer.outSize);
+    // TODO: avoid copying. (removed copying weights and biases already)
     copy1DFromHostToDevice(layer.data.data, devicePointers.data, layer.inSize);
     copy1DFromHostToDevice(derivatives.data, devicePointers.derivatives, derivatives.n);
 

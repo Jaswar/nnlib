@@ -45,6 +45,8 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           data(inSize),
           aVector(outSize),
           devicePointers(inSize, outSize) {
+    copy2DFromHostToDevice(weights.data, devicePointers.weights, outSize, inSize);
+    copy1DFromHostToDevice(biases.data, devicePointers.biases, outSize);
 }
 
 Layer::~Layer() = default;
