@@ -27,16 +27,17 @@ void showCudaInfo() {
     for (int i = 0; i < deviceCount; i++) {
         cudaDeviceProp props;
         cudaGetDeviceProperties(&props, i);
-        std::cout << "DEVICE " << i << ": " << props.name << ": " << props.major << "." << props.minor << std::endl;
-        std::cout << "\tGlobal memory:   " << props.totalGlobalMem / mb << "MB" << std::endl;
-        std::cout << "\tShared memory:   " << props.sharedMemPerBlock / kb << "KB" << std::endl;
-        std::cout << "\tConstant memory: " << props.totalConstMem / kb << "KB" << std::endl;
-        std::cout << "\tBlock registers: " << props.regsPerBlock << std::endl;
+        std::cout << "DEVICE " << i << ": " << props.name << ": " << std::endl;
+        std::cout << "  Compute capability:\t" << props.major << "." << props.minor << std::endl;
+        std::cout << "  Global memory:\t" << props.totalGlobalMem / mb << "MB" << std::endl;
+        std::cout << "  Shared memory:\t" << props.sharedMemPerBlock / kb << "KB" << std::endl;
+        std::cout << "  Constant memory:\t" << props.totalConstMem / kb << "KB" << std::endl;
+        std::cout << "  Block registers:\t" << props.regsPerBlock << std::endl;
 
-        std::cout << "\tWarp size:         " << props.warpSize << std::endl;
-        std::cout << "\tThreads per block: " << props.maxThreadsPerBlock << std::endl;
-        std::cout << "\tMax block dimensions: [ " << props.maxThreadsDim[0] << ", " << props.maxThreadsDim[1]  << ", " << props.maxThreadsDim[2] << " ]" << std::endl;
-        std::cout << "\tMax grid dimensions:  [ " << props.maxGridSize[0] << ", " << props.maxGridSize[1]  << ", " << props.maxGridSize[2] << " ]" << std::endl;
+        std::cout << "  Warp size:\t\t" << props.warpSize << std::endl;
+        std::cout << "  Threads per block:\t" << props.maxThreadsPerBlock << std::endl;
+        std::cout << "  Max block dimensions:\t[ " << props.maxThreadsDim[0] << ", " << props.maxThreadsDim[1]  << ", " << props.maxThreadsDim[2] << " ]" << std::endl;
+        std::cout << "  Max grid dimensions:\t[ " << props.maxGridSize[0] << ", " << props.maxGridSize[1]  << ", " << props.maxGridSize[2] << " ]" << std::endl;
     }
 
     std::cout << std::endl;
