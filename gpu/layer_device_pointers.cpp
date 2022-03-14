@@ -10,11 +10,6 @@
 LayerDevicePointers::LayerDevicePointers(int inSize, int outSize) : inSize(inSize), outSize(outSize) {
     if (isCudaAvailable()) {
         weights = allocate1DArrayDevice(inSize * outSize);
-        biases = allocate1DArrayDevice(outSize);
-        data = allocate1DArrayDevice(inSize);
-        derivatives = allocate1DArrayDevice(outSize);
-
-        newDelta = allocate1DArrayDevice(outSize);
     }
 }
 
@@ -38,11 +33,5 @@ LayerDevicePointers::~LayerDevicePointers() {
 void LayerDevicePointers::allocatePreviousWeights(int n, int m) {
     if (isCudaAvailable() && previousWeights == nullptr && n > 0 && m > 0) {
         previousWeights = allocate1DArrayDevice(n * m);
-    }
-}
-
-void LayerDevicePointers::allocateDelta(int n) {
-    if (isCudaAvailable() && delta == nullptr) {
-        delta = allocate1DArrayDevice(n);
     }
 }

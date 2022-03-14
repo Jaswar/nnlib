@@ -4,25 +4,81 @@
 
 #include "vector.h"
 #include "../exceptions/size_mismatch_exception.h"
+#include "../gpu/allocation_gpu.cuh"
+#include "../exceptions/different_data_location_exception.h"
+#include "../gpu/vector_operations.cuh"
 
 Vector::Vector(int n) : Vector(allocate1DArray(n), n) {}
 
-Vector::Vector(DTYPE* data, int n) : data(data), n(n) {}
+Vector::Vector(int n, dLocation location) : n(n), data(), location(location) {
+    if (location == HOST) {
+        this->data = allocate1DArray(n);
+    } else {
+        this->data = allocate1DArrayDevice(n);
+    }
+}
+
+Vector::Vector(DTYPE* data, int n) : data(data), n(n), location(HOST) {}
+
+Vector::Vector(DTYPE* data, int n, dLocation location) : data(data), n(n), location(location) {}
 
 Vector::Vector(const Vector& vector) {
+    location = vector.location;
     n = vector.n;
-    data = copy1DArray(n, vector.data);
+
+    if (location == HOST) {
+        data = copy1DArray(n, vector.data);
+    } else {
+        data = copy1DArrayDevice(n, vector.data);
+    }
 }
 
 Vector::~Vector() {
+    if (location == HOST) {
+        free(data);
+    } else {
+        free1DArrayDevice(data);
+    }
+}
+
+
+void Vector::moveToDevice() {
+    if (location == DEVICE) {
+        return;
+    }
+
+    DTYPE* deviceData = allocate1DArrayDevice(n);
+    copy1DFromHostToDevice(data, deviceData, n);
+
     free(data);
+    data = deviceData;
+    location = DEVICE;
+}
+
+void Vector::moveToHost() {
+    if (location == HOST) {
+        return;
+    }
+
+    DTYPE* hostData = allocate1DArray(n);
+    copy1DFromDeviceToHost(data, hostData, n);
+
+    free1DArrayDevice(data);
+    data = hostData;
+    location = HOST;
 }
 
 Vector& Vector::operator=(const Vector& vector) {
-    free(data);
-
     n = vector.n;
-    data = copy1DArray(n, vector.data);
+    location = vector.location;
+
+    if (location == HOST) {
+        free(data);
+        data = copy1DArray(n, vector.data);
+    } else {
+        free1DArrayDevice(data);
+        data = copy1DArrayDevice(n, vector.data);
+    }
 
     return *this;
 }
@@ -62,54 +118,58 @@ Vector operator+(const Vector& v1, const Vector& v2) {
     if (v1.n != v2.n) {
         throw SizeMismatchException();
     }
-
-    DTYPE* newData = allocate1DArray(v1.n);
-
-    for (int i = 0; i < v1.n; i++) {
-        newData[i] = v1[i] + v2[i];
+    if (v1.location != v2.location) {
+        throw DifferentDataLocationException();
     }
 
-    return Vector(newData, v1.n);
+    if (v1.location == HOST) {
+        DTYPE* newData = allocate1DArray(v1.n);
+
+        for (int i = 0; i < v1.n; i++) {
+            newData[i] = v1[i] + v2[i];
+        }
+
+        return Vector(newData, v1.n);
+    } else {
+        return addVectors(v1, v2);
+    }
 }
 
 Vector operator-(const Vector& v1, const Vector& v2) {
     if (v1.n != v2.n) {
         throw SizeMismatchException();
     }
-
-    DTYPE* newData = allocate1DArray(v1.n);
-
-    for (int i = 0; i < v1.n; i++) {
-        newData[i] = v1[i] - v2[i];
+    if (v1.location != v2.location) {
+        throw DifferentDataLocationException();
     }
 
-    return Vector(newData, v1.n);
+    if (v1.location == HOST) {
+        DTYPE* newData = allocate1DArray(v1.n);
+
+        for (int i = 0; i < v1.n; i++) {
+            newData[i] = v1[i] - v2[i];
+        }
+
+        return Vector(newData, v1.n);
+    } else {
+        return subtractVectors(v1, v2);
+    }
 }
 
 Vector operator*(const Vector& v1, DTYPE constant) {
-    DTYPE* newData = allocate1DArray(v1.n);
+    if (v1.location == HOST) {
+        DTYPE* newData = allocate1DArray(v1.n);
 
-    for (int i = 0; i < v1.n; i++) {
-        newData[i] = v1[i] * constant;
+        for (int i = 0; i < v1.n; i++) {
+            newData[i] = v1[i] * constant;
+        }
+
+        return Vector(newData, v1.n);
+    } else {
+        return multiplyVector(v1, constant);
     }
-
-    return Vector(newData, v1.n);
 }
 
 Vector operator*(DTYPE constant, const Vector& v1) {
     return v1 * constant;
 }
-
-DTYPE operator*(const Vector& v1, const Vector& v2) {
-    if (v1.n != v2.n) {
-        throw SizeMismatchException();
-    }
-
-    DTYPE dotProduct = 0;
-    for (int i = 0; i < v1.n; i++) {
-        dotProduct += v1[i] * v2[i];
-    }
-
-    return dotProduct;
-}
-

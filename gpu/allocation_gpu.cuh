@@ -17,6 +17,8 @@ void copy1DFromDeviceToHost(DTYPE* device, DTYPE* host, int n);
 
 void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, int n, int m);
 
+DTYPE* copy1DArrayDevice(int n, DTYPE* old);
+
 void free1DArrayDevice(DTYPE* device);
 
 #endif //NNLIB_ALLOCATION_GPU_CUH

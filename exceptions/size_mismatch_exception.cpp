@@ -5,5 +5,5 @@
 #include "size_mismatch_exception.h"
 
 const char* SizeMismatchException::what() const throw() {
-    return NULL;
+    return "Size mismatch exception";
 }

@@ -52,6 +52,12 @@ void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, int n, int m) {
     free(temp);
 }
 
+DTYPE* copy1DArrayDevice(int n, DTYPE* old) {
+    DTYPE* allocated = allocate1DArrayDevice(n);
+    cudaMemcpy(allocated, old, n * sizeof(DTYPE), cudaMemcpyDeviceToDevice);
+    return allocated;
+}
+
 #else
 
 DTYPE* allocate1DArrayDevice(int n) {

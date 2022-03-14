@@ -31,7 +31,8 @@ Vector Network::forward(const Vector& input) {
 
 void Network::backward(const Vector& predicted, const Vector& target, DTYPE learningRate) {
     // Mean squared error loss used here
-    const Vector& loss = (1 / (DTYPE) target.n) * (predicted - target);
+    Vector loss = (1 / (DTYPE) target.n) * (predicted - target);
+    loss.moveToDevice();
 
     Layer& last = layers.back();
     auto deltaWeights = last.backward(loss, Matrix(0, 0), true, learningRate);

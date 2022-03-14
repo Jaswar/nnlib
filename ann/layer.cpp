@@ -46,14 +46,16 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           aVector(outSize),
           devicePointers(inSize, outSize) {
     copy2DFromHostToDevice(weights.data, devicePointers.weights, outSize, inSize);
-    copy1DFromHostToDevice(biases.data, devicePointers.biases, outSize);
 }
 
 Layer::~Layer() = default;
 
 Vector Layer::forward(const Vector& input) {
+    data.moveToHost();
     aVector = weights * input + biases;
     data = input;
+
+    data.moveToDevice();
 
     if (activation == "relu") {
         return ReLU(aVector);
@@ -68,10 +70,11 @@ Vector Layer::forward(const Vector& input) {
 
 std::pair<Vector, Matrix> Layer::backward(const Vector& delta, const Matrix& previousWeights,
                                           bool isLastLayer, DTYPE learningRate) {
+    biases.moveToDevice();
     devicePointers.allocatePreviousWeights(previousWeights.n, previousWeights.m);
-    devicePointers.allocateDelta(delta.n);
 
     const Vector& newDelta = backpropagation(*this, delta, previousWeights, isLastLayer, learningRate);
+    biases.moveToHost();
     return {newDelta, weights};
 }
 

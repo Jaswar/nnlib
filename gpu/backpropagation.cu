@@ -15,7 +15,7 @@ __global__
 void performBackpropagation(DTYPE* biases, DTYPE* weights, DTYPE* data, DTYPE* derivatives,
                             DTYPE* delta, DTYPE* previousWeights, DTYPE* newDelta, int inSize, int outSize, int deltaSize,
                             DTYPE learningRate, bool isLastLayer) {
-    int index = blockIdx.x * blockDim.x + threadIdx.x;
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= outSize) {
         return;
@@ -49,31 +49,27 @@ void performBackpropagation(DTYPE* biases, DTYPE* weights, DTYPE* data, DTYPE* d
 
 Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previousWeights,
               bool isLastLayer, DTYPE learningRate) {
-    const Vector& derivatives = layer.calculateDerivatives();
+    Vector derivatives = layer.calculateDerivatives();
+    derivatives.moveToDevice();
     const LayerDevicePointers& devicePointers = layer.devicePointers;
 
 
-    // TODO: avoid copying. (removed copying weights and biases already)
-    copy1DFromHostToDevice(layer.data.data, devicePointers.data, layer.inSize);
-    copy1DFromHostToDevice(derivatives.data, devicePointers.derivatives, derivatives.n);
 
-    copy1DFromHostToDevice(delta.data, devicePointers.delta, delta.n);
+    // TODO: avoid copying. (removed copying weights and biases already)
+    Vector newDelta = Vector(layer.outSize, DEVICE);
+
     copy2DFromHostToDevice(previousWeights.data, devicePointers.previousWeights, previousWeights.n, previousWeights.m);
 
 
-    performBackpropagation<<<1, layer.outSize>>>(devicePointers.biases, devicePointers.weights,
-                                                 devicePointers.data, devicePointers.derivatives, devicePointers.delta,
-                                                 devicePointers.previousWeights, devicePointers.newDelta,
+    performBackpropagation<<<1, layer.outSize>>>(layer.biases.data, devicePointers.weights,
+                                                 layer.data.data, derivatives.data, delta.data,
+                                                 devicePointers.previousWeights, newDelta.data,
                                                  layer.inSize, layer.outSize, delta.n, learningRate, isLastLayer);
 
 
     copy2DFromDeviceToHost(devicePointers.weights, layer.weights.data, layer.outSize, layer.inSize);
-    copy1DFromDeviceToHost(devicePointers.biases, layer.biases.data, layer.outSize);
 
-    DTYPE* newDelta = allocate1DArray(layer.outSize);
-    copy1DFromDeviceToHost(devicePointers.newDelta, newDelta, layer.outSize);
-
-    return Vector(newDelta, layer.outSize);
+    return newDelta;
 }
 
 #else

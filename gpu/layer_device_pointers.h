@@ -14,23 +14,14 @@ class LayerDevicePointers {
 
 public:
     DTYPE* weights;
-    DTYPE* biases;
-    DTYPE* data;
-
-    DTYPE* derivatives;
-    DTYPE* delta{};
 
     DTYPE* previousWeights{};
-
-    DTYPE* newDelta;
 
     LayerDevicePointers(int inSize, int outSize);
 
     ~LayerDevicePointers();
 
     void allocatePreviousWeights(int n, int m);
-
-    void allocateDelta(int n);
 };
 
 

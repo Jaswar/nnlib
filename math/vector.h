@@ -8,17 +8,26 @@
 #include <iostream>
 #include "../utils/allocation.h"
 
+enum dLocation {HOST, DEVICE};
+
 class Vector {
 
 public:
     DTYPE* data;
     int n;
+    dLocation location;
 
     explicit Vector(int n);
+    Vector(int n, dLocation location);
     Vector(DTYPE* data, int n);
+    Vector(DTYPE* data, int n, dLocation location);
+
     Vector(const Vector& vector);
 
     ~Vector();
+
+    void moveToDevice();
+    void moveToHost();
 
     Vector& operator=(const Vector& other);
     DTYPE operator[](int index) const;
@@ -32,7 +41,5 @@ Vector operator+(const Vector& v1, const Vector& v2);
 Vector operator-(const Vector& v1, const Vector& v2);
 Vector operator*(const Vector& v1, DTYPE constant);
 Vector operator*(DTYPE constant, const Vector& v1);
-// Dot product
-DTYPE operator*(const Vector& v1, const Vector& v2);
 
 #endif //NNLIB_VECTOR_H

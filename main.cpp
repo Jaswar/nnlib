@@ -7,8 +7,26 @@
 #include "utils/onehot_encode.h"
 #include "gpu/backpropagation.cuh"
 
+class Animal {
+public:
+    virtual void print() {
+        std::cout << "Animal" << std::endl;
+    }
+};
+
+
+class Dog : public Animal {
+public:
+    void print() override {
+        std::cout << "Dog" << std::endl;
+    }
+};
+
 int main() {
     showCudaInfo();
+
+//    Dog* dog = new Dog();
+//    (*dog).print();
 
     const Matrix& X = readCSV("data/features.txt");
     std::cout << X << std::endl;
