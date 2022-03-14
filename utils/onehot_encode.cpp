@@ -26,13 +26,13 @@ Matrix oneHotEncode(const Vector& vector) {
     int n = vector.n;
     int m = static_cast<int>(unique.size());
 
-    DTYPE** resultSpace = allocate2DArray(n, m, 0);
+    DTYPE* resultSpace = allocate1DArray(n * m, 0);
     Matrix result = Matrix(resultSpace, n, m);
 
     for (int i = 0; i < vector.n; i++) {
         DTYPE value = vector[i];
         int index = indexOf(value, unique);
-        result[i][index] = 1;
+        result(i, index) = 1;
     }
 
     return result;

@@ -26,15 +26,15 @@ Vector initializeBiases(int outSize) {
 }
 
 Matrix initializeWeights(int inSize, int outSize) {
-    DTYPE** weights = allocate2DArray(outSize, inSize);
+    Matrix weights = Matrix(outSize, inSize);
 
     for (int i = 0; i < outSize; i++) {
         for (int j = 0; j < inSize; j++) {
-            weights[i][j] = getRandomValue();
+            weights(i, j) = getRandomValue();
         }
     }
 
-    return Matrix(weights, outSize, inSize);
+    return weights;
 }
 
 Layer::Layer(int inSize, int outSize, const std::string& activation)
@@ -45,7 +45,7 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           data(inSize),
           aVector(outSize),
           devicePointers(inSize, outSize) {
-    copy2DFromHostToDevice(weights.data, devicePointers.weights, outSize, inSize);
+    copy1DFromHostToDevice(weights.data, devicePointers.weights, outSize * inSize);
 }
 
 Layer::~Layer() = default;

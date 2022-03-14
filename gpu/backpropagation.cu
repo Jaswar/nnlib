@@ -58,7 +58,7 @@ Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previous
     // TODO: avoid copying. (removed copying weights and biases already)
     Vector newDelta = Vector(layer.outSize, DEVICE);
 
-    copy2DFromHostToDevice(previousWeights.data, devicePointers.previousWeights, previousWeights.n, previousWeights.m);
+    copy1DFromHostToDevice(previousWeights.data, devicePointers.previousWeights, previousWeights.n * previousWeights.m);
 
 
     performBackpropagation<<<1, layer.outSize>>>(layer.biases.data, devicePointers.weights,
@@ -67,7 +67,7 @@ Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previous
                                                  layer.inSize, layer.outSize, delta.n, learningRate, isLastLayer);
 
 
-    copy2DFromDeviceToHost(devicePointers.weights, layer.weights.data, layer.outSize, layer.inSize);
+    copy1DFromDeviceToHost(devicePointers.weights, layer.weights.data, layer.outSize * layer.inSize);
 
     return newDelta;
 }

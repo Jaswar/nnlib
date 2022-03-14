@@ -50,17 +50,17 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << std::endl;
         for (int row = 0; row < X.n; row++) {
-            const Vector& input = Vector(copy1DArray(X.m, X[row]), X.m);
+            const Vector& input = Vector(copy1DArray(X.m, &X.data[row * X.m]), X.m);
             const Vector& output = forward(input);
 
-            const Vector& targets = Vector(copy1DArray(y.m, y[row]), y.m);
+            const Vector& targets = Vector(copy1DArray(y.m, &y.data[row * y.m]), y.m);
             backward(output, targets, learningRate);
         }
 
         // Calculate the accuracy on the training set.
         int correct = 0;
         for (int row = 0; row < X.n; row++) {
-            const Vector& input = Vector(copy1DArray(X.m, X[row]), X.m);
+            const Vector& input = Vector(copy1DArray(X.m, &X.data[row * X.m]), X.m);
             const Vector& output = forward(input);
 
             int maxInx = 0;
@@ -70,7 +70,7 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
                 }
             }
 
-            if (y[row][maxInx] == 1) {
+            if (y(row, maxInx) == 1) {
                 correct++;
             }
         }

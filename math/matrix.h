@@ -11,21 +11,20 @@
 
 
 class Matrix {
-
 public:
-    DTYPE** data;
+    DTYPE* data;
     int n;
     int m;
 
     Matrix(int n, int m);
-    Matrix(DTYPE** data, int n, int m);
+    Matrix(DTYPE* data, int n, int m);
     Matrix(const Matrix& matrix);
 
     ~Matrix();
 
     Matrix& operator=(const Matrix& matrix);
-    DTYPE*& operator[](int index);
-    DTYPE* operator[](int index) const;
+    DTYPE& operator()(int x, int y);
+    DTYPE operator()(int x, int y) const;
 };
 
 // "toString" for std::cout

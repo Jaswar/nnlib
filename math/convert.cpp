@@ -12,18 +12,18 @@ Vector convertToVector(const Matrix& matrix) {
     DTYPE* vectorData = allocate1DArray(matrix.n);
 
     for (int i = 0; i < matrix.n; i++) {
-        vectorData[i] = matrix[i][0];
+        vectorData[i] = matrix(i, 0);
     }
 
     return Vector(vectorData, matrix.n);
 }
 
 Matrix convertToMatrix(const Vector& vector) {
-    DTYPE** matrixData = allocate2DArray(vector.n, 1);
+    Matrix matrix = Matrix(vector.n, 1);
 
     for (int i = 0; i < vector.n; i++) {
-        matrixData[i][0] = vector[i];
+        matrix(i, 0) = vector[i];
     }
 
-    return Matrix(matrixData, vector.n, 1);
+    return matrix;
 }

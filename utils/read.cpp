@@ -72,7 +72,9 @@ Matrix readCSV(const std::string& filepath, const std::string& delim) {
             row[j] = static_cast<DTYPE>(std::stod(*it2));
         }
 
-        result[i] = row;
+        for (int j = 0; j < m; j++) {
+            result(i, j) = row[j];
+        }
     }
 
     return result;

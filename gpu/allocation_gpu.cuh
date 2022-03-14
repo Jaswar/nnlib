@@ -9,6 +9,7 @@
 
 DTYPE* allocate1DArrayDevice(int n);
 
+
 void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, int n);
 
 void copy2DFromHostToDevice(DTYPE** host, DTYPE* device, int n, int m);
