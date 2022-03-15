@@ -35,7 +35,7 @@ void Network::backward(const Vector& predicted, const Vector& target, DTYPE lear
     loss.moveToDevice();
 
     Layer& last = layers.back();
-    auto deltaWeights = last.backward(loss, Matrix(0, 0), true, learningRate);
+    auto deltaWeights = last.backward(loss, Matrix(0, 0, DEVICE), true, learningRate);
 
     for (auto i = layers.rbegin() + 1; i != layers.rend(); ++i) {
         deltaWeights = i->backward(deltaWeights.first, deltaWeights.second, false, learningRate);

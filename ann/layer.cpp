@@ -43,15 +43,14 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
           data(inSize),
-          aVector(outSize),
-          devicePointers(inSize, outSize) {
-    copy1DFromHostToDevice(weights.data, devicePointers.weights, outSize * inSize);
-}
+          aVector(outSize) {}
 
 Layer::~Layer() = default;
 
 Vector Layer::forward(const Vector& input) {
     data.moveToHost();
+    weights.moveToHost();
+    biases.moveToHost();
     aVector = weights * input + biases;
     data = input;
 
@@ -71,10 +70,9 @@ Vector Layer::forward(const Vector& input) {
 std::pair<Vector, Matrix> Layer::backward(const Vector& delta, const Matrix& previousWeights,
                                           bool isLastLayer, DTYPE learningRate) {
     biases.moveToDevice();
-    devicePointers.allocatePreviousWeights(previousWeights.n, previousWeights.m);
+    weights.moveToDevice();
 
     const Vector& newDelta = backpropagation(*this, delta, previousWeights, isLastLayer, learningRate);
-    biases.moveToHost();
     return {newDelta, weights};
 }
 

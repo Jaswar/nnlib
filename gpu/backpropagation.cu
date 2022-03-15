@@ -5,6 +5,7 @@
 #include "backpropagation.cuh"
 #include "verify.cuh"
 #include "allocation_gpu.cuh"
+#include "assert.cuh"
 
 #ifdef HAS_CUDA
 
@@ -51,23 +52,14 @@ Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previous
               bool isLastLayer, DTYPE learningRate) {
     Vector derivatives = layer.calculateDerivatives();
     derivatives.moveToDevice();
-    const LayerDevicePointers& devicePointers = layer.devicePointers;
 
 
-
-    // TODO: avoid copying. (removed copying weights and biases already)
     Vector newDelta = Vector(layer.outSize, DEVICE);
 
-    copy1DFromHostToDevice(previousWeights.data, devicePointers.previousWeights, previousWeights.n * previousWeights.m);
-
-
-    performBackpropagation<<<1, layer.outSize>>>(layer.biases.data, devicePointers.weights,
+    performBackpropagation<<<1, layer.outSize>>>(layer.biases.data, layer.weights.data,
                                                  layer.data.data, derivatives.data, delta.data,
-                                                 devicePointers.previousWeights, newDelta.data,
+                                                 previousWeights.data, newDelta.data,
                                                  layer.inSize, layer.outSize, delta.n, learningRate, isLastLayer);
-
-
-    copy1DFromDeviceToHost(devicePointers.weights, layer.weights.data, layer.outSize * layer.inSize);
 
     return newDelta;
 }

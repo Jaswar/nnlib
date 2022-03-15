@@ -15,10 +15,16 @@ public:
     DTYPE* data;
     int n;
     int m;
+    dLocation location;
 
     Matrix(int n, int m);
+    Matrix(int n, int m, dLocation location);
     Matrix(DTYPE* data, int n, int m);
+    Matrix(DTYPE* data, int n, int m, dLocation location);
     Matrix(const Matrix& matrix);
+
+    void moveToDevice();
+    void moveToHost();
 
     ~Matrix();
 
@@ -33,7 +39,7 @@ std::ostream& operator<<(std::ostream& stream, const Matrix& matrix);
 Matrix operator+(const Matrix& m1, const Matrix& m2);
 Matrix operator-(const Matrix& m1, const Matrix& m2);
 
-Matrix operator*(const Matrix& m1, const Matrix& m2);
+//Matrix operator*(const Matrix& m1, const Matrix& m2);
 Vector operator*(const Matrix& m, const Vector& v);
 Matrix operator*(const Matrix& m, DTYPE constant);
 Matrix operator*(DTYPE constant, const Matrix& m);

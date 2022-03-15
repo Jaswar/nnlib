@@ -7,7 +7,6 @@
 
 #include <string>
 #include "../math/matrix.h"
-#include "../gpu/layer_device_pointers.h"
 
 class Layer {
 public:
@@ -20,8 +19,6 @@ public:
     Vector data;
 
     Vector aVector;
-
-    LayerDevicePointers devicePointers;
 
     Layer(int inSize, int outSize, const std::string& activation = "linear");
 
