@@ -10,12 +10,16 @@
 int main() {
     showCudaInfo();
 
-    const Matrix& X = readCSV("C:/Users/janwa/CLionProjects/nnlib/data/features.txt");
+    Matrix X = readCSV("C:/Users/janwa/CLionProjects/nnlib/data/features.txt");
     std::cout << X << std::endl;
 
+    X.moveToDevice();
+
     const Vector& yv = convertToVector(readCSV("C:/Users/janwa/CLionProjects/nnlib/data/targets.txt"));
-    const Matrix& y = oneHotEncode(yv);
+    Matrix y = oneHotEncode(yv);
     std::cout << y << std::endl;
+
+    y.moveToDevice();
 
     Network network = Network(10);
     network.add(128);

@@ -4,6 +4,7 @@
 
 #include <time.h>
 #include "network.h"
+#include "../gpu/allocation_gpu.cuh"
 
 Network::Network(int inputSize, long long seed) : seed(seed), layers(), previousSize(inputSize) {
     if (this->seed == NO_SEED) {
@@ -50,18 +51,21 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << std::endl;
         for (int row = 0; row < X.n; row++) {
-            const Vector& input = Vector(copy1DArray(X.m, &X.data[row * X.m]), X.m);
+            const Vector& input = Vector(copy1DArrayDevice(X.m, &X.data[row * X.m]), X.m, DEVICE);
             const Vector& output = forward(input);
 
-            const Vector& targets = Vector(copy1DArray(y.m, &y.data[row * y.m]), y.m);
+            const Vector& targets = Vector(copy1DArrayDevice(y.m, &y.data[row * y.m]), y.m, DEVICE);
             backward(output, targets, learningRate);
         }
 
+        Matrix yCopy = y;
+        yCopy.moveToHost();
         // Calculate the accuracy on the training set.
         int correct = 0;
         for (int row = 0; row < X.n; row++) {
-            const Vector& input = Vector(copy1DArray(X.m, &X.data[row * X.m]), X.m);
-            const Vector& output = forward(input);
+            const Vector& input = Vector(copy1DArrayDevice(X.m, &X.data[row * X.m]), X.m, DEVICE);
+            Vector output = forward(input);
+            output.moveToHost();
 
             int maxInx = 0;
             for (int i = 0; i < y.m; i++) {
@@ -70,7 +74,7 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
                 }
             }
 
-            if (y(row, maxInx) == 1) {
+            if (yCopy(row, maxInx) == 1) {
                 correct++;
             }
         }

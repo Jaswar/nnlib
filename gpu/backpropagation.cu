@@ -50,9 +50,7 @@ void performBackpropagation(DTYPE* biases, DTYPE* weights, DTYPE* data, DTYPE* d
 
 Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previousWeights,
               bool isLastLayer, DTYPE learningRate) {
-    Vector derivatives = layer.calculateDerivatives();
-    derivatives.moveToDevice();
-
+    const Vector& derivatives = layer.calculateDerivatives();
 
     Vector newDelta = Vector(layer.outSize, DEVICE);
 

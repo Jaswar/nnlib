@@ -4,7 +4,7 @@
 
 #include <utility>
 #include "layer.h"
-#include "activation.h"
+#include "activation.cuh"
 #include "../gpu/backpropagation.cuh"
 #include "../gpu/verify.cuh"
 #include "../gpu/allocation_gpu.cuh"
@@ -43,18 +43,18 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
           data(inSize),
-          aVector(outSize) {}
+          aVector(outSize) {
+    biases.moveToDevice();
+    weights.moveToDevice();
+    data.moveToDevice();
+    aVector.moveToDevice();
+}
 
 Layer::~Layer() = default;
 
 Vector Layer::forward(const Vector& input) {
-    data.moveToHost();
-    weights.moveToHost();
-    biases.moveToHost();
     aVector = weights * input + biases;
     data = input;
-
-    data.moveToDevice();
 
     if (activation == "relu") {
         return ReLU(aVector);
@@ -69,9 +69,6 @@ Vector Layer::forward(const Vector& input) {
 
 std::pair<Vector, Matrix> Layer::backward(const Vector& delta, const Matrix& previousWeights,
                                           bool isLastLayer, DTYPE learningRate) {
-    biases.moveToDevice();
-    weights.moveToDevice();
-
     const Vector& newDelta = backpropagation(*this, delta, previousWeights, isLastLayer, learningRate);
     return {newDelta, weights};
 }
@@ -84,8 +81,7 @@ Vector Layer::calculateDerivatives() const {
     } else if (activation == "tanh") {
         return tanhDerivative(aVector);
     } else {
-        DTYPE* newData = allocate1DArray(aVector.n, 1);
-        return Vector(newData, aVector.n);
+        return linearDerivative(aVector);
     }
 }
 
