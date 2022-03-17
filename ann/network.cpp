@@ -81,3 +81,11 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
         std::cout << ((double) correct) / X.n << std::endl;
     }
 }
+
+void Network::build() {
+    int prevSize = previousSize;
+    for (auto i = layers.rbegin(); i != layers.rend(); ++i) {
+        i->build(prevSize);
+        prevSize = i->outSize;
+    }
+}

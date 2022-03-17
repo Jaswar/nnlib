@@ -20,6 +20,8 @@ public:
 
     Vector aVector;
 
+    Vector delta;
+
     Layer(int inSize, int outSize, const std::string& activation = "linear");
 
     ~Layer();
@@ -30,6 +32,8 @@ public:
                                        bool isLastLayer = false, DTYPE learningRate = 0.01);
 
     Vector calculateDerivatives() const;
+
+    void build(int previousSize);
 };
 
 #endif //NNLIB_LAYER_H

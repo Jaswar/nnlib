@@ -43,7 +43,8 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
           data(inSize),
-          aVector(outSize) {
+          aVector(outSize),
+          delta(Vector(nullptr, 0, DEVICE)) {
     biases.moveToDevice();
     weights.moveToDevice();
     data.moveToDevice();
@@ -83,6 +84,10 @@ Vector Layer::calculateDerivatives() const {
     } else {
         return linearDerivative(aVector);
     }
+}
+
+void Layer::build(int previousSize) {
+    delta = Vector(previousSize, DEVICE);
 }
 
 
