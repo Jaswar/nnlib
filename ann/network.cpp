@@ -22,24 +22,33 @@ void Network::add(int numNeurons, const std::string& activation) {
 }
 
 Vector Network::forward(const Vector& input) {
-    Vector current = input;
-    for (auto& layer : layers) {
-        current = layer.forward(current);
+    Layer& first = layers.front();
+    first.forward(input);
+
+    for (auto i = layers.begin() + 1; i != layers.end(); i++) {
+        size_t index = i - layers.begin();
+        i->forward(layers.at(index - 1).zVector);
     }
 
-    return current;
+    return layers.back().zVector;
 }
 
 void Network::backward(const Vector& predicted, const Vector& target, DTYPE learningRate) {
     // Mean squared error loss used here
-    Vector loss = (1 / (DTYPE) target.n) * (predicted - target);
+    Vector loss = Vector(target.n);
     loss.moveToDevice();
 
+    subtract(predicted, target, loss);
+    multiply((1 / (DTYPE) target.n), loss, loss);
+
     Layer& last = layers.back();
-    auto deltaWeights = last.backward(loss, Matrix(0, 0, DEVICE), true, learningRate);
+    last.backward(loss, Matrix(0, 0, DEVICE), true, learningRate);
 
     for (auto i = layers.rbegin() + 1; i != layers.rend(); ++i) {
-        deltaWeights = i->backward(deltaWeights.first, deltaWeights.second, false, learningRate);
+        size_t index = i - layers.rbegin();
+        Layer& prev = layers.at(layers.size() - index);
+
+        i->backward(prev.newDelta, prev.weights, false, learningRate);
     }
 }
 
@@ -79,13 +88,5 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
             }
         }
         std::cout << ((double) correct) / X.n << std::endl;
-    }
-}
-
-void Network::build() {
-    int prevSize = previousSize;
-    for (auto i = layers.rbegin(); i != layers.rend(); ++i) {
-        i->build(prevSize);
-        prevSize = i->outSize;
     }
 }

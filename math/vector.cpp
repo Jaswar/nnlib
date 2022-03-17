@@ -114,62 +114,57 @@ std::ostream& operator<<(std::ostream& stream, const Vector& vector) {
     return stream;
 }
 
-Vector operator+(const Vector& v1, const Vector& v2) {
-    if (v1.n != v2.n) {
+void add(const Vector& v1, const Vector& v2, Vector& result) {
+    if (v1.n != v2.n || v1.n != result.n || v2.n != result.n) {
         throw SizeMismatchException();
     }
-    if (v1.location != v2.location) {
+    if (v1.location != v2.location || v1.location != result.location || v2.location != result.location) {
         throw DifferentDataLocationException();
     }
 
     if (v1.location == HOST) {
-        DTYPE* newData = allocate1DArray(v1.n);
-
         for (int i = 0; i < v1.n; i++) {
-            newData[i] = v1[i] + v2[i];
+            result[i] = v1[i] + v2[i];
         }
-
-        return Vector(newData, v1.n);
     } else {
-        return addVectors(v1, v2);
+        addVectors(v1, v2, result);
     }
 }
 
-Vector operator-(const Vector& v1, const Vector& v2) {
-    if (v1.n != v2.n) {
+void subtract(const Vector& v1, const Vector& v2, Vector& result) {
+    if (v1.n != v2.n || v1.n != result.n || v2.n != result.n) {
         throw SizeMismatchException();
     }
-    if (v1.location != v2.location) {
+    if (v1.location != v2.location || v1.location != result.location || v2.location != result.location) {
         throw DifferentDataLocationException();
     }
 
     if (v1.location == HOST) {
-        DTYPE* newData = allocate1DArray(v1.n);
-
         for (int i = 0; i < v1.n; i++) {
-            newData[i] = v1[i] - v2[i];
+            result[i] = v1[i] - v2[i];
         }
-
-        return Vector(newData, v1.n);
     } else {
-        return subtractVectors(v1, v2);
+        subtractVectors(v1, v2, result);
     }
 }
 
-Vector operator*(const Vector& v1, DTYPE constant) {
+void multiply(const Vector& v1, DTYPE constant, Vector& result) {
+    if (v1.n != result.n) {
+        throw SizeMismatchException();
+    }
+    if (v1.location != result.location) {
+        throw DifferentDataLocationException();
+    }
+
     if (v1.location == HOST) {
-        DTYPE* newData = allocate1DArray(v1.n);
-
         for (int i = 0; i < v1.n; i++) {
-            newData[i] = v1[i] * constant;
+            result[i] = v1[i] * constant;
         }
-
-        return Vector(newData, v1.n);
     } else {
-        return multiplyVector(v1, constant);
+        multiplyVector(v1, constant, result);
     }
 }
 
-Vector operator*(DTYPE constant, const Vector& v1) {
-    return v1 * constant;
+void multiply(DTYPE constant, const Vector& v1, Vector& result) {
+    multiply(v1, constant, result);
 }

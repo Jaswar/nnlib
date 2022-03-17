@@ -19,21 +19,21 @@ public:
     Vector data;
 
     Vector aVector;
+    Vector zVector;
 
-    Vector delta;
+    Vector newDelta;
+    Vector derivatives;
 
     Layer(int inSize, int outSize, const std::string& activation = "linear");
 
     ~Layer();
 
-    Vector forward(const Vector& input);
+    void forward(const Vector& input);
 
-    std::pair<Vector, Matrix> backward(const Vector& delta, const Matrix& previousWeights,
+    void backward(const Vector& delta, const Matrix& previousWeights,
                                        bool isLastLayer = false, DTYPE learningRate = 0.01);
 
-    Vector calculateDerivatives() const;
-
-    void build(int previousSize);
+    void calculateDerivatives();
 };
 
 #endif //NNLIB_LAYER_H

@@ -7,13 +7,12 @@
 
 #include "../math/vector.h"
 
-Vector ReLU(const Vector& v);
-Vector sigmoid(const Vector& v);
-Vector tanh(const Vector& v);
+void ReLU(const Vector& v, Vector& result);
+void sigmoid(const Vector& v, Vector& result);
+void linear(const Vector& v, Vector& result);
 
-Vector ReLUDerivative(const Vector& input);
-Vector sigmoidDerivative(const Vector& input);
-Vector tanhDerivative(const Vector& input);
-Vector linearDerivative(const Vector& input);
+void ReLUDerivative(const Vector& input, Vector& result);
+void sigmoidDerivative(const Vector& input, Vector& result);
+void linearDerivative(const Vector& input, Vector& result);
 
 #endif //NNLIB_ACTIVATION_CUH

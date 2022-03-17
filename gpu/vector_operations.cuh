@@ -7,9 +7,8 @@
 
 #include "../math/vector.h"
 
-Vector addVectors(const Vector& v1, const Vector& v2);
-Vector subtractVectors(const Vector& v1, const Vector& v2);
-Vector multiplyVector(const Vector& v1, DTYPE constant);
-Vector dotProduct(const Vector& v1, const Vector& v2);
+void addVectors(const Vector& v1, const Vector& v2, Vector& result);
+void subtractVectors(const Vector& v1, const Vector& v2, Vector& result);
+void multiplyVector(const Vector& v1, DTYPE constant, Vector& result);
 
 #endif //NNLIB_VECTOR_OPERATIONS_CUH

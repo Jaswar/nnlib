@@ -37,9 +37,9 @@ public:
 // "toString" for std::cout
 std::ostream& operator<<(std::ostream& stream, const Vector& vector);
 
-Vector operator+(const Vector& v1, const Vector& v2);
-Vector operator-(const Vector& v1, const Vector& v2);
-Vector operator*(const Vector& v1, DTYPE constant);
-Vector operator*(DTYPE constant, const Vector& v1);
+void add(const Vector& v1, const Vector& v2, Vector& result);
+void subtract(const Vector& v1, const Vector& v2, Vector& result);
+void multiply(const Vector& v1, DTYPE constant, Vector& result);
+void multiply(DTYPE constant, const Vector& v2, Vector& result);
 
 #endif //NNLIB_VECTOR_H

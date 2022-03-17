@@ -25,8 +25,6 @@ public:
     void backward(const Vector& predicted, const Vector& target, DTYPE learningRate = 0.01);
 
     void train(const Matrix& X, const Matrix& y, int epochs, DTYPE learningRate = 0.01);
-
-    void build();
 };
 
 

@@ -10,7 +10,7 @@
 #ifndef NNLIB_BACKPROPAGATION_CUH
 #define NNLIB_BACKPROPAGATION_CUH
 
-Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previousWeights,
+void backpropagation(Layer& layer, const Vector& delta, const Matrix& previousWeights,
                 bool isLastLayer, DTYPE learningRate);
 
 #endif //NNLIB_BACKPROPAGATION_CUH

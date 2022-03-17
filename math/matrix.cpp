@@ -131,49 +131,45 @@ std::ostream& operator<<(std::ostream& stream, const Matrix& matrix) {
     return stream;
 }
 
-Matrix operator+(const Matrix& m1, const Matrix& m2) {
-    if (m1.n != m2.n || m1.m != m2.m) {
+void add(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    if (m1.n != m2.n || m1.m != m2.m
+        || m1.n != result.n || m1.m != result.m
+        || m2.n != result.n || m2.m != result.m ) {
         throw SizeMismatchException();
     }
-    if (m1.location != m2.location) {
+    if (m1.location != m2.location || m1.location != result.location || m2.location != result.location) {
         throw DifferentDataLocationException();
     }
 
     if (m1.location == HOST) {
-        Matrix result = Matrix(m1.n, m1.m);
-
         for (int i = 0; i < m1.n; i++) {
             for (int j = 0; j < m1.m; j++) {
                 result(i, j) = m1(i, j) + m2(i, j);
             }
         }
-
-        return result;
     } else {
-        return addMatrices(m1, m2);
+        addMatrices(m1, m2, result);
     }
 }
 
-Matrix operator-(const Matrix& m1, const Matrix& m2) {
-    if (m1.n != m2.n || m1.m != m2.m) {
+void subtract(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    if (m1.n != m2.n || m1.m != m2.m
+        || m1.n != result.n || m1.m != result.m
+        || m2.n != result.n || m2.m != result.m ) {
         throw SizeMismatchException();
     }
-    if (m1.location != m2.location) {
+    if (m1.location != m2.location || m1.location != result.location || m2.location != result.location) {
         throw DifferentDataLocationException();
     }
 
     if (m1.location == HOST) {
-        Matrix result = Matrix(m1.n, m1.m);
-
         for (int i = 0; i < m1.n; i++) {
             for (int j = 0; j < m1.m; j++) {
                 result(i, j) = m1(i, j) - m2(i, j);
             }
         }
-
-        return result;
     } else {
-        return subtractMatrices(m1, m2);
+        subtractMatrices(m1, m2, result);
     }
 }
 
@@ -198,46 +194,45 @@ Matrix operator-(const Matrix& m1, const Matrix& m2) {
 //    return result;
 //}
 
-Vector operator*(const Matrix& m, const Vector& v) {
-    if (m.m != v.n) {
+void multiply(const Matrix& m, const Vector& v, Vector& result) {
+    if (m.m != v.n || result.n != m.n) {
         throw SizeMismatchException();
     }
-    if (m.location != v.location) {
+    if (m.location != v.location || m.location != result.location || v.location != result.location) {
         throw DifferentDataLocationException();
     }
 
     if (m.location == HOST) {
-        DTYPE* newData = allocate1DArray(m.n);
-
         for (int i = 0; i < m.n; i++) {
-            newData[i] = 0;
+            result[i] = 0;
             for (int j = 0; j < v.n; j++) {
-                newData[i] += m(i, j) * v[j];
+                result[i] += m(i, j) * v[j];
             }
         }
-
-        return Vector(newData, m.n);
     } else {
-        return multiplyMatrixVector(m, v);
+        multiplyMatrixVector(m, v, result);
     }
 }
 
-Matrix operator*(const Matrix& m, DTYPE constant) {
-    if (m.location == HOST) {
-        Matrix result = Matrix(m.n, m.m);
+void multiply(const Matrix& m, DTYPE constant, Matrix& result) {
+    if (m.n != result.n || m.m != result.m) {
+        throw SizeMismatchException();
+    }
+    if (m.location != result.location) {
+        throw DifferentDataLocationException();
+    }
 
+    if (m.location == HOST) {
         for (int i = 0; i < m.n; i++) {
             for (int j = 0; j < m.m; j++) {
                 result(i, j) = m(i, j) * constant;
             }
         }
-
-        return result;
     } else {
-        return multiplyMatrix(m, constant);
+        multiplyMatrix(m, constant, result);
     }
 }
 
-Matrix operator*(DTYPE constant, const Matrix& m2) {
-    return m2 * constant;
+void multiply(DTYPE constant, const Matrix& m, Matrix& result) {
+    multiply(m, constant, result);
 }

@@ -25,8 +25,6 @@ int main() {
     network.add(128);
     network.add(7, "sigmoid");
 
-    network.build();
-
     network.train(X, y, 25, 0.004);
 
     return 0;

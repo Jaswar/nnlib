@@ -7,9 +7,9 @@
 #ifndef NNLIB_MATRIX_OPERATIONS_CUH
 #define NNLIB_MATRIX_OPERATIONS_CUH
 
-Matrix addMatrices(const Matrix& m1, const Matrix& m2);
-Matrix subtractMatrices(const Matrix& m1, const Matrix& m2);
-Vector multiplyMatrixVector(const Matrix& matrix, const Vector& vector);
-Matrix multiplyMatrix(const Matrix& m1, DTYPE constant);
+void addMatrices(const Matrix& m1, const Matrix& m2, Matrix& result);
+void subtractMatrices(const Matrix& m1, const Matrix& m2, Matrix& result);
+void multiplyMatrixVector(const Matrix& matrix, const Vector& vector, Vector& result);
+void multiplyMatrix(const Matrix& m1, DTYPE constant, Matrix& result);
 
 #endif //NNLIB_MATRIX_OPERATIONS_CUH

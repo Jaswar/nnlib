@@ -48,18 +48,12 @@ void performBackpropagation(DTYPE* biases, DTYPE* weights, DTYPE* data, DTYPE* d
     }
 }
 
-Vector backpropagation(Layer& layer, const Vector& delta, const Matrix& previousWeights,
+void backpropagation(Layer& layer, const Vector& delta, const Matrix& previousWeights,
               bool isLastLayer, DTYPE learningRate) {
-    const Vector& derivatives = layer.calculateDerivatives();
-
-    Vector newDelta = Vector(layer.outSize, DEVICE);
-
     performBackpropagation<<<1, layer.outSize>>>(layer.biases.data, layer.weights.data,
-                                                 layer.data.data, derivatives.data, delta.data,
-                                                 previousWeights.data, newDelta.data,
+                                                 layer.data.data, layer.derivatives.data, delta.data,
+                                                 previousWeights.data, layer.newDelta.data,
                                                  layer.inSize, layer.outSize, delta.n, learningRate, isLastLayer);
-
-    return newDelta;
 }
 
 #else

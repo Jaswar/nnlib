@@ -36,12 +36,11 @@ public:
 // "toString" for std::cout
 std::ostream& operator<<(std::ostream& stream, const Matrix& matrix);
 
-Matrix operator+(const Matrix& m1, const Matrix& m2);
-Matrix operator-(const Matrix& m1, const Matrix& m2);
+void add(const Matrix& m1, const Matrix& m2, Matrix& result);
+void subtract(const Matrix& m1, const Matrix& m2, Matrix& result);
 
-//Matrix operator*(const Matrix& m1, const Matrix& m2);
-Vector operator*(const Matrix& m, const Vector& v);
-Matrix operator*(const Matrix& m, DTYPE constant);
-Matrix operator*(DTYPE constant, const Matrix& m);
+void multiply(const Matrix& m, const Vector& v, Vector& result);
+void multiply(const Matrix& m, DTYPE constant, Matrix& result);
+void multiply(DTYPE constant, const Matrix& m, Matrix& result);
 
 #endif //NNLIB_MATRIX_H

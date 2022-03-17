@@ -4,6 +4,8 @@
 
 #include "activation.cuh"
 #include "../gpu/allocation_gpu.cuh"
+#include "../exceptions/size_mismatch_exception.h"
+#include "../exceptions/different_data_location_exception.h"
 
 __global__
 void ReLUDevice(DTYPE* vector, DTYPE* result, int n) {
@@ -20,25 +22,24 @@ void ReLUDevice(DTYPE* vector, DTYPE* result, int n) {
     }
 }
 
-Vector ReLU(const Vector& v) {
-    if (v.location == HOST) {
-        DTYPE* newData = allocate1DArray(v.n);
+void ReLU(const Vector& v, Vector& result) {
+    if (result.n != v.n) {
+        throw SizeMismatchException();
+    }
+    if (result.location != v.location) {
+        throw DifferentDataLocationException();
+    }
 
+    if (v.location == HOST) {
         for (int i = 0; i < v.n; i++) {
             if (v[i] <= 0) {
-                newData[i] = 0;
+                result[i] = 0;
             } else {
-                newData[i] = v[i];
+                result[i] = v[i];
             }
         }
-
-        return Vector(newData, v.n);
     } else {
-        DTYPE* result = allocate1DArrayDevice(v.n);
-
-        ReLUDevice<<<1, v.n>>>(v.data, result, v.n);
-
-        return Vector(result, v.n, DEVICE);
+        ReLUDevice<<<1, v.n>>>(v.data, result.data, v.n);
     }
 }
 
@@ -62,32 +63,49 @@ DTYPE fSigmoid(DTYPE x) {
     return 1 / (1 + exp(-x));
 }
 
-Vector sigmoid(const Vector& v) {
+void sigmoid(const Vector& v, Vector& result) {
+    if (result.n != v.n) {
+        throw SizeMismatchException();
+    }
+    if (result.location != v.location) {
+        throw DifferentDataLocationException();
+    }
+
     if (v.location == HOST) {
-        DTYPE* newData = allocate1DArray(v.n);
-
         for (int i = 0; i < v.n; i++) {
-            newData[i] = fSigmoid(v[i]);
+            result[i] = fSigmoid(v[i]);
         }
-
-        return Vector(newData, v.n);
     } else {
-        DTYPE* result = allocate1DArrayDevice(v.n);
-
-        sigmoidDevice<<<1, v.n>>>(v.data, result, v.n);
-
-        return Vector(result, v.n, DEVICE);
+        sigmoidDevice<<<1, v.n>>>(v.data, result.data, v.n);
     }
 }
 
-Vector tanh(const Vector& v) {
-    DTYPE* newData = allocate1DArray(v.n);
+__global__
+void linearDevice(DTYPE* vector, DTYPE* result, int n) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
-    for (int i = 0; i < v.n; i++) {
-        newData[i] = tanh(v[i]);
+    if (index >= n) {
+        return;
     }
 
-    return Vector(newData, v.n);
+    result[index] = vector[index];
+}
+
+void linear(const Vector& v, Vector& result) {
+    if (result.n != v.n) {
+        throw SizeMismatchException();
+    }
+    if (result.location != v.location) {
+        throw DifferentDataLocationException();
+    }
+
+    if (v.location == HOST) {
+        for (int i = 0; i < v.n; i++) {
+            result[i] = v[i];
+        }
+    } else {
+        linearDevice<<<1, v.n>>>(v.data, result.data, v.n);
+    }
 }
 
 __global__
@@ -101,16 +119,20 @@ void linearDerivativeDevice(DTYPE* vector, DTYPE* result, int n) {
     result[index] = 1;
 }
 
-Vector linearDerivative(const Vector& input) {
+void linearDerivative(const Vector& input, Vector& result) {
+    if (result.n != input.n) {
+        throw SizeMismatchException();
+    }
+    if (result.location != input.location) {
+        throw DifferentDataLocationException();
+    }
+
     if (input.location == HOST) {
-        DTYPE* newData = allocate1DArray(input.n, 1);
-        return Vector(newData, input.n);
+        for (int i = 0; i < input.n; i++) {
+            result[i] = 1;
+        }
     } else {
-        DTYPE* result = allocate1DArrayDevice(input.n);
-
-        linearDerivativeDevice<<<1, input.n>>>(input.data, result, input.n);
-
-        return Vector(result, input.n, DEVICE);
+        linearDerivativeDevice<<<1, input.n>>>(input.data, result.data, input.n);
     }
 }
 
@@ -129,25 +151,24 @@ void ReLUDerivativeDevice(DTYPE* vector, DTYPE* result, int n) {
     }
 }
 
-Vector ReLUDerivative(const Vector& input) {
-    if (input.location == HOST) {
-        DTYPE* newData = allocate1DArray(input.n);
+void ReLUDerivative(const Vector& input, Vector& result) {
+    if (result.n != input.n) {
+        throw SizeMismatchException();
+    }
+    if (result.location != input.location) {
+        throw DifferentDataLocationException();
+    }
 
+    if (input.location == HOST) {
         for (int i = 0; i < input.n; i++) {
             if (input[i] <= 0) {
-                newData[i] = 0;
+                result[i] = 0;
             } else {
-                newData[i] = 1;
+                result[i] = 1;
             }
         }
-
-        return Vector(newData, input.n);
     } else {
-        DTYPE* result = allocate1DArrayDevice(input.n);
-
-        ReLUDerivativeDevice<<<1, input.n>>>(input.data, result, input.n);
-
-        return Vector(result, input.n, DEVICE);
+        ReLUDerivativeDevice<<<1, input.n>>>(input.data, result.data, input.n);
     }
 }
 
@@ -162,30 +183,19 @@ void sigmoidDerivativeDevice(DTYPE* vector, DTYPE* result, int n) {
     result[index] = fSigmoidDevice(vector[index]) * (1 - fSigmoidDevice(vector[index]));
 }
 
-Vector sigmoidDerivative(const Vector& input) {
+void sigmoidDerivative(const Vector& input, Vector& result) {
+    if (result.n != input.n) {
+        throw SizeMismatchException();
+    }
+    if (result.location != input.location) {
+        throw DifferentDataLocationException();
+    }
+
     if (input.location == HOST) {
-        DTYPE* newData = allocate1DArray(input.n);
-
         for (int i = 0; i < input.n; i++) {
-            newData[i] = fSigmoid(input[i]) * (1 - fSigmoid(input[i]));
+            result[i] = fSigmoid(input[i]) * (1 - fSigmoid(input[i]));
         }
-
-        return Vector(newData, input.n);
     } else {
-        DTYPE* result = allocate1DArrayDevice(input.n);
-
-        sigmoidDerivativeDevice<<<1, input.n>>>(input.data, result, input.n);
-
-        return Vector(result, input.n, DEVICE);
+        sigmoidDerivativeDevice<<<1, input.n>>>(input.data, result.data, input.n);
     }
-}
-
-Vector tanhDerivative(const Vector& input) {
-    DTYPE* newData = allocate1DArray(input.n);
-
-    for (int i = 0; i < input.n; i++) {
-        newData[i] = 1 - (tanh(input[i]) * tanh(input[i]));
-    }
-
-    return Vector(newData, input.n);
 }

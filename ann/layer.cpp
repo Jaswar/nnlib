@@ -44,50 +44,51 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           weights(initializeWeights(inSize, outSize)),
           data(inSize),
           aVector(outSize),
-          delta(Vector(nullptr, 0, DEVICE)) {
+          zVector(outSize),
+          newDelta(outSize),
+          derivatives(outSize) {
     biases.moveToDevice();
     weights.moveToDevice();
     data.moveToDevice();
+
     aVector.moveToDevice();
+    zVector.moveToDevice();
+
+    newDelta.moveToDevice();
+    derivatives.moveToDevice();
 }
 
 Layer::~Layer() = default;
 
-Vector Layer::forward(const Vector& input) {
-    aVector = weights * input + biases;
+void Layer::forward(const Vector& input) {
+    multiply(weights, input, aVector);
+    add(aVector, biases, aVector);
+
     data = input;
 
     if (activation == "relu") {
-        return ReLU(aVector);
+        ReLU(aVector, zVector);
     } else if (activation == "sigmoid") {
-        return sigmoid(aVector);
-    } else if (activation == "tanh") {
-        return tanh(aVector);
+        sigmoid(aVector, zVector);
     } else {
-        return aVector;
+        linear(aVector, zVector);
     }
 }
 
-std::pair<Vector, Matrix> Layer::backward(const Vector& delta, const Matrix& previousWeights,
+void Layer::backward(const Vector& delta, const Matrix& previousWeights,
                                           bool isLastLayer, DTYPE learningRate) {
-    const Vector& newDelta = backpropagation(*this, delta, previousWeights, isLastLayer, learningRate);
-    return {newDelta, weights};
+    calculateDerivatives();
+
+    backpropagation(*this, delta, previousWeights, isLastLayer, learningRate);
 }
 
-Vector Layer::calculateDerivatives() const {
+void Layer::calculateDerivatives() {
     if (activation == "relu") {
-        return ReLUDerivative(aVector);
+        ReLUDerivative(aVector, derivatives);
     } else if (activation == "sigmoid") {
-        return sigmoidDerivative(aVector);
-    } else if (activation == "tanh") {
-        return tanhDerivative(aVector);
+        sigmoidDerivative(aVector, derivatives);
     } else {
-        return linearDerivative(aVector);
+        linearDerivative(aVector, derivatives);
     }
 }
-
-void Layer::build(int previousSize) {
-    delta = Vector(previousSize, DEVICE);
-}
-
 
