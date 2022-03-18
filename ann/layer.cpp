@@ -49,7 +49,6 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           derivatives(outSize) {
     biases.moveToDevice();
     weights.moveToDevice();
-    data.moveToDevice();
 
     aVector.moveToDevice();
     zVector.moveToDevice();
@@ -64,7 +63,7 @@ void Layer::forward(const Vector& input) {
     multiply(weights, input, aVector);
     add(aVector, biases, aVector);
 
-    data = input;
+    data.data = input.data;
 
     if (activation == "relu") {
         ReLU(aVector, zVector);

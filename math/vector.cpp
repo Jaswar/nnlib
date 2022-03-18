@@ -12,9 +12,17 @@ Vector::Vector(int n) : Vector(allocate1DArray(n), n) {}
 
 Vector::Vector(int n, dLocation location) : n(n), data(), location(location) {
     if (location == HOST) {
-        this->data = allocate1DArray(n);
+        if (n > 0) {
+            this->data = allocate1DArray(n);
+        } else {
+            this->data = nullptr;
+        }
     } else {
-        this->data = allocate1DArrayDevice(n);
+        if (n > 0) {
+            this->data = allocate1DArrayDevice(n);
+        } else {
+            this->data = nullptr;
+        }
     }
 }
 
@@ -34,13 +42,16 @@ Vector::Vector(const Vector& vector) {
 }
 
 Vector::~Vector() {
+    if (n == 0) {
+        return;
+    }
+
     if (location == HOST) {
         free(data);
     } else {
         free1DArrayDevice(data);
     }
 }
-
 
 void Vector::moveToDevice() {
     if (location == DEVICE) {
@@ -73,10 +84,14 @@ Vector& Vector::operator=(const Vector& vector) {
     location = vector.location;
 
     if (location == HOST) {
-        free(data);
+        if (n > 0) {
+            free(data);
+        }
         data = copy1DArray(n, vector.data);
     } else {
-        free1DArrayDevice(data);
+        if (n > 0) {
+            free1DArrayDevice(data);
+        }
         data = copy1DArrayDevice(n, vector.data);
     }
 

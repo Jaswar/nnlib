@@ -6,7 +6,7 @@
 #include "network.h"
 #include "../gpu/allocation_gpu.cuh"
 
-Network::Network(int inputSize, long long seed) : seed(seed), layers(), previousSize(inputSize) {
+Network::Network(int inputSize, long long seed) : seed(seed), layers(), previousSize(inputSize), loss(inputSize, DEVICE) {
     if (this->seed == NO_SEED) {
         this->seed = time(nullptr);
     }
@@ -19,9 +19,10 @@ void Network::add(int numNeurons, const std::string& activation) {
     layers.push_back(newLayer);
 
     previousSize = numNeurons;
+    loss = Vector(numNeurons, DEVICE);
 }
 
-Vector Network::forward(const Vector& input) {
+void Network::forward(const Vector& input, Vector& output) {
     Layer& first = layers.front();
     first.forward(input);
 
@@ -30,14 +31,11 @@ Vector Network::forward(const Vector& input) {
         i->forward(layers.at(index - 1).zVector);
     }
 
-    return layers.back().zVector;
+    output.data = layers.back().zVector.data;
 }
 
 void Network::backward(const Vector& predicted, const Vector& target, DTYPE learningRate) {
     // Mean squared error loss used here
-    Vector loss = Vector(target.n);
-    loss.moveToDevice();
-
     subtract(predicted, target, loss);
     multiply((1 / (DTYPE) target.n), loss, loss);
 
@@ -57,13 +55,16 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
         throw SizeMismatchException();
     }
 
+    Vector input = Vector(X.m, DEVICE);
+    Vector targets = Vector(y.m, DEVICE);
+    Vector output = Vector(y.m, DEVICE);
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << std::endl;
         for (int row = 0; row < X.n; row++) {
-            const Vector& input = Vector(copy1DArrayDevice(X.m, &X.data[row * X.m]), X.m, DEVICE);
-            const Vector& output = forward(input);
+            input.data = &X.data[row * X.m];
+            forward(input, output);
 
-            const Vector& targets = Vector(copy1DArrayDevice(y.m, &y.data[row * y.m]), y.m, DEVICE);
+            targets.data = &y.data[row * y.m];
             backward(output, targets, learningRate);
         }
 
@@ -72,13 +73,14 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
         // Calculate the accuracy on the training set.
         int correct = 0;
         for (int row = 0; row < X.n; row++) {
-            const Vector& input = Vector(copy1DArrayDevice(X.m, &X.data[row * X.m]), X.m, DEVICE);
-            Vector output = forward(input);
-            output.moveToHost();
+            input.data = &X.data[row * X.m];
+            forward(input, output);
+            Vector copy = output;
+            copy.moveToHost();
 
             int maxInx = 0;
             for (int i = 0; i < y.m; i++) {
-                if (output[i] > output[maxInx]) {
+                if (copy[i] > copy[maxInx]) {
                     maxInx = i;
                 }
             }

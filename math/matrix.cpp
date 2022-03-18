@@ -6,13 +6,21 @@
 #include "../exceptions/different_data_location_exception.h"
 #include "../gpu/matrix_operations.cuh"
 
-Matrix::Matrix(int n, int m) : Matrix(allocate1DArray(n * m), n, m, HOST) {}
+Matrix::Matrix(int n, int m) : Matrix(n, m, HOST) {}
 
 Matrix::Matrix(int n, int m, dLocation location) : n(n), m(m), location(location) {
     if (location == HOST) {
-        this->data = allocate1DArray(n * m);
+        if (n > 0 && m > 0) {
+            this->data = allocate1DArray(n * m);
+        } else {
+            this->data = nullptr;
+        }
     } else {
-        this->data = allocate1DArrayDevice(n * m);
+        if (n > 0 && m > 0) {
+            this->data = allocate1DArrayDevice(n * m);
+        } else {
+            this->data = nullptr;
+        }
     }
 }
 
@@ -59,6 +67,10 @@ void Matrix::moveToHost() {
 }
 
 Matrix::~Matrix() {
+    if (n == 0 || m == 0) {
+        return;
+    }
+
     if (location == HOST) {
         free(data);
     } else {
@@ -67,17 +79,22 @@ Matrix::~Matrix() {
 }
 
 Matrix& Matrix::operator=(const Matrix& matrix) {
-    n = matrix.n;
-    m = matrix.m;
     location = matrix.location;
 
     if (location == HOST) {
-        free(data);
-        data = copy1DArray(n * m, matrix.data);
+        if (n > 0 && m > 0) {
+            free(data);
+        }
+        data = copy1DArray(matrix.n * matrix.m, matrix.data);
     } else {
-        free1DArrayDevice(data);
-        data = copy1DArrayDevice(n * m, matrix.data);
+        if (n > 0 && m > 0) {
+            free1DArrayDevice(data);
+        }
+        data = copy1DArrayDevice(matrix.n * matrix.m, matrix.data);
     }
+
+    n = matrix.n;
+    m = matrix.m;
 
     return *this;
 }

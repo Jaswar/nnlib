@@ -11,6 +11,9 @@
 #define NO_SEED -1
 
 class Network {
+    // Pre-allocated space for loss
+    Vector loss;
+
     std::vector<Layer> layers;
     long long seed;
     int previousSize;
@@ -20,7 +23,7 @@ public:
 
     void add(int numNeurons, const std::string& activation = "linear");
 
-    Vector forward(const Vector& input);
+    void forward(const Vector& input, Vector& output);
 
     void backward(const Vector& predicted, const Vector& target, DTYPE learningRate = 0.01);
 
