@@ -42,7 +42,7 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           activation(activation),
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
-          data(inSize),
+          data(),
           aVector(outSize),
           zVector(outSize),
           newDelta(outSize),
@@ -63,7 +63,7 @@ void Layer::forward(const Vector& input) {
     multiply(weights, input, aVector);
     add(aVector, biases, aVector);
 
-    data.data = input.data;
+    data = &input;
 
     if (activation == "relu") {
         ReLU(aVector, zVector);

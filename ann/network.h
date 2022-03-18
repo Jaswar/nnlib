@@ -23,7 +23,7 @@ public:
 
     void add(int numNeurons, const std::string& activation = "linear");
 
-    void forward(const Vector& input, Vector& output);
+    Vector* forward(const Vector& input);
 
     void backward(const Vector& predicted, const Vector& target, DTYPE learningRate = 0.01);
 

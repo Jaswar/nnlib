@@ -16,7 +16,7 @@ public:
 
     Matrix weights;
     Vector biases;
-    Vector data;
+    const Vector* data;
 
     Vector aVector;
     Vector zVector;
