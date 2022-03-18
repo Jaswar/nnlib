@@ -68,6 +68,9 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
         throw SizeMismatchException();
     }
 
+    Matrix yCopy = y;
+    yCopy.moveToHost();
+
     std::vector<Vector> inputs = convertToVectors(X);
     std::vector<Vector> targets = convertToVectors(y);
 
@@ -79,8 +82,6 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
             backward(*output, targets.at(row), learningRate);
         }
 
-        Matrix yCopy = y;
-        yCopy.moveToHost();
         // Calculate the accuracy on the training set.
         int correct = 0;
         for (int row = 0; row < X.n; row++) {
