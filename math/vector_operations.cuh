@@ -5,7 +5,7 @@
 #ifndef NNLIB_VECTOR_OPERATIONS_CUH
 #define NNLIB_VECTOR_OPERATIONS_CUH
 
-#include "../math/vector.h"
+#include "vector.h"
 
 void addVectors(const Vector& v1, const Vector& v2, Vector& result);
 void subtractVectors(const Vector& v1, const Vector& v2, Vector& result);

@@ -5,7 +5,7 @@
 #include <utility>
 #include "../math/vector.h"
 #include "../math/matrix.h"
-#include "../ann/layer.h"
+#include "layer.h"
 
 #ifndef NNLIB_BACKPROPAGATION_CUH
 #define NNLIB_BACKPROPAGATION_CUH

@@ -5,7 +5,7 @@
 #include "gpu/verify.cuh"
 #include "math/convert.h"
 #include "utils/onehot_encode.h"
-#include "gpu/backpropagation.cuh"
+#include "ann/backpropagation.cuh"
 
 int main() {
     showCudaInfo();

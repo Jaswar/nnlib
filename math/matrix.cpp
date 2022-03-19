@@ -4,7 +4,7 @@
 #include "matrix.h"
 #include "../gpu/allocation_gpu.cuh"
 #include "../exceptions/different_data_location_exception.h"
-#include "../gpu/matrix_operations.cuh"
+#include "matrix_operations.cuh"
 
 Matrix::Matrix(int n, int m) : Matrix(n, m, HOST) {}
 

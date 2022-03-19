@@ -3,8 +3,8 @@
 //
 
 #include "matrix_operations.cuh"
-#include "allocation_gpu.cuh"
-#include "verify.cuh"
+#include "../gpu/allocation_gpu.cuh"
+#include "../gpu/verify.cuh"
 
 __global__
 void addMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, int n, int m) {

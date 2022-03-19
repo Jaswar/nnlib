@@ -6,7 +6,7 @@
 #include "../exceptions/size_mismatch_exception.h"
 #include "../gpu/allocation_gpu.cuh"
 #include "../exceptions/different_data_location_exception.h"
-#include "../gpu/vector_operations.cuh"
+#include "vector_operations.cuh"
 
 Vector::Vector(int n) : Vector(allocate1DArray(n), n) {}
 
