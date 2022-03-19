@@ -4,6 +4,7 @@
 
 #include "vector_operations.cuh"
 #include "allocation_gpu.cuh"
+#include "verify.cuh"
 
 __global__
 void addVectorsDevice(const DTYPE* v1, const DTYPE* v2, DTYPE* result, int n) {

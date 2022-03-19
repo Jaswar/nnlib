@@ -6,6 +6,7 @@
 #define NNLIB_ACTIVATION_CUH
 
 #include "../math/vector.h"
+#include "../gpu/verify.cuh"
 
 void ReLU(const Vector& v, Vector& result);
 void sigmoid(const Vector& v, Vector& result);

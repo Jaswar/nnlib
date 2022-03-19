@@ -7,8 +7,6 @@
 
 #ifdef HAS_CUDA
 
-#include "cuda.h"
-
 bool isCudaAvailable() {
     return true;
 }

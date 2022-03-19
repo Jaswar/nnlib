@@ -9,9 +9,6 @@
 
 #ifdef HAS_CUDA
 
-#include <cuda.h>
-#define NUM_BLOCKS 200
-
 __global__
 void performBackpropagation(DTYPE* biases, DTYPE* weights, DTYPE* data, DTYPE* derivatives,
                             DTYPE* delta, DTYPE* previousWeights, DTYPE* newDelta, int inSize, int outSize, int deltaSize,

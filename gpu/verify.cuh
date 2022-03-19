@@ -7,6 +7,10 @@
 
 #if __has_include("cuda.h")
 
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include <device_launch_parameters.h>
+
 #define HAS_CUDA
 
 #endif
