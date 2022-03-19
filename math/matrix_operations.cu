@@ -69,3 +69,19 @@ void multiplyMatrixDevice(const DTYPE* matrix, DTYPE constant, DTYPE* result, in
 void multiplyMatrix(const Matrix& m1, DTYPE constant, Matrix& result) {
     multiplyMatrixDevice<<<m1.n, m1.m>>>(m1.data, constant, result.data, m1.n, m1.m);
 }
+
+__global__
+void transposeMatrixDevice(const DTYPE* matrix, DTYPE* result, int n, int m) {
+    auto row = blockIdx.x;
+    auto column = threadIdx.x;
+
+    if (row >= n || column >= m) {
+        return;
+    }
+
+    result[column * n + row] = matrix[row * m + column];
+}
+
+void transposeMatrix(const Matrix& m, Matrix& result) {
+    transposeMatrixDevice<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
+}

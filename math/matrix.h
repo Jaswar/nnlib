@@ -29,6 +29,7 @@ public:
     ~Matrix();
 
     Matrix& operator=(const Matrix& matrix);
+
     DTYPE& operator()(int x, int y);
     DTYPE operator()(int x, int y) const;
 };
@@ -42,5 +43,7 @@ void subtract(const Matrix& m1, const Matrix& m2, Matrix& result);
 void multiply(const Matrix& m, const Vector& v, Vector& result);
 void multiply(const Matrix& m, DTYPE constant, Matrix& result);
 void multiply(DTYPE constant, const Matrix& m, Matrix& result);
+
+void transpose(const Matrix& m, Matrix& result);
 
 #endif //NNLIB_MATRIX_H

@@ -253,3 +253,22 @@ void multiply(const Matrix& m, DTYPE constant, Matrix& result) {
 void multiply(DTYPE constant, const Matrix& m, Matrix& result) {
     multiply(m, constant, result);
 }
+
+void transpose(const Matrix& m, Matrix& result) {
+    if (m.n != result.m || m.m != result.n) {
+        throw SizeMismatchException();
+    }
+    if (m.location != result.location) {
+        throw DifferentDataLocationException();
+    }
+
+    if (m.location == HOST) {
+        for (int i = 0; i < m.n; i++) {
+            for (int j = 0; j < m.m; j++) {
+                result(j, i) = m(i, j);
+            }
+        }
+    } else {
+        transposeMatrix(m, result);
+    }
+}
