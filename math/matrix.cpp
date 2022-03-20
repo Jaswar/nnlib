@@ -190,26 +190,28 @@ void subtract(const Matrix& m1, const Matrix& m2, Matrix& result) {
     }
 }
 
-//Matrix operator*(const Matrix& m1, const Matrix& m2) {
-//    if (m1.m != m2.n) {
-//        throw SizeMismatchException();
-//    }
-//
-//    Matrix result = Matrix(m1.n, m2.m);
-//
-//    for (int row = 0; row < m1.n; row++) {
-//        for (int column = 0; column < m2.m; column++) {
-//
-//            DTYPE sum = 0;
-//            for (int i = 0; i < m1.m; i++) {
-//                sum += m1(row, i) * m2(i, column);
-//            }
-//            result(row, column) = sum;
-//        }
-//    }
-//
-//    return result;
-//}
+void multiply(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    if (m1.m != m2.n || m1.n != result.n || m2.m != result.m) {
+        throw SizeMismatchException();
+    }
+    if (m1.location != m2.location || m1.location != result.location || m2.location != result.location) {
+        throw DifferentDataLocationException();
+    }
+
+    if (m1.location == HOST) {
+        for (int row = 0; row < m1.n; row++) {
+            for (int column = 0; column < m2.m; column++) {
+                DTYPE sum = 0;
+                for (int i = 0; i < m1.m; i++) {
+                    sum += m1(row, i) * m2(i, column);
+                }
+                result(row, column) = sum;
+            }
+        }
+    } else {
+        multiplyMatrices(m1, m2, result);
+    }
+}
 
 void multiply(const Matrix& m, const Vector& v, Vector& result) {
     if (m.m != v.n || result.n != m.n) {

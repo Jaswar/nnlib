@@ -56,6 +56,28 @@ void multiplyMatrixVector(const Matrix& matrix, const Vector& vector, Vector& re
 }
 
 __global__
+void multiplyMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, int nm1, int mm1, int mm2) {
+    auto row = blockIdx.x;
+    auto column = threadIdx.x;
+
+    if (row >= nm1 || column >= mm2) {
+        return;
+    }
+
+    DTYPE sum = 0;
+
+    for (int i = 0; i < mm1; i++) {
+        sum += m1[row * mm1 + i] * m2[i * mm2 + column];
+    }
+
+    result[row * mm2 + column] = sum;
+}
+
+void multiplyMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    multiplyMatricesDevice<<<m1.n, m2.m>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
+}
+
+__global__
 void multiplyMatrixDevice(const DTYPE* matrix, DTYPE constant, DTYPE* result, int n, int m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 

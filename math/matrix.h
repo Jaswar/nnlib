@@ -40,6 +40,7 @@ std::ostream& operator<<(std::ostream& stream, const Matrix& matrix);
 void add(const Matrix& m1, const Matrix& m2, Matrix& result);
 void subtract(const Matrix& m1, const Matrix& m2, Matrix& result);
 
+void multiply(const Matrix& m1, const Matrix& m2, Matrix& result);
 void multiply(const Matrix& m, const Vector& v, Vector& result);
 void multiply(const Matrix& m, DTYPE constant, Matrix& result);
 void multiply(DTYPE constant, const Matrix& m, Matrix& result);
