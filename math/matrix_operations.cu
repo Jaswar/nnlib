@@ -22,6 +22,22 @@ void addMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
 }
 
 __global__
+void addBroadcastDevice(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, int n, int m) {
+    auto row = blockIdx.x;
+    auto column = threadIdx.x;
+
+    if (row > n || column > m) {
+        return;
+    }
+
+    result[row * m + column] = matrix[row * m + column] + vector[column];
+}
+
+void addBroadcast(const Matrix& m, const Vector& v, Matrix& result) {
+    addBroadcastDevice<<<m.n, m.m>>>(m.data, v.data, result.data, m.n, m.m);
+}
+
+__global__
 void subtractMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, int n, int m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 

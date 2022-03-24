@@ -8,6 +8,7 @@
 #define NNLIB_MATRIX_OPERATIONS_CUH
 
 void addMatrices(const Matrix& m1, const Matrix& m2, Matrix& result);
+void addBroadcast(const Matrix& m, const Vector& v, Matrix& result);
 void subtractMatrices(const Matrix& m1, const Matrix& m2, Matrix& result);
 
 void multiplyMatrixVector(const Matrix& matrix, const Vector& vector, Vector& result);

@@ -169,6 +169,25 @@ void add(const Matrix& m1, const Matrix& m2, Matrix& result) {
     }
 }
 
+void add(const Matrix& m, const Vector& v, Matrix& result) {
+    if (m.m != v.n || m.m != result.m || m.n != result.n || result.m != v.n) {
+        throw SizeMismatchException();
+    }
+    if (m.location != v.location || v.location != result.location || m.location != result.location) {
+        throw DifferentDataLocationException();
+    }
+
+    if (m.location == HOST) {
+        for (int i = 0; i < m.n; i++) {
+            for (int j = 0; j < m.m; j++) {
+                result(i, j) = m(i, j) + v[j];
+            }
+        }
+    } else {
+        addBroadcast(m, v, result);
+    }
+}
+
 void subtract(const Matrix& m1, const Matrix& m2, Matrix& result) {
     if (m1.n != m2.n || m1.m != m2.m
         || m1.n != result.n || m1.m != result.m

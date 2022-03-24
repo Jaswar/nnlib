@@ -38,6 +38,10 @@ public:
 std::ostream& operator<<(std::ostream& stream, const Matrix& matrix);
 
 void add(const Matrix& m1, const Matrix& m2, Matrix& result);
+
+// Broadcast v onto m
+void add(const Matrix& m, const Vector& v, Matrix& result);
+
 void subtract(const Matrix& m1, const Matrix& m2, Matrix& result);
 
 void multiply(const Matrix& m1, const Matrix& m2, Matrix& result);
