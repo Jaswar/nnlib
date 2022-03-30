@@ -16,22 +16,27 @@ public:
 
     Matrix weights;
     Vector biases;
-    const Vector* data;
+    const Matrix* data;
 
-    Vector aVector;
-    Vector zVector;
+    Matrix aMatrix;
+    Matrix zMatrix;
 
-    Vector newDelta;
-    Vector derivatives;
+    Matrix newDelta;
+    Matrix derivatives;
+
+    Matrix weightsGradients;
+    Vector biasesGradients;
 
     Layer(int inSize, int outSize, const std::string& activation = "linear");
 
     ~Layer();
 
-    void forward(const Vector& input);
+    void forward(const Matrix& batch);
 
-    void backward(const Vector& delta, const Matrix& previousWeights,
+    void backward(const Matrix& delta, const Matrix& previousWeights,
                                        bool isLastLayer = false, DTYPE learningRate = 0.01);
+
+    void applyGradients();
 
     void calculateDerivatives();
 };

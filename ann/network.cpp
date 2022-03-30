@@ -18,8 +18,29 @@ std::vector<Vector> convertToVectors(const Matrix& matrix) {
     return result;
 }
 
+std::vector<Matrix> splitIntoBatches(const Matrix& matrix, int batchSize, bool doTranspose = false) {
+    std::vector<Matrix> result;
 
-Network::Network(int inputSize, long long seed) : seed(seed), layers(), previousSize(inputSize), loss(inputSize, DEVICE) {
+    int numBatches = std::ceil(matrix.n / (double) batchSize);
+    for (int i = 0; i < numBatches; i++) {
+        DTYPE* allocated = copy1DArrayDevice(matrix.m * batchSize, &matrix.data[i * matrix.m * batchSize]);
+        Matrix batch = Matrix(allocated, 32, matrix.m, DEVICE);
+
+        if (doTranspose) {
+            DTYPE* allocatedT = allocate1DArrayDevice(matrix.m * batchSize);
+            Matrix batchT = Matrix(allocatedT, matrix.m, 32, DEVICE);
+            transpose(batch, batchT);
+
+            result.push_back(batchT);
+        } else {
+            result.push_back(batch);
+        }
+    }
+
+    return result;
+}
+
+Network::Network(int inputSize, long long seed) : seed(seed), layers(), previousSize(inputSize), loss(32, inputSize, DEVICE) {
     if (this->seed == NO_SEED) {
         this->seed = time(nullptr);
     }
@@ -32,22 +53,22 @@ void Network::add(int numNeurons, const std::string& activation) {
     layers.push_back(newLayer);
 
     previousSize = numNeurons;
-    loss = Vector(numNeurons, DEVICE);
+    loss = Matrix(32, numNeurons, DEVICE);
 }
 
-Vector* Network::forward(const Vector& input) {
+Matrix* Network::forward(const Matrix& input) {
     Layer& first = layers.front();
     first.forward(input);
 
     for (auto i = layers.begin() + 1; i != layers.end(); i++) {
         size_t index = i - layers.begin();
-        i->forward(layers.at(index - 1).zVector);
+        i->forward(layers.at(index - 1).zMatrix);
     }
 
-    return &layers.back().zVector;
+    return &layers.back().zMatrix;
 }
 
-void Network::backward(const Vector& predicted, const Vector& target, DTYPE learningRate) {
+void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE learningRate) {
     // Mean squared error loss used here
     subtract(predicted, target, loss);
     multiply((1 / (DTYPE) target.n), loss, loss);
@@ -61,6 +82,10 @@ void Network::backward(const Vector& predicted, const Vector& target, DTYPE lear
 
         i->backward(prev.newDelta, prev.weights, false, learningRate);
     }
+
+    for (auto& layer : layers) {
+        layer.applyGradients();
+    }
 }
 
 void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learningRate) {
@@ -71,33 +96,39 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
     Matrix yCopy = y;
     yCopy.moveToHost();
 
-    std::vector<Vector> inputs = convertToVectors(X);
-    std::vector<Vector> targets = convertToVectors(y);
+    std::vector<Matrix> batches = splitIntoBatches(X, 32);
+    std::vector<Matrix> targets = splitIntoBatches(y, 32);
 
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << std::endl;
-        for (int row = 0; row < X.n; row++) {
-            const Vector* output = forward(inputs.at(row));
+        for (int row = 0; row < batches.size(); row++) {
+            const Matrix* output = forward(batches.at(row));
 
             backward(*output, targets.at(row), learningRate);
         }
 
         // Calculate the accuracy on the training set.
         int correct = 0;
-        for (int row = 0; row < X.n; row++) {
-            const Vector* output = forward(inputs.at(row));
-            Vector copy = *output;
+        for (int batch = 0; batch < batches.size(); batch++) {
+            const Matrix* output = forward(batches.at(batch));
+            Matrix copy = *output;
             copy.moveToHost();
 
-            int maxInx = 0;
-            for (int i = 0; i < y.m; i++) {
-                if (copy[i] > copy[maxInx]) {
-                    maxInx = i;
+            for (int row = 0; row < 32; row++) {
+                if (batch * 32 + row >= X.n) {
+                    continue;
                 }
-            }
 
-            if (yCopy(row, maxInx) == 1) {
-                correct++;
+                int maxInx = 0;
+                for (int i = 0; i < y.m; i++) {
+                    if (copy(row, i) > copy(row, maxInx)) {
+                        maxInx = i;
+                    }
+                }
+
+                if (yCopy(batch * 32 + row, maxInx) == 1) {
+                    correct++;
+                }
             }
         }
         std::cout << ((double) correct) / X.n << std::endl;

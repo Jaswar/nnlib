@@ -12,7 +12,7 @@
 
 class Network {
     // Pre-allocated space for loss
-    Vector loss;
+    Matrix loss;
 
     std::vector<Layer> layers;
     long long seed;
@@ -23,9 +23,9 @@ public:
 
     void add(int numNeurons, const std::string& activation = "linear");
 
-    Vector* forward(const Vector& input);
+    Matrix* forward(const Matrix& batch);
 
-    void backward(const Vector& predicted, const Vector& target, DTYPE learningRate = 0.01);
+    void backward(const Matrix& predicted, const Matrix& target, DTYPE learningRate = 0.01);
 
     void train(const Matrix& X, const Matrix& y, int epochs, DTYPE learningRate = 0.01);
 };

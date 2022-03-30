@@ -8,6 +8,65 @@
 #include "../exceptions/different_data_location_exception.h"
 
 __global__
+void linearDevice(DTYPE* vector, DTYPE* result, int n) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= n) {
+        return;
+    }
+
+    result[index] = vector[index];
+}
+
+void linear(const Vector& v, Vector& result) {
+    if (result.n != v.n) {
+        throw SizeMismatchException();
+    }
+    if (result.location != v.location) {
+        throw DifferentDataLocationException();
+    }
+
+    if (v.location == HOST) {
+        for (int i = 0; i < v.n; i++) {
+            result[i] = v[i];
+        }
+    } else {
+        linearDevice<<<1, v.n>>>(v.data, result.data, v.n);
+    }
+}
+
+__global__
+void linearDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+    auto row = blockIdx.x;
+    auto column = threadIdx.x;
+
+    if (row >= n || column >= m) {
+        return;
+    }
+
+    result[row * m + column] = matrix[row * m + column];
+}
+
+void linear(const Matrix& m, Matrix& result) {
+    if (m.n != result.n || m.m != result.m) {
+        throw SizeMismatchException();
+    }
+    if (m.location != result.location) {
+        throw DifferentDataLocationException();
+    }
+
+    if (m.location == HOST) {
+        for (int row = 0; row < m.n; row++) {
+            for (int i = 0; i < m.m; i++) {
+                result(row, i) = m(row, i);
+            }
+        }
+    } else {
+        linearDevice<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
+    }
+}
+
+__global__
 void ReLUDevice(DTYPE* vector, DTYPE* result, int n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -40,6 +99,45 @@ void ReLU(const Vector& v, Vector& result) {
         }
     } else {
         ReLUDevice<<<1, v.n>>>(v.data, result.data, v.n);
+    }
+}
+
+__global__
+void ReLUDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+    auto row = blockIdx.x;
+    auto column = threadIdx.x;
+
+    if (row >= n || column >= m) {
+        return;
+    }
+
+    if (matrix[row * m + column] <= 0) {
+        result[row * m + column] = 0;
+    } else {
+        result[row * m + column] = matrix[row * m + column];
+    }
+}
+
+void ReLU(const Matrix& m, Matrix& result) {
+    if (m.n != result.n || m.m != result.m) {
+        throw SizeMismatchException();
+    }
+    if (m.location != result.location) {
+        throw DifferentDataLocationException();
+    }
+
+    if (m.location == HOST) {
+        for (int row = 0; row < m.n; row++) {
+            for (int i = 0; i < m.m; i++) {
+                if (m(row, i) <= 0) {
+                    result(row, i) = 0;
+                } else {
+                    result(row, i) = m(row, i);
+                }
+            }
+        }
+    } else {
+        ReLUDevice<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
     }
 }
 
@@ -81,30 +179,33 @@ void sigmoid(const Vector& v, Vector& result) {
 }
 
 __global__
-void linearDevice(DTYPE* vector, DTYPE* result, int n) {
-    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+void sigmoidDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+    auto row = blockIdx.x;
+    auto column = threadIdx.x;
 
-    if (index >= n) {
+    if (row >= n || column >= m) {
         return;
     }
 
-    result[index] = vector[index];
+    result[row * m + column] = fSigmoidDevice(matrix[row * m + column]);
 }
 
-void linear(const Vector& v, Vector& result) {
-    if (result.n != v.n) {
+void sigmoid(const Matrix& m, Matrix& result) {
+    if (m.n != result.n || m.m != result.m) {
         throw SizeMismatchException();
     }
-    if (result.location != v.location) {
-        throw DifferentDataLocationException();
+    if (result.location != m.location) {
+        throw SizeMismatchException();
     }
 
-    if (v.location == HOST) {
-        for (int i = 0; i < v.n; i++) {
-            result[i] = v[i];
+    if (m.location == HOST) {
+        for (int row = 0; row < m.n; row++) {
+            for (int i = 0; i < m.m; i++) {
+                result(row, i) = fSigmoid(m(row, i));
+            }
         }
     } else {
-        linearDevice<<<1, v.n>>>(v.data, result.data, v.n);
+        sigmoidDevice<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
     }
 }
 
@@ -133,6 +234,37 @@ void linearDerivative(const Vector& input, Vector& result) {
         }
     } else {
         linearDerivativeDevice<<<1, input.n>>>(input.data, result.data, input.n);
+    }
+}
+
+__global__
+void linearDerivativeDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+    auto row = blockIdx.x;
+    auto column = threadIdx.x;
+
+    if (row >= n || column >= m) {
+        return;
+    }
+
+    result[row * m + column] = 1;
+}
+
+void linearDerivative(const Matrix& input, Matrix& result) {
+    if (input.n != result.n || input.m != result.m) {
+        throw SizeMismatchException();
+    }
+    if (input.location != result.location) {
+        throw DifferentDataLocationException();
+    }
+
+    if (input.location == HOST) {
+        for (int row = 0; row < input.n; row++) {
+            for (int i = 0; i < input.m; i++) {
+                result(row, i) = 1;
+            }
+        }
+    } else {
+        linearDerivativeDevice<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
     }
 }
 
@@ -173,6 +305,45 @@ void ReLUDerivative(const Vector& input, Vector& result) {
 }
 
 __global__
+void ReLUDerivativeDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+    auto row = blockIdx.x;
+    auto column = threadIdx.x;
+
+    if (row >= n || column >= m) {
+        return;
+    }
+
+    if (matrix[row * m + column] <= 0) {
+        result[row * m + column] = 0;
+    } else {
+        result[row * m + column] = 1;
+    }
+}
+
+void ReLUDerivative(const Matrix& input, Matrix& result) {
+    if (input.n != result.n || input.m != result.m) {
+        throw SizeMismatchException();
+    }
+    if (result.location != input.location) {
+        throw DifferentDataLocationException();
+    }
+
+    if (input.location == HOST) {
+        for (int row = 0; row < input.n; row++) {
+            for (int i = 0; i < input.m; i++) {
+                if (input(row, i) <= 0) {
+                    result(row, i) = 0;
+                } else {
+                    result(row, i) = 1;
+                }
+            }
+        }
+    } else {
+        ReLUDerivativeDevice<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
+    }
+}
+
+__global__
 void sigmoidDerivativeDevice(DTYPE* vector, DTYPE* result, int n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -197,5 +368,36 @@ void sigmoidDerivative(const Vector& input, Vector& result) {
         }
     } else {
         sigmoidDerivativeDevice<<<1, input.n>>>(input.data, result.data, input.n);
+    }
+}
+
+__global__
+void sigmoidDerivativeDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+    auto row = blockIdx.x;
+    auto column = threadIdx.x;
+
+    if (row >= n || column >= m) {
+        return;
+    }
+
+    result[row * m + column] = fSigmoidDevice(matrix[row * m + column]) * (1 - fSigmoidDevice(matrix[row * m + column]));
+}
+
+void sigmoidDerivative(const Matrix& input, Matrix& result) {
+    if (input.n != result.n || input.m != result.m) {
+        throw SizeMismatchException();
+    }
+    if (input.location != result.location) {
+        throw DifferentDataLocationException();
+    }
+
+    if (input.location == HOST) {
+        for (int row = 0; row < input.n; row++) {
+            for (int i = 0; i < input.m; i++) {
+                result(row, i) = fSigmoid(input(row, i)) * (1 - fSigmoid(input(row, i)));
+            }
+        }
+    } else {
+        sigmoidDerivativeDevice<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
     }
 }

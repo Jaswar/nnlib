@@ -7,13 +7,22 @@
 
 #include "../math/vector.h"
 #include "../gpu/verify.cuh"
+#include "../math/matrix.h"
 
+void linear(const Vector& v, Vector& result);
 void ReLU(const Vector& v, Vector& result);
 void sigmoid(const Vector& v, Vector& result);
-void linear(const Vector& v, Vector& result);
 
+void linear(const Matrix& m, Matrix& result);
+void ReLU(const Matrix& m, Matrix& result);
+void sigmoid(const Matrix& m, Matrix& result);
+
+void linearDerivative(const Vector& input, Vector& result);
 void ReLUDerivative(const Vector& input, Vector& result);
 void sigmoidDerivative(const Vector& input, Vector& result);
-void linearDerivative(const Vector& input, Vector& result);
+
+void linearDerivative(const Matrix& input, Matrix& result);
+void ReLUDerivative(const Matrix& input, Matrix& result);
+void sigmoidDerivative(const Matrix& input, Matrix& result);
 
 #endif //NNLIB_ACTIVATION_CUH

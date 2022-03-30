@@ -26,10 +26,10 @@ Vector initializeBiases(int outSize) {
 }
 
 Matrix initializeWeights(int inSize, int outSize) {
-    Matrix weights = Matrix(outSize, inSize);
+    Matrix weights = Matrix(inSize, outSize);
 
-    for (int i = 0; i < outSize; i++) {
-        for (int j = 0; j < inSize; j++) {
+    for (int i = 0; i < inSize; i++) {
+        for (int j = 0; j < outSize; j++) {
             weights(i, j) = getRandomValue();
         }
     }
@@ -43,51 +43,60 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
           data(),
-          aVector(outSize),
-          zVector(outSize),
-          newDelta(outSize),
-          derivatives(outSize) {
+          aMatrix(32, outSize),
+          zMatrix(32, outSize),
+          newDelta(32, outSize),
+          derivatives(32, outSize),
+          weightsGradients(allocate1DArray(inSize * outSize, 0), inSize, outSize),
+          biasesGradients(allocate1DArray(outSize, 0), outSize) {
     biases.moveToDevice();
     weights.moveToDevice();
 
-    aVector.moveToDevice();
-    zVector.moveToDevice();
+    aMatrix.moveToDevice();
+    zMatrix.moveToDevice();
 
     newDelta.moveToDevice();
     derivatives.moveToDevice();
+
+    weightsGradients.moveToDevice();
+    biasesGradients.moveToDevice();
 }
 
 Layer::~Layer() = default;
 
-void Layer::forward(const Vector& input) {
-    multiply(weights, input, aVector);
-    add(aVector, biases, aVector);
+void Layer::forward(const Matrix& batch) {
+    multiply(batch, weights, aMatrix);
+    add(aMatrix, biases, aMatrix);
 
-    data = &input;
+    data = &batch;
 
     if (activation == "relu") {
-        ReLU(aVector, zVector);
+        ReLU(aMatrix, zMatrix);
     } else if (activation == "sigmoid") {
-        sigmoid(aVector, zVector);
+        sigmoid(aMatrix, zMatrix);
     } else {
-        linear(aVector, zVector);
+        linear(aMatrix, zMatrix);
     }
 }
 
-void Layer::backward(const Vector& delta, const Matrix& previousWeights,
+void Layer::backward(const Matrix& delta, const Matrix& previousWeights,
                                           bool isLastLayer, DTYPE learningRate) {
     calculateDerivatives();
 
     backpropagation(*this, delta, previousWeights, isLastLayer, learningRate);
 }
 
+void Layer::applyGradients() {
+    applyGradient(*this);
+}
+
 void Layer::calculateDerivatives() {
     if (activation == "relu") {
-        ReLUDerivative(aVector, derivatives);
+        ReLUDerivative(aMatrix, derivatives);
     } else if (activation == "sigmoid") {
-        sigmoidDerivative(aVector, derivatives);
+        sigmoidDerivative(aMatrix, derivatives);
     } else {
-        linearDerivative(aVector, derivatives);
+        linearDerivative(aMatrix, derivatives);
     }
 }
 

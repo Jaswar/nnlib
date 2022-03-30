@@ -25,7 +25,7 @@ int main() {
     network.add(128);
     network.add(7, "sigmoid");
 
-    network.train(X, y, 25, 0.004);
+    network.train(X, y, 300, 0.01);
 
     return 0;
 }
