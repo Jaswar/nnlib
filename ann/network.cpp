@@ -69,22 +69,21 @@ Matrix* Network::forward(const Matrix& input) {
 }
 
 void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE learningRate) {
-    // Mean squared error loss used here
+    // Squared error loss used here
     subtract(predicted, target, loss);
-    multiply((1 / (DTYPE) target.n), loss, loss);
 
     Layer& last = layers.back();
-    last.backward(loss, Matrix(0, 0, DEVICE), true, learningRate);
+    last.backward(loss, Matrix(0, 0, DEVICE), true);
 
     for (auto i = layers.rbegin() + 1; i != layers.rend(); ++i) {
         size_t index = i - layers.rbegin();
         Layer& prev = layers.at(layers.size() - index);
 
-        i->backward(prev.newDelta, prev.weights, false, learningRate);
+        i->backward(prev.newDelta, prev.weights, false);
     }
 
     for (auto& layer : layers) {
-        layer.applyGradients();
+        layer.applyGradients(learningRate);
     }
 }
 

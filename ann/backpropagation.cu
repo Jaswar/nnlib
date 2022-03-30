@@ -11,92 +11,71 @@
 
 __global__
 void performBackpropagation(DTYPE* biasesGradients, DTYPE* weightsGradients, const DTYPE* data, const DTYPE* derivatives,
-                            const DTYPE* delta, const DTYPE* previousWeights, DTYPE* newDelta, int inSize, int outSize, int deltaSize,
-                            DTYPE learningRate, bool isLastLayer, int row) {
+                            const DTYPE* delta, const DTYPE* previousWeights, DTYPE* newDelta, int inSize, int outSize, int deltaSize, bool isLastLayer) {
     auto index = threadIdx.x;
 
     if (index >= outSize) {
         return;
     }
 
-    if (isLastLayer) {
-        DTYPE coreGradient = delta[row * deltaSize + index] * derivatives[row * outSize + index];
+    for (int row = 0; row < 32; row++) {
+        if (isLastLayer) {
+            DTYPE coreGradient = delta[row * deltaSize + index] * derivatives[row * outSize + index];
 
-        biasesGradients[index] += learningRate * coreGradient;
+            biasesGradients[index] += coreGradient;
 
-        for (int j = 0; j < inSize; j++) {
-            weightsGradients[j * outSize + index] += learningRate * coreGradient * data[row * inSize + j];
+            for (int j = 0; j < inSize; j++) {
+                weightsGradients[j * outSize + index] += coreGradient * data[row * inSize + j];
+            }
+
+            newDelta[row * outSize + index] = coreGradient;
+        } else {
+            DTYPE coreGradient = 0;
+            for (int j = 0; j < deltaSize; j++) {
+                coreGradient += delta[row * deltaSize + j] * derivatives[row * outSize + index] * previousWeights[index * deltaSize + j];
+            }
+
+            biasesGradients[index] += coreGradient;
+
+            for (int j = 0; j < inSize; j++) {
+                weightsGradients[j * outSize + index] += coreGradient * data[row * inSize + j];
+            }
+
+            newDelta[row * outSize + index] = coreGradient;
         }
-
-        newDelta[row * outSize + index] = coreGradient;
-    } else {
-        DTYPE coreGradient = 0;
-        for (int j = 0; j < deltaSize; j++) {
-            coreGradient += delta[row * deltaSize + j] * derivatives[row * outSize + index] * previousWeights[index * deltaSize + j];
-        }
-
-        biasesGradients[index] += learningRate * coreGradient;
-
-        for (int j = 0; j < inSize; j++) {
-            weightsGradients[j * outSize + index] += learningRate * coreGradient * data[row * inSize + j];
-        }
-
-        newDelta[row * outSize + index] = coreGradient;
     }
+
 }
 
-void backpropagation(Layer& layer, const Matrix& delta, const Matrix& previousWeights,
-              bool isLastLayer, DTYPE learningRate) {
-    for (int i = 0; i < 32; i++) {
-        cudaDeviceSynchronize();
-        performBackpropagation<<<1, layer.outSize>>>(layer.biasesGradients.data, layer.weightsGradients.data,
-                                                     layer.data->data, layer.derivatives.data, delta.data,
-                                                     previousWeights.data, layer.newDelta.data,
-                                                     layer.inSize, layer.outSize, delta.m, learningRate, isLastLayer, i);
-    }
+void backpropagation(Layer& layer, const Matrix& delta, const Matrix& previousWeights, bool isLastLayer) {
+    performBackpropagation<<<1, layer.outSize>>>(layer.biasesGradients.data, layer.weightsGradients.data,
+                                                 layer.data->data, layer.derivatives.data, delta.data,
+                                                 previousWeights.data, layer.newDelta.data,
+                                                 layer.inSize, layer.outSize, delta.m, isLastLayer);
 }
 
 __global__
-void applyGradientsDevice(DTYPE* biases, DTYPE* weights, DTYPE* biasesGradients, DTYPE* weightsGradients, int inSize, int outSize) {
+void applyGradientsDevice(DTYPE* biases, DTYPE* weights, DTYPE* biasesGradients, DTYPE* weightsGradients,
+                          int inSize, int outSize, DTYPE learningRate) {
     auto index = threadIdx.x;
 
     if (index >= outSize) {
         return;
     }
 
-    biases[index] -= biasesGradients[index] / 32;
+    biases[index] -= learningRate * biasesGradients[index] / 32;
     biasesGradients[index] = 0;
 
     for (int i = 0; i < inSize; i++) {
-        weights[i * outSize + index] -= weightsGradients[i * outSize + index] / 32;
+        weights[i * outSize + index] -= learningRate * weightsGradients[i * outSize + index] / 32;
         weightsGradients[i * outSize + index] = 0;
     }
 }
 
-void applyGradient(Layer& layer) {
-//    Vector b = layer.biases;
-//    b.moveToHost();
-//    std::cout << b << std::endl;
-//
-//    Vector bg = layer.biasesGradients;
-//    bg.moveToHost();
-//    std::cout << bg << std::endl;
-//
-//    Matrix w = layer.weights;
-//    w.moveToHost();
-//    std::cout << w << std::endl;
-
+void applyGradient(Layer& layer, DTYPE learningRate) {
     applyGradientsDevice<<<1, layer.outSize>>>(layer.biases.data, layer.weights.data,
                                                layer.biasesGradients.data, layer.weightsGradients.data,
-                                               layer.inSize, layer.outSize);
-
-//    Vector ub = layer.biases;
-//    ub.moveToHost();
-//    std::cout << ub << std::endl;
-//
-//    Matrix uw = layer.weights;
-//    uw.moveToHost();
-//    std::cout << uw << std::endl;
+                                               layer.inSize, layer.outSize, learningRate);
 }
 
 #else

@@ -33,10 +33,9 @@ public:
 
     void forward(const Matrix& batch);
 
-    void backward(const Matrix& delta, const Matrix& previousWeights,
-                                       bool isLastLayer = false, DTYPE learningRate = 0.01);
+    void backward(const Matrix& delta, const Matrix& previousWeights, bool isLastLayer = false);
 
-    void applyGradients();
+    void applyGradients(DTYPE learningRate = 0.01);
 
     void calculateDerivatives();
 };

@@ -79,15 +79,14 @@ void Layer::forward(const Matrix& batch) {
     }
 }
 
-void Layer::backward(const Matrix& delta, const Matrix& previousWeights,
-                                          bool isLastLayer, DTYPE learningRate) {
+void Layer::backward(const Matrix& delta, const Matrix& previousWeights, bool isLastLayer) {
     calculateDerivatives();
 
-    backpropagation(*this, delta, previousWeights, isLastLayer, learningRate);
+    backpropagation(*this, delta, previousWeights, isLastLayer);
 }
 
-void Layer::applyGradients() {
-    applyGradient(*this);
+void Layer::applyGradients(DTYPE learningRate) {
+    applyGradient(*this, learningRate);
 }
 
 void Layer::calculateDerivatives() {
