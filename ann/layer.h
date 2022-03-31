@@ -8,6 +8,8 @@
 #include <string>
 #include "../math/matrix.h"
 
+#define DEFAULT_BATCH_SIZE 32
+
 class Layer {
 public:
     int outSize;
@@ -33,11 +35,14 @@ public:
 
     void forward(const Matrix& batch);
 
-    void backward(const Matrix& delta, const Matrix& previousWeights, bool isLastLayer = false);
+    void backward(const Matrix& delta, const Matrix& previousWeights, int batchSize = DEFAULT_BATCH_SIZE, bool isLastLayer = false);
 
-    void applyGradients(DTYPE learningRate = 0.01);
+    void applyGradients(int batchSize, DTYPE learningRate = 0.01);
 
+private:
     void calculateDerivatives();
+
+    void allocate(int batchSize);
 };
 
 #endif //NNLIB_LAYER_H

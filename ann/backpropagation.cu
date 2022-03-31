@@ -11,14 +11,15 @@
 
 __global__
 void performBackpropagation(DTYPE* biasesGradients, DTYPE* weightsGradients, const DTYPE* data, const DTYPE* derivatives,
-                            const DTYPE* delta, const DTYPE* previousWeights, DTYPE* newDelta, int inSize, int outSize, int deltaSize, bool isLastLayer) {
+                            const DTYPE* delta, const DTYPE* previousWeights, DTYPE* newDelta,
+                            int inSize, int outSize, int deltaSize, int batchSize, bool isLastLayer) {
     auto index = threadIdx.x;
 
     if (index >= outSize) {
         return;
     }
 
-    for (int row = 0; row < 32; row++) {
+    for (int row = 0; row < batchSize; row++) {
         if (isLastLayer) {
             DTYPE coreGradient = delta[row * deltaSize + index] * derivatives[row * outSize + index];
 
@@ -47,35 +48,38 @@ void performBackpropagation(DTYPE* biasesGradients, DTYPE* weightsGradients, con
 
 }
 
-void backpropagation(Layer& layer, const Matrix& delta, const Matrix& previousWeights, bool isLastLayer) {
+void backpropagation(Layer& layer, const Matrix& delta, const Matrix& previousWeights,
+                     int batchSize, bool isLastLayer) {
     performBackpropagation<<<1, layer.outSize>>>(layer.biasesGradients.data, layer.weightsGradients.data,
                                                  layer.data->data, layer.derivatives.data, delta.data,
                                                  previousWeights.data, layer.newDelta.data,
-                                                 layer.inSize, layer.outSize, delta.m, isLastLayer);
+                                                 layer.inSize, layer.outSize, delta.m, batchSize, isLastLayer);
+    gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
 void applyGradientsDevice(DTYPE* biases, DTYPE* weights, DTYPE* biasesGradients, DTYPE* weightsGradients,
-                          int inSize, int outSize, DTYPE learningRate) {
+                          int inSize, int outSize, int batchSize, DTYPE learningRate) {
     auto index = threadIdx.x;
 
     if (index >= outSize) {
         return;
     }
 
-    biases[index] -= learningRate * biasesGradients[index] / 32;
+    biases[index] -= learningRate * biasesGradients[index] / (DTYPE) batchSize;
     biasesGradients[index] = 0;
 
     for (int i = 0; i < inSize; i++) {
-        weights[i * outSize + index] -= learningRate * weightsGradients[i * outSize + index] / 32;
+        weights[i * outSize + index] -= learningRate * weightsGradients[i * outSize + index] / (DTYPE) batchSize;
         weightsGradients[i * outSize + index] = 0;
     }
 }
 
-void applyGradient(Layer& layer, DTYPE learningRate) {
+void applyGradient(Layer& layer, int batchSize, DTYPE learningRate) {
     applyGradientsDevice<<<1, layer.outSize>>>(layer.biases.data, layer.weights.data,
                                                layer.biasesGradients.data, layer.weightsGradients.data,
-                                               layer.inSize, layer.outSize, learningRate);
+                                               layer.inSize, layer.outSize, batchSize, learningRate);
+    gpuCheckError( cudaDeviceSynchronize() )
 }
 
 #else

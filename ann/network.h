@@ -27,7 +27,7 @@ public:
 
     void backward(const Matrix& predicted, const Matrix& target, DTYPE learningRate = 0.01);
 
-    void train(const Matrix& X, const Matrix& y, int epochs, DTYPE learningRate = 0.01);
+    void train(const Matrix& X, const Matrix& y, int epochs, int batchSize = DEFAULT_BATCH_SIZE, DTYPE learningRate = 0.01);
 };
 
 

@@ -22,10 +22,10 @@ int main() {
     y.moveToDevice();
 
     Network network = Network(10);
-    network.add(128);
+    network.add(14);
     network.add(7, "sigmoid");
 
-    network.train(X, y, 300, 0.01);
+    network.train(X, y, 300, 128, 0.01);
 
     return 0;
 }

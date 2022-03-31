@@ -24,11 +24,11 @@ std::vector<Matrix> splitIntoBatches(const Matrix& matrix, int batchSize, bool d
     int numBatches = std::ceil(matrix.n / (double) batchSize);
     for (int i = 0; i < numBatches; i++) {
         DTYPE* allocated = copy1DArrayDevice(matrix.m * batchSize, &matrix.data[i * matrix.m * batchSize]);
-        Matrix batch = Matrix(allocated, 32, matrix.m, DEVICE);
+        Matrix batch = Matrix(allocated, batchSize, matrix.m, DEVICE);
 
         if (doTranspose) {
             DTYPE* allocatedT = allocate1DArrayDevice(matrix.m * batchSize);
-            Matrix batchT = Matrix(allocatedT, matrix.m, 32, DEVICE);
+            Matrix batchT = Matrix(allocatedT, matrix.m, batchSize, DEVICE);
             transpose(batch, batchT);
 
             result.push_back(batchT);
@@ -40,7 +40,7 @@ std::vector<Matrix> splitIntoBatches(const Matrix& matrix, int batchSize, bool d
     return result;
 }
 
-Network::Network(int inputSize, long long seed) : seed(seed), layers(), previousSize(inputSize), loss(32, inputSize, DEVICE) {
+Network::Network(int inputSize, long long seed) : seed(seed), layers(), previousSize(inputSize), loss(DEFAULT_BATCH_SIZE, inputSize, DEVICE) {
     if (this->seed == NO_SEED) {
         this->seed = time(nullptr);
     }
@@ -53,7 +53,7 @@ void Network::add(int numNeurons, const std::string& activation) {
     layers.push_back(newLayer);
 
     previousSize = numNeurons;
-    loss = Matrix(32, numNeurons, DEVICE);
+    loss = Matrix(DEFAULT_BATCH_SIZE, numNeurons, DEVICE);
 }
 
 Matrix* Network::forward(const Matrix& input) {
@@ -69,25 +69,29 @@ Matrix* Network::forward(const Matrix& input) {
 }
 
 void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE learningRate) {
+    if (loss.n != predicted.n) {
+        loss = Matrix(predicted.n, loss.m, loss.location);
+    }
+
     // Squared error loss used here
     subtract(predicted, target, loss);
 
     Layer& last = layers.back();
-    last.backward(loss, Matrix(0, 0, DEVICE), true);
+    last.backward(loss, Matrix(0, 0, DEVICE), predicted.n, true);
 
     for (auto i = layers.rbegin() + 1; i != layers.rend(); ++i) {
         size_t index = i - layers.rbegin();
         Layer& prev = layers.at(layers.size() - index);
 
-        i->backward(prev.newDelta, prev.weights, false);
+        i->backward(prev.newDelta, prev.weights, predicted.n, false);
     }
 
     for (auto& layer : layers) {
-        layer.applyGradients(learningRate);
+        layer.applyGradients(predicted.n, learningRate);
     }
 }
 
-void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learningRate) {
+void Network::train(const Matrix& X, const Matrix& y, int epochs, int batchSize, DTYPE learningRate) {
     if (X.n != y.n) {
         throw SizeMismatchException();
     }
@@ -95,8 +99,8 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
     Matrix yCopy = y;
     yCopy.moveToHost();
 
-    std::vector<Matrix> batches = splitIntoBatches(X, 32);
-    std::vector<Matrix> targets = splitIntoBatches(y, 32);
+    std::vector<Matrix> batches = splitIntoBatches(X, batchSize);
+    std::vector<Matrix> targets = splitIntoBatches(y, batchSize);
 
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << std::endl;
@@ -113,8 +117,8 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
             Matrix copy = *output;
             copy.moveToHost();
 
-            for (int row = 0; row < 32; row++) {
-                if (batch * 32 + row >= X.n) {
+            for (int row = 0; row < batchSize; row++) {
+                if (batch * batchSize + row >= X.n) {
                     continue;
                 }
 
@@ -125,7 +129,7 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, DTYPE learning
                     }
                 }
 
-                if (yCopy(batch * 32 + row, maxInx) == 1) {
+                if (yCopy(batch * batchSize + row, maxInx) == 1) {
                     correct++;
                 }
             }

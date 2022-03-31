@@ -43,10 +43,10 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
           data(),
-          aMatrix(32, outSize),
-          zMatrix(32, outSize),
-          newDelta(32, outSize),
-          derivatives(32, outSize),
+          aMatrix(DEFAULT_BATCH_SIZE, outSize),
+          zMatrix(DEFAULT_BATCH_SIZE, outSize),
+          newDelta(DEFAULT_BATCH_SIZE, outSize),
+          derivatives(DEFAULT_BATCH_SIZE, outSize),
           weightsGradients(allocate1DArray(inSize * outSize, 0), inSize, outSize),
           biasesGradients(allocate1DArray(outSize, 0), outSize) {
     biases.moveToDevice();
@@ -65,6 +65,8 @@ Layer::Layer(int inSize, int outSize, const std::string& activation)
 Layer::~Layer() = default;
 
 void Layer::forward(const Matrix& batch) {
+    allocate(batch.n);
+
     multiply(batch, weights, aMatrix);
     add(aMatrix, biases, aMatrix);
 
@@ -79,14 +81,14 @@ void Layer::forward(const Matrix& batch) {
     }
 }
 
-void Layer::backward(const Matrix& delta, const Matrix& previousWeights, bool isLastLayer) {
+void Layer::backward(const Matrix& delta, const Matrix& previousWeights, int batchSize, bool isLastLayer) {
     calculateDerivatives();
 
-    backpropagation(*this, delta, previousWeights, isLastLayer);
+    backpropagation(*this, delta, previousWeights, batchSize, isLastLayer);
 }
 
-void Layer::applyGradients(DTYPE learningRate) {
-    applyGradient(*this, learningRate);
+void Layer::applyGradients(int batchSize, DTYPE learningRate) {
+    applyGradient(*this, batchSize, learningRate);
 }
 
 void Layer::calculateDerivatives() {
@@ -99,3 +101,17 @@ void Layer::calculateDerivatives() {
     }
 }
 
+void Layer::allocate(int batchSize) {
+    if (aMatrix.n != batchSize) {
+        aMatrix = Matrix(batchSize, aMatrix.m, aMatrix.location);
+    }
+    if (zMatrix.n != batchSize) {
+        zMatrix = Matrix(batchSize, zMatrix.m, zMatrix.location);
+    }
+    if (newDelta.n != batchSize) {
+        newDelta = Matrix(batchSize, newDelta.m, newDelta.location);
+    }
+    if (derivatives.n != batchSize) {
+        derivatives = Matrix(batchSize, derivatives.m, derivatives.location);
+    }
+}
