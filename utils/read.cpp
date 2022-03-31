@@ -62,6 +62,9 @@ Matrix readCSV(const std::string& filepath, const std::string& delim) {
     // Read every line
     for (auto it = lines.begin(); it < lines.end(); it++) {
         size_t i = it - lines.begin();
+        if (i % 1000 == 0) {
+            std::cout << "Reading row " << i << std::endl;
+        }
         auto values = split(*it, delim);
 
         // Split every line by the delimiter and iterate over the values

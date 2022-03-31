@@ -13,36 +13,37 @@ __global__
 void computeGradientsDevice(DTYPE* biasesGradients, DTYPE* weightsGradients, const DTYPE* data, const DTYPE* derivatives,
                             const DTYPE* delta, const DTYPE* previousWeights, DTYPE* newDelta,
                             int inSize, int outSize, int deltaSize, int batchSize, bool isLastLayer) {
-    auto index = threadIdx.x;
+    auto outIndex = blockIdx.x;
+    auto inIndex = threadIdx.x;
 
-    if (index >= outSize) {
+    if (outIndex >= outSize || inIndex >= inSize) {
         return;
     }
 
     for (int row = 0; row < batchSize; row++) {
         if (isLastLayer) {
-            DTYPE coreGradient = delta[row * deltaSize + index] * derivatives[row * outSize + index];
+            DTYPE coreGradient = delta[row * deltaSize + outIndex] * derivatives[row * outSize + outIndex];
 
-            biasesGradients[index] += coreGradient;
+            if (inIndex == 0) {
+                newDelta[row * outSize + outIndex] = coreGradient;
 
-            for (int j = 0; j < inSize; j++) {
-                weightsGradients[j * outSize + index] += coreGradient * data[row * inSize + j];
+                biasesGradients[outIndex] += coreGradient;
             }
 
-            newDelta[row * outSize + index] = coreGradient;
+            weightsGradients[inIndex * outSize + outIndex] += coreGradient * data[row * inSize + inIndex];
         } else {
             DTYPE coreGradient = 0;
             for (int j = 0; j < deltaSize; j++) {
-                coreGradient += delta[row * deltaSize + j] * derivatives[row * outSize + index] * previousWeights[index * deltaSize + j];
+                coreGradient += delta[row * deltaSize + j] * derivatives[row * outSize + outIndex] * previousWeights[outIndex * deltaSize + j];
             }
 
-            biasesGradients[index] += coreGradient;
+            if (inIndex == 0) {
+                newDelta[row * outSize + outIndex] = coreGradient;
 
-            for (int j = 0; j < inSize; j++) {
-                weightsGradients[j * outSize + index] += coreGradient * data[row * inSize + j];
+                biasesGradients[outIndex] += coreGradient;
             }
 
-            newDelta[row * outSize + index] = coreGradient;
+            weightsGradients[inIndex * outSize + outIndex] += coreGradient * data[row * inSize + inIndex];
         }
     }
 
@@ -50,7 +51,7 @@ void computeGradientsDevice(DTYPE* biasesGradients, DTYPE* weightsGradients, con
 
 void computeGradients(Layer& layer, const Matrix& delta, const Matrix& previousWeights,
                      int batchSize, bool isLastLayer) {
-    computeGradientsDevice<<<1, layer.outSize>>>(layer.biasesGradients.data, layer.weightsGradients.data,
+    computeGradientsDevice<<<layer.outSize, layer.inSize>>>(layer.biasesGradients.data, layer.weightsGradients.data,
                                                  layer.data->data, layer.derivatives.data, delta.data,
                                                  previousWeights.data, layer.newDelta.data,
                                                  layer.inSize, layer.outSize, delta.m, batchSize, isLastLayer);
@@ -60,23 +61,24 @@ void computeGradients(Layer& layer, const Matrix& delta, const Matrix& previousW
 __global__
 void applyGradientsDevice(DTYPE* biases, DTYPE* weights, DTYPE* biasesGradients, DTYPE* weightsGradients,
                           int inSize, int outSize, int batchSize, DTYPE learningRate) {
-    auto index = threadIdx.x;
+    auto outIndex = blockIdx.x;
+    auto inIndex = threadIdx.x;
 
-    if (index >= outSize) {
+    if (outIndex >= outSize || inIndex >= inSize) {
         return;
     }
 
-    biases[index] -= learningRate * biasesGradients[index] / (DTYPE) batchSize;
-    biasesGradients[index] = 0;
-
-    for (int i = 0; i < inSize; i++) {
-        weights[i * outSize + index] -= learningRate * weightsGradients[i * outSize + index] / (DTYPE) batchSize;
-        weightsGradients[i * outSize + index] = 0;
+    if (inIndex == 0) {
+        biases[outIndex] -= learningRate * biasesGradients[outIndex] / (DTYPE) batchSize;
+        biasesGradients[outIndex] = 0;
     }
+
+    weights[inIndex * outSize + outIndex] -= learningRate * weightsGradients[inIndex * outSize + outIndex] / (DTYPE) batchSize;
+    weightsGradients[inIndex * outSize + outIndex] = 0;
 }
 
 void applyGradients(Layer& layer, int batchSize, DTYPE learningRate) {
-    applyGradientsDevice<<<1, layer.outSize>>>(layer.biases.data, layer.weights.data,
+    applyGradientsDevice<<<layer.outSize, layer.inSize>>>(layer.biases.data, layer.weights.data,
                                                layer.biasesGradients.data, layer.weightsGradients.data,
                                                layer.inSize, layer.outSize, batchSize, learningRate);
     gpuCheckError( cudaDeviceSynchronize() )
