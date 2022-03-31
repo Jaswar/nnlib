@@ -16,13 +16,14 @@ add_subdirectory(utils)
 check_language(CUDA)
 if (CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
+    set(CMAKE_CUDA_STANDARD 14)
 
     include_directories(${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 
-    set(CMAKE_CUDA_STANDARD 14)
-
     # Add flag to specify the architecture of the GPU (compute capability)
-    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -gencode arch=compute_50,code=sm_50")
+    if (NOT DEFINED CUDA_ARCHITECTURES)
+        set_target_properties(nnlib PROPERTIES CUDA_ARCHITECTURES "50")
+    endif()
 
     set_target_properties(nnlib PROPERTIES
             CUDA_SEPARABLE_COMPILATION ON)
