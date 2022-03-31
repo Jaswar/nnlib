@@ -10,9 +10,9 @@
 #ifndef NNLIB_BACKPROPAGATION_CUH
 #define NNLIB_BACKPROPAGATION_CUH
 
-void backpropagation(Layer& layer, const Matrix& delta, const Matrix& previousWeights,
+void computeGradients(Layer& layer, const Matrix& delta, const Matrix& previousWeights,
                      int batchSize, bool isLastLayer);
 
-void applyGradient(Layer& layer, int batchSize, DTYPE learningRate = 0.01);
+void applyGradients(Layer& layer, int batchSize, DTYPE learningRate = 0.01);
 
 #endif //NNLIB_BACKPROPAGATION_CUH

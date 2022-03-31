@@ -84,11 +84,11 @@ void Layer::forward(const Matrix& batch) {
 void Layer::backward(const Matrix& delta, const Matrix& previousWeights, int batchSize, bool isLastLayer) {
     calculateDerivatives();
 
-    backpropagation(*this, delta, previousWeights, batchSize, isLastLayer);
+    computeGradients(*this, delta, previousWeights, batchSize, isLastLayer);
 }
 
 void Layer::applyGradients(int batchSize, DTYPE learningRate) {
-    applyGradient(*this, batchSize, learningRate);
+    ::applyGradients(*this, batchSize, learningRate);
 }
 
 void Layer::calculateDerivatives() {

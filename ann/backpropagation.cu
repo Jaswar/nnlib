@@ -10,7 +10,7 @@
 #ifdef HAS_CUDA
 
 __global__
-void performBackpropagation(DTYPE* biasesGradients, DTYPE* weightsGradients, const DTYPE* data, const DTYPE* derivatives,
+void computeGradientsDevice(DTYPE* biasesGradients, DTYPE* weightsGradients, const DTYPE* data, const DTYPE* derivatives,
                             const DTYPE* delta, const DTYPE* previousWeights, DTYPE* newDelta,
                             int inSize, int outSize, int deltaSize, int batchSize, bool isLastLayer) {
     auto index = threadIdx.x;
@@ -48,9 +48,9 @@ void performBackpropagation(DTYPE* biasesGradients, DTYPE* weightsGradients, con
 
 }
 
-void backpropagation(Layer& layer, const Matrix& delta, const Matrix& previousWeights,
+void computeGradients(Layer& layer, const Matrix& delta, const Matrix& previousWeights,
                      int batchSize, bool isLastLayer) {
-    performBackpropagation<<<1, layer.outSize>>>(layer.biasesGradients.data, layer.weightsGradients.data,
+    computeGradientsDevice<<<1, layer.outSize>>>(layer.biasesGradients.data, layer.weightsGradients.data,
                                                  layer.data->data, layer.derivatives.data, delta.data,
                                                  previousWeights.data, layer.newDelta.data,
                                                  layer.inSize, layer.outSize, delta.m, batchSize, isLastLayer);
@@ -75,7 +75,7 @@ void applyGradientsDevice(DTYPE* biases, DTYPE* weights, DTYPE* biasesGradients,
     }
 }
 
-void applyGradient(Layer& layer, int batchSize, DTYPE learningRate) {
+void applyGradients(Layer& layer, int batchSize, DTYPE learningRate) {
     applyGradientsDevice<<<1, layer.outSize>>>(layer.biases.data, layer.weights.data,
                                                layer.biasesGradients.data, layer.weightsGradients.data,
                                                layer.inSize, layer.outSize, batchSize, learningRate);
