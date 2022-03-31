@@ -31,11 +31,10 @@ void showCudaInfo() {
         std::cout << "  Shared memory:\t" << props.sharedMemPerBlock / kb << "KB" << std::endl;
         std::cout << "  Constant memory:\t" << props.totalConstMem / kb << "KB" << std::endl;
         std::cout << "  Block registers:\t" << props.regsPerBlock << std::endl;
-
         std::cout << "  Warp size:\t\t" << props.warpSize << std::endl;
         std::cout << "  Threads per block:\t" << props.maxThreadsPerBlock << std::endl;
-        std::cout << "  Max block dimensions:\t[ " << props.maxThreadsDim[0] << ", " << props.maxThreadsDim[1]  << ", " << props.maxThreadsDim[2] << " ]" << std::endl;
-        std::cout << "  Max grid dimensions:\t[ " << props.maxGridSize[0] << ", " << props.maxGridSize[1]  << ", " << props.maxGridSize[2] << " ]" << std::endl;
+        std::cout << "  Max block dimensions:\t(" << props.maxThreadsDim[0] << ", " << props.maxThreadsDim[1]  << ", " << props.maxThreadsDim[2] << ")" << std::endl;
+        std::cout << "  Max grid dimensions:\t(" << props.maxGridSize[0] << ", " << props.maxGridSize[1]  << ", " << props.maxGridSize[2] << ")" << std::endl;
     }
 
     std::cout << std::endl;
