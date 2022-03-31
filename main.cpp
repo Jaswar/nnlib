@@ -10,15 +10,6 @@
 int main() {
     showCudaInfo();
 
-//    Matrix X = readCSV("C:/Users/janwa/CLionProjects/nnlib/data/features.txt");
-//    std::cout << X << std::endl;
-//
-//    X.moveToDevice();
-//
-//    const Vector& yv = convertToVector(readCSV("C:/Users/janwa/CLionProjects/nnlib/data/targets.txt"));
-//    Matrix y = oneHotEncode(yv);
-//    std::cout << y << std::endl;
-
     Matrix dataset = readCSV("C:/Users/janwa/CLionProjects/nnlib/data/MNIST_test.txt");
     Matrix X = Matrix(dataset.n, dataset.m - 1, HOST);
     Vector yv = Vector(dataset.n, HOST);
