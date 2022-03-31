@@ -20,6 +20,7 @@ void addVectorsDevice(const DTYPE* v1, const DTYPE* v2, DTYPE* result, int n) {
 
 void addVectors(const Vector& v1, const Vector& v2, Vector& result) {
     addVectorsDevice<<<1, v1.n>>>(v1.data, v2.data, result.data, v1.n);
+    gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 
@@ -37,6 +38,7 @@ void subtractVectorsDevice(const DTYPE* v1, const DTYPE* v2, DTYPE* result, int 
 
 void subtractVectors(const Vector& v1, const Vector& v2, Vector& result) {
     subtractVectorsDevice<<<1, v1.n>>>(v1.data, v2.data, result.data, v1.n);
+    gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 
@@ -53,6 +55,7 @@ void multiplyVectorDevice(const DTYPE* v1, DTYPE constant, DTYPE* result, int n)
 
 void multiplyVector(const Vector& v1, DTYPE constant, Vector& result) {
     multiplyVectorDevice<<<1, v1.n>>>(v1.data, constant, result.data, v1.n);
+    gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 

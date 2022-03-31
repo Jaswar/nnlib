@@ -55,6 +55,7 @@ void computeGradients(Layer& layer, const Matrix& delta, const Matrix& previousW
                                                  layer.data->data, layer.derivatives.data, delta.data,
                                                  previousWeights.data, layer.newDelta.data,
                                                  layer.inSize, layer.outSize, delta.m, batchSize, isLastLayer);
+    gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 
@@ -81,6 +82,7 @@ void applyGradients(Layer& layer, int batchSize, DTYPE learningRate) {
     applyGradientsDevice<<<layer.outSize, layer.inSize>>>(layer.biases.data, layer.weights.data,
                                                layer.biasesGradients.data, layer.weightsGradients.data,
                                                layer.inSize, layer.outSize, batchSize, learningRate);
+    gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 
