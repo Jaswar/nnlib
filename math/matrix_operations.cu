@@ -5,6 +5,7 @@
 #include "matrix_operations.cuh"
 #include "../gpu/allocation_gpu.cuh"
 #include "../gpu/verify.cuh"
+#include "../gpu/assert.cuh"
 
 __global__
 void addMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, int n, int m) {
@@ -19,6 +20,7 @@ void addMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, int n, i
 
 void addMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
     addMatricesDevice<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
+    gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
@@ -35,6 +37,7 @@ void addBroadcastDevice(const DTYPE* matrix, const DTYPE* vector, DTYPE* result,
 
 void addBroadcast(const Matrix& m, const Vector& v, Matrix& result) {
     addBroadcastDevice<<<m.n, m.m>>>(m.data, v.data, result.data, m.n, m.m);
+    gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
@@ -50,6 +53,7 @@ void subtractMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, int
 
 void subtractMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
     subtractMatricesDevice<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
+    gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
@@ -69,6 +73,7 @@ void mulMatrixVectorDevice(const DTYPE* matrix, const DTYPE* vector, DTYPE* resu
 
 void multiplyMatrixVector(const Matrix& matrix, const Vector& vector, Vector& result) {
     mulMatrixVectorDevice<<<1, matrix.n>>>(matrix.data, vector.data, result.data, matrix.n, matrix.m);
+    gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
@@ -91,6 +96,7 @@ void multiplyMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, int
 
 void multiplyMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
     multiplyMatricesDevice<<<m1.n, m2.m>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
+    gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
@@ -106,6 +112,7 @@ void multiplyMatrixDevice(const DTYPE* matrix, DTYPE constant, DTYPE* result, in
 
 void multiplyMatrix(const Matrix& m1, DTYPE constant, Matrix& result) {
     multiplyMatrixDevice<<<m1.n, m1.m>>>(m1.data, constant, result.data, m1.n, m1.m);
+    gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
@@ -122,4 +129,5 @@ void transposeMatrixDevice(const DTYPE* matrix, DTYPE* result, int n, int m) {
 
 void transposeMatrix(const Matrix& m, Matrix& result) {
     transposeMatrixDevice<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
+    gpuCheckError( cudaDeviceSynchronize() )
 }

@@ -6,6 +6,7 @@
 #include "../gpu/allocation_gpu.cuh"
 #include "../exceptions/size_mismatch_exception.h"
 #include "../exceptions/different_data_location_exception.h"
+#include "../gpu/assert.cuh"
 
 __global__
 void linearDevice(DTYPE* vector, DTYPE* result, int n) {
@@ -32,6 +33,7 @@ void linear(const Vector& v, Vector& result) {
         }
     } else {
         linearDevice<<<1, v.n>>>(v.data, result.data, v.n);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }
 
@@ -63,6 +65,7 @@ void linear(const Matrix& m, Matrix& result) {
         }
     } else {
         linearDevice<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }
 
@@ -99,6 +102,7 @@ void ReLU(const Vector& v, Vector& result) {
         }
     } else {
         ReLUDevice<<<1, v.n>>>(v.data, result.data, v.n);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }
 
@@ -138,6 +142,7 @@ void ReLU(const Matrix& m, Matrix& result) {
         }
     } else {
         ReLUDevice<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }
 
@@ -175,6 +180,7 @@ void sigmoid(const Vector& v, Vector& result) {
         }
     } else {
         sigmoidDevice<<<1, v.n>>>(v.data, result.data, v.n);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }
 
@@ -206,6 +212,7 @@ void sigmoid(const Matrix& m, Matrix& result) {
         }
     } else {
         sigmoidDevice<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }
 
@@ -234,6 +241,7 @@ void linearDerivative(const Vector& input, Vector& result) {
         }
     } else {
         linearDerivativeDevice<<<1, input.n>>>(input.data, result.data, input.n);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }
 
@@ -265,6 +273,7 @@ void linearDerivative(const Matrix& input, Matrix& result) {
         }
     } else {
         linearDerivativeDevice<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }
 
@@ -301,6 +310,7 @@ void ReLUDerivative(const Vector& input, Vector& result) {
         }
     } else {
         ReLUDerivativeDevice<<<1, input.n>>>(input.data, result.data, input.n);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }
 
@@ -340,6 +350,7 @@ void ReLUDerivative(const Matrix& input, Matrix& result) {
         }
     } else {
         ReLUDerivativeDevice<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }
 
@@ -368,6 +379,7 @@ void sigmoidDerivative(const Vector& input, Vector& result) {
         }
     } else {
         sigmoidDerivativeDevice<<<1, input.n>>>(input.data, result.data, input.n);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }
 
@@ -399,5 +411,6 @@ void sigmoidDerivative(const Matrix& input, Matrix& result) {
         }
     } else {
         sigmoidDerivativeDevice<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
+        gpuCheckError( cudaDeviceSynchronize() )
     }
 }

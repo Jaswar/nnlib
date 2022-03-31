@@ -5,6 +5,7 @@
 #include <time.h>
 #include "network.h"
 #include "../gpu/allocation_gpu.cuh"
+#include <algorithm>
 
 std::vector<Vector> convertToVectors(const Matrix& matrix) {
     std::vector<Vector> result;
@@ -23,12 +24,13 @@ std::vector<Matrix> splitIntoBatches(const Matrix& matrix, int batchSize, bool d
 
     int numBatches = std::ceil(matrix.n / (double) batchSize);
     for (int i = 0; i < numBatches; i++) {
-        DTYPE* allocated = copy1DArrayDevice(matrix.m * batchSize, &matrix.data[i * matrix.m * batchSize]);
-        Matrix batch = Matrix(allocated, batchSize, matrix.m, DEVICE);
+        int rowsInBatch = std::min(batchSize, matrix.n - batchSize * i);
+        DTYPE* allocated = copy1DArrayDevice(matrix.m * rowsInBatch, &matrix.data[i * matrix.m * batchSize]);
+        Matrix batch = Matrix(allocated, rowsInBatch, matrix.m, DEVICE);
 
         if (doTranspose) {
-            DTYPE* allocatedT = allocate1DArrayDevice(matrix.m * batchSize);
-            Matrix batchT = Matrix(allocatedT, matrix.m, batchSize, DEVICE);
+            DTYPE* allocatedT = allocate1DArrayDevice(matrix.m * rowsInBatch);
+            Matrix batchT = Matrix(allocatedT, matrix.m, rowsInBatch, DEVICE);
             transpose(batch, batchT);
 
             result.push_back(batchT);

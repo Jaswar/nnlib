@@ -11,12 +11,12 @@
 
 DTYPE* allocate1DArrayDevice(int n) {
     DTYPE* allocated;
-    gpuCheckError( cudaMalloc(&allocated, n * sizeof(DTYPE)) );
+    gpuCheckError( cudaMalloc(&allocated, n * sizeof(DTYPE)) )
     return allocated;
 }
 
 void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, int n) {
-    gpuCheckError( cudaMemcpy(device, host, n * sizeof(DTYPE), cudaMemcpyHostToDevice) );
+    gpuCheckError( cudaMemcpy(device, host, n * sizeof(DTYPE), cudaMemcpyHostToDevice) )
 }
 
 void copy2DFromHostToDevice(DTYPE** host, DTYPE* device, int n, int m) {
@@ -26,21 +26,21 @@ void copy2DFromHostToDevice(DTYPE** host, DTYPE* device, int n, int m) {
             temp[i * m + j] = host[i][j];
         }
     }
-    gpuCheckError( cudaMemcpy(device, temp, n * m * sizeof(DTYPE), cudaMemcpyHostToDevice) );
+    gpuCheckError( cudaMemcpy(device, temp, n * m * sizeof(DTYPE), cudaMemcpyHostToDevice) )
     free(temp);
 }
 
 void free1DArrayDevice(DTYPE* device) {
-    gpuCheckError( cudaFree(device) );
+    gpuCheckError( cudaFree(device) )
 }
 
 void copy1DFromDeviceToHost(DTYPE* device, DTYPE* host, int n) {
-    gpuCheckError( cudaMemcpy(host, device, n * sizeof(DTYPE), cudaMemcpyDeviceToHost) );
+    gpuCheckError( cudaMemcpy(host, device, n * sizeof(DTYPE), cudaMemcpyDeviceToHost) )
 }
 
 void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, int n, int m) {
     DTYPE* temp = allocate1DArray(n * m);
-    gpuCheckError( cudaMemcpy(temp, device, n * m * sizeof(DTYPE), cudaMemcpyDeviceToHost) );
+    gpuCheckError( cudaMemcpy(temp, device, n * m * sizeof(DTYPE), cudaMemcpyDeviceToHost) )
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
@@ -54,7 +54,7 @@ void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, int n, int m) {
 
 DTYPE* copy1DArrayDevice(int n, DTYPE* old) {
     DTYPE* allocated = allocate1DArrayDevice(n);
-    cudaMemcpy(allocated, old, n * sizeof(DTYPE), cudaMemcpyDeviceToDevice);
+    gpuCheckError( cudaMemcpy(allocated, old, n * sizeof(DTYPE), cudaMemcpyDeviceToDevice) )
     return allocated;
 }
 
