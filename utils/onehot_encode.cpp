@@ -23,8 +23,8 @@ Matrix oneHotEncode(const Vector& vector) {
         unique.insert(vector[i]);
     }
 
-    int n = vector.n;
-    int m = static_cast<int>(unique.size());
+    auto n = vector.n;
+    auto m = unique.size();
 
     DTYPE* resultSpace = allocate1DArray(n * m, 0);
     Matrix result = Matrix(resultSpace, n, m);

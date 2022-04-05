@@ -50,11 +50,12 @@ std::vector<std::string> readFile(const std::string& filepath) {
 }
 
 void threadCSVJob(const std::vector<std::string>& lines, const std::string& delim, Matrix& result, int id, int numThreads) {
-    int numIterations = std::ceil(lines.size() / (double) numThreads);
+    int size = lines.size();
+    int numIterations = std::ceil(size / (double) numThreads);
 
     for (int i = 0; i < numIterations; i++) {
         if (id == 0) {
-            showProgressBar(i * numThreads, lines.size());
+            showProgressBar(i * numThreads, size);
         }
         int index = id + numThreads * i;
         if (index >= lines.size()) {
@@ -72,7 +73,7 @@ void threadCSVJob(const std::vector<std::string>& lines, const std::string& deli
     }
 
     if (id == 0) {
-        showProgressBar(lines.size(), lines.size());
+        showProgressBar(size, size);
     }
 }
 
@@ -81,8 +82,8 @@ Matrix readCSV(const std::string& filepath, const std::string& delim, int numThr
 
     auto lines = readFile(filepath);
 
-    auto n = static_cast<int>(lines.size());
-    auto m = n > 0 ? static_cast<int>(split(lines.front(), delim).size()) : 1;
+    auto n = lines.size();
+    auto m = n > 0 ? split(lines.front(), delim).size() : 1;
     Matrix result = Matrix(n, m);
 
     std::vector<std::thread> threads;

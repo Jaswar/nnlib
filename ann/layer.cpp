@@ -15,7 +15,7 @@ DTYPE getRandomValue() {
     return (((DTYPE) rand() / RAND_MAX) * 2 - 1) / 5;
 }
 
-Vector initializeBiases(int outSize) {
+Vector initializeBiases(size_t outSize) {
     DTYPE* biases = allocate1DArray(outSize);
 
     for (int i = 0; i < outSize; i++) {
@@ -25,7 +25,7 @@ Vector initializeBiases(int outSize) {
     return Vector(biases, outSize);
 }
 
-Matrix initializeWeights(int inSize, int outSize) {
+Matrix initializeWeights(size_t inSize, size_t outSize) {
     Matrix weights = Matrix(inSize, outSize);
 
     for (int i = 0; i < inSize; i++) {
@@ -37,9 +37,9 @@ Matrix initializeWeights(int inSize, int outSize) {
     return weights;
 }
 
-Layer::Layer(int inSize, int outSize, const std::string& activation)
+Layer::Layer(size_t inSize, size_t outSize, std::string activation)
         : inSize(inSize), outSize(outSize),
-          activation(activation),
+          activation(std::move(activation)),
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
           data(),
@@ -81,13 +81,13 @@ void Layer::forward(const Matrix& batch) {
     }
 }
 
-void Layer::backward(const Matrix& delta, const Matrix& previousWeights, int batchSize, bool isLastLayer) {
+void Layer::backward(const Matrix& delta, const Matrix& previousWeights, size_t batchSize, bool isLastLayer) {
     calculateDerivatives();
 
     computeGradients(*this, delta, previousWeights, batchSize, isLastLayer);
 }
 
-void Layer::applyGradients(int batchSize, DTYPE learningRate) {
+void Layer::applyGradients(size_t batchSize, DTYPE learningRate) {
     ::applyGradients(*this, batchSize, learningRate);
 }
 
@@ -101,7 +101,7 @@ void Layer::calculateDerivatives() {
     }
 }
 
-void Layer::allocate(int batchSize) {
+void Layer::allocate(size_t batchSize) {
     if (aMatrix.n != batchSize) {
         aMatrix = Matrix(batchSize, aMatrix.m, aMatrix.location);
     }

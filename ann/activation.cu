@@ -9,7 +9,7 @@
 #include "../gpu/assert.cuh"
 
 __global__
-void linearDevice(const DTYPE* vector, DTYPE* result, int n) {
+void linearDevice(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -39,7 +39,7 @@ void linear(const Vector& v, Vector& result) {
 }
 
 __global__
-void linearDevice(const DTYPE* matrix, DTYPE* result, int n, int m) {
+void linearDevice(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -72,7 +72,7 @@ void linear(const Matrix& m, Matrix& result) {
 }
 
 __global__
-void ReLUDevice(const DTYPE* vector, DTYPE* result, int n) {
+void ReLUDevice(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -110,7 +110,7 @@ void ReLU(const Vector& v, Vector& result) {
 }
 
 __global__
-void ReLUDevice(const DTYPE* matrix, DTYPE* result, int n, int m) {
+void ReLUDevice(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -156,7 +156,7 @@ DTYPE fSigmoidDevice(DTYPE x) {
 }
 
 __global__
-void sigmoidDevice(DTYPE* vector, DTYPE* result, int n) {
+void sigmoidDevice(DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -190,7 +190,7 @@ void sigmoid(const Vector& v, Vector& result) {
 }
 
 __global__
-void sigmoidDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+void sigmoidDevice(DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -223,7 +223,7 @@ void sigmoid(const Matrix& m, Matrix& result) {
 }
 
 __global__
-void linearDerivativeDevice(const DTYPE* vector, DTYPE* result, int n) {
+void linearDerivativeDevice(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -253,7 +253,7 @@ void linearDerivative(const Vector& input, Vector& result) {
 }
 
 __global__
-void linearDerivativeDevice(const DTYPE* matrix, DTYPE* result, int n, int m) {
+void linearDerivativeDevice(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -286,7 +286,7 @@ void linearDerivative(const Matrix& input, Matrix& result) {
 }
 
 __global__
-void ReLUDerivativeDevice(const DTYPE* vector, DTYPE* result, int n) {
+void ReLUDerivativeDevice(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -324,7 +324,7 @@ void ReLUDerivative(const Vector& input, Vector& result) {
 }
 
 __global__
-void ReLUDerivativeDevice(const DTYPE* matrix, DTYPE* result, int n, int m) {
+void ReLUDerivativeDevice(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -365,7 +365,7 @@ void ReLUDerivative(const Matrix& input, Matrix& result) {
 }
 
 __global__
-void sigmoidDerivativeDevice(DTYPE* vector, DTYPE* result, int n) {
+void sigmoidDerivativeDevice(DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -395,7 +395,7 @@ void sigmoidDerivative(const Vector& input, Vector& result) {
 }
 
 __global__
-void sigmoidDerivativeDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+void sigmoidDerivativeDevice(DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 

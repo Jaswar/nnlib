@@ -19,12 +19,12 @@ std::vector<Vector> convertToVectors(const Matrix& matrix) {
     return result;
 }
 
-std::vector<Matrix> splitIntoBatches(const Matrix& matrix, int batchSize, bool doTranspose = false) {
+std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, bool doTranspose = false) {
     std::vector<Matrix> result;
 
     int numBatches = std::ceil(matrix.n / (double) batchSize);
     for (int i = 0; i < numBatches; i++) {
-        int rowsInBatch = std::min(batchSize, static_cast<int>(matrix.n - batchSize * i));
+        int rowsInBatch = std::min(batchSize, matrix.n - batchSize * i);
         DTYPE* allocated = copy1DArrayDevice(matrix.m * rowsInBatch, &matrix.data[i * matrix.m * batchSize]);
         Matrix batch = Matrix(allocated, rowsInBatch, matrix.m, DEVICE);
 
@@ -42,14 +42,14 @@ std::vector<Matrix> splitIntoBatches(const Matrix& matrix, int batchSize, bool d
     return result;
 }
 
-Network::Network(int inputSize, long long seed) : seed(seed), layers(), previousSize(inputSize), loss(DEFAULT_BATCH_SIZE, inputSize, DEVICE) {
+Network::Network(size_t inputSize, long long seed) : seed(seed), layers(), previousSize(inputSize), loss(DEFAULT_BATCH_SIZE, inputSize, DEVICE) {
     if (this->seed == NO_SEED) {
         this->seed = time(nullptr);
     }
     srand(this->seed);
 }
 
-void Network::add(int numNeurons, const std::string& activation) {
+void Network::add(size_t numNeurons, const std::string& activation) {
     Layer newLayer = Layer(previousSize, numNeurons, activation);
 
     layers.push_back(newLayer);
@@ -93,7 +93,7 @@ void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE lear
     }
 }
 
-void Network::train(const Matrix& X, const Matrix& y, int epochs, int batchSize, DTYPE learningRate) {
+void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize, DTYPE learningRate) {
     if (X.n != y.n) {
         throw SizeMismatchException();
     }

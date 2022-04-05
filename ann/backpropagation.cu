@@ -12,7 +12,7 @@
 __global__
 void computeGradientsDeviceLastLayer(DTYPE* biasesGradients, DTYPE* weightsGradients, const DTYPE* data, const DTYPE* derivatives,
                                      const DTYPE* delta, const DTYPE* previousWeights, DTYPE* newDelta,
-                                     int inSize, int outSize, int deltaSize, int batchSize) {
+                                     size_t inSize, size_t outSize, size_t deltaSize, size_t batchSize) {
     auto outIndex = blockIdx.x;
     auto inIndex = threadIdx.x;
 
@@ -38,7 +38,7 @@ void computeGradientsDeviceLastLayer(DTYPE* biasesGradients, DTYPE* weightsGradi
 __global__
 void computeGradientsDevice(DTYPE* biasesGradients, DTYPE* weightsGradients, const DTYPE* data, const DTYPE* derivatives,
                             const DTYPE* delta, const DTYPE* previousWeights, DTYPE* newDelta,
-                            int inSize, int outSize, int deltaSize, int batchSize) {
+                            size_t inSize, size_t outSize, size_t deltaSize, size_t batchSize) {
     auto outIndex = blockIdx.x;
     auto inIndex = threadIdx.x;
 
@@ -64,7 +64,7 @@ void computeGradientsDevice(DTYPE* biasesGradients, DTYPE* weightsGradients, con
 }
 
 void computeGradients(Layer& layer, const Matrix& delta, const Matrix& previousWeights,
-                     int batchSize, bool isLastLayer) {
+                      size_t batchSize, bool isLastLayer) {
     if (isLastLayer) {
         computeGradientsDeviceLastLayer<<<layer.outSize, layer.inSize>>>(layer.biasesGradients.data, layer.weightsGradients.data,
                                                                 layer.data->data, layer.derivatives.data, delta.data,
@@ -82,7 +82,7 @@ void computeGradients(Layer& layer, const Matrix& delta, const Matrix& previousW
 
 __global__
 void applyGradientsDevice(DTYPE* biases, DTYPE* weights, DTYPE* biasesGradients, DTYPE* weightsGradients,
-                          int inSize, int outSize, int batchSize, DTYPE learningRate) {
+                          size_t inSize, size_t outSize, size_t batchSize, DTYPE learningRate) {
     auto outIndex = blockIdx.x;
     auto inIndex = threadIdx.x;
 
@@ -99,7 +99,7 @@ void applyGradientsDevice(DTYPE* biases, DTYPE* weights, DTYPE* biasesGradients,
     weightsGradients[inIndex * outSize + outIndex] = 0;
 }
 
-void applyGradients(Layer& layer, int batchSize, DTYPE learningRate) {
+void applyGradients(Layer& layer, size_t batchSize, DTYPE learningRate) {
     applyGradientsDevice<<<layer.outSize, layer.inSize>>>(layer.biases.data, layer.weights.data,
                                                layer.biasesGradients.data, layer.weightsGradients.data,
                                                layer.inSize, layer.outSize, batchSize, learningRate);

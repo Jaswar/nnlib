@@ -8,7 +8,7 @@
 #include "../gpu/assert.cuh"
 
 __global__
-void addMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, int n, int m) {
+void addMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n * m) {
@@ -25,7 +25,7 @@ void addMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
 }
 
 __global__
-void addBroadcastDevice(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, int n, int m) {
+void addBroadcastDevice(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -43,7 +43,7 @@ void addBroadcast(const Matrix& m, const Vector& v, Matrix& result) {
 }
 
 __global__
-void subtractMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, int n, int m) {
+void subtractMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n * m) {
@@ -60,7 +60,7 @@ void subtractMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
 }
 
 __global__
-void mulMatrixVectorDevice(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, int n, int m) {
+void mulMatrixVectorDevice(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -81,7 +81,7 @@ void multiplyMatrixVector(const Matrix& matrix, const Vector& vector, Vector& re
 }
 
 __global__
-void multiplyMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, int nm1, int mm1, int mm2) {
+void multiplyMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t nm1, size_t mm1, size_t mm2) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -105,7 +105,7 @@ void multiplyMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
 }
 
 __global__
-void multiplyMatrixDevice(const DTYPE* matrix, DTYPE constant, DTYPE* result, int n, int m) {
+void multiplyMatrixDevice(const DTYPE* matrix, DTYPE constant, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n * m) {
@@ -122,7 +122,7 @@ void multiplyMatrix(const Matrix& m1, DTYPE constant, Matrix& result) {
 }
 
 __global__
-void transposeMatrixDevice(const DTYPE* matrix, DTYPE* result, int n, int m) {
+void transposeMatrixDevice(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 

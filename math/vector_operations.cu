@@ -8,7 +8,7 @@
 #include "../gpu/assert.cuh"
 
 __global__
-void addVectorsDevice(const DTYPE* v1, const DTYPE* v2, DTYPE* result, int n) {
+void addVectorsDevice(const DTYPE* v1, const DTYPE* v2, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -25,7 +25,7 @@ void addVectors(const Vector& v1, const Vector& v2, Vector& result) {
 }
 
 __global__
-void subtractVectorsDevice(const DTYPE* v1, const DTYPE* v2, DTYPE* result, int n) {
+void subtractVectorsDevice(const DTYPE* v1, const DTYPE* v2, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -43,7 +43,7 @@ void subtractVectors(const Vector& v1, const Vector& v2, Vector& result) {
 }
 
 __global__
-void multiplyVectorDevice(const DTYPE* v1, DTYPE constant, DTYPE* result, int n) {
+void multiplyVectorDevice(const DTYPE* v1, DTYPE constant, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {

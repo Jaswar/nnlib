@@ -12,8 +12,8 @@
 
 class Layer {
 public:
-    int outSize;
-    int inSize;
+    size_t outSize;
+    size_t inSize;
     std::string activation;
 
     Matrix weights;
@@ -29,20 +29,20 @@ public:
     Matrix weightsGradients;
     Vector biasesGradients;
 
-    Layer(int inSize, int outSize, const std::string& activation = "linear");
+    Layer(size_t inSize, size_t outSize, std::string  activation = "linear");
 
     ~Layer();
 
     void forward(const Matrix& batch);
 
-    void backward(const Matrix& delta, const Matrix& previousWeights, int batchSize = DEFAULT_BATCH_SIZE, bool isLastLayer = false);
+    void backward(const Matrix& delta, const Matrix& previousWeights, size_t batchSize = DEFAULT_BATCH_SIZE, bool isLastLayer = false);
 
-    void applyGradients(int batchSize, DTYPE learningRate = 0.01);
+    void applyGradients(size_t batchSize, DTYPE learningRate = 0.01);
 
 private:
     void calculateDerivatives();
 
-    void allocate(int batchSize);
+    void allocate(size_t batchSize);
 };
 
 #endif //NNLIB_LAYER_H

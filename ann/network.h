@@ -16,18 +16,18 @@ class Network {
 
     std::vector<Layer> layers;
     long long seed;
-    int previousSize;
+    size_t previousSize;
 
 public:
-    explicit Network(int inputSize, long long seed = NO_SEED);
+    explicit Network(size_t inputSize, long long seed = NO_SEED);
 
-    void add(int numNeurons, const std::string& activation = "linear");
+    void add(size_t numNeurons, const std::string& activation = "linear");
 
     Matrix* forward(const Matrix& batch);
 
     void backward(const Matrix& predicted, const Matrix& target, DTYPE learningRate = 0.01);
 
-    void train(const Matrix& X, const Matrix& y, int epochs, int batchSize = DEFAULT_BATCH_SIZE, DTYPE learningRate = 0.01);
+    void train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE, DTYPE learningRate = 0.01);
 };
 
 
