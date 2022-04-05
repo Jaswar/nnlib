@@ -6,18 +6,16 @@
 #include "math/convert.h"
 #include "utils/onehot_encode.h"
 #include "ann/backpropagation.cuh"
+#include <chrono>
 
 int main() {
     showCudaInfo();
 
-    Matrix dataset = readCSV("C:/Users/janwa/CLionProjects/nnlib/data/MNIST_test.txt");
+    Matrix dataset = readCSV("C:/Users/janwa/CLionProjects/nnlib/data/MNIST_train.txt", ",", 4);
     Matrix X = Matrix(dataset.n, dataset.m - 1, HOST);
     Vector yv = Vector(dataset.n, HOST);
 
     for (int i = 0; i < dataset.n; i++) {
-        if (i % 1000 == 0) {
-            std::cout << "Converting row " << i << std::endl;
-        }
         yv[i] = dataset(i, 0);
         for (int j = 1; j < dataset.m; j++) {
             X(i, j - 1) = dataset(i, j) / 255;

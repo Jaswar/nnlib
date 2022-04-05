@@ -13,7 +13,7 @@ bool fileExists(const std::string& filepath);
 
 std::vector<std::string> readFile(const std::string& filepath);
 
-Matrix readCSV(const std::string& filepath, const std::string& delim = ",");
+Matrix readCSV(const std::string& filepath, const std::string& delim = ",", int numThreads = 1);
 
 
 #endif //NNLIB_READ_H

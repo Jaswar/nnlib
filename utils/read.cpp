@@ -5,17 +5,14 @@
 #include <utility>
 #include <fstream>
 #include "read.h"
+#include "printing.h"
+#include <thread>
 
 std::vector<std::string> split(const std::string& str, const std::string& delim) {
-    size_t start = 0;
+    size_t start = 0, end = 0;
 
     std::vector<std::string> result;
-    while (true) {
-        size_t end = str.find(delim, start);
-        if (end == std::string::npos) {
-            break;
-        }
-
+    while ((end = str.find(delim, start)) != std::string::npos) {
         result.push_back(str.substr(start, end - start));
         start = end + delim.length();
     }
@@ -43,7 +40,7 @@ std::vector<std::string> readFile(const std::string& filepath) {
 
     std::string line;
     if (file.is_open()) {
-        while (std::getline(file, line)) {
+        while (file >> line) {
             lines.push_back(line);
         }
         file.close();
@@ -52,33 +49,53 @@ std::vector<std::string> readFile(const std::string& filepath) {
     return lines;
 }
 
-Matrix readCSV(const std::string& filepath, const std::string& delim) {
+void threadCSVJob(const std::vector<std::string>& lines, const std::string& delim, Matrix& result, int id, int numThreads) {
+    int numIterations = std::ceil(lines.size() / (double) numThreads);
+
+    for (int i = 0; i < numIterations; i++) {
+        if (id == 0) {
+            showProgressBar(i * numThreads, lines.size());
+        }
+        int index = id + numThreads * i;
+        if (index >= lines.size()) {
+            return;
+        }
+
+        const std::string& line = lines.at(index);
+        size_t start = 0, end;
+        int j = 0;
+        while ((end = line.find(delim, start)) != std::string::npos) {
+            result(index, j++) = static_cast<DTYPE>(std::stod(line.substr(start, end - start)));
+            start = end + delim.length();
+        }
+        result(index, j) = static_cast<DTYPE>(std::stod(line.substr(start)));
+    }
+
+    if (id == 0) {
+        showProgressBar(lines.size(), lines.size());
+    }
+}
+
+Matrix readCSV(const std::string& filepath, const std::string& delim, int numThreads) {
+    std::cout << "Reading CSV file " << filepath << std::endl;
+
     auto lines = readFile(filepath);
 
     auto n = static_cast<int>(lines.size());
     auto m = n > 0 ? static_cast<int>(split(lines.front(), delim).size()) : 1;
     Matrix result = Matrix(n, m);
 
-    // Read every line
-    for (auto it = lines.begin(); it < lines.end(); it++) {
-        size_t i = it - lines.begin();
-        if (i % 1000 == 0) {
-            std::cout << "Reading row " << i << std::endl;
-        }
-        auto values = split(*it, delim);
-
-        // Split every line by the delimiter and iterate over the values
-        DTYPE* row = allocate1DArray(m);
-        for (auto it2 = values.begin(); it2 < values.end(); it2++) {
-            size_t j = it2 - values.begin();
-
-            row[j] = static_cast<DTYPE>(std::stod(*it2));
-        }
-
-        for (int j = 0; j < m; j++) {
-            result(i, j) = row[j];
-        }
+    std::vector<std::thread> threads;
+    for (int id = 0; id < numThreads; id++) {
+        std::thread thread(threadCSVJob, std::ref(lines), std::ref(delim), std::ref(result), id, numThreads);
+        threads.push_back(std::move(thread));
     }
+
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
+    std::cout << std::endl;
 
     return result;
 }
