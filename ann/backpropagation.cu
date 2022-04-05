@@ -21,11 +21,13 @@ void computeGradientsDeviceLastLayer(DTYPE* biasesGradients, DTYPE* weightsGradi
     }
 
     for (int row = 0; row < batchSize; row++) {
+        // TODO: Element-wise matrix multiplication to replace this operation
         DTYPE coreGradient = delta[row * deltaSize + outIndex] * derivatives[row * outSize + outIndex];
 
         if (inIndex == 0) {
             newDelta[row * outSize + outIndex] = coreGradient;
 
+            // TODO: Could be replaced with sum matrix over one axis
             biasesGradients[outIndex] += coreGradient;
         }
 

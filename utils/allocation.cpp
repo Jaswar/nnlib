@@ -6,7 +6,7 @@
 #include <cstring>
 #include "allocation.h"
 
-DTYPE** allocate2DArray(int n, int m) {
+DTYPE** allocate2DArray(size_t n, size_t m) {
     auto data = (DTYPE **) malloc(sizeof(DTYPE*) * n);
 
     for (int i = 0; i < n; i++) {
@@ -16,7 +16,7 @@ DTYPE** allocate2DArray(int n, int m) {
     return data;
 }
 
-DTYPE** allocate2DArray(int n, int m, DTYPE defaultValue) {
+DTYPE** allocate2DArray(size_t n, size_t m, DTYPE defaultValue) {
     DTYPE** allocated = allocate2DArray(n, m);
 
     for (int i = 0; i < n; i++) {
@@ -28,11 +28,11 @@ DTYPE** allocate2DArray(int n, int m, DTYPE defaultValue) {
     return allocated;
 }
 
-DTYPE* allocate1DArray(int n) {
+DTYPE* allocate1DArray(size_t n) {
     return (DTYPE*) malloc(sizeof(DTYPE) * n);
 }
 
-DTYPE* allocate1DArray(int n, DTYPE defaultValue) {
+DTYPE* allocate1DArray(size_t n, DTYPE defaultValue) {
     DTYPE* allocated = allocate1DArray(n);
 
     for (int i = 0; i < n; i++) {
@@ -42,7 +42,7 @@ DTYPE* allocate1DArray(int n, DTYPE defaultValue) {
     return allocated;
 }
 
-DTYPE* copy1DArray(int n, DTYPE* original) {
+DTYPE* copy1DArray(size_t n, DTYPE* original) {
     DTYPE* copy = allocate1DArray(n);
 
     memcpy(copy, original, n * sizeof(DTYPE));
@@ -50,7 +50,7 @@ DTYPE* copy1DArray(int n, DTYPE* original) {
     return copy;
 }
 
-DTYPE** copy2DArray(int n, int m, DTYPE** original) {
+DTYPE** copy2DArray(size_t n, size_t m, DTYPE** original) {
     DTYPE** copy = allocate2DArray(n, m);
 
     // Only the second pointer contains data, so copy only it. The first is an array of pointers.

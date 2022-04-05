@@ -7,16 +7,16 @@
 
 #define DTYPE float
 
-DTYPE* allocate1DArray(int n);
+DTYPE* allocate1DArray(size_t n);
 
-DTYPE* allocate1DArray(int n, DTYPE defaultValue);
+DTYPE* allocate1DArray(size_t n, DTYPE defaultValue);
 
-DTYPE** allocate2DArray(int n, int m);
+DTYPE** allocate2DArray(size_t n, size_t m);
 
-DTYPE** allocate2DArray(int n, int m, DTYPE defaultValue);
+DTYPE** allocate2DArray(size_t n, size_t m, DTYPE defaultValue);
 
-DTYPE* copy1DArray(int n, DTYPE* original);
+DTYPE* copy1DArray(size_t n, DTYPE* original);
 
-DTYPE** copy2DArray(int n, int m, DTYPE** original);
+DTYPE** copy2DArray(size_t n, size_t m, DTYPE** original);
 
 #endif //NNLIB_ALLOCATION_H

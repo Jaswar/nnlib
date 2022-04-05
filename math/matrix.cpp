@@ -6,9 +6,9 @@
 #include "../exceptions/different_data_location_exception.h"
 #include "matrix_operations.cuh"
 
-Matrix::Matrix(int n, int m) : Matrix(n, m, HOST) {}
+Matrix::Matrix(size_t n, size_t m) : Matrix(n, m, HOST) {}
 
-Matrix::Matrix(int n, int m, dLocation location) : n(n), m(m), location(location) {
+Matrix::Matrix(size_t n, size_t m, dLocation location) : n(n), m(m), location(location) {
     if (location == HOST) {
         if (n > 0 && m > 0) {
             this->data = allocate1DArray(n * m);
@@ -24,9 +24,9 @@ Matrix::Matrix(int n, int m, dLocation location) : n(n), m(m), location(location
     }
 }
 
-Matrix::Matrix(DTYPE* data, int n, int m) : Matrix(data, n, m, HOST) {}
+Matrix::Matrix(DTYPE* data, size_t n, size_t m) : Matrix(data, n, m, HOST) {}
 
-Matrix::Matrix(DTYPE* data, int n, int m, dLocation location) : data(data), n(n), m(m), location(location) {}
+Matrix::Matrix(DTYPE* data, size_t n, size_t m, dLocation location) : data(data), n(n), m(m), location(location) {}
 
 Matrix::Matrix(const Matrix& matrix) {
     location = matrix.location;
@@ -99,15 +99,15 @@ Matrix& Matrix::operator=(const Matrix& matrix) {
     return *this;
 }
 
-DTYPE& Matrix::operator()(int x, int y) {
+DTYPE& Matrix::operator()(size_t x, size_t y) {
     return data[x * m + y];
 }
 
-DTYPE Matrix::operator()(int x, int y) const {
+DTYPE Matrix::operator()(size_t x, size_t y) const {
     return data[x * m + y];
 }
 
-void displayRow(std::ostream& stream, const Matrix& matrix, int row, int m) {
+void displayRow(std::ostream& stream, const Matrix& matrix, size_t row, size_t m) {
     stream << "[";
 
     for (int i = 0; i < m - 1; i++) {

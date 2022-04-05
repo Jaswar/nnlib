@@ -8,9 +8,9 @@
 #include "../exceptions/different_data_location_exception.h"
 #include "vector_operations.cuh"
 
-Vector::Vector(int n) : Vector(allocate1DArray(n), n) {}
+Vector::Vector(size_t n) : Vector(allocate1DArray(n), n) {}
 
-Vector::Vector(int n, dLocation location) : n(n), data(), location(location) {
+Vector::Vector(size_t n, dLocation location) : n(n), data(), location(location) {
     if (location == HOST) {
         if (n > 0) {
             this->data = allocate1DArray(n);
@@ -26,9 +26,9 @@ Vector::Vector(int n, dLocation location) : n(n), data(), location(location) {
     }
 }
 
-Vector::Vector(DTYPE* data, int n) : data(data), n(n), location(HOST) {}
+Vector::Vector(DTYPE* data, size_t n) : data(data), n(n), location(HOST) {}
 
-Vector::Vector(DTYPE* data, int n, dLocation location) : data(data), n(n), location(location) {}
+Vector::Vector(DTYPE* data, size_t n, dLocation location) : data(data), n(n), location(location) {}
 
 Vector::Vector(const Vector& vector) {
     location = vector.location;
@@ -98,12 +98,12 @@ Vector& Vector::operator=(const Vector& vector) {
     return *this;
 }
 
-DTYPE Vector::operator[](int index) const {
+DTYPE Vector::operator[](size_t index) const {
     return data[index];
 }
 
 // This can overwrite the value at index, so it is not const.
-DTYPE& Vector::operator[](int index) {
+DTYPE& Vector::operator[](size_t index) {
     return data[index];
 }
 

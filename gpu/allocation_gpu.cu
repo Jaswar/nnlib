@@ -9,17 +9,17 @@
 
 #ifdef HAS_CUDA
 
-DTYPE* allocate1DArrayDevice(int n) {
+DTYPE* allocate1DArrayDevice(size_t n) {
     DTYPE* allocated;
     gpuCheckError( cudaMalloc(&allocated, n * sizeof(DTYPE)) )
     return allocated;
 }
 
-void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, int n) {
+void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, size_t n) {
     gpuCheckError( cudaMemcpy(device, host, n * sizeof(DTYPE), cudaMemcpyHostToDevice) )
 }
 
-void copy2DFromHostToDevice(DTYPE** host, DTYPE* device, int n, int m) {
+void copy2DFromHostToDevice(DTYPE** host, DTYPE* device, size_t n, size_t m) {
     DTYPE* temp = allocate1DArray(n * m);
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
@@ -34,11 +34,11 @@ void free1DArrayDevice(DTYPE* device) {
     gpuCheckError( cudaFree(device) )
 }
 
-void copy1DFromDeviceToHost(DTYPE* device, DTYPE* host, int n) {
+void copy1DFromDeviceToHost(DTYPE* device, DTYPE* host, size_t n) {
     gpuCheckError( cudaMemcpy(host, device, n * sizeof(DTYPE), cudaMemcpyDeviceToHost) )
 }
 
-void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, int n, int m) {
+void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, size_t n, size_t m) {
     DTYPE* temp = allocate1DArray(n * m);
     gpuCheckError( cudaMemcpy(temp, device, n * m * sizeof(DTYPE), cudaMemcpyDeviceToHost) )
 
@@ -52,7 +52,7 @@ void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, int n, int m) {
     free(temp);
 }
 
-DTYPE* copy1DArrayDevice(int n, DTYPE* old) {
+DTYPE* copy1DArrayDevice(size_t n, DTYPE* old) {
     DTYPE* allocated = allocate1DArrayDevice(n);
     gpuCheckError( cudaMemcpy(allocated, old, n * sizeof(DTYPE), cudaMemcpyDeviceToDevice) )
     return allocated;
@@ -60,19 +60,19 @@ DTYPE* copy1DArrayDevice(int n, DTYPE* old) {
 
 #else
 
-DTYPE* allocate1DArrayDevice(int n) {
+DTYPE* allocate1DArrayDevice(size_t n) {
     return nullptr;
 }
 
-DTYPE** allocate2DArrayDevice(int n, int m) {
+DTYPE** allocate2DArrayDevice(size_t n, size_t m) {
     return nullptr;
 }
 
-void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, int n) {
+void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, size_t n) {
 
 }
 
-void copy2DFromHostToDevice(DTYPE** host, DTYPE** device, int n, int m) {
+void copy2DFromHostToDevice(DTYPE** host, DTYPE** device, size_t n, size_t m) {
 
 }
 

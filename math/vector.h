@@ -14,13 +14,13 @@ class Vector {
 
 public:
     DTYPE* data;
-    int n;
+    size_t n;
     dLocation location;
 
-    explicit Vector(int n);
-    Vector(int n, dLocation location);
-    Vector(DTYPE* data, int n);
-    Vector(DTYPE* data, int n, dLocation location);
+    explicit Vector(size_t n);
+    Vector(size_t n, dLocation location);
+    Vector(DTYPE* data, size_t n);
+    Vector(DTYPE* data, size_t n, dLocation location);
 
     Vector(const Vector& vector);
 
@@ -30,8 +30,8 @@ public:
     void moveToHost();
 
     Vector& operator=(const Vector& other);
-    DTYPE operator[](int index) const;
-    DTYPE& operator[](int index);
+    DTYPE operator[](size_t index) const;
+    DTYPE& operator[](size_t index);
 };
 
 // "toString" for std::cout

@@ -13,14 +13,14 @@
 class Matrix {
 public:
     DTYPE* data;
-    int n;
-    int m;
+    size_t n;
+    size_t m;
     dLocation location;
 
-    Matrix(int n, int m);
-    Matrix(int n, int m, dLocation location);
-    Matrix(DTYPE* data, int n, int m);
-    Matrix(DTYPE* data, int n, int m, dLocation location);
+    Matrix(size_t n, size_t m);
+    Matrix(size_t n, size_t m, dLocation location);
+    Matrix(DTYPE* data, size_t n, size_t m);
+    Matrix(DTYPE* data, size_t n, size_t m, dLocation location);
     Matrix(const Matrix& matrix);
 
     void moveToDevice();
@@ -30,8 +30,8 @@ public:
 
     Matrix& operator=(const Matrix& matrix);
 
-    DTYPE& operator()(int x, int y);
-    DTYPE operator()(int x, int y) const;
+    DTYPE& operator()(size_t x, size_t y);
+    DTYPE operator()(size_t x, size_t y) const;
 };
 
 // "toString" for std::cout

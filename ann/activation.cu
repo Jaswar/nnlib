@@ -9,7 +9,7 @@
 #include "../gpu/assert.cuh"
 
 __global__
-void linearDevice(DTYPE* vector, DTYPE* result, int n) {
+void linearDevice(const DTYPE* vector, DTYPE* result, int n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -39,7 +39,7 @@ void linear(const Vector& v, Vector& result) {
 }
 
 __global__
-void linearDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+void linearDevice(const DTYPE* matrix, DTYPE* result, int n, int m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -72,7 +72,7 @@ void linear(const Matrix& m, Matrix& result) {
 }
 
 __global__
-void ReLUDevice(DTYPE* vector, DTYPE* result, int n) {
+void ReLUDevice(const DTYPE* vector, DTYPE* result, int n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -110,7 +110,7 @@ void ReLU(const Vector& v, Vector& result) {
 }
 
 __global__
-void ReLUDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+void ReLUDevice(const DTYPE* matrix, DTYPE* result, int n, int m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -223,7 +223,7 @@ void sigmoid(const Matrix& m, Matrix& result) {
 }
 
 __global__
-void linearDerivativeDevice(DTYPE* vector, DTYPE* result, int n) {
+void linearDerivativeDevice(const DTYPE* vector, DTYPE* result, int n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -253,7 +253,7 @@ void linearDerivative(const Vector& input, Vector& result) {
 }
 
 __global__
-void linearDerivativeDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+void linearDerivativeDevice(const DTYPE* matrix, DTYPE* result, int n, int m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -286,7 +286,7 @@ void linearDerivative(const Matrix& input, Matrix& result) {
 }
 
 __global__
-void ReLUDerivativeDevice(DTYPE* vector, DTYPE* result, int n) {
+void ReLUDerivativeDevice(const DTYPE* vector, DTYPE* result, int n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -324,7 +324,7 @@ void ReLUDerivative(const Vector& input, Vector& result) {
 }
 
 __global__
-void ReLUDerivativeDevice(DTYPE* matrix, DTYPE* result, int n, int m) {
+void ReLUDerivativeDevice(const DTYPE* matrix, DTYPE* result, int n, int m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 

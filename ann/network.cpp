@@ -24,7 +24,7 @@ std::vector<Matrix> splitIntoBatches(const Matrix& matrix, int batchSize, bool d
 
     int numBatches = std::ceil(matrix.n / (double) batchSize);
     for (int i = 0; i < numBatches; i++) {
-        int rowsInBatch = std::min(batchSize, matrix.n - batchSize * i);
+        int rowsInBatch = std::min(batchSize, static_cast<int>(matrix.n - batchSize * i));
         DTYPE* allocated = copy1DArrayDevice(matrix.m * rowsInBatch, &matrix.data[i * matrix.m * batchSize]);
         Matrix batch = Matrix(allocated, rowsInBatch, matrix.m, DEVICE);
 
