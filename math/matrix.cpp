@@ -8,7 +8,7 @@
 
 Matrix::Matrix(size_t n, size_t m) : Matrix(n, m, HOST) {}
 
-Matrix::Matrix(size_t n, size_t m, dLocation location) : n(n), m(m), location(location) {
+Matrix::Matrix(size_t n, size_t m, DataLocation location) : n(n), m(m), location(location) {
     if (location == HOST) {
         if (n > 0 && m > 0) {
             this->data = allocate1DArray(n * m);
@@ -26,7 +26,7 @@ Matrix::Matrix(size_t n, size_t m, dLocation location) : n(n), m(m), location(lo
 
 Matrix::Matrix(DTYPE* data, size_t n, size_t m) : Matrix(data, n, m, HOST) {}
 
-Matrix::Matrix(DTYPE* data, size_t n, size_t m, dLocation location) : data(data), n(n), m(m), location(location) {}
+Matrix::Matrix(DTYPE* data, size_t n, size_t m, DataLocation location) : data(data), n(n), m(m), location(location) {}
 
 Matrix::Matrix(const Matrix& matrix) {
     location = matrix.location;

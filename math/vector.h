@@ -8,19 +8,19 @@
 #include <iostream>
 #include "../utils/allocation.h"
 
-enum dLocation {HOST, DEVICE};
+enum DataLocation {HOST, DEVICE};
 
 class Vector {
 
 public:
     DTYPE* data;
     size_t n;
-    dLocation location;
+    DataLocation location;
 
     explicit Vector(size_t n);
-    Vector(size_t n, dLocation location);
+    Vector(size_t n, DataLocation location);
     Vector(DTYPE* data, size_t n);
-    Vector(DTYPE* data, size_t n, dLocation location);
+    Vector(DTYPE* data, size_t n, DataLocation location);
 
     Vector(const Vector& vector);
 

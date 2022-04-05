@@ -10,7 +10,7 @@
 
 Vector::Vector(size_t n) : Vector(allocate1DArray(n), n) {}
 
-Vector::Vector(size_t n, dLocation location) : n(n), data(), location(location) {
+Vector::Vector(size_t n, DataLocation location) : n(n), data(), location(location) {
     if (location == HOST) {
         if (n > 0) {
             this->data = allocate1DArray(n);
@@ -28,7 +28,7 @@ Vector::Vector(size_t n, dLocation location) : n(n), data(), location(location) 
 
 Vector::Vector(DTYPE* data, size_t n) : data(data), n(n), location(HOST) {}
 
-Vector::Vector(DTYPE* data, size_t n, dLocation location) : data(data), n(n), location(location) {}
+Vector::Vector(DTYPE* data, size_t n, DataLocation location) : data(data), n(n), location(location) {}
 
 Vector::Vector(const Vector& vector) {
     location = vector.location;

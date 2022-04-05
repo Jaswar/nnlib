@@ -15,12 +15,12 @@ public:
     DTYPE* data;
     size_t n;
     size_t m;
-    dLocation location;
+    DataLocation location;
 
     Matrix(size_t n, size_t m);
-    Matrix(size_t n, size_t m, dLocation location);
+    Matrix(size_t n, size_t m, DataLocation location);
     Matrix(DTYPE* data, size_t n, size_t m);
-    Matrix(DTYPE* data, size_t n, size_t m, dLocation location);
+    Matrix(DTYPE* data, size_t n, size_t m, DataLocation location);
     Matrix(const Matrix& matrix);
 
     void moveToDevice();
