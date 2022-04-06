@@ -15,6 +15,8 @@ void multiplyMatrixVector(const Matrix& matrix, const Vector& vector, Vector& re
 void multiplyMatrices(const Matrix& m1, const Matrix& m2, Matrix& result);
 void multiplyMatrix(const Matrix& m1, DTYPE constant, Matrix& result);
 
+void hadamardMatrices(const Matrix& m1, const Matrix& m2, Matrix& result);
+
 void transposeMatrix(const Matrix& m, Matrix& result);
 
 #endif //NNLIB_MATRIX_OPERATIONS_CUH

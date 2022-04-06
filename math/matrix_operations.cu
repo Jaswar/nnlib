@@ -122,6 +122,23 @@ void multiplyMatrix(const Matrix& m1, DTYPE constant, Matrix& result) {
 }
 
 __global__
+void hadamardMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= n * m) {
+        return;
+    }
+
+    result[index] = m1[index] * m2[index];
+}
+
+void hadamardMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    hadamardMatricesDevice<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
+    gpuCheckError( cudaGetLastError() )
+    gpuCheckError( cudaDeviceSynchronize() )
+}
+
+__global__
 void transposeMatrixDevice(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;

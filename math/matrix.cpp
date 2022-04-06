@@ -275,6 +275,27 @@ void multiply(DTYPE constant, const Matrix& m, Matrix& result) {
     multiply(m, constant, result);
 }
 
+void hadamard(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    if (m1.n != m2.n || m1.m != m2.m
+        || m1.n != result.n || m1.m != result.m
+        || m2.n != result.n || m2.m != result.m ) {
+        throw SizeMismatchException();
+    }
+    if (m1.location != m2.location || m1.location != result.location || m2.location != result.location) {
+        throw DifferentDataLocationException();
+    }
+
+    if (m1.location == HOST) {
+        for (int i = 0; i < m1.n; i++) {
+            for (int j = 0; j < m1.m; j++) {
+                result(i, j) = m1(i, j) * m2(i, j);
+            }
+        }
+    } else {
+        hadamardMatrices(m1, m2, result);
+    }
+}
+
 void transpose(const Matrix& m, Matrix& result) {
     if (m.n != result.m || m.m != result.n) {
         throw SizeMismatchException();
