@@ -11,6 +11,12 @@
 #define DEFAULT_BATCH_SIZE 32
 
 class Layer {
+private:
+    Matrix previousWeightsT;
+    Matrix dataT;
+    Vector ones;
+    Matrix newDeltaT;
+
 public:
     size_t outSize;
     size_t inSize;

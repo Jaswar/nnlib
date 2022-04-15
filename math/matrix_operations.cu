@@ -2,10 +2,13 @@
 // Created by Jan Warchocki on 15/03/2022.
 //
 
+
 #include "matrix_operations.cuh"
 #include "../gpu/allocation_gpu.cuh"
 #include "../gpu/verify.cuh"
 #include "../gpu/assert.cuh"
+
+
 
 __global__
 void addMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
@@ -82,15 +85,15 @@ void multiplyMatrixVector(const Matrix& matrix, const Vector& vector, Vector& re
 
 __global__
 void multiplyMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t nm1, size_t mm1, size_t mm2) {
-    auto row = blockIdx.x;
-    auto column = threadIdx.x;
+    auto row = blockIdx.x * blockDim.x + threadIdx.x;
+    auto column = blockIdx.y * blockDim.y + threadIdx.y;
 
     if (row >= nm1 || column >= mm2) {
         return;
     }
 
     DTYPE sum = 0;
-
+#pragma unroll
     for (int i = 0; i < mm1; i++) {
         sum += m1[row * mm1 + i] * m2[i * mm2 + column];
     }
@@ -99,7 +102,9 @@ void multiplyMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, siz
 }
 
 void multiplyMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
-    multiplyMatricesDevice<<<m1.n, m2.m>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
+    dim3 blocks(32, 32);
+    dim3 threads(32, 32);
+    multiplyMatricesDevice<<<blocks, threads>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
     gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }

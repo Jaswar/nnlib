@@ -43,12 +43,19 @@ Layer::Layer(size_t inSize, size_t outSize, std::string activation)
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
           data(),
+          dataT(inSize, DEFAULT_BATCH_SIZE),
           aMatrix(DEFAULT_BATCH_SIZE, outSize),
           zMatrix(DEFAULT_BATCH_SIZE, outSize),
           newDelta(DEFAULT_BATCH_SIZE, outSize),
+          newDeltaT(outSize, DEFAULT_BATCH_SIZE),
           derivatives(DEFAULT_BATCH_SIZE, outSize),
+          previousWeightsT(0, 0),
           weightsGradients(allocate1DArray(inSize * outSize, 0), inSize, outSize),
-          biasesGradients(allocate1DArray(outSize, 0), outSize) {
+          biasesGradients(allocate1DArray(outSize, 0), outSize),
+          ones(allocate1DArray(DEFAULT_BATCH_SIZE, 1), DEFAULT_BATCH_SIZE) {
+
+    dataT.moveToDevice();
+
     biases.moveToDevice();
     weights.moveToDevice();
 
@@ -56,10 +63,14 @@ Layer::Layer(size_t inSize, size_t outSize, std::string activation)
     zMatrix.moveToDevice();
 
     newDelta.moveToDevice();
+    newDeltaT.moveToDevice();
     derivatives.moveToDevice();
+
+    previousWeightsT.moveToDevice();
 
     weightsGradients.moveToDevice();
     biasesGradients.moveToDevice();
+    ones.moveToDevice();
 }
 
 Layer::~Layer() = default;
@@ -71,6 +82,7 @@ void Layer::forward(const Matrix& batch) {
     add(zMatrix, biases, zMatrix);
 
     data = &batch;
+    transpose(batch, dataT);
 
     if (activation == "relu") {
         ReLU(zMatrix, aMatrix);
@@ -82,9 +94,28 @@ void Layer::forward(const Matrix& batch) {
 }
 
 void Layer::backward(const Matrix& delta, const Matrix& previousWeights, size_t batchSize, bool isLastLayer) {
+    if (previousWeightsT.n != previousWeights.n || previousWeightsT.m != previousWeights.m) {
+        previousWeightsT = Matrix(previousWeights.m, previousWeights.n, previousWeights.location);
+    }
     calculateDerivatives();
 
-    computeGradients(*this, delta, previousWeights, batchSize, isLastLayer);
+    if (!isLastLayer) {
+        transpose(previousWeights, previousWeightsT);
+        multiply(delta, previousWeightsT, newDelta);
+        hadamard(newDelta, derivatives, newDelta);
+
+        transpose(newDelta, newDeltaT);
+        multiply(newDeltaT, ones, biasesGradients);
+
+        multiply(dataT, newDelta, weightsGradients);
+    } else {
+        hadamard(delta, derivatives, newDelta);
+
+        transpose(newDelta, newDeltaT);
+        multiply(newDeltaT, ones, biasesGradients);
+
+        multiply(dataT, newDelta, weightsGradients);
+    }
 }
 
 void Layer::applyGradients(size_t batchSize, DTYPE learningRate) {
@@ -102,6 +133,14 @@ void Layer::calculateDerivatives() {
 }
 
 void Layer::allocate(size_t batchSize) {
+    if (ones.n != batchSize) {
+        Vector temp = Vector(allocate1DArray(batchSize, 1), batchSize);
+        temp.moveToDevice();
+        ones = temp;
+    }
+    if (dataT.m != batchSize) {
+        dataT = Matrix(dataT.n, batchSize, dataT.location);
+    }
     if (aMatrix.n != batchSize) {
         aMatrix = Matrix(batchSize, aMatrix.m, aMatrix.location);
     }
@@ -110,6 +149,9 @@ void Layer::allocate(size_t batchSize) {
     }
     if (newDelta.n != batchSize) {
         newDelta = Matrix(batchSize, newDelta.m, newDelta.location);
+    }
+    if (newDeltaT.m != batchSize) {
+        newDeltaT = Matrix(newDeltaT.n, batchSize, newDeltaT.location);
     }
     if (derivatives.n != batchSize) {
         derivatives = Matrix(batchSize, derivatives.m, derivatives.location);
