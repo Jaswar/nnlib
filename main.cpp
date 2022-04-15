@@ -11,7 +11,7 @@
 int main() {
     showCudaInfo();
 
-    Matrix dataset = readCSV("C:/Users/janwa/CLionProjects/nnlib/data/MNIST_train.txt", ",", 4);
+    Matrix dataset = readCSV("C:/Users/janwa/CLionProjects/nnlib/data/MNIST_test.txt", ",", 4);
     Matrix X = Matrix(dataset.n, dataset.m - 1, HOST);
     Vector yv = Vector(dataset.n, HOST);
 

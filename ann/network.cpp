@@ -64,10 +64,10 @@ Matrix* Network::forward(const Matrix& input) {
 
     for (auto i = layers.begin() + 1; i != layers.end(); i++) {
         size_t index = i - layers.begin();
-        i->forward(layers.at(index - 1).zMatrix);
+        i->forward(layers.at(index - 1).aMatrix);
     }
 
-    return &layers.back().zMatrix;
+    return &layers.back().aMatrix;
 }
 
 void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE learningRate) {

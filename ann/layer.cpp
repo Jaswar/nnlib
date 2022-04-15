@@ -67,17 +67,17 @@ Layer::~Layer() = default;
 void Layer::forward(const Matrix& batch) {
     allocate(batch.n);
 
-    multiply(batch, weights, aMatrix);
-    add(aMatrix, biases, aMatrix);
+    multiply(batch, weights, zMatrix);
+    add(zMatrix, biases, zMatrix);
 
     data = &batch;
 
     if (activation == "relu") {
-        ReLU(aMatrix, zMatrix);
+        ReLU(zMatrix, aMatrix);
     } else if (activation == "sigmoid") {
-        sigmoid(aMatrix, zMatrix);
+        sigmoid(zMatrix, aMatrix);
     } else {
-        linear(aMatrix, zMatrix);
+        linear(zMatrix, aMatrix);
     }
 }
 
@@ -93,11 +93,11 @@ void Layer::applyGradients(size_t batchSize, DTYPE learningRate) {
 
 void Layer::calculateDerivatives() {
     if (activation == "relu") {
-        ReLUDerivative(aMatrix, derivatives);
+        ReLUDerivative(zMatrix, derivatives);
     } else if (activation == "sigmoid") {
-        sigmoidDerivative(aMatrix, derivatives);
+        sigmoidDerivative(zMatrix, derivatives);
     } else {
-        linearDerivative(aMatrix, derivatives);
+        linearDerivative(zMatrix, derivatives);
     }
 }
 
