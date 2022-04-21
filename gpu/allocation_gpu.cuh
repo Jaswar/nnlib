@@ -9,6 +9,7 @@
 
 DTYPE* allocate1DArrayDevice(size_t n);
 
+void copy1DFromDeviceToDevice(DTYPE* oldLoc, DTYPE* newLoc, size_t n);
 
 void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, size_t n);
 

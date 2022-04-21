@@ -40,7 +40,7 @@ std::vector<std::string> readFile(const std::string& filepath) {
 
     std::string line;
     if (file.is_open()) {
-        while (file >> line) {
+        while (std::getline(file, line)) {
             lines.push_back(line);
         }
         file.close();

@@ -15,6 +15,10 @@ DTYPE* allocate1DArrayDevice(size_t n) {
     return allocated;
 }
 
+void copy1DFromDeviceToDevice(DTYPE* oldLoc, DTYPE* newLoc, size_t n) {
+    gpuCheckError(cudaMemcpy(newLoc, oldLoc, n * sizeof(DTYPE), cudaMemcpyDeviceToDevice) )
+}
+
 void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, size_t n) {
     gpuCheckError( cudaMemcpy(device, host, n * sizeof(DTYPE), cudaMemcpyHostToDevice) )
 }

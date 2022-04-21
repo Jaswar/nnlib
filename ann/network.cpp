@@ -42,7 +42,10 @@ std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, boo
     return result;
 }
 
-Network::Network(size_t inputSize, long long seed) : seed(seed), layers(), previousSize(inputSize), loss(DEFAULT_BATCH_SIZE, inputSize, DEVICE) {
+Network::Network(size_t inputSize, long long seed) : seed(seed),
+        layers(),
+        previousSize(inputSize),
+        loss(DEFAULT_BATCH_SIZE, inputSize, DEVICE) {
     if (this->seed == NO_SEED) {
         this->seed = time(nullptr);
     }
@@ -98,8 +101,8 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
         throw SizeMismatchException();
     }
 
-    Matrix yCopy = y;
-    yCopy.moveToHost();
+    Matrix yHost = y;
+    yHost.moveToHost();
 
     std::vector<Matrix> batches = splitIntoBatches(X, batchSize);
     std::vector<Matrix> targets = splitIntoBatches(y, batchSize);
@@ -113,27 +116,20 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
         }
 
         // Calculate the accuracy on the training set.
+        Matrix output = *forward(X);
+        output.moveToHost();
+
         int correct = 0;
-        for (int batch = 0; batch < batches.size(); batch++) {
-            const Matrix* output = forward(batches.at(batch));
-            Matrix copy = *output;
-            copy.moveToHost();
-
-            for (int row = 0; row < batchSize; row++) {
-                if (batch * batchSize + row >= X.n) {
-                    continue;
+        for (int row = 0; row < X.n; row++) {
+            int maxInx = 0;
+            for (int i = 0; i < y.m; i++) {
+                if (output(row, i) > output(row, maxInx)) {
+                    maxInx = i;
                 }
+            }
 
-                int maxInx = 0;
-                for (int i = 0; i < y.m; i++) {
-                    if (copy(row, i) > copy(row, maxInx)) {
-                        maxInx = i;
-                    }
-                }
-
-                if (yCopy(batch * batchSize + row, maxInx) == 1) {
-                    correct++;
-                }
+            if (yHost(row, maxInx) == 1) {
+                correct++;
             }
         }
         std::cout << ((double) correct) / X.n << std::endl;
