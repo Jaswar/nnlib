@@ -143,7 +143,7 @@ void multiplyMatricesDeviceNoTiling(const DTYPE* m1, const DTYPE* m2, DTYPE* res
 void multiplyMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
     cudaDeviceProp props;
     gpuCheckError( cudaGetDeviceProperties(&props, 0) )
-    if (m1.n > props.maxThreadsPerBlock) {
+    if (m1.m > props.maxThreadsPerBlock) {
         size_t sizeY = std::ceil((double) std::max(m1.n, m2.n) / TILE_WIDTH);
         size_t sizeX = std::ceil((double) std::max(m1.m, m2.m) / TILE_WIDTH);
 
