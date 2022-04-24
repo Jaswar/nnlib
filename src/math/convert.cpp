@@ -2,6 +2,7 @@
 // Created by Jan Warchocki on 07/03/2022.
 //
 
+#include <exceptions/size_mismatch_exception.h>
 #include "convert.h"
 
 Vector convertToVector(const Matrix& matrix) {

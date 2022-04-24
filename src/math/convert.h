@@ -5,8 +5,8 @@
 #ifndef NNLIB_CONVERT_H
 #define NNLIB_CONVERT_H
 
-#include "vector.h"
-#include "matrix.h"
+#include "../../include/vector.h"
+#include "../../include/matrix.h"
 
 Vector convertToVector(const Matrix& matrix);
 

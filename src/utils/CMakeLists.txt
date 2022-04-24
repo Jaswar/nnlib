@@ -1,4 +1,4 @@
-set(SOURCE_FILES allocation.cpp allocation.h
+set(SOURCE_FILES allocation.cpp ../../include/allocation.h
         onehot_encode.cpp onehot_encode.h
         read.cpp read.h
         printing.cpp printing.h)

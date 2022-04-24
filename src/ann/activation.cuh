@@ -5,9 +5,9 @@
 #ifndef NNLIB_ACTIVATION_CUH
 #define NNLIB_ACTIVATION_CUH
 
-#include "../math/vector.h"
+#include "../../include/vector.h"
 #include "../gpu/verify.cuh"
-#include "../math/matrix.h"
+#include "../../include/matrix.h"
 
 void linear(const Vector& v, Vector& result);
 void ReLU(const Vector& v, Vector& result);

@@ -6,7 +6,7 @@
 #define NNLIB_VECTOR_H
 
 #include <iostream>
-#include "../utils/allocation.h"
+#include "allocation.h"
 
 enum DataLocation {HOST, DEVICE};
 

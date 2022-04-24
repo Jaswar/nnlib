@@ -5,7 +5,7 @@
 #ifndef NNLIB_ALLOCATION_GPU_CUH
 #define NNLIB_ALLOCATION_GPU_CUH
 
-#include "../utils/allocation.h"
+#include "../../include/allocation.h"
 
 DTYPE* allocate1DArrayDevice(size_t n);
 

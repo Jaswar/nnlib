@@ -3,9 +3,9 @@
 //
 
 #include <utility>
-#include "../math/vector.h"
-#include "../math/matrix.h"
-#include "layer.h"
+#include "../../include/vector.h"
+#include "../../include/matrix.h"
+#include "../../include/layer.h"
 
 #ifndef NNLIB_BACKPROPAGATION_CUH
 #define NNLIB_BACKPROPAGATION_CUH

@@ -5,8 +5,7 @@
 #ifndef NNLIB_MATRIX_H
 #define NNLIB_MATRIX_H
 
-#include "../utils/allocation.h"
-#include "../exceptions/size_mismatch_exception.h"
+
 #include "vector.h"
 
 

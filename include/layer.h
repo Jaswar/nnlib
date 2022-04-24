@@ -6,7 +6,7 @@
 #define NNLIB_LAYER_H
 
 #include <string>
-#include "../math/matrix.h"
+#include "matrix.h"
 
 #define DEFAULT_BATCH_SIZE 32
 

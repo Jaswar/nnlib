@@ -1,6 +1,6 @@
 #include <iostream>
-#include "math/matrix.h"
-#include "ann/network.h"
+#include "include/matrix.h"
+#include "include/network.h"
 #include "utils/read.h"
 #include "gpu/verify.cuh"
 #include "math/convert.h"

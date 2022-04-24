@@ -3,9 +3,10 @@
 //
 
 #include <time.h>
-#include "network.h"
+#include "../../include/network.h"
 #include "../gpu/allocation_gpu.cuh"
 #include <algorithm>
+#include <exceptions/size_mismatch_exception.h>
 
 std::vector<Vector> convertToVectors(const Matrix& matrix) {
     std::vector<Vector> result;

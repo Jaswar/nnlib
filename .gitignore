@@ -1,9 +1,14 @@
 /out
+/install
+/build
+
 /.vs
 /.idea
+
 /cmake-build-release
 /cmake-build-debug
 /CMakeFiles
 /cmake-build-debug-visual-studio
 /cmake-build-release-visual-studio
+
 /data

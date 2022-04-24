@@ -4,7 +4,7 @@
 
 #include <cstdlib>
 #include <cstring>
-#include "allocation.h"
+#include "../../include/allocation.h"
 
 DTYPE** allocate2DArray(size_t n, size_t m) {
     auto data = (DTYPE **) malloc(sizeof(DTYPE*) * n);
