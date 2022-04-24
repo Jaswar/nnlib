@@ -9,12 +9,4 @@ find_package(nnlib CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE nnlib::nnlib)
-
-if (NOT DEFINED CUDA_ARCHITECTURES)
-    set_target_properties(${PROJECT_NAME} PROPERTIES CUDA_ARCHITECTURES "50")
-endif()
-
-set_target_properties(${PROJECT_NAME} PROPERTIES
-        CUDA_SEPARABLE_COMPILATION ON)
-
+target_link_libraries(${PROJECT_NAME} PRIVATE nnlib)

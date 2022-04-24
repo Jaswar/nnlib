@@ -5,8 +5,6 @@ project(nnlib
         DESCRIPTION "GPU-Accelerated Neural Network Library"
         VERSION 0.0.1)
 
-set(namespace ${PROJECT_NAME})
-
 set(CMAKE_CXX_STANDARD 14)
 
 add_library(${PROJECT_NAME})
@@ -58,7 +56,6 @@ install(TARGETS ${PROJECT_NAME}
 
 install(EXPORT "${PROJECT_NAME}Targets"
         FILE "${PROJECT_NAME}Targets.cmake"
-        NAMESPACE ${namespace}::
         DESTINATION cmake)
 
 include(CMakePackageConfigHelpers)
@@ -80,9 +77,7 @@ install(FILES
         )
 # generate the export targets for the build tree
 export(EXPORT "${PROJECT_NAME}Targets"
-        FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Targets.cmake"
-        NAMESPACE ${namespace}::
-        )
+        FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Targets.cmake")
 
 check_language(CUDA)
 if (CMAKE_CUDA_COMPILER)
