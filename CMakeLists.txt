@@ -44,7 +44,8 @@ else()
     )
 endif()
 
-set(public_headers include/network.h include/layer.h include/matrix.h include/vector.h include/allocation.h)
+set(public_headers include/network.h include/layer.h include/matrix.h include/vector.h include/allocation.h
+        include/onehot_encode.h include/read.h include/verify.cuh)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${public_headers}")
 
@@ -96,7 +97,8 @@ if (CMAKE_CUDA_COMPILER)
     endif()
 
     set_target_properties(nnlib PROPERTIES
-            CUDA_SEPARABLE_COMPILATION ON)
+            CUDA_SEPARABLE_COMPILATION ON
+            CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 else()
     set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 endif()

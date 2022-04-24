@@ -12,8 +12,10 @@ echo Building library
 # Check if the generator was passed (is the first argument non-empty)
 if [ -z "$1" ]
 then
+  echo No generator passed - assuming CMake default
   cmake ..
 else
+  echo Using passed generator "$1"
   cmake -G "$1" ..
 fi
 

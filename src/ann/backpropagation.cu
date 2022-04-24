@@ -3,7 +3,7 @@
 //
 
 #include "backpropagation.cuh"
-#include "../gpu/verify.cuh"
+#include "verify.cuh"
 #include "../gpu/allocation_gpu.cuh"
 #include "../gpu/assert.cuh"
 

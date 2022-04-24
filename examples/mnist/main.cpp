@@ -1,11 +1,9 @@
 #include <iostream>
-#include "include/matrix.h"
-#include "include/network.h"
-#include "utils/read.h"
-#include "gpu/verify.cuh"
-#include "math/convert.h"
-#include "utils/onehot_encode.h"
-#include "ann/backpropagation.cuh"
+#include <nnlib/matrix.h>
+#include <nnlib/network.h>
+#include <nnlib/read.h>
+#include <nnlib/verify.cuh>
+#include <nnlib/onehot_encode.h>
 #include <chrono>
 
 int main() {

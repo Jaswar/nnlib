@@ -6,7 +6,7 @@
 #define NNLIB_READ_H
 
 #include <string>
-#include "../../include/matrix.h"
+#include "matrix.h"
 #include <vector>
 
 bool fileExists(const std::string& filepath);

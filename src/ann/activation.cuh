@@ -6,7 +6,7 @@
 #define NNLIB_ACTIVATION_CUH
 
 #include "../../include/vector.h"
-#include "../gpu/verify.cuh"
+#include "verify.cuh"
 #include "../../include/matrix.h"
 
 void linear(const Vector& v, Vector& result);

@@ -5,8 +5,8 @@
 #ifndef NNLIB_ONEHOT_ENCODE_H
 #define NNLIB_ONEHOT_ENCODE_H
 
-#include "../../include/matrix.h"
-#include "../../include/vector.h"
+#include "matrix.h"
+#include "vector.h"
 
 Matrix oneHotEncode(const Vector& vector);
 

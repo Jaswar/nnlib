@@ -6,7 +6,7 @@
 #include "../../include/layer.h"
 #include "activation.cuh"
 #include "backpropagation.cuh"
-#include "../gpu/verify.cuh"
+#include "verify.cuh"
 #include "../gpu/allocation_gpu.cuh"
 
 DTYPE getRandomValue() {
