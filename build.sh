@@ -22,3 +22,5 @@ cmake --build . --target install
 
 echo Cleaning build directory
 cd .. && rm -r build
+
+echo Done
