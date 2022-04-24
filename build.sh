@@ -1,6 +1,11 @@
 echo Clearing build and install directories
-rm -r build
-rm -r install
+if [ -d build ]; then
+  rm -r build
+fi
+
+if [ -d install ]; then
+  rm -r install
+fi
 
 echo Creating build directory
 mkdir build && cd build
@@ -10,17 +15,16 @@ mkdir build && cd build
 echo Building library
 
 # Check if the generator was passed (is the first argument non-empty)
-if [ -z "$1" ]
-then
+if [ -z "$1" ]; then
   echo No generator passed - assuming CMake default
-  cmake ..
+  cmake -DCMAKE_BUILD_TYPE=Release ..
 else
   echo Using passed generator "$1"
-  cmake -G "$1" ..
+  cmake -G "$1" -DCMAKE_BUILD_TYPE=Release ..
 fi
 
 echo Installing library
-cmake --build . --target install
+cmake --build . --target install --config Release
 
 echo Cleaning build directory
 cd .. && rm -r build
