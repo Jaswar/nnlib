@@ -2,6 +2,9 @@
 /install
 /build
 
+# Custom script to launch build.sh with "Visual Studio 15 2017 Win64" as argument
+vs2017_build.sh
+
 /.vs
 /.idea
 
