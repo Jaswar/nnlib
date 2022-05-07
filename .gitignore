@@ -1,7 +1,12 @@
 /out
 /install
 /build
+/data
+
 /examples/*/build
+/examples/*/.idea
+/examples/*/cmake-build-debug
+/examples/*/cmake-build-release
 
 # Custom script to launch build.sh with "Visual Studio 15 2017 Win64" as argument
 vs2017_build.sh
@@ -15,4 +20,3 @@ vs2017_build.sh
 /cmake-build-debug-visual-studio
 /cmake-build-release-visual-studio
 
-/data

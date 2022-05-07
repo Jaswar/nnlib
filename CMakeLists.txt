@@ -7,7 +7,7 @@ project(nnlib
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_library(${PROJECT_NAME})
+add_library(${PROJECT_NAME} STATIC)
 
 add_subdirectory(src/ann)
 add_subdirectory(src/exceptions)
@@ -66,6 +66,8 @@ set(public_headers include/network.h include/layer.h include/matrix.h include/ve
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${public_headers}")
 
+set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
+
 include(GNUInstallDirs)
 
 install(TARGETS ${PROJECT_NAME}
@@ -94,6 +96,20 @@ install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
         DESTINATION cmake
         )
+
+if (MSVC)
+    install(FILES "${CMAKE_SOURCE_DIR}/build/${PROJECT_NAME}.dir/${CMAKE_BUILD_TYPE}/nnlib.pdb"
+            DESTINATION lib
+            OPTIONAL)
+
+    install(DIRECTORY
+            $<TARGET_FILE_DIR:nnlib>/
+            DESTINATION lib
+
+            FILES_MATCHING
+            PATTERN "*.pdb")
+endif()
+
 # generate the export targets for the build tree
 export(EXPORT "${PROJECT_NAME}Targets"
         FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Targets.cmake")

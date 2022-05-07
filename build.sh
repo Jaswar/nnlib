@@ -4,12 +4,7 @@ generator=""
 while getopts ":c:g:" opt; do
   case $opt in
     c)
-      if [[ $OPTARG = "Release" ]] || [[ $OPTARG = "Debug" ]]; then
         build_configuration=$OPTARG
-      else
-        echo ">>> Not a valid build configuration: $OPTARG"
-        exit 1
-      fi
       ;;
     g)
       generator=$OPTARG
