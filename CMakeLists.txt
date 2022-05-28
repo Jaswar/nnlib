@@ -97,6 +97,7 @@ install(FILES
         DESTINATION cmake
         )
 
+# Try to copy the pdb file in one of the two ways if using MSVC
 if (MSVC)
     install(FILES "${CMAKE_SOURCE_DIR}/build/${PROJECT_NAME}.dir/${CMAKE_BUILD_TYPE}/nnlib.pdb"
             DESTINATION lib

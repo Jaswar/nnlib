@@ -1,11 +1,7 @@
-build_configuration=Debug
 generator=""
-# Check build type and see if generator was passed
-while getopts ":c:g:" opt; do
+# See if a generator was passed
+while getopts ":g:" opt; do
   case $opt in
-    c)
-        build_configuration=$OPTARG
-      ;;
     g)
       generator=$OPTARG
       ;;
@@ -20,33 +16,39 @@ while getopts ":c:g:" opt; do
   esac
 done
 
-echo ">>> Clearing build and install directories"
-if [ -d build ]; then
-  rm -r build
-fi
-
+echo ">>> Clearing the install directory"
 if [ -d install ]; then
   rm -r install
 fi
 
-echo ">>> Creating build directory"
-mkdir build && cd build
+function build_and_install {
+  if [ -d build ]; then
+    echo ">>> Clearing the build directory"
+    rm -r build
+  fi
 
-echo ">>> Building nnlib in $build_configuration mode"
+  echo ">>> Creating build directory"
+  mkdir build && cd build
 
-# Check if the generator was passed
-if [[ $generator = "" ]]; then
-  echo ">>> No generator passed - assuming CMake default"
-  cmake -DCMAKE_BUILD_TYPE=$build_configuration ..
-else
-  echo ">>> Using passed generator $generator"
-  cmake -G "$generator" -DCMAKE_BUILD_TYPE=$build_configuration ..
-fi
+  echo ">>> Building nnlib in $1 mode"
 
-echo ">>> Installing library"
-cmake --build . --target install --config $build_configuration
+  # Check if the generator was passed
+  if [[ $2 = "" ]]; then
+    echo ">>> No generator passed - assuming CMake default"
+    cmake -DCMAKE_BUILD_TYPE=$1 ..
+  else
+    echo ">>> Using passed generator $2"
+    cmake -G "$2" -DCMAKE_BUILD_TYPE=$1 ..
+  fi
 
-echo ">>> Cleaning build directory"
-cd .. && rm -r build
+  echo ">>> Installing library"
+  cmake --build . --target install --config $1
+
+  echo ">>> Clearing the build directory"
+  cd .. && rm -r build
+}
+
+build_and_install "Debug" "$generator"
+build_and_install "Release" "$generator"
 
 echo ">>> Done"
