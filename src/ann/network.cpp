@@ -54,7 +54,16 @@ Network::Network(size_t inputSize, long long seed) : seed(seed),
 }
 
 void Network::add(size_t numNeurons, const std::string& activation) {
-    Layer newLayer = Layer(previousSize, numNeurons, activation);
+    Activation* activationFunction = nullptr;
+    if (activation == "relu") {
+        activationFunction = new ReLUActivation(DEVICE);
+    } else if (activation == "sigmoid") {
+        activationFunction = new SigmoidActivation(DEVICE);
+    } else {
+        activationFunction = new LinearActivation(DEVICE);
+    }
+
+    Layer newLayer = Layer(previousSize, numNeurons, activationFunction);
 
     layers.push_back(newLayer);
 

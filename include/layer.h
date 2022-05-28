@@ -7,6 +7,7 @@
 
 #include <string>
 #include "matrix.h"
+#include "activation.h"
 
 #define DEFAULT_BATCH_SIZE 32
 
@@ -20,7 +21,7 @@ private:
 public:
     size_t outSize;
     size_t inSize;
-    std::string activation;
+    Activation* activation;
 
     Matrix weights;
     Vector biases;
@@ -35,7 +36,7 @@ public:
     Matrix weightsGradients;
     Vector biasesGradients;
 
-    Layer(size_t inSize, size_t outSize, std::string  activation = "linear");
+    Layer(size_t inSize, size_t outSize, Activation* activation);
 
     ~Layer();
 

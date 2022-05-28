@@ -62,7 +62,7 @@ else()
 endif()
 
 set(public_headers include/network.h include/layer.h include/matrix.h include/vector.h include/allocation.h
-        include/onehot_encode.h include/read.h include/verify.cuh include/convert.h)
+        include/onehot_encode.h include/read.h include/verify.cuh include/convert.h include/activation.h)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${public_headers}")
 

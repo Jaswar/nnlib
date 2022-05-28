@@ -4,7 +4,6 @@
 
 #include <utility>
 #include "../../include/layer.h"
-#include "activation.cuh"
 #include "backpropagation.cuh"
 #include "verify.cuh"
 #include "../gpu/allocation_gpu.cuh"
@@ -37,9 +36,9 @@ Matrix initializeWeights(size_t inSize, size_t outSize) {
     return weights;
 }
 
-Layer::Layer(size_t inSize, size_t outSize, std::string activation)
+Layer::Layer(size_t inSize, size_t outSize, Activation* activation)
         : inSize(inSize), outSize(outSize),
-          activation(std::move(activation)),
+          activation(activation),
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
           data(),
@@ -84,13 +83,7 @@ void Layer::forward(const Matrix& batch) {
     data = &batch;
     transpose(batch, dataT);
 
-    if (activation == "relu") {
-        ReLU(zMatrix, aMatrix);
-    } else if (activation == "sigmoid") {
-        sigmoid(zMatrix, aMatrix);
-    } else {
-        linear(zMatrix, aMatrix);
-    }
+    activation->forward(zMatrix, aMatrix);
 }
 
 void Layer::backward(const Matrix& delta, const Matrix& previousWeights, size_t batchSize, bool isLastLayer) {
@@ -123,13 +116,7 @@ void Layer::applyGradients(size_t batchSize, DTYPE learningRate) {
 }
 
 void Layer::calculateDerivatives() {
-    if (activation == "relu") {
-        ReLUDerivative(zMatrix, derivatives);
-    } else if (activation == "sigmoid") {
-        sigmoidDerivative(zMatrix, derivatives);
-    } else {
-        linearDerivative(zMatrix, derivatives);
-    }
+    activation->computeDerivatives(zMatrix, derivatives);
 }
 
 void Layer::allocate(size_t batchSize) {
