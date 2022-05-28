@@ -8,12 +8,7 @@ build_configuration=Debug
 while getopts ":c:" opt; do
   case $opt in
     c)
-      if [[ $OPTARG = "Release" ]] || [[ $OPTARG = "Debug" ]]; then
         build_configuration=$OPTARG
-      else
-        echo ">>> Not a valid build configuration: $OPTARG"
-        exit 1
-      fi
       ;;
     \?)
       echo ">>> Invalid option: -$OPTARG" >&2
