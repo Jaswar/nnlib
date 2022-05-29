@@ -13,14 +13,14 @@
 
 class Layer {
 private:
-    DataLocation location;
-
     Matrix previousWeightsT;
+
     Matrix dataT;
     Vector ones;
     Matrix newDeltaT;
-
 public:
+    DataLocation location;
+
     size_t outSize;
     size_t inSize;
     Activation* activation;
