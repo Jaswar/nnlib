@@ -49,7 +49,7 @@ void multiplyMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
     }
 }
 
-void multiplyMatrixOnHost(const Matrix& m, float constant, Matrix& result) {
+void multiplyMatrixOnHost(const Matrix& m, DTYPE constant, Matrix& result) {
     for (int i = 0; i < m.n; i++) {
         for (int j = 0; j < m.m; j++) {
             result(i, j) = m(i, j) * constant;
