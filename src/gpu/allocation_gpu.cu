@@ -6,6 +6,7 @@
 #include "verify.cuh"
 #include "assert.cuh"
 #include <stdio.h>
+#include <exceptions/unexpected_cuda_call_exception.h>
 
 #ifdef HAS_CUDA
 
@@ -65,19 +66,35 @@ DTYPE* copy1DArrayDevice(size_t n, DTYPE* old) {
 #else
 
 DTYPE* allocate1DArrayDevice(size_t n) {
-    return nullptr;
+    throw UnexpectedCUDACallException();
 }
 
-DTYPE** allocate2DArrayDevice(size_t n, size_t m) {
-    return nullptr;
+void copy1DFromDeviceToDevice(DTYPE* oldLoc, DTYPE* newLoc, size_t n) {
+    throw UnexpectedCUDACallException();
 }
 
 void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, size_t n) {
-
+    throw UnexpectedCUDACallException();
 }
 
-void copy2DFromHostToDevice(DTYPE** host, DTYPE** device, size_t n, size_t m) {
+void copy2DFromHostToDevice(DTYPE** host, DTYPE* device, size_t n, size_t m) {
+    throw UnexpectedCUDACallException();
+}
 
+void free1DArrayDevice(DTYPE* device) {
+    throw UnexpectedCUDACallException();
+}
+
+void copy1DFromDeviceToHost(DTYPE* device, DTYPE* host, size_t n) {
+    throw UnexpectedCUDACallException();
+}
+
+void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, size_t n, size_t m) {
+    throw UnexpectedCUDACallException();
+}
+
+DTYPE* copy1DArrayDevice(size_t n, DTYPE* old) {
+    throw UnexpectedCUDACallException();
 }
 
 #endif
