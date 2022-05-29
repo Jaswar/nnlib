@@ -2,11 +2,13 @@
 // Created by Jan Warchocki on 03/03/2022.
 //
 
+#include <utils/location_verifiers.h>
 #include "vector.h"
 #include "exceptions/size_mismatch_exception.h"
 #include "gpu/allocation_gpu.cuh"
 #include "exceptions/different_data_location_exception.h"
-#include "vector_operations.cuh"
+#include "vector_operations_on_device.cuh"
+#include "vector_operations_on_host.h"
 
 Vector::Vector(size_t n) : Vector(allocate1DArray(n), n) {}
 
@@ -133,16 +135,14 @@ void add(const Vector& v1, const Vector& v2, Vector& result) {
     if (v1.n != v2.n || v1.n != result.n || v2.n != result.n) {
         throw SizeMismatchException();
     }
-    if (v1.location != v2.location || v1.location != result.location || v2.location != result.location) {
-        throw DifferentDataLocationException();
-    }
 
-    if (v1.location == HOST) {
-        for (int i = 0; i < v1.n; i++) {
-            result[i] = v1[i] + v2[i];
-        }
+    const std::initializer_list<DataLocation> locations = {v1.location, v2.location, result.location};
+    if (allLocationsAreHost(locations)) {
+        addVectorsOnHost(v1, v2, result);
+    } else if (allLocationsAreDevice(locations)) {
+        addVectorsOnDevice(v1, v2, result);
     } else {
-        addVectors(v1, v2, result);
+        throw DifferentDataLocationException();
     }
 }
 
@@ -150,16 +150,14 @@ void subtract(const Vector& v1, const Vector& v2, Vector& result) {
     if (v1.n != v2.n || v1.n != result.n || v2.n != result.n) {
         throw SizeMismatchException();
     }
-    if (v1.location != v2.location || v1.location != result.location || v2.location != result.location) {
-        throw DifferentDataLocationException();
-    }
 
-    if (v1.location == HOST) {
-        for (int i = 0; i < v1.n; i++) {
-            result[i] = v1[i] - v2[i];
-        }
+    const std::initializer_list<DataLocation> locations = {v1.location, v2.location, result.location};
+    if (allLocationsAreHost(locations)) {
+        subtractVectorsOnHost(v1, v2, result);
+    } else if (allLocationsAreDevice(locations)) {
+        subtractVectorsOnDevice(v1, v2, result);
     } else {
-        subtractVectors(v1, v2, result);
+        throw DifferentDataLocationException();
     }
 }
 
@@ -167,16 +165,14 @@ void multiply(const Vector& v1, DTYPE constant, Vector& result) {
     if (v1.n != result.n) {
         throw SizeMismatchException();
     }
-    if (v1.location != result.location) {
-        throw DifferentDataLocationException();
-    }
 
-    if (v1.location == HOST) {
-        for (int i = 0; i < v1.n; i++) {
-            result[i] = v1[i] * constant;
-        }
+    const std::initializer_list<DataLocation> locations = {v1.location, result.location};
+    if (allLocationsAreHost(locations)) {
+        multiplyVectorOnHost(v1, constant, result);
+    } else if (allLocationsAreDevice(locations)) {
+        multiplyVectorOnDevice(v1, constant, result);
     } else {
-        multiplyVector(v1, constant, result);
+        throw DifferentDataLocationException();
     }
 }
 
