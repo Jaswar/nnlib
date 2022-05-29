@@ -4,10 +4,13 @@
 
 
 #include <algorithm>
+#include <exceptions/unexpected_cuda_call_exception.h>
 #include "matrix_operations_on_device.cuh"
 #include "../gpu/allocation_gpu.cuh"
 #include "verify.cuh"
 #include "../gpu/assert.cuh"
+
+#ifdef HAS_CUDA
 
 #define TILE_WIDTH 16
 
@@ -93,7 +96,7 @@ void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* resul
     auto column = blockIdx.x * blockDim.x + threadIdx.x;
 
     DTYPE acc = 0;
-    for (int tileIdx = 0; tileIdx < std::ceil((float) M / TILE_WIDTH); tileIdx++) {
+    for (int tileIdx = 0; tileIdx < std::ceil((c) M / TILE_WIDTH); tileIdx++) {
         auto m1InxColumn = tileIdx * blockDim.x + threadIdx.x;
         auto m2InxRow = tileIdx * blockDim.y + threadIdx.y;
 
@@ -208,3 +211,40 @@ void transposeMatrixOnDevice(const Matrix& m, Matrix& result) {
     gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
+
+#else
+
+void addMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    throw UnexpectedCUDACallException();
+}
+
+void addBroadcastOnDevice(const Matrix& m, const Vector& v, Matrix& result) {
+    throw UnexpectedCUDACallException();
+}
+
+void subtractMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    throw UnexpectedCUDACallException();
+}
+
+void multiplyMatrixVectorOnDevice(const Matrix& matrix, const Vector& vector, Vector& result) {
+    throw UnexpectedCUDACallException();
+}
+
+void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    throw UnexpectedCUDACallException();
+}
+
+void multiplyMatrixOnDevice(const Matrix& m1, DTYPE constant, Matrix& result) {
+    throw UnexpectedCUDACallException();
+}
+
+void hadamardMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    throw UnexpectedCUDACallException();
+}
+
+void transposeMatrixOnDevice(const Matrix& m, Matrix& result) {
+    throw UnexpectedCUDACallException();
+}
+
+#endif
+
