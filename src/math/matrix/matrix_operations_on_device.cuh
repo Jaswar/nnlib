@@ -2,7 +2,7 @@
 // Created by Jan Warchocki on 15/03/2022.
 //
 
-#include "../../include/matrix.h"
+#include "matrix.h"
 
 #ifndef NNLIB_MATRIX_OPERATIONS_CUH
 #define NNLIB_MATRIX_OPERATIONS_CUH

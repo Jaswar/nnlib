@@ -6,9 +6,9 @@
 #include <algorithm>
 #include <exceptions/unexpected_cuda_call_exception.h>
 #include "matrix_operations_on_device.cuh"
-#include "../gpu/allocation_gpu.cuh"
+#include "gpu/allocation_gpu.cuh"
 #include "verify.cuh"
-#include "../gpu/assert.cuh"
+#include "gpu/assert.cuh"
 
 #ifdef HAS_CUDA
 

@@ -2,10 +2,10 @@
 // Created by Jan Warchocki on 03/03/2022.
 //
 
-#include "../../include/vector.h"
-#include "../exceptions/size_mismatch_exception.h"
-#include "../gpu/allocation_gpu.cuh"
-#include "../exceptions/different_data_location_exception.h"
+#include "vector.h"
+#include "exceptions/size_mismatch_exception.h"
+#include "gpu/allocation_gpu.cuh"
+#include "exceptions/different_data_location_exception.h"
 #include "vector_operations.cuh"
 
 Vector::Vector(size_t n) : Vector(allocate1DArray(n), n) {}

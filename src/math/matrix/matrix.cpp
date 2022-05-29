@@ -2,11 +2,11 @@
 // Created by Jan Warchocki on 03/03/2022.
 //
 #include <utils/location_verifiers.h>
-#include "../../include/matrix.h"
-#include "../../include/allocation.h"
-#include "../exceptions/size_mismatch_exception.h"
-#include "../gpu/allocation_gpu.cuh"
-#include "../exceptions/different_data_location_exception.h"
+#include "matrix.h"
+#include "allocation.h"
+#include "exceptions/size_mismatch_exception.h"
+#include "gpu/allocation_gpu.cuh"
+#include "exceptions/different_data_location_exception.h"
 #include "matrix_operations_on_device.cuh"
 #include "matrix_operations_on_host.h"
 
