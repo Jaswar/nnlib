@@ -4,7 +4,7 @@
 
 
 #include <algorithm>
-#include "matrix_operations.cuh"
+#include "matrix_operations_on_device.cuh"
 #include "../gpu/allocation_gpu.cuh"
 #include "verify.cuh"
 #include "../gpu/assert.cuh"
@@ -12,7 +12,7 @@
 #define TILE_WIDTH 16
 
 __global__
-void addMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
+void addMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n * m) {
@@ -22,14 +22,14 @@ void addMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n
     result[index] = m1[index] + m2[index];
 }
 
-void addMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
-    addMatricesDevice<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
+void addMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    addMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
     gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
-void addBroadcastDevice(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
+void addBroadcastKernel(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -40,14 +40,14 @@ void addBroadcastDevice(const DTYPE* matrix, const DTYPE* vector, DTYPE* result,
     result[row * m + column] = matrix[row * m + column] + vector[column];
 }
 
-void addBroadcast(const Matrix& m, const Vector& v, Matrix& result) {
-    addBroadcastDevice<<<m.n, m.m>>>(m.data, v.data, result.data, m.n, m.m);
+void addBroadcastOnDevice(const Matrix& m, const Vector& v, Matrix& result) {
+    addBroadcastKernel<<<m.n, m.m>>>(m.data, v.data, result.data, m.n, m.m);
     gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
-void subtractMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
+void subtractMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n * m) {
@@ -57,14 +57,14 @@ void subtractMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, siz
     result[index] = m1[index] - m2[index];
 }
 
-void subtractMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
-    subtractMatricesDevice<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
+void subtractMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    subtractMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
     gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
-void mulMatrixVectorDevice(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
+void mulMatrixVectorKernel(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -78,14 +78,14 @@ void mulMatrixVectorDevice(const DTYPE* matrix, const DTYPE* vector, DTYPE* resu
     result[index] = sum;
 }
 
-void multiplyMatrixVector(const Matrix& matrix, const Vector& vector, Vector& result) {
-    mulMatrixVectorDevice<<<1, matrix.n>>>(matrix.data, vector.data, result.data, matrix.n, matrix.m);
+void multiplyMatrixVectorOnDevice(const Matrix& matrix, const Vector& vector, Vector& result) {
+    mulMatrixVectorKernel<<<1, matrix.n>>>(matrix.data, vector.data, result.data, matrix.n, matrix.m);
     gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
-void multiplyMatricesDeviceTiling(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t N, size_t M, size_t K) {
+void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t N, size_t M, size_t K) {
     __shared__ DTYPE m1Tile[TILE_WIDTH][TILE_WIDTH];
     __shared__ DTYPE m2Tile[TILE_WIDTH][TILE_WIDTH];
 
@@ -124,7 +124,7 @@ void multiplyMatricesDeviceTiling(const DTYPE* m1, const DTYPE* m2, DTYPE* resul
 }
 
 __global__
-void multiplyMatricesDeviceNoTiling(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t N, size_t M, size_t K) {
+void multiplyMatricesNoTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t N, size_t M, size_t K) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -140,7 +140,7 @@ void multiplyMatricesDeviceNoTiling(const DTYPE* m1, const DTYPE* m2, DTYPE* res
     result[row * K + column] = sum;
 }
 
-void multiplyMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
+void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
     cudaDeviceProp props;
     gpuCheckError( cudaGetDeviceProperties(&props, 0) )
     if (m1.m > props.maxThreadsPerBlock) {
@@ -149,16 +149,16 @@ void multiplyMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
 
         dim3 blocks(sizeX, sizeY);
         dim3 threads(TILE_WIDTH, TILE_WIDTH);
-        multiplyMatricesDeviceTiling<<<blocks, threads>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
+        multiplyMatricesTilingKernel<<<blocks, threads>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
     } else {
-        multiplyMatricesDeviceNoTiling<<<m1.n, m2.m>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
+        multiplyMatricesNoTilingKernel<<<m1.n, m2.m>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
     }
     gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
-void multiplyMatrixDevice(const DTYPE* matrix, DTYPE constant, DTYPE* result, size_t n, size_t m) {
+void multiplyMatrixKernel(const DTYPE* matrix, DTYPE constant, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n * m) {
@@ -168,14 +168,14 @@ void multiplyMatrixDevice(const DTYPE* matrix, DTYPE constant, DTYPE* result, si
     result[index] = matrix[index] * constant;
 }
 
-void multiplyMatrix(const Matrix& m1, DTYPE constant, Matrix& result) {
-    multiplyMatrixDevice<<<m1.n, m1.m>>>(m1.data, constant, result.data, m1.n, m1.m);
+void multiplyMatrixOnDevice(const Matrix& m1, DTYPE constant, Matrix& result) {
+    multiplyMatrixKernel<<<m1.n, m1.m>>>(m1.data, constant, result.data, m1.n, m1.m);
     gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
-void hadamardMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
+void hadamardMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n * m) {
@@ -185,14 +185,14 @@ void hadamardMatricesDevice(const DTYPE* m1, const DTYPE* m2, DTYPE* result, siz
     result[index] = m1[index] * m2[index];
 }
 
-void hadamardMatrices(const Matrix& m1, const Matrix& m2, Matrix& result) {
-    hadamardMatricesDevice<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
+void hadamardMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    hadamardMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
     gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }
 
 __global__
-void transposeMatrixDevice(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
+void transposeMatrixKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -203,8 +203,8 @@ void transposeMatrixDevice(const DTYPE* matrix, DTYPE* result, size_t n, size_t 
     result[column * n + row] = matrix[row * m + column];
 }
 
-void transposeMatrix(const Matrix& m, Matrix& result) {
-    transposeMatrixDevice<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
+void transposeMatrixOnDevice(const Matrix& m, Matrix& result) {
+    transposeMatrixKernel<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
     gpuCheckError( cudaGetLastError() )
     gpuCheckError( cudaDeviceSynchronize() )
 }

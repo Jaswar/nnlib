@@ -1,12 +1,14 @@
 //
 // Created by Jan Warchocki on 03/03/2022.
 //
+#include <utils/location_verifiers.h>
 #include "../../include/matrix.h"
 #include "../../include/allocation.h"
 #include "../exceptions/size_mismatch_exception.h"
 #include "../gpu/allocation_gpu.cuh"
 #include "../exceptions/different_data_location_exception.h"
-#include "matrix_operations.cuh"
+#include "matrix_operations_on_device.cuh"
+#include "matrix_operations_on_host.h"
 
 Matrix::Matrix(size_t n, size_t m) : Matrix(n, m, HOST) {}
 
@@ -156,18 +158,14 @@ void add(const Matrix& m1, const Matrix& m2, Matrix& result) {
         || m2.n != result.n || m2.m != result.m ) {
         throw SizeMismatchException();
     }
-    if (m1.location != m2.location || m1.location != result.location || m2.location != result.location) {
-        throw DifferentDataLocationException();
-    }
 
-    if (m1.location == HOST) {
-        for (int i = 0; i < m1.n; i++) {
-            for (int j = 0; j < m1.m; j++) {
-                result(i, j) = m1(i, j) + m2(i, j);
-            }
-        }
+    const std::initializer_list<DataLocation> locations = {m1.location, m2.location, result.location};
+    if (allLocationsAreHost(locations)) {
+        addMatricesOnHost(m1, m2, result);
+    } else if (allLocationsAreDevice(locations)){
+        addMatricesOnDevice(m1, m2, result);
     } else {
-        addMatrices(m1, m2, result);
+        throw DifferentDataLocationException();
     }
 }
 
@@ -175,18 +173,14 @@ void add(const Matrix& m, const Vector& v, Matrix& result) {
     if (m.m != v.n || m.m != result.m || m.n != result.n || result.m != v.n) {
         throw SizeMismatchException();
     }
-    if (m.location != v.location || v.location != result.location || m.location != result.location) {
-        throw DifferentDataLocationException();
-    }
 
-    if (m.location == HOST) {
-        for (int i = 0; i < m.n; i++) {
-            for (int j = 0; j < m.m; j++) {
-                result(i, j) = m(i, j) + v[j];
-            }
-        }
+    const std::initializer_list<DataLocation> locations = {m.location, v.location, result.location};
+    if (allLocationsAreHost(locations)) {
+        addBroadcastOnHost(m, v, result);
+    } else if (allLocationsAreDevice(locations)) {
+        addBroadcastOnDevice(m, v, result);
     } else {
-        addBroadcast(m, v, result);
+        throw DifferentDataLocationException();
     }
 }
 
@@ -196,18 +190,14 @@ void subtract(const Matrix& m1, const Matrix& m2, Matrix& result) {
         || m2.n != result.n || m2.m != result.m ) {
         throw SizeMismatchException();
     }
-    if (m1.location != m2.location || m1.location != result.location || m2.location != result.location) {
-        throw DifferentDataLocationException();
-    }
 
-    if (m1.location == HOST) {
-        for (int i = 0; i < m1.n; i++) {
-            for (int j = 0; j < m1.m; j++) {
-                result(i, j) = m1(i, j) - m2(i, j);
-            }
-        }
+    const std::initializer_list<DataLocation> locations = {m1.location, m2.location, result.location};
+    if (allLocationsAreHost(locations)) {
+        subtractMatricesOnHost(m1, m2, result);
+    } else if (allLocationsAreDevice(locations)) {
+        subtractMatricesOnDevice(m1, m2, result);
     } else {
-        subtractMatrices(m1, m2, result);
+        throw DifferentDataLocationException();
     }
 }
 
@@ -215,22 +205,14 @@ void multiply(const Matrix& m1, const Matrix& m2, Matrix& result) {
     if (m1.m != m2.n || m1.n != result.n || m2.m != result.m) {
         throw SizeMismatchException();
     }
-    if (m1.location != m2.location || m1.location != result.location || m2.location != result.location) {
-        throw DifferentDataLocationException();
-    }
 
-    if (m1.location == HOST) {
-        for (int row = 0; row < m1.n; row++) {
-            for (int column = 0; column < m2.m; column++) {
-                DTYPE sum = 0;
-                for (int i = 0; i < m1.m; i++) {
-                    sum += m1(row, i) * m2(i, column);
-                }
-                result(row, column) = sum;
-            }
-        }
+    const std::initializer_list<DataLocation> locations = {m1.location, m2.location, result.location};
+    if (allLocationsAreHost(locations)) {
+        multiplyMatricesOnHost(m1, m2, result);
+    } else if (allLocationsAreDevice(locations)) {
+        multiplyMatricesOnDevice(m1, m2, result);
     } else {
-        multiplyMatrices(m1, m2, result);
+        throw DifferentDataLocationException();
     }
 }
 
@@ -238,19 +220,14 @@ void multiply(const Matrix& m, const Vector& v, Vector& result) {
     if (m.m != v.n || result.n != m.n) {
         throw SizeMismatchException();
     }
-    if (m.location != v.location || m.location != result.location || v.location != result.location) {
-        throw DifferentDataLocationException();
-    }
 
-    if (m.location == HOST) {
-        for (int i = 0; i < m.n; i++) {
-            result[i] = 0;
-            for (int j = 0; j < v.n; j++) {
-                result[i] += m(i, j) * v[j];
-            }
-        }
+    const std::initializer_list<DataLocation> locations = {m.location, v.location, result.location};
+    if (allLocationsAreHost(locations)) {
+        multiplyMatrixVectorOnHost(m, v, result);
+    } else if (allLocationsAreDevice(locations)) {
+        multiplyMatrixVectorOnDevice(m, v, result);
     } else {
-        multiplyMatrixVector(m, v, result);
+        throw DifferentDataLocationException();
     }
 }
 
@@ -258,18 +235,14 @@ void multiply(const Matrix& m, DTYPE constant, Matrix& result) {
     if (m.n != result.n || m.m != result.m) {
         throw SizeMismatchException();
     }
-    if (m.location != result.location) {
-        throw DifferentDataLocationException();
-    }
 
-    if (m.location == HOST) {
-        for (int i = 0; i < m.n; i++) {
-            for (int j = 0; j < m.m; j++) {
-                result(i, j) = m(i, j) * constant;
-            }
-        }
+    const std::initializer_list<DataLocation> locations = {m.location, result.location};
+    if (allLocationsAreHost(locations)) {
+        multiplyMatrixOnHost(m, constant, result);
+    } else if (allLocationsAreDevice(locations)) {
+        multiplyMatrixOnDevice(m, constant, result);
     } else {
-        multiplyMatrix(m, constant, result);
+        throw DifferentDataLocationException();
     }
 }
 
@@ -283,18 +256,14 @@ void hadamard(const Matrix& m1, const Matrix& m2, Matrix& result) {
         || m2.n != result.n || m2.m != result.m ) {
         throw SizeMismatchException();
     }
-    if (m1.location != m2.location || m1.location != result.location || m2.location != result.location) {
-        throw DifferentDataLocationException();
-    }
 
-    if (m1.location == HOST) {
-        for (int i = 0; i < m1.n; i++) {
-            for (int j = 0; j < m1.m; j++) {
-                result(i, j) = m1(i, j) * m2(i, j);
-            }
-        }
+    const std::initializer_list<DataLocation> locations = {m1.location, m2.location, result.location};
+    if (allLocationsAreHost(locations)) {
+        hadamardMatricesOnHost(m1, m2, result);
+    } else if (allLocationsAreDevice(locations)) {
+        hadamardMatricesOnDevice(m1, m2, result);
     } else {
-        hadamardMatrices(m1, m2, result);
+        throw DifferentDataLocationException();
     }
 }
 
@@ -302,17 +271,13 @@ void transpose(const Matrix& m, Matrix& result) {
     if (m.n != result.m || m.m != result.n) {
         throw SizeMismatchException();
     }
-    if (m.location != result.location) {
-        throw DifferentDataLocationException();
-    }
 
-    if (m.location == HOST) {
-        for (int i = 0; i < m.n; i++) {
-            for (int j = 0; j < m.m; j++) {
-                result(j, i) = m(i, j);
-            }
-        }
+    const std::initializer_list<DataLocation> locations = {m.location, result.location};
+    if (allLocationsAreHost(locations)) {
+        transposeMatrixOnHost(m, result);
+    } else if (allLocationsAreDevice(locations)) {
+        transposeMatrixOnDevice(m, result);
     } else {
-        transposeMatrix(m, result);
+        throw DifferentDataLocationException();
     }
 }
