@@ -2,7 +2,7 @@
 // Created by Jan Warchocki on 29/05/2022.
 //
 
-#include <activation.h>
+#include "../../../../include/activation.h"
 #include <utils/location_verifiers.h>
 #include <exceptions/different_data_location_exception.h>
 #include <exceptions/unexpected_cuda_call_exception.h>

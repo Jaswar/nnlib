@@ -6,7 +6,7 @@
 #include <exceptions/different_data_location_exception.h>
 #include <gpu/assert.cuh>
 #include <exceptions/unexpected_cuda_call_exception.h>
-#include <activation.h>
+#include "../../../../include/activation.h"
 
 #ifdef HAS_CUDA
 

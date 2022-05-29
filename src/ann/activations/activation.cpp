@@ -2,7 +2,7 @@
 // Created by Jan Warchocki on 03/03/2022.
 //
 
-#include <activation.h>
+#include "../../../include/activation.h"
 #include <exceptions/size_mismatch_exception.h>
 #include <utils/location_verifiers.h>
 #include <exceptions/different_data_location_exception.h>

@@ -4,7 +4,7 @@
 
 #include <utils/location_verifiers.h>
 #include <exceptions/different_data_location_exception.h>
-#include <activation.h>
+#include "../../../../include/activation.h"
 
 LinearActivation::LinearActivation() : Activation(new LinearOnHostEvaluator(),
                                                   new LinearOnDeviceEvaluator()) {

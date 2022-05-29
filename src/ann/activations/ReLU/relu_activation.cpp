@@ -3,7 +3,7 @@
 //
 
 
-#include <activation.h>
+#include "../../../../include/activation.h"
 
 ReLUActivation::ReLUActivation() : Activation(new ReLUOnHostEvaluator(),
                                               new ReLUOnDeviceEvaluator()) {

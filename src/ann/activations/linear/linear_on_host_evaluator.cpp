@@ -4,7 +4,7 @@
 
 #include <utils/location_verifiers.h>
 #include <exceptions/different_data_location_exception.h>
-#include <activation.h>
+#include "../../../../include/activation.h"
 
 void LinearOnHostEvaluator::forward(const Vector& input, Vector& result) const {
     if (!allLocationsAreHost({input.location, result.location})) {
