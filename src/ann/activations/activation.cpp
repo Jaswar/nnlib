@@ -4,13 +4,21 @@
 
 #include <activation.h>
 #include <exceptions/size_mismatch_exception.h>
+#include <utils/location_verifiers.h>
+#include <exceptions/different_data_location_exception.h>
 
 void Activation::forward(const Vector& input, Vector& result) const {
     if (result.n != input.n) {
         throw SizeMismatchException();
     }
 
-    this->evaluator->forward(input, result);
+    if (allLocationsAreHost({input.location, result.location})) {
+        this->hostEvaluator->forward(input, result);
+    } else if (allLocationsAreDevice({input.location, result.location})) {
+        this->deviceEvaluator->forward(input, result);
+    } else {
+        throw DifferentDataLocationException();
+    }
 }
 
 void Activation::forward(const Matrix& input, Matrix& result) const {
@@ -18,7 +26,13 @@ void Activation::forward(const Matrix& input, Matrix& result) const {
         throw SizeMismatchException();
     }
 
-    this->evaluator->forward(input, result);
+    if (allLocationsAreHost({input.location, result.location})) {
+        this->hostEvaluator->forward(input, result);
+    } else if (allLocationsAreDevice({input.location, result.location})) {
+        this->deviceEvaluator->forward(input, result);
+    } else {
+        throw DifferentDataLocationException();
+    }
 }
 
 void Activation::computeDerivatives(const Vector& output, Vector& result) const {
@@ -26,7 +40,13 @@ void Activation::computeDerivatives(const Vector& output, Vector& result) const 
         throw SizeMismatchException();
     }
 
-    this->evaluator->computeDerivatives(output, result);
+    if (allLocationsAreHost({output.location, result.location})) {
+        this->hostEvaluator->computeDerivatives(output, result);
+    } else if (allLocationsAreDevice({output.location, result.location})) {
+        this->deviceEvaluator->computeDerivatives(output, result);
+    } else {
+        throw DifferentDataLocationException();
+    }
 }
 
 void Activation::computeDerivatives(const Matrix& output, Matrix& result) const {
@@ -34,11 +54,20 @@ void Activation::computeDerivatives(const Matrix& output, Matrix& result) const 
         throw SizeMismatchException();
     }
 
-    this->evaluator->computeDerivatives(output, result);
+    if (allLocationsAreHost({output.location, result.location})) {
+        this->hostEvaluator->computeDerivatives(output, result);
+    } else if (allLocationsAreDevice({output.location, result.location})) {
+        this->deviceEvaluator->computeDerivatives(output, result);
+    } else {
+        throw DifferentDataLocationException();
+    }
 }
 
-Activation::Activation(DataLocation location) : evaluator(nullptr), location(location) {}
+Activation::Activation(ActivationEvaluator* hostEvaluator,
+                       ActivationEvaluator* deviceEvaluator) :
+                       hostEvaluator(hostEvaluator), deviceEvaluator(deviceEvaluator) {}
 
 Activation::~Activation() {
-    delete evaluator;
+    delete hostEvaluator;
+    delete deviceEvaluator;
 }

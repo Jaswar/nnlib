@@ -4,10 +4,6 @@
 
 #include <activation.h>
 
-SigmoidActivation::SigmoidActivation(DataLocation location) : Activation(location) {
-    if (this->location == HOST) {
-        this->evaluator = new SigmoidOnHostEvaluator();
-    } else {
-        this->evaluator = new SigmoidOnDeviceEvaluator();
-    }
+SigmoidActivation::SigmoidActivation() : Activation(new SigmoidOnHostEvaluator(),
+                                                    new SigmoidOnDeviceEvaluator()) {
 }

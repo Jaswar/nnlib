@@ -5,10 +5,6 @@
 
 #include <activation.h>
 
-ReLUActivation::ReLUActivation(DataLocation location) : Activation(location) {
-    if (this->location == HOST) {
-        this->evaluator = new ReLUOnHostEvaluator();
-    } else {
-        this->evaluator = new ReLUOnDeviceEvaluator();
-    }
+ReLUActivation::ReLUActivation() : Activation(new ReLUOnHostEvaluator(),
+                                              new ReLUOnDeviceEvaluator()) {
 }

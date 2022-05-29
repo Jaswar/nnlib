@@ -22,11 +22,12 @@ public:
 
 class Activation {
 protected:
-    ActivationEvaluator* evaluator;
-    DataLocation location;
+    ActivationEvaluator* hostEvaluator;
+    ActivationEvaluator* deviceEvaluator;
 
 public:
-    explicit Activation(DataLocation location);
+    explicit Activation(ActivationEvaluator* hostEvaluator,
+                        ActivationEvaluator* deviceEvaluator);
 
     void forward(const Vector& input, Vector& result) const;
     void forward(const Matrix& input, Matrix& result) const;
@@ -43,7 +44,7 @@ public:
 
 class LinearActivation : public Activation {
 public:
-    explicit LinearActivation(DataLocation location);
+    explicit LinearActivation();
 };
 
 class LinearOnHostEvaluator : public ActivationEvaluator {
@@ -72,7 +73,7 @@ public:
 
 class ReLUActivation : public Activation {
 public:
-    explicit ReLUActivation(DataLocation location);
+    explicit ReLUActivation();
 };
 
 class ReLUOnHostEvaluator : public ActivationEvaluator {
@@ -101,7 +102,7 @@ public:
 
 class SigmoidActivation : public Activation {
 public:
-    explicit SigmoidActivation(DataLocation location);
+    explicit SigmoidActivation();
 };
 
 class SigmoidOnHostEvaluator : public ActivationEvaluator {
