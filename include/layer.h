@@ -13,6 +13,8 @@
 
 class Layer {
 private:
+    DataLocation location;
+
     Matrix previousWeightsT;
     Matrix dataT;
     Vector ones;
@@ -36,7 +38,7 @@ public:
     Matrix weightsGradients;
     Vector biasesGradients;
 
-    Layer(size_t inSize, size_t outSize, Activation* activation);
+    Layer(size_t inSize, size_t outSize, Activation* activation, DataLocation location);
 
     ~Layer();
 

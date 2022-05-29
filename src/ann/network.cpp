@@ -8,53 +8,45 @@
 #include <algorithm>
 #include <exceptions/size_mismatch_exception.h>
 
-std::vector<Vector> convertToVectors(const Matrix& matrix) {
-    std::vector<Vector> result;
-
-    for (int i = 0; i < matrix.n; i++) {
-        DTYPE* allocated = copy1DArrayDevice(matrix.m, &matrix.data[i * matrix.m]);
-        Vector vector = Vector(allocated, matrix.m, DEVICE);
-        result.push_back(vector);
-    }
-
-    return result;
-}
-
-std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, bool doTranspose = false) {
+std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, DataLocation location) {
     std::vector<Matrix> result;
 
     int numBatches = std::ceil(matrix.n / (double) batchSize);
     for (int i = 0; i < numBatches; i++) {
         int rowsInBatch = std::min(batchSize, matrix.n - batchSize * i);
-        DTYPE* allocated = copy1DArrayDevice(matrix.m * rowsInBatch, &matrix.data[i * matrix.m * batchSize]);
-        Matrix batch = Matrix(allocated, rowsInBatch, matrix.m, DEVICE);
 
-        if (doTranspose) {
-            DTYPE* allocatedT = allocate1DArrayDevice(matrix.m * rowsInBatch);
-            Matrix batchT = Matrix(allocatedT, matrix.m, rowsInBatch, DEVICE);
-            transpose(batch, batchT);
-
-            result.push_back(batchT);
+        DTYPE* allocated;
+        if (location == DEVICE) {
+            allocated = copy1DArrayDevice(matrix.m * rowsInBatch, &matrix.data[i * matrix.m * batchSize]);
         } else {
-            result.push_back(batch);
+            allocated = copy1DArray(matrix.m * rowsInBatch, &matrix.data[i * matrix.m * batchSize]);
         }
+        Matrix batch = Matrix(allocated, rowsInBatch, matrix.m, location);
+
+        result.push_back(batch);
     }
 
     return result;
 }
 
-Network::Network(size_t inputSize, long long seed) : seed(seed),
+Network::Network(size_t inputSize, bool useGPU, long long seed) : seed(seed),
         layers(),
+        location(HOST),
         previousSize(inputSize),
-        loss(DEFAULT_BATCH_SIZE, inputSize, DEVICE) {
+        loss(DEFAULT_BATCH_SIZE, inputSize) {
     if (this->seed == NO_SEED) {
         this->seed = time(nullptr);
     }
     srand(this->seed);
+
+    if (useGPU && isCudaAvailable()) {
+        location = DEVICE;
+        loss.moveToDevice();
+    }
 }
 
 void Network::add(size_t numNeurons, const std::string& activation) {
-    Activation* activationFunction = nullptr;
+    Activation* activationFunction;
     if (activation == "relu") {
         activationFunction = new ReLUActivation();
     } else if (activation == "sigmoid") {
@@ -63,12 +55,12 @@ void Network::add(size_t numNeurons, const std::string& activation) {
         activationFunction = new LinearActivation();
     }
 
-    Layer newLayer = Layer(previousSize, numNeurons, activationFunction);
+    Layer newLayer = Layer(previousSize, numNeurons, activationFunction, location);
 
     layers.push_back(newLayer);
 
     previousSize = numNeurons;
-    loss = Matrix(DEFAULT_BATCH_SIZE, numNeurons, DEVICE);
+    loss = Matrix(DEFAULT_BATCH_SIZE, numNeurons, location);
 }
 
 Matrix* Network::forward(const Matrix& input) {
@@ -92,7 +84,7 @@ void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE lear
     subtract(predicted, target, loss);
 
     Layer& last = layers.back();
-    last.backward(loss, Matrix(0, 0, DEVICE), predicted.n, true);
+    last.backward(loss, Matrix(0, 0, location), predicted.n, true);
 
     for (auto i = layers.rbegin() + 1; i != layers.rend(); ++i) {
         size_t index = i - layers.rbegin();
@@ -114,8 +106,8 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
     Matrix yHost = y;
     yHost.moveToHost();
 
-    std::vector<Matrix> batches = splitIntoBatches(X, batchSize);
-    std::vector<Matrix> targets = splitIntoBatches(y, batchSize);
+    std::vector<Matrix> batches = splitIntoBatches(X, batchSize, location);
+    std::vector<Matrix> targets = splitIntoBatches(y, batchSize, location);
 
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << std::endl;

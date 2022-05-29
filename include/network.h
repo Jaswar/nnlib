@@ -11,6 +11,8 @@
 #define NO_SEED -1
 
 class Network {
+    DataLocation location;
+
     // Pre-allocated space for loss
     Matrix loss;
 
@@ -19,7 +21,7 @@ class Network {
     size_t previousSize;
 
 public:
-    explicit Network(size_t inputSize, long long seed = NO_SEED);
+    explicit Network(size_t inputSize, bool useGPU = true, long long seed = NO_SEED);
 
     void add(size_t numNeurons, const std::string& activation = "linear");
 

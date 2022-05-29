@@ -15,13 +15,13 @@ DTYPE getRandomValue() {
 }
 
 Vector initializeBiases(size_t outSize) {
-    DTYPE* biases = allocate1DArray(outSize);
+    Vector biases = Vector(outSize);
 
     for (int i = 0; i < outSize; i++) {
         biases[i] = getRandomValue();
     }
 
-    return Vector(biases, outSize);
+    return biases;
 }
 
 Matrix initializeWeights(size_t inSize, size_t outSize) {
@@ -36,8 +36,9 @@ Matrix initializeWeights(size_t inSize, size_t outSize) {
     return weights;
 }
 
-Layer::Layer(size_t inSize, size_t outSize, Activation* activation)
-        : inSize(inSize), outSize(outSize),
+Layer::Layer(size_t inSize, size_t outSize, Activation* activation, DataLocation location)
+        : location(location),
+          inSize(inSize), outSize(outSize),
           activation(activation),
           biases(initializeBiases(outSize)),
           weights(initializeWeights(inSize, outSize)),
@@ -53,23 +54,25 @@ Layer::Layer(size_t inSize, size_t outSize, Activation* activation)
           biasesGradients(allocate1DArray(outSize, 0), outSize),
           ones(allocate1DArray(DEFAULT_BATCH_SIZE, 1), DEFAULT_BATCH_SIZE) {
 
-    dataT.moveToDevice();
+    if (location == DEVICE) {
+        dataT.moveToDevice();
 
-    biases.moveToDevice();
-    weights.moveToDevice();
+        biases.moveToDevice();
+        weights.moveToDevice();
 
-    aMatrix.moveToDevice();
-    zMatrix.moveToDevice();
+        aMatrix.moveToDevice();
+        zMatrix.moveToDevice();
 
-    newDelta.moveToDevice();
-    newDeltaT.moveToDevice();
-    derivatives.moveToDevice();
+        newDelta.moveToDevice();
+        newDeltaT.moveToDevice();
+        derivatives.moveToDevice();
 
-    previousWeightsT.moveToDevice();
+        previousWeightsT.moveToDevice();
 
-    weightsGradients.moveToDevice();
-    biasesGradients.moveToDevice();
-    ones.moveToDevice();
+        weightsGradients.moveToDevice();
+        biasesGradients.moveToDevice();
+        ones.moveToDevice();
+    }
 }
 
 Layer::~Layer() = default;
@@ -122,7 +125,11 @@ void Layer::calculateDerivatives() {
 void Layer::allocate(size_t batchSize) {
     if (ones.n != batchSize) {
         Vector temp = Vector(allocate1DArray(batchSize, 1), batchSize);
-        temp.moveToDevice();
+
+        if (location == DEVICE) {
+            temp.moveToDevice();
+        }
+
         ones = temp;
     }
     if (dataT.m != batchSize) {
