@@ -96,7 +96,7 @@ void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* resul
     auto column = blockIdx.x * blockDim.x + threadIdx.x;
 
     DTYPE acc = 0;
-    for (int tileIdx = 0; tileIdx < std::ceil((c) M / TILE_WIDTH); tileIdx++) {
+    for (int tileIdx = 0; tileIdx < std::ceil((float) M / TILE_WIDTH); tileIdx++) {
         auto m1InxColumn = tileIdx * blockDim.x + threadIdx.x;
         auto m2InxRow = tileIdx * blockDim.y + threadIdx.y;
 
