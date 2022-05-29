@@ -4,7 +4,7 @@
 
 #include <utility>
 #include "../../include/layer.h"
-#include "backpropagation.cuh"
+#include "backpropagation.h"
 #include "verify.cuh"
 #include "../gpu/allocation_gpu.cuh"
 

@@ -31,6 +31,8 @@ if (CMAKE_CUDA_COMPILER)
             CUDA_SEPARABLE_COMPILATION ON
             CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 else()
+    # If no CUDA, assume only C++
+    get_target_property(SOURCE_FILES nnlib SOURCES)
     set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 endif()
 

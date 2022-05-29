@@ -12,7 +12,7 @@ set(SOURCE_FILES activations/activation.cpp ../../include/activation.h
         activations/sigmoid/sigmoid_on_host_evaluator.cpp
         activations/sigmoid/sigmoid_on_device_evaluator.cu
 
-        backpropagation.cu backpropagation.cuh
+        backpropagation.cpp backpropagation.h
         backpropagation_on_host.cpp
         backpropagation_on_device.cu
 

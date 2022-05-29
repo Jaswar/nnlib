@@ -4,6 +4,7 @@
 
 #include <utility>
 #include <iostream>
+#include "printing.h"
 
 void showProgressBar(int currentStep, int maxSteps) {
     if (currentStep % (maxSteps / 20) == 0) {
@@ -26,5 +27,3 @@ void showProgressBar(int currentStep, int maxSteps) {
         std::cout << "] (" << maxSteps << "/" << maxSteps << ")" << std::flush;
     }
 }
-
-#include "printing.h"

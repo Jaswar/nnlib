@@ -3,7 +3,7 @@
 //
 
 #include <exceptions/unexpected_cuda_call_exception.h>
-#include "backpropagation.cuh"
+#include "backpropagation.h"
 #include "verify.cuh"
 #include "../gpu/allocation_gpu.cuh"
 #include "../gpu/assert.cuh"
