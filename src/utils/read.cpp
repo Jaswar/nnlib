@@ -7,6 +7,7 @@
 #include "read.h"
 #include "printing.h"
 #include <thread>
+#include <cmath>
 
 std::vector<std::string> split(const std::string& str, const std::string& delim) {
     size_t start = 0, end = 0;
@@ -32,7 +33,9 @@ std::vector<std::string> readFile(const std::string& filepath) {
     std::vector<std::string> lines;
     std::ifstream file;
 
+    std::cout << filepath << std::endl;
     if (fileExists(filepath)) {
+        std::cout << "in" << std::endl;
         file = std::ifstream(filepath);
     } else {
         file = std::ifstream("../" + filepath);

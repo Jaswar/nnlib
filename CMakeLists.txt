@@ -15,6 +15,9 @@ add_subdirectory(src/gpu)
 add_subdirectory(src/math)
 add_subdirectory(src/utils)
 
+find_package(Threads REQUIRED)
+target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+
 check_language(CUDA)
 if (CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
@@ -34,6 +37,7 @@ else()
     # If no CUDA, assume only C++
     get_target_property(SOURCE_FILES nnlib SOURCES)
     set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
+    set_source_files_properties(${SOURCE_FILES} PROPERTIES COMPILE_OPTIONS -xc++)
 endif()
 
 target_include_directories(${PROJECT_NAME}

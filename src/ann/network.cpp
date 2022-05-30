@@ -7,6 +7,7 @@
 #include "../gpu/allocation_gpu.cuh"
 #include <algorithm>
 #include <exceptions/size_mismatch_exception.h>
+#include <cmath>
 
 std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, DataLocation location) {
     std::vector<Matrix> result;

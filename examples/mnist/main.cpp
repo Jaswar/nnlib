@@ -9,7 +9,7 @@
 int main() {
     showCudaInfo();
 
-    Matrix dataset = readCSV("C:/Users/janwa/CLionProjects/nnlib/data/MNIST_train.txt", ",", 4);
+    Matrix dataset = readCSV("/home/jan/Desktop/nnlib/data/MNIST_train.txt", ",", 4);
     Matrix X = Matrix(dataset.n, dataset.m - 1, HOST);
     Vector yv = Vector(dataset.n, HOST);
 
@@ -23,8 +23,8 @@ int main() {
     std::cout << yv << std::endl;
 
     Matrix y = oneHotEncode(yv);
-    X.moveToDevice();
-    y.moveToDevice();
+    //X.moveToDevice();
+    //y.moveToDevice();
 
     Network network = Network(X.m);
     network.add(64);

@@ -5,6 +5,8 @@
 #ifndef NNLIB_ALLOCATION_H
 #define NNLIB_ALLOCATION_H
 
+#include <cstddef>
+
 #define DTYPE float
 
 DTYPE* allocate1DArray(size_t n);
