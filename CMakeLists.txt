@@ -37,7 +37,7 @@ else()
     # If no CUDA, assume only C++
     get_target_property(SOURCE_FILES nnlib SOURCES)
     set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if(NOT MSVC)
         set_source_files_properties(${SOURCE_FILES} PROPERTIES COMPILE_OPTIONS -xc++)
     endif()
 endif()
