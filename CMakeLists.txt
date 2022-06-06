@@ -37,7 +37,9 @@ else()
     # If no CUDA, assume only C++
     get_target_property(SOURCE_FILES nnlib SOURCES)
     set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
-    set_source_files_properties(${SOURCE_FILES} PROPERTIES COMPILE_OPTIONS -xc++)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        set_source_files_properties(${SOURCE_FILES} PROPERTIES COMPILE_OPTIONS -xc++)
+    endif()
 endif()
 
 target_include_directories(${PROJECT_NAME}

@@ -35,7 +35,6 @@ std::vector<std::string> readFile(const std::string& filepath) {
 
     std::cout << filepath << std::endl;
     if (fileExists(filepath)) {
-        std::cout << "in" << std::endl;
         file = std::ifstream(filepath);
     } else {
         file = std::ifstream("../" + filepath);

@@ -7,6 +7,7 @@
 #include <exceptions/different_data_location_exception.h>
 #include <exceptions/unexpected_cuda_call_exception.h>
 #include <gpu/assert.cuh>
+#include <math.h>
 
 #ifdef HAS_CUDA
 
