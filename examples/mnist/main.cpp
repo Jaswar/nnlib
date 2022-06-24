@@ -23,8 +23,10 @@ int main() {
     std::cout << yv << std::endl;
 
     Matrix y = oneHotEncode(yv);
-    //X.moveToDevice();
-    //y.moveToDevice();
+    if (isCudaAvailable()) {
+        X.moveToDevice();
+        y.moveToDevice();
+    }
 
     Network network = Network(X.m);
     network.add(64);
