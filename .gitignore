@@ -19,6 +19,3 @@ vs2017_build.sh
 /CMakeFiles
 /cmake-build-debug-visual-studio
 /cmake-build-release-visual-studio
-
-# File used for development only purposes
-main.cpp
