@@ -123,3 +123,9 @@ endif()
 export(EXPORT "${PROJECT_NAME}Targets"
         FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Targets.cmake")
 
+# See if the library is built in test mode and if it is add testing
+if (CMAKE_TEST_NNLIB)
+    message(STATUS "Building ${PROJECT_NAME} with testing")
+    add_subdirectory(test)
+endif()
+
