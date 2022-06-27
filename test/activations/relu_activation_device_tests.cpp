@@ -11,7 +11,7 @@
 
 #ifdef HAS_CUDA
 
-TEST(relu_activation_device, forward) {
+TEST(reluActivationDevice, forward) {
     const Matrix& data = constructMatrix({{1, 0, -3}, {-4, 5, -6}}, DEVICE);
     Matrix result = Matrix(2, 3, DEVICE);
 
@@ -24,7 +24,7 @@ TEST(relu_activation_device, forward) {
     ASSERT_MATRIX_EQ(result, {{1, 0, 0}, {0, 5, 0}});
 }
 
-TEST(relu_activation_device, derivatives) {
+TEST(reluActivationDevice, derivatives) {
     const Matrix& data = constructMatrix({{-1, 2, 0}, {4, -5, -6}}, DEVICE);
     Matrix result = Matrix(2, 3, DEVICE);
 

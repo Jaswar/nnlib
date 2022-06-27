@@ -7,7 +7,7 @@
 #include "../utils.h"
 #include "../assertions.h"
 
-TEST(vector_operations_host, add) {
+TEST(vectorOperationsHost, add) {
     const Vector& v1 = constructVector({1, 2});
     const Vector& v2 = constructVector({2, 2});
     Vector result = Vector(2);
@@ -17,7 +17,7 @@ TEST(vector_operations_host, add) {
     ASSERT_VECTOR_EQ(result, {3, 4});
 }
 
-TEST(vector_operations_host, subtract) {
+TEST(vectorOperationsHost, subtract) {
     const Vector& v1 = constructVector({1, 2});
     const Vector& v2 = constructVector({2, 2});
     Vector result = Vector(2);
@@ -27,7 +27,7 @@ TEST(vector_operations_host, subtract) {
     ASSERT_VECTOR_EQ(result, {-1, 0});
 }
 
-TEST(vector_operations_host, multiply_constant_vector) {
+TEST(vectorOperationsHost, multiplyConstantVector) {
     const Vector& v = constructVector({-2, 2});
     Vector result = Vector(2);
 
@@ -36,7 +36,7 @@ TEST(vector_operations_host, multiply_constant_vector) {
     ASSERT_VECTOR_EQ(result, {-8, 8});
 }
 
-TEST(vector_operations_host, multiply_vector_constant) {
+TEST(vectorOperationsHost, multiplyVectorConstant) {
     const Vector& v = constructVector({-2, 2});
     Vector result = Vector(2);
 

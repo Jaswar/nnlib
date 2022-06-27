@@ -8,7 +8,7 @@
 #include "../utils.h"
 #include "../assertions.h"
 
-TEST(relu_activation_host, forward) {
+TEST(reluActivationHost, forward) {
     const Matrix& data = constructMatrix({{1, 0, -3}, {-4, 5, -6}});
     Matrix result = Matrix(2, 3);
 
@@ -19,7 +19,7 @@ TEST(relu_activation_host, forward) {
     ASSERT_MATRIX_EQ(result, {{1, 0, 0}, {0, 5, 0}});
 }
 
-TEST(relu_activation_host, derivatives) {
+TEST(reluActivationHost, derivatives) {
     const Matrix& data = constructMatrix({{-1, 2, 0}, {4, -5, -6}});
     Matrix result = Matrix(2, 3);
 

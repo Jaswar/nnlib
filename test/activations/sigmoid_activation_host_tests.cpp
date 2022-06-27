@@ -8,7 +8,7 @@
 #include "../utils.h"
 #include "../assertions.h"
 
-TEST(sigmoid_activation_host, forward) {
+TEST(sigmoidActivationHost, forward) {
     const Matrix& data = constructMatrix({{1, 0, -3}, {-4, 5, -6}});
     Matrix result = Matrix(2, 3);
 
@@ -19,7 +19,7 @@ TEST(sigmoid_activation_host, forward) {
     ASSERT_MATRIX_CLOSE(result, {{0.73105, 0.5, 0.04742}, {0.01798, 0.99330, 0.00247}});
 }
 
-TEST(sigmoid_activation_host, derivatives) {
+TEST(sigmoidActivationHost, derivatives) {
     const Matrix& data = constructMatrix({{-1, 2, 0}, {4, -5, -6}});
     Matrix result = Matrix(2, 3);
 

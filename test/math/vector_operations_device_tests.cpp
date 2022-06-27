@@ -10,7 +10,7 @@
 
 #ifdef HAS_CUDA
 
-TEST(vector_operations_device, add) {
+TEST(vectorOperationsDevice, add) {
     Vector v1 = constructVector({1, 2}, DEVICE);
     Vector v2 = constructVector({2, 2}, DEVICE);
     Vector result = Vector(2, DEVICE);
@@ -22,7 +22,7 @@ TEST(vector_operations_device, add) {
     ASSERT_VECTOR_EQ(result, {3, 4});
 }
 
-TEST(vector_operations_device, subtract) {
+TEST(vectorOperationsDevice, subtract) {
     Vector v1 = constructVector({1, 2}, DEVICE);
     Vector v2 = constructVector({2, 2}, DEVICE);
     Vector result = Vector(2, DEVICE);
@@ -34,7 +34,7 @@ TEST(vector_operations_device, subtract) {
     ASSERT_VECTOR_EQ(result, {-1, 0});
 }
 
-TEST(vector_operations_device, multiply_constant_vector) {
+TEST(vectorOperationsDevice, multiplyConstantVector) {
     Vector v = constructVector({-2, 2}, DEVICE);
     Vector result = Vector(2, DEVICE);
 
@@ -45,7 +45,7 @@ TEST(vector_operations_device, multiply_constant_vector) {
     ASSERT_VECTOR_EQ(result, {-8, 8});
 }
 
-TEST(vector_operations_device, multiply_vector_constant) {
+TEST(vectorOperationsDevice, multiplyVectorConstant) {
     Vector v = constructVector({-2, 2}, DEVICE);
     Vector result = Vector(2, DEVICE);
 
