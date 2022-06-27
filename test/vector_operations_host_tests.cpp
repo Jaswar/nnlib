@@ -4,16 +4,12 @@
 
 #include <gtest/gtest.h>
 #include <vector.h>
+#include "utils.h"
 
 TEST(vector_operations_host, add) {
-    Vector v1 = Vector(2, HOST);
-    Vector v2 = Vector(2, HOST);
+    const Vector& v1 = constructVector({1, 2});
+    const Vector& v2 = constructVector({2, 2});
     Vector result = Vector(2, HOST);
-
-    v1[0] = 1;
-    v1[1] = 2;
-    v2[0] = 2;
-    v2[1] = 2;
 
     add(v1, v2, result);
 
@@ -22,14 +18,9 @@ TEST(vector_operations_host, add) {
 }
 
 TEST(vector_operations_host, subtract) {
-    Vector v1 = Vector(2, HOST);
-    Vector v2 = Vector(2, HOST);
+    const Vector& v1 = constructVector({1, 2});
+    const Vector& v2 = constructVector({2, 2});
     Vector result = Vector(2, HOST);
-
-    v1[0] = 1;
-    v1[1] = 2;
-    v2[0] = 2;
-    v2[1] = 2;
 
     subtract(v1, v2, result);
 
@@ -38,11 +29,8 @@ TEST(vector_operations_host, subtract) {
 }
 
 TEST(vector_operations_host, multiply_constant_vector) {
-    Vector v = Vector(2, HOST);
+    const Vector& v = constructVector({-2, 2});
     Vector result = Vector(2, HOST);
-
-    v[0] = -2;
-    v[1] = 2;
 
     multiply(v, 4, result);
 
@@ -51,11 +39,8 @@ TEST(vector_operations_host, multiply_constant_vector) {
 }
 
 TEST(vector_operations_host, multiply_vector_constant) {
-    Vector v = Vector(2, HOST);
+    const Vector& v = constructVector({-2, 2});
     Vector result = Vector(2, HOST);
-
-    v[0] = -2;
-    v[1] = 2;
 
     multiply(4, v, result);
 
