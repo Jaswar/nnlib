@@ -9,7 +9,7 @@
 TEST(vector_operations_host, add) {
     const Vector& v1 = constructVector({1, 2});
     const Vector& v2 = constructVector({2, 2});
-    Vector result = Vector(2, HOST);
+    Vector result = Vector(2);
 
     add(v1, v2, result);
 
@@ -19,7 +19,7 @@ TEST(vector_operations_host, add) {
 TEST(vector_operations_host, subtract) {
     const Vector& v1 = constructVector({1, 2});
     const Vector& v2 = constructVector({2, 2});
-    Vector result = Vector(2, HOST);
+    Vector result = Vector(2);
 
     subtract(v1, v2, result);
 
@@ -28,7 +28,7 @@ TEST(vector_operations_host, subtract) {
 
 TEST(vector_operations_host, multiply_constant_vector) {
     const Vector& v = constructVector({-2, 2});
-    Vector result = Vector(2, HOST);
+    Vector result = Vector(2);
 
     multiply(v, 4, result);
 
@@ -37,7 +37,7 @@ TEST(vector_operations_host, multiply_constant_vector) {
 
 TEST(vector_operations_host, multiply_vector_constant) {
     const Vector& v = constructVector({-2, 2});
-    Vector result = Vector(2, HOST);
+    Vector result = Vector(2);
 
     multiply(4, v, result);
 

@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #include "utils.h"
 
-Vector constructVector(std::initializer_list<DTYPE> vectorDefinition) {
+Vector constructVector(std::initializer_list<DTYPE> vectorDefinition, DataLocation location) {
     Vector vector = Vector(vectorDefinition.size(), HOST);
 
     int i = 0;
@@ -14,10 +14,14 @@ Vector constructVector(std::initializer_list<DTYPE> vectorDefinition) {
         vector[i++] = value;
     }
 
+    if (location == DEVICE) {
+        vector.moveToDevice();
+    }
+
     return vector;
 }
 
-Matrix constructMatrix(std::initializer_list<std::initializer_list<DTYPE>> matrixDefinition) {
+Matrix constructMatrix(std::initializer_list<std::initializer_list<DTYPE>> matrixDefinition, DataLocation location) {
     size_t numColumns = matrixDefinition.begin()->size();
     Matrix matrix = Matrix(matrixDefinition.size(), numColumns);
 
@@ -28,6 +32,10 @@ Matrix constructMatrix(std::initializer_list<std::initializer_list<DTYPE>> matri
         }
         i++;
         j = 0;
+    }
+
+    if (location == DEVICE) {
+        matrix.moveToDevice();
     }
 
     return matrix;

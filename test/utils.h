@@ -8,8 +8,8 @@
 #include <vector.h>
 #include <matrix.h>
 
-Vector constructVector(std::initializer_list<DTYPE> vectorDefinition);
-Matrix constructMatrix(std::initializer_list<std::initializer_list<DTYPE>> matrixDefinition);
+Vector constructVector(std::initializer_list<DTYPE> vectorDefinition, DataLocation location = HOST);
+Matrix constructMatrix(std::initializer_list<std::initializer_list<DTYPE>> matrixDefinition, DataLocation location = HOST);
 
 void assertEqual(const Matrix& result, std::initializer_list<std::initializer_list<DTYPE>> expected);
 void assertEqual(const Vector& result, std::initializer_list<DTYPE> expected);

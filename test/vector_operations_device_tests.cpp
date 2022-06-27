@@ -10,12 +10,9 @@
 #ifdef HAS_CUDA
 
 TEST(vector_operations_device, add) {
-    Vector v1 = constructVector({1, 2});
-    Vector v2 = constructVector({2, 2});
+    Vector v1 = constructVector({1, 2}, DEVICE);
+    Vector v2 = constructVector({2, 2}, DEVICE);
     Vector result = Vector(2, DEVICE);
-
-    v1.moveToDevice();
-    v2.moveToDevice();
 
     add(v1, v2, result);
 
@@ -25,12 +22,9 @@ TEST(vector_operations_device, add) {
 }
 
 TEST(vector_operations_device, subtract) {
-    Vector v1 = constructVector({1, 2});
-    Vector v2 = constructVector({2, 2});
+    Vector v1 = constructVector({1, 2}, DEVICE);
+    Vector v2 = constructVector({2, 2}, DEVICE);
     Vector result = Vector(2, DEVICE);
-
-    v1.moveToDevice();
-    v2.moveToDevice();
 
     subtract(v1, v2, result);
 
@@ -40,10 +34,8 @@ TEST(vector_operations_device, subtract) {
 }
 
 TEST(vector_operations_device, multiply_constant_vector) {
-    Vector v = constructVector({-2, 2});
+    Vector v = constructVector({-2, 2}, DEVICE);
     Vector result = Vector(2, DEVICE);
-
-    v.moveToDevice();
 
     multiply(v, 4, result);
 
@@ -53,10 +45,8 @@ TEST(vector_operations_device, multiply_constant_vector) {
 }
 
 TEST(vector_operations_device, multiply_vector_constant) {
-    Vector v = constructVector({-2, 2});
+    Vector v = constructVector({-2, 2}, DEVICE);
     Vector result = Vector(2, DEVICE);
-
-    v.moveToDevice();
 
     multiply(4, v, result);
 
