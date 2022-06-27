@@ -4,8 +4,8 @@
 
 #include <gtest/gtest.h>
 #include <matrix.h>
-#include "utils.h"
-#include "assertions.h"
+#include "../utils.h"
+#include "../assertions.h"
 
 TEST(matrix_operations_host, add) {
     const Matrix& m1 = constructMatrix({{1, 2, 3}, {4, 5, 6}});

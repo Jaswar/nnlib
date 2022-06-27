@@ -2,9 +2,9 @@ set(NNLIB_TEST_EXEC test_nnlib)
 
 add_executable(${NNLIB_TEST_EXEC}
         utils.h utils.cpp
-        assertions.h assertions.cpp
-        vector_operations_host_tests.cpp vector_operations_device_tests.cpp
-        matrix_operations_host_tests.cpp matrix_operations_device_tests.cpp)
+        assertions.h assertions.cpp)
+
+add_subdirectory(math)
 
 include(FetchContent)
 FetchContent_Declare(

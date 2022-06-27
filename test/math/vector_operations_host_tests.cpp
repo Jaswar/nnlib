@@ -4,8 +4,8 @@
 
 #include <gtest/gtest.h>
 #include <vector.h>
-#include "utils.h"
-#include "assertions.h"
+#include "../utils.h"
+#include "../assertions.h"
 
 TEST(vector_operations_host, add) {
     const Vector& v1 = constructVector({1, 2});

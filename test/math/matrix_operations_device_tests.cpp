@@ -4,8 +4,8 @@
 
 #include <gtest/gtest.h>
 #include <matrix.h>
-#include "utils.h"
-#include "assertions.h"
+#include "../utils.h"
+#include "../assertions.h"
 #include <verify.cuh>
 
 #ifdef HAS_CUDA
