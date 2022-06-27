@@ -6,6 +6,7 @@
 #include <vector.h>
 #include <verify.cuh>
 #include "utils.h"
+#include "assertions.h"
 
 #ifdef HAS_CUDA
 
@@ -18,7 +19,7 @@ TEST(vector_operations_device, add) {
 
     result.moveToHost();
 
-    assertEqual(result, {3, 4});
+    ASSERT_VECTOR(result, {3, 4});
 }
 
 TEST(vector_operations_device, subtract) {
@@ -30,7 +31,7 @@ TEST(vector_operations_device, subtract) {
 
     result.moveToHost();
 
-    assertEqual(result, {-1, 0});
+    ASSERT_VECTOR(result, {-1, 0});
 }
 
 TEST(vector_operations_device, multiply_constant_vector) {
@@ -41,7 +42,7 @@ TEST(vector_operations_device, multiply_constant_vector) {
 
     result.moveToHost();
 
-    assertEqual(result, {-8, 8});
+    ASSERT_VECTOR(result, {-8, 8});
 }
 
 TEST(vector_operations_device, multiply_vector_constant) {
@@ -52,7 +53,7 @@ TEST(vector_operations_device, multiply_vector_constant) {
 
     result.moveToHost();
 
-    assertEqual(result, {-8, 8});
+    ASSERT_VECTOR(result, {-8, 8});
 }
 
 #endif

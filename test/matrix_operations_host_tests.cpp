@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include <matrix.h>
 #include "utils.h"
+#include "assertions.h"
 
 TEST(matrix_operations_host, add) {
     const Matrix& m1 = constructMatrix({{1, 2, 3}, {4, 5, 6}});
@@ -13,7 +14,7 @@ TEST(matrix_operations_host, add) {
 
     add(m1, m2, result);
 
-    assertEqual(result, {{3, 6, 11}, {20, 37, 70}});
+    ASSERT_MATRIX(result, {{3, 6, 11}, {20, 37, 70}});
 }
 
 TEST(matrix_operations_host, subtract) {
@@ -23,7 +24,7 @@ TEST(matrix_operations_host, subtract) {
 
     subtract(m1, m2, result);
 
-    assertEqual(result, {{-1, -2, -5}, {-12, -27, -58}});
+    ASSERT_MATRIX(result, {{-1, -2, -5}, {-12, -27, -58}});
 }
 
 TEST(matrix_operations_host, add_broadcast_vector) {
@@ -33,7 +34,7 @@ TEST(matrix_operations_host, add_broadcast_vector) {
 
     add(m, v, result);
 
-    assertEqual(result, {{4, 4, 4}, {7, 7, 7}});
+    ASSERT_MATRIX(result, {{4, 4, 4}, {7, 7, 7}});
 }
 
 TEST(matrix_operations_host, multiply_matrices) {
@@ -46,7 +47,7 @@ TEST(matrix_operations_host, multiply_matrices) {
 
     multiply(m1, m2, result);
 
-    assertEqual(result, {{92, 108, 122, 134}, {200, 240, 278, 308}});
+    ASSERT_MATRIX(result, {{92, 108, 122, 134}, {200, 240, 278, 308}});
 }
 
 TEST(matrix_operations_host, multiply_matrix_vector) {
@@ -56,7 +57,7 @@ TEST(matrix_operations_host, multiply_matrix_vector) {
 
     multiply(m, v, result);
 
-    assertEqual(result, {8, 18});
+    ASSERT_VECTOR(result, {8, 18});
 }
 
 TEST(matrix_operations_host, multiply_matrix_constant) {
@@ -65,7 +66,7 @@ TEST(matrix_operations_host, multiply_matrix_constant) {
 
     multiply(m, 2, result);
 
-    assertEqual(result, {{2, 0}, {0, 2}});
+    ASSERT_MATRIX(result, {{2, 0}, {0, 2}});
 }
 
 TEST(matrix_operations_host, multiply_constant_matrix) {
@@ -74,7 +75,7 @@ TEST(matrix_operations_host, multiply_constant_matrix) {
 
     multiply(2, m, result);
 
-    assertEqual(result, {{2, 0}, {0, 2}});
+    ASSERT_MATRIX(result, {{2, 0}, {0, 2}});
 }
 
 TEST(matrix_operations_host, hadamard_product) {
@@ -84,7 +85,7 @@ TEST(matrix_operations_host, hadamard_product) {
 
     hadamard(m1, m2, result);
 
-    assertEqual(result, {{2, 8, 24}, {32, 20, 12}});
+    ASSERT_MATRIX(result, {{2, 8, 24}, {32, 20, 12}});
 }
 
 TEST(matrix_operations_host, transpose) {
@@ -93,5 +94,5 @@ TEST(matrix_operations_host, transpose) {
 
     transpose(m, result);
 
-    assertEqual(result, {{-1, 7}, {2, 2}, {-2, 4}, {2, 5}});
+    ASSERT_MATRIX(result, {{-1, 7}, {2, 2}, {-2, 4}, {2, 5}});
 }

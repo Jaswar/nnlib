@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include <matrix.h>
 #include "utils.h"
+#include "assertions.h"
 #include <verify.cuh>
 
 #ifdef HAS_CUDA
@@ -18,7 +19,7 @@ TEST(matrix_operations_device, add) {
 
     result.moveToHost();
 
-    assertEqual(result, {{3, 6, 11}, {20, 37, 70}});
+    ASSERT_MATRIX(result, {{3, 6, 11}, {20, 37, 70}});
 }
 
 TEST(matrix_operations_device, subtract) {
@@ -30,7 +31,7 @@ TEST(matrix_operations_device, subtract) {
 
     result.moveToHost();
 
-    assertEqual(result, {{-1, -2, -5}, {-12, -27, -58}});
+    ASSERT_MATRIX(result, {{-1, -2, -5}, {-12, -27, -58}});
 }
 
 TEST(matrix_operations_device, add_broadcast_vector) {
@@ -42,7 +43,7 @@ TEST(matrix_operations_device, add_broadcast_vector) {
 
     result.moveToHost();
 
-    assertEqual(result, {{4, 4, 4}, {7, 7, 7}});
+    ASSERT_MATRIX(result, {{4, 4, 4}, {7, 7, 7}});
 }
 
 TEST(matrix_operations_device, multiply_matrices) {
@@ -57,7 +58,7 @@ TEST(matrix_operations_device, multiply_matrices) {
 
     result.moveToHost();
 
-    assertEqual(result, {{92, 108, 122, 134}, {200, 240, 278, 308}});
+    ASSERT_MATRIX(result, {{92, 108, 122, 134}, {200, 240, 278, 308}});
 }
 
 TEST(matrix_operations_device, multiply_matrix_vector) {
@@ -69,7 +70,7 @@ TEST(matrix_operations_device, multiply_matrix_vector) {
 
     result.moveToHost();
 
-    assertEqual(result, {8, 18});
+    ASSERT_VECTOR(result, {8, 18});
 }
 
 TEST(matrix_operations_device, multiply_matrix_constant) {
@@ -80,7 +81,7 @@ TEST(matrix_operations_device, multiply_matrix_constant) {
 
     result.moveToHost();
 
-    assertEqual(result, {{2, 0}, {0, 2}});
+    ASSERT_MATRIX(result, {{2, 0}, {0, 2}});
 }
 
 TEST(matrix_operations_device, multiply_constant_matrix) {
@@ -91,7 +92,7 @@ TEST(matrix_operations_device, multiply_constant_matrix) {
 
     result.moveToHost();
 
-    assertEqual(result, {{2, 0}, {0, 2}});
+    ASSERT_MATRIX(result, {{2, 0}, {0, 2}});
 }
 
 TEST(matrix_operations_device, hadamard_product) {
@@ -103,7 +104,7 @@ TEST(matrix_operations_device, hadamard_product) {
 
     result.moveToHost();
 
-    assertEqual(result, {{2, 8, 24}, {32, 20, 12}});
+    ASSERT_MATRIX(result, {{2, 8, 24}, {32, 20, 12}});
 }
 
 TEST(matrix_operations_device, transpose) {
@@ -114,7 +115,7 @@ TEST(matrix_operations_device, transpose) {
 
     result.moveToHost();
 
-    assertEqual(result, {{-1, 7}, {2, 2}, {-2, 4}, {2, 5}});
+    ASSERT_MATRIX(result, {{-1, 7}, {2, 2}, {-2, 4}, {2, 5}});
 }
 
 #endif
