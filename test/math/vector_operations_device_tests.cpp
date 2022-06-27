@@ -19,7 +19,7 @@ TEST(vector_operations_device, add) {
 
     result.moveToHost();
 
-    ASSERT_VECTOR(result, {3, 4});
+    ASSERT_VECTOR_EQ(result, {3, 4});
 }
 
 TEST(vector_operations_device, subtract) {
@@ -31,7 +31,7 @@ TEST(vector_operations_device, subtract) {
 
     result.moveToHost();
 
-    ASSERT_VECTOR(result, {-1, 0});
+    ASSERT_VECTOR_EQ(result, {-1, 0});
 }
 
 TEST(vector_operations_device, multiply_constant_vector) {
@@ -42,7 +42,7 @@ TEST(vector_operations_device, multiply_constant_vector) {
 
     result.moveToHost();
 
-    ASSERT_VECTOR(result, {-8, 8});
+    ASSERT_VECTOR_EQ(result, {-8, 8});
 }
 
 TEST(vector_operations_device, multiply_vector_constant) {
@@ -53,7 +53,7 @@ TEST(vector_operations_device, multiply_vector_constant) {
 
     result.moveToHost();
 
-    ASSERT_VECTOR(result, {-8, 8});
+    ASSERT_VECTOR_EQ(result, {-8, 8});
 }
 
 #endif

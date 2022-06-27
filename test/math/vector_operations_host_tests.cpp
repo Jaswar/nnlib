@@ -14,7 +14,7 @@ TEST(vector_operations_host, add) {
 
     add(v1, v2, result);
 
-    ASSERT_VECTOR(result, {3, 4});
+    ASSERT_VECTOR_EQ(result, {3, 4});
 }
 
 TEST(vector_operations_host, subtract) {
@@ -24,7 +24,7 @@ TEST(vector_operations_host, subtract) {
 
     subtract(v1, v2, result);
 
-    ASSERT_VECTOR(result, {-1, 0});
+    ASSERT_VECTOR_EQ(result, {-1, 0});
 }
 
 TEST(vector_operations_host, multiply_constant_vector) {
@@ -33,7 +33,7 @@ TEST(vector_operations_host, multiply_constant_vector) {
 
     multiply(v, 4, result);
 
-    ASSERT_VECTOR(result, {-8, 8});
+    ASSERT_VECTOR_EQ(result, {-8, 8});
 }
 
 TEST(vector_operations_host, multiply_vector_constant) {
@@ -42,5 +42,5 @@ TEST(vector_operations_host, multiply_vector_constant) {
 
     multiply(4, v, result);
 
-    ASSERT_VECTOR(result, {-8, 8});
+    ASSERT_VECTOR_EQ(result, {-8, 8});
 }

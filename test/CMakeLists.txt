@@ -5,6 +5,7 @@ add_executable(${NNLIB_TEST_EXEC}
         assertions.h assertions.cpp)
 
 add_subdirectory(math)
+add_subdirectory(activations)
 
 include(FetchContent)
 FetchContent_Declare(
