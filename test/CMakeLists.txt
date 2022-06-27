@@ -1,6 +1,6 @@
 set(NNLIB_TEST_EXEC test_nnlib)
 
-add_executable(${NNLIB_TEST_EXEC} main.cpp)
+add_executable(${NNLIB_TEST_EXEC} vector_operations_host_tests.cpp)
 
 include(FetchContent)
 FetchContent_Declare(
