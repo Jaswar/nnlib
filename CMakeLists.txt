@@ -9,11 +9,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_library(${PROJECT_NAME} STATIC)
 
-add_subdirectory(src/ann)
-add_subdirectory(src/exceptions)
-add_subdirectory(src/gpu)
-add_subdirectory(src/math)
-add_subdirectory(src/utils)
+add_subdirectory(include)
+add_subdirectory(src)
 
 find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
@@ -69,10 +66,10 @@ else()
     )
 endif()
 
-set(public_headers include/network.h include/layer.h include/matrix.h include/vector.h include/allocation.h
+set(PUBLIC_HEADERS include/network.h include/layer.h include/matrix.h include/vector.h include/allocation.h
         include/onehot_encode.h include/read.h include/verify.cuh include/convert.h include/activation.h)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${public_headers}")
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 

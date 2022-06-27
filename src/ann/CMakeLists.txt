@@ -1,4 +1,4 @@
-set(SOURCE_FILES activations/activation.cpp ../../include/activation.h
+set(SOURCE_FILES activations/activation.cpp
 
         activations/linear/linear_activation.cpp
         activations/linear/linear_on_host_evaluator.cpp
@@ -16,7 +16,7 @@ set(SOURCE_FILES activations/activation.cpp ../../include/activation.h
         backpropagation_on_host.cpp
         backpropagation_on_device.cu
 
-        layer.cpp ../../include/layer.h
-        network.cpp ../../include/network.h)
+        layer.cpp
+        network.cpp)
 
 target_sources(nnlib PRIVATE ${SOURCE_FILES})
