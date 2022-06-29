@@ -6,10 +6,15 @@
 #include <nnlib/onehot_encode.h>
 #include <chrono>
 
-int main() {
+int main(int argc, char** argv) {
+    if (argc < 2) {
+        std::cout << "Dataset file path was not specified." << std::endl;
+        return 1;
+    }
+
     showCudaInfo();
 
-    Matrix dataset = readCSV("C:/Users/janwa/CLionProjects/nnlib/data/MNIST_train.txt", ",", 4);
+    Matrix dataset = readCSV(argv[1], ",", 4);
     Matrix X = Matrix(dataset.n, dataset.m - 1, HOST);
     Vector yv = Vector(dataset.n, HOST);
 
