@@ -58,7 +58,8 @@ void LinearOnDeviceEvaluator::forward(const Vector& input, Vector& result) const
     }
 
     linearKernel<<<1, input.n>>>(input.data, result.data, input.n);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 void LinearOnDeviceEvaluator::forward(const Matrix& input, Matrix& result) const {
@@ -67,7 +68,8 @@ void LinearOnDeviceEvaluator::forward(const Matrix& input, Matrix& result) const
     }
 
     linearKernel<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 void LinearOnDeviceEvaluator::computeDerivatives(const Vector& output, Vector& result) const {
@@ -76,7 +78,8 @@ void LinearOnDeviceEvaluator::computeDerivatives(const Vector& output, Vector& r
     }
 
     linearDerivativeKernel<<<1, output.n>>>(output.data, result.data, output.n);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 void LinearOnDeviceEvaluator::computeDerivatives(const Matrix& output, Matrix& result) const {
@@ -85,7 +88,8 @@ void LinearOnDeviceEvaluator::computeDerivatives(const Matrix& output, Matrix& r
     }
 
     linearDerivativeKernel<<<output.n, output.m>>>(output.data, result.data, output.n, output.m);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 LinearOnDeviceEvaluator::~LinearOnDeviceEvaluator() = default;

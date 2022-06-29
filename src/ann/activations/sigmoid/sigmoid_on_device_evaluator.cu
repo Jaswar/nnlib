@@ -64,7 +64,8 @@ void SigmoidOnDeviceEvaluator::forward(const Vector& input, Vector& result) cons
     }
 
     sigmoidKernel<<<1, input.n>>>(input.data, result.data, input.n);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 void SigmoidOnDeviceEvaluator::forward(const Matrix& input, Matrix& result) const {
@@ -73,7 +74,8 @@ void SigmoidOnDeviceEvaluator::forward(const Matrix& input, Matrix& result) cons
     }
 
     sigmoidKernel<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 void SigmoidOnDeviceEvaluator::computeDerivatives(const Vector& output, Vector& result) const {
@@ -82,7 +84,8 @@ void SigmoidOnDeviceEvaluator::computeDerivatives(const Vector& output, Vector& 
     }
 
     sigmoidDerivativeKernel<<<1, output.n>>>(output.data, result.data, output.n);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 void SigmoidOnDeviceEvaluator::computeDerivatives(const Matrix& output, Matrix& result) const {
@@ -91,7 +94,8 @@ void SigmoidOnDeviceEvaluator::computeDerivatives(const Matrix& output, Matrix& 
     }
 
     sigmoidDerivativeKernel<<<output.n, output.m>>>(output.data, result.data, output.n, output.m);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 SigmoidOnDeviceEvaluator::~SigmoidOnDeviceEvaluator() = default;

@@ -22,7 +22,8 @@ __global__ void addVectorsKernel(const DTYPE* v1, const DTYPE* v2, DTYPE* result
 
 void addVectorsOnDevice(const Vector& v1, const Vector& v2, Vector& result) {
     addVectorsKernel<<<1, v1.n>>>(v1.data, v2.data, result.data, v1.n);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 __global__ void subtractVectorsKernel(const DTYPE* v1, const DTYPE* v2, DTYPE* result, size_t n) {
@@ -38,7 +39,8 @@ __global__ void subtractVectorsKernel(const DTYPE* v1, const DTYPE* v2, DTYPE* r
 
 void subtractVectorsOnDevice(const Vector& v1, const Vector& v2, Vector& result) {
     subtractVectorsKernel<<<1, v1.n>>>(v1.data, v2.data, result.data, v1.n);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 __global__ void multiplyVectorKernel(const DTYPE* v1, DTYPE constant, DTYPE* result, size_t n) {
@@ -53,7 +55,8 @@ __global__ void multiplyVectorKernel(const DTYPE* v1, DTYPE constant, DTYPE* res
 
 void multiplyVectorOnDevice(const Vector& v1, DTYPE constant, Vector& result) {
     multiplyVectorKernel<<<1, v1.n>>>(v1.data, constant, result.data, v1.n);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 #else

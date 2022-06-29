@@ -33,7 +33,8 @@ void applyGradientsOnDevice(Layer& layer, size_t batchSize, DTYPE learningRate) 
     applyGradientsKernel<<<layer.outSize, layer.inSize>>>(layer.biases.data, layer.weights.data,
                                                           layer.biasesGradients.data, layer.weightsGradients.data,
                                                           layer.inSize, layer.outSize, batchSize, learningRate);
-    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
+    gpuCheckError(cudaGetLastError());
+    gpuCheckError(cudaDeviceSynchronize());
 }
 
 #else
