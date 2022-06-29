@@ -1,3 +1,9 @@
+# Navigate to correct directory if script was not moved from "scripts"
+parent_dir=$(pwd | xargs basename)
+if [[ $parent_dir = "scripts" ]]; then
+  cd ..
+fi
+
 generator=""
 # See if a generator was passed
 while getopts ":g:" opt; do

@@ -1,7 +1,13 @@
 # Script to build an example.
 # The example folder is passed as the only non-positional argument of the script.
-# Usage: ./build.sh [options] example
-# Eg: ./build.sh -c Release mnist
+# Usage: ./build_example.sh [options] example
+# Eg: ./build_example.sh -c Release mnist
+
+# Navigate to correct directory if script was not moved from "scripts"
+parent_dir=$(pwd | xargs basename)
+if [[ $parent_dir = "scripts" ]]; then
+  cd ../examples
+fi
 
 build_configuration=Debug
 prefix_path=""
