@@ -96,6 +96,7 @@ void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE lear
     }
 }
 
+//NOLINTNEXTLINE(readability-identifier-naming)
 void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize, DTYPE learningRate) {
     if (X.n != y.n) {
         throw SizeMismatchException();
@@ -122,6 +123,7 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
     }
 }
 
+//NOLINTNEXTLINE(readability-identifier-naming)
 void Network::computeAccuracy(const Matrix& X, const Matrix& y, const Matrix& predictions) {
     // Calculate the accuracy on the training set.
     int correct = 0;

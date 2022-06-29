@@ -7,6 +7,33 @@ CheckOptions:
     value: -1
   - key: google-readability-function-size.BranchThreshold
     value: 5
+
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.MacroDefinitionCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.MemberCase
+    value: camelBack
+  - key: readability-identifier-naming.MethodCase
+    value: camelBack
+  - key: readability-identifier-naming.NamespaceCase
+    value: camelBack
+  - key: readability-identifier-naming.ParameterCase
+    value: camelBack
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.TypedefCase
+    value: camelBack
+  - key: readability-identifier-naming.UnionCase
+    value: CamelCase
+  - key: readability-identifier-naming.VariableCase
+    value: camelBack
 Checks:   '-*,
           cert-dcl21-cpp,
           cert-dcl58-cpp,
@@ -94,5 +121,6 @@ Checks:   '-*,
           readability-string-compare,
           readability-uniqueptr-delete-release,
           readability-use-anyofallof,
+          readability-identifier-naming,
           performance-*,
           bugprone-*'
