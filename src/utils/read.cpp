@@ -51,8 +51,8 @@ std::vector<std::string> readFile(const std::string& filepath) {
 }
 
 void threadCSVJob(const std::vector<std::string>& lines, const std::string& delim, Matrix& result, int id, int numThreads) {
-    int size = lines.size();
-    int numIterations = std::ceil(size / (double) numThreads);
+    int size = static_cast<int>(lines.size());
+    int numIterations = std::ceil(size / static_cast<double>(numThreads));
 
     for (int i = 0; i < numIterations; i++) {
         if (id == 0) {

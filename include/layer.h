@@ -52,6 +52,13 @@ private:
     void calculateDerivatives();
 
     void allocate(size_t batchSize);
+    void allocateOnes(size_t batchSize);
+    void allocateDataT(size_t batchSize);
+    void allocateAMatrix(size_t batchSize);
+    void allocateZMatrix(size_t batchSize);
+    void allocateNewDelta(size_t batchSize);
+    void allocateNewDeltaT(size_t batchSize);
+    void allocateDerivatives(size_t batchSize);
 };
 
 #endif //NNLIB_LAYER_H

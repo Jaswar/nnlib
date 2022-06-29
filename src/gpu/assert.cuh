@@ -5,7 +5,7 @@
 #ifndef NNLIB_ASSERT_CUH
 #define NNLIB_ASSERT_CUH
 
-#include <stdio.h>
+#include <cstdio>
 #include "verify.cuh"
 
 #ifdef HAS_CUDA

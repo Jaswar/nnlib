@@ -11,6 +11,8 @@
 DTYPE getRandomValue() {
     // TODO: For large networks, the values at neurons can grow very large rendering them useless
     // A fix can lower the initial weights and biases.
+    // For now don't lint it and use rand()
+    // NOLINTNEXTLINE
     return (((DTYPE) rand() / RAND_MAX) * 2 - 1) / 5;
 }
 
@@ -123,6 +125,16 @@ void Layer::calculateDerivatives() {
 }
 
 void Layer::allocate(size_t batchSize) {
+    allocateOnes(batchSize);
+    allocateDataT(batchSize);
+    allocateAMatrix(batchSize);
+    allocateZMatrix(batchSize);
+    allocateNewDelta(batchSize);
+    allocateNewDeltaT(batchSize);
+    allocateDerivatives(batchSize);
+}
+
+void Layer::allocateOnes(size_t batchSize) {
     if (ones.n != batchSize) {
         Vector temp = Vector(allocate1DArray(batchSize, 1), batchSize);
 
@@ -132,21 +144,39 @@ void Layer::allocate(size_t batchSize) {
 
         ones = temp;
     }
+}
+
+void Layer::allocateDataT(size_t batchSize) {
     if (dataT.m != batchSize) {
         dataT = Matrix(dataT.n, batchSize, dataT.location);
     }
+}
+
+void Layer::allocateAMatrix(size_t batchSize) {
     if (aMatrix.n != batchSize) {
         aMatrix = Matrix(batchSize, aMatrix.m, aMatrix.location);
     }
+}
+
+void Layer::allocateZMatrix(size_t batchSize) {
     if (zMatrix.n != batchSize) {
         zMatrix = Matrix(batchSize, zMatrix.m, zMatrix.location);
     }
+}
+
+void Layer::allocateNewDelta(size_t batchSize) {
     if (newDelta.n != batchSize) {
         newDelta = Matrix(batchSize, newDelta.m, newDelta.location);
     }
+}
+
+void Layer::allocateNewDeltaT(size_t batchSize) {
     if (newDeltaT.m != batchSize) {
         newDeltaT = Matrix(newDeltaT.n, batchSize, newDeltaT.location);
     }
+}
+
+void Layer::allocateDerivatives(size_t batchSize) {
     if (derivatives.n != batchSize) {
         derivatives = Matrix(batchSize, derivatives.m, derivatives.location);
     }

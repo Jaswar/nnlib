@@ -4,6 +4,6 @@
 
 #include "size_mismatch_exception.h"
 
-const char* SizeMismatchException::what() const throw() {
+const char* SizeMismatchException::what() const noexcept {
     return "Size mismatch exception";
 }

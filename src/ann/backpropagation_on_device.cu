@@ -21,11 +21,11 @@ void applyGradientsKernel(DTYPE* biases, DTYPE* weights, DTYPE* biasesGradients,
     }
 
     if (inIndex == 0) {
-        biases[outIndex] -= learningRate * biasesGradients[outIndex] / (DTYPE) batchSize;
+        biases[outIndex] -= learningRate * biasesGradients[outIndex] / static_cast<DTYPE>(batchSize);
         biasesGradients[outIndex] = 0;
     }
 
-    weights[inIndex * outSize + outIndex] -= learningRate * weightsGradients[inIndex * outSize + outIndex] / (DTYPE) batchSize;
+    weights[inIndex * outSize + outIndex] -= learningRate * weightsGradients[inIndex * outSize + outIndex] / static_cast<DTYPE>(batchSize);
     weightsGradients[inIndex * outSize + outIndex] = 0;
 }
 

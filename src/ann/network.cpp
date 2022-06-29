@@ -2,7 +2,7 @@
 // Created by Jan Warchocki on 03/03/2022.
 //
 
-#include <time.h>
+#include <ctime>
 #include "../../include/network.h"
 #include "../gpu/allocation_gpu.cuh"
 #include <algorithm>
@@ -12,9 +12,9 @@
 std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, DataLocation location) {
     std::vector<Matrix> result;
 
-    int numBatches = std::ceil(matrix.n / (double) batchSize);
+    int numBatches = std::ceil(static_cast<double>(matrix.n) / static_cast<double>(batchSize));
     for (int i = 0; i < numBatches; i++) {
-        int rowsInBatch = std::min(batchSize, matrix.n - batchSize * i);
+        auto rowsInBatch = std::min(batchSize, matrix.n - batchSize * i);
 
         DTYPE* allocated;
         if (location == DEVICE) {
@@ -118,23 +118,27 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
             backward(*output, targets.at(row), learningRate);
         }
 
-        // Calculate the accuracy on the training set.
-        Matrix output = *forward(X);
-        output.moveToHost();
+        Matrix predictions = *forward(X);
+        predictions.moveToHost();
 
-        int correct = 0;
-        for (int row = 0; row < X.n; row++) {
-            int maxInx = 0;
-            for (int i = 0; i < y.m; i++) {
-                if (output(row, i) > output(row, maxInx)) {
-                    maxInx = i;
-                }
-            }
+        computeAccuracy(X, yHost, predictions);
+    }
+}
 
-            if (yHost(row, maxInx) == 1) {
-                correct++;
+void Network::computeAccuracy(const Matrix& X, const Matrix& y, const Matrix& predictions) {
+    // Calculate the accuracy on the training set.
+    int correct = 0;
+    for (int row = 0; row < X.n; row++) {
+        int maxInx = 0;
+        for (int i = 0; i < y.m; i++) {
+            if (predictions(row, i) > predictions(row, maxInx)) {
+                maxInx = i;
             }
         }
-        std::cout << ((double) correct) / X.n << std::endl;
+
+        if (y(row, maxInx) == 1) {
+            correct++;
+        }
     }
+    std::cout << (static_cast<double>(correct)) / static_cast<double>(X.n) << std::endl;
 }

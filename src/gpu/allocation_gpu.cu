@@ -5,7 +5,6 @@
 #include "allocation_gpu.cuh"
 #include "verify.cuh"
 #include "assert.cuh"
-#include <stdio.h>
 #include <exceptions/unexpected_cuda_call_exception.h>
 
 #ifdef HAS_CUDA

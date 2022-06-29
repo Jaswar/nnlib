@@ -88,6 +88,7 @@ void multiplyMatrixVectorOnDevice(const Matrix& matrix, const Vector& vector, Ve
 }
 
 __global__
+// NOLINTNEXTLINE(google-readability-function-size)
 void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t N, size_t M, size_t K) {
     __shared__ DTYPE m1Tile[TILE_WIDTH][TILE_WIDTH];
     __shared__ DTYPE m2Tile[TILE_WIDTH][TILE_WIDTH];
@@ -96,6 +97,8 @@ void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* resul
     auto column = blockIdx.x * blockDim.x + threadIdx.x;
 
     DTYPE acc = 0;
+    // Ignore the downcast here.
+    // NOLINTNEXTLINE
     for (int tileIdx = 0; tileIdx < std::ceil((float) M / TILE_WIDTH); tileIdx++) {
         auto m1InxColumn = tileIdx * blockDim.x + threadIdx.x;
         auto m2InxRow = tileIdx * blockDim.y + threadIdx.y;
@@ -144,11 +147,13 @@ void multiplyMatricesNoTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* res
 }
 
 void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    // Linter says props will not be initialized, but it will be so disable error.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
     cudaDeviceProp props;
     gpuCheckError( cudaGetDeviceProperties(&props, 0) )
     if (m1.m > props.maxThreadsPerBlock) {
-        size_t sizeY = std::ceil((double) std::max(m1.n, m2.n) / TILE_WIDTH);
-        size_t sizeX = std::ceil((double) std::max(m1.m, m2.m) / TILE_WIDTH);
+        size_t sizeY = std::ceil(static_cast<double>(std::max(m1.n, m2.n)) / TILE_WIDTH);
+        size_t sizeX = std::ceil(static_cast<double>(std::max(m1.m, m2.m)) / TILE_WIDTH);
 
         dim3 blocks(sizeX, sizeY);
         dim3 threads(TILE_WIDTH, TILE_WIDTH);

@@ -83,6 +83,10 @@ Matrix::~Matrix() {
 }
 
 Matrix& Matrix::operator=(const Matrix& matrix) {
+    if (this == &matrix) {
+        return *this;
+    }
+
     location = matrix.location;
 
     if (location == HOST) {
@@ -103,11 +107,7 @@ Matrix& Matrix::operator=(const Matrix& matrix) {
     return *this;
 }
 
-DTYPE& Matrix::operator()(size_t x, size_t y) {
-    return data[x * m + y];
-}
-
-DTYPE Matrix::operator()(size_t x, size_t y) const {
+DTYPE& Matrix::operator()(size_t x, size_t y) const {
     return data[x * m + y];
 }
 
@@ -126,7 +126,7 @@ void displayRow(std::ostream& stream, const Matrix& matrix, size_t row, size_t m
 }
 
 std::ostream& operator<<(std::ostream& stream, const Matrix& matrix) {
-    int maxPeek = 10; // Number of lines to show from the front and back of matrix.
+    size_t maxPeek = 10; // Number of lines to show from the front and back of matrix.
 
     stream << "Matrix([";
 

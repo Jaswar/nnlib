@@ -30,8 +30,7 @@ public:
     void moveToHost();
 
     Vector& operator=(const Vector& other);
-    DTYPE operator[](size_t index) const;
-    DTYPE& operator[](size_t index);
+    DTYPE& operator[](size_t index) const;
 };
 
 // "toString" for std::cout

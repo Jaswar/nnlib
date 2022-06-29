@@ -2,6 +2,7 @@
 // Created by Jan Warchocki on 28/05/2022.
 //
 
+#include <algorithm>
 #include "location_verifiers.h"
 
 bool allLocationsAreSame(std::initializer_list<DataLocation> locations) {
@@ -19,21 +20,15 @@ bool allLocationsAreSame(std::initializer_list<DataLocation> locations) {
 }
 
 bool allLocationsAreHost(std::initializer_list<DataLocation> locations) {
-    for (auto location : locations) {
-        if (location == DEVICE) {
-            return false;
-        }
-    }
-    return true;
+    return std::all_of(locations.begin(), locations.end(), [](DataLocation location){
+        return location == HOST;
+    });
 }
 
 bool allLocationsAreDevice(std::initializer_list<DataLocation> locations) {
-    for (auto location : locations) {
-        if (location == HOST) {
-            return false;
-        }
-    }
-    return true;
+    return std::all_of(locations.begin(), locations.end(), [](DataLocation location){
+        return location == DEVICE;
+    });
 }
 
 

@@ -7,10 +7,10 @@
 #include "../../include/allocation.h"
 
 DTYPE** allocate2DArray(size_t n, size_t m) {
-    auto data = (DTYPE **) malloc(sizeof(DTYPE*) * n);
+    auto data = static_cast<DTYPE **>(malloc(sizeof(DTYPE*) * n));
 
     for (int i = 0; i < n; i++) {
-        data[i] = (DTYPE *) malloc(sizeof(DTYPE) * m);
+        data[i] = static_cast<DTYPE *>(malloc(sizeof(DTYPE) * m));
     }
 
     return data;
@@ -29,7 +29,7 @@ DTYPE** allocate2DArray(size_t n, size_t m, DTYPE defaultValue) {
 }
 
 DTYPE* allocate1DArray(size_t n) {
-    return (DTYPE*) malloc(sizeof(DTYPE) * n);
+    return static_cast<DTYPE*>(malloc(sizeof(DTYPE) * n));
 }
 
 DTYPE* allocate1DArray(size_t n, DTYPE defaultValue) {

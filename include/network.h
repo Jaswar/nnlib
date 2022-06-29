@@ -8,7 +8,7 @@
 #include <vector>
 #include "layer.h"
 
-#define NO_SEED -1
+#define NO_SEED (-1)
 
 class Network {
     DataLocation location;
@@ -30,6 +30,9 @@ public:
     void backward(const Matrix& predicted, const Matrix& target, DTYPE learningRate = 0.01);
 
     void train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE, DTYPE learningRate = 0.01);
+
+private:
+    static void computeAccuracy(const Matrix& X, const Matrix& yHost, const Matrix& predictions);
 };
 
 

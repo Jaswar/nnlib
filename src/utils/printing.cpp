@@ -6,6 +6,14 @@
 #include <iostream>
 #include "printing.h"
 
+void showProgressBarFinished(int maxSteps) {
+    std::cout << "\r[";
+    for (int j = 0; j < 20; j++) {
+        std::cout << "=";
+    }
+    std::cout << "] (" << maxSteps << "/" << maxSteps << ")" << std::flush;
+}
+
 void showProgressBar(int currentStep, int maxSteps) {
     if (currentStep % (maxSteps / 20) == 0) {
         std::cout << "\r[";
@@ -20,10 +28,6 @@ void showProgressBar(int currentStep, int maxSteps) {
         }
         std::cout << "] (" << currentStep << "/" << maxSteps << ")" << std::flush;
     } else if (currentStep >= maxSteps) {
-        std::cout << "\r[";
-        for (int j = 0; j < 20; j++) {
-            std::cout << "=";
-        }
-        std::cout << "] (" << maxSteps << "/" << maxSteps << ")" << std::flush;
+        showProgressBarFinished(maxSteps);
     }
 }

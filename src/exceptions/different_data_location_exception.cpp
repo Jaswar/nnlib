@@ -4,6 +4,6 @@
 
 #include "different_data_location_exception.h"
 
-const char* DifferentDataLocationException::what() const throw() {
+const char* DifferentDataLocationException::what() const noexcept {
     return "Different data location exception";
 }

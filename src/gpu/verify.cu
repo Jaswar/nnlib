@@ -23,6 +23,7 @@ void showCudaInfo() {
     std::cout << "Detected " << deviceCount << (deviceCount == 1 ? " device:" : " devices:") << std::endl;
 
     for (int i = 0; i < deviceCount; i++) {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
         cudaDeviceProp props;
         cudaGetDeviceProperties(&props, i);
         std::cout << "DEVICE " << i << ": " << props.name << ": " << std::endl;

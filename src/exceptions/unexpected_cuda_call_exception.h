@@ -8,7 +8,7 @@
 #include <exception>
 
 class UnexpectedCUDACallException : public std::exception {
-    const char * what() const throw ();
+    const char* what() const noexcept override;
 };
 
 

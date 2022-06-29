@@ -29,8 +29,7 @@ public:
 
     Matrix& operator=(const Matrix& matrix);
 
-    DTYPE& operator()(size_t x, size_t y);
-    DTYPE operator()(size_t x, size_t y) const;
+    DTYPE& operator()(size_t x, size_t y) const;
 };
 
 // "toString" for std::cout

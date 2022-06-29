@@ -82,6 +82,10 @@ void Vector::moveToHost() {
 }
 
 Vector& Vector::operator=(const Vector& vector) {
+    if (this == &vector) {
+        return *this;
+    }
+
     n = vector.n;
     location = vector.location;
 
@@ -100,17 +104,13 @@ Vector& Vector::operator=(const Vector& vector) {
     return *this;
 }
 
-DTYPE Vector::operator[](size_t index) const {
-    return data[index];
-}
-
 // This can overwrite the value at index, so it is not const.
-DTYPE& Vector::operator[](size_t index) {
+DTYPE& Vector::operator[](size_t index) const {
     return data[index];
 }
 
 std::ostream& operator<<(std::ostream& stream, const Vector& vector) {
-    int maxPeek = 10; // Number of lines to show from the front and back of vector.
+    size_t maxPeek = 10; // Number of lines to show from the front and back of vector.
 
     stream << "Vector([";
 
