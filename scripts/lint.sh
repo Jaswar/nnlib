@@ -27,17 +27,22 @@ regex="\(\./\(src\|include\)/.*\.\(cpp\|cu\|h\|cuh\)\)\|\(\./test/\(assertions\|
 num_files=$(find . -regex $regex | wc -l)
 echo ">>> Detected $num_files files to lint"
 
+should_fail=false
 files=$(find . -regex $regex)
-echo ">>> Linting $(echo $files | wc -l) files"
 for file in $files; do
     echo ">>> Linting $file"
     clang-tidy --quiet -p build $file
 	
     if [[ $? -ne 0 ]]; then
-	echo ">>> Linter failed for $file"
-        exit $?
+	      echo ">>> Linter failed for $file"
+        should_fail=true
     fi
 done
+
+if [[ "$should_fail" = "true" ]]; then
+  echo ">>> Linter failed for one or more files"
+  exit 1
+fi
 
 # Clear the build directory once everything is done
 echo ">>> Removing the build directory"
