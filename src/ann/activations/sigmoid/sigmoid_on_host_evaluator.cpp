@@ -9,7 +9,7 @@
 #include <cmath>
 
 DTYPE fSigmoid(DTYPE x) {
-    return 1 / (1 + exp(-x));
+    return 1 / (1 + static_cast<DTYPE>(exp(-static_cast<double>(x))));
 }
 
 void SigmoidOnHostEvaluator::forward(const Vector& input, Vector& result) const {

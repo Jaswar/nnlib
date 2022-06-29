@@ -81,24 +81,24 @@ void Vector::moveToHost() {
     location = HOST;
 }
 
-Vector& Vector::operator=(const Vector& vector) {
-    if (this == &vector) {
+Vector& Vector::operator=(const Vector& other) {
+    if (this == &other) {
         return *this;
     }
 
-    n = vector.n;
-    location = vector.location;
+    n = other.n;
+    location = other.location;
 
     if (location == HOST) {
         if (n > 0) {
             free(data);
         }
-        data = copy1DArray(n, vector.data);
+        data = copy1DArray(n, other.data);
     } else {
         if (n > 0) {
             free1DArrayDevice(data);
         }
-        data = copy1DArrayDevice(n, vector.data);
+        data = copy1DArrayDevice(n, other.data);
     }
 
     return *this;

@@ -64,9 +64,9 @@ void Network::add(size_t numNeurons, const std::string& activation) {
     loss = Matrix(DEFAULT_BATCH_SIZE, numNeurons, location);
 }
 
-Matrix* Network::forward(const Matrix& input) {
+Matrix* Network::forward(const Matrix& batch) {
     Layer& first = layers.front();
-    first.forward(input);
+    first.forward(batch);
 
     for (auto i = layers.begin() + 1; i != layers.end(); i++) {
         size_t index = i - layers.begin();

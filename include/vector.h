@@ -39,6 +39,6 @@ std::ostream& operator<<(std::ostream& stream, const Vector& vector);
 void add(const Vector& v1, const Vector& v2, Vector& result);
 void subtract(const Vector& v1, const Vector& v2, Vector& result);
 void multiply(const Vector& v1, DTYPE constant, Vector& result);
-void multiply(DTYPE constant, const Vector& v2, Vector& result);
+void multiply(DTYPE constant, const Vector& v1, Vector& result);
 
 #endif //NNLIB_VECTOR_H
