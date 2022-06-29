@@ -2,8 +2,8 @@
 // Created by Jan Warchocki on 28/05/2022.
 //
 
-#include <algorithm>
 #include "location_verifiers.h"
+#include <algorithm>
 
 bool allLocationsAreSame(std::initializer_list<DataLocation> locations) {
     int countHost = 0;
@@ -20,15 +20,9 @@ bool allLocationsAreSame(std::initializer_list<DataLocation> locations) {
 }
 
 bool allLocationsAreHost(std::initializer_list<DataLocation> locations) {
-    return std::all_of(locations.begin(), locations.end(), [](DataLocation location){
-        return location == HOST;
-    });
+    return std::all_of(locations.begin(), locations.end(), [](DataLocation location) { return location == HOST; });
 }
 
 bool allLocationsAreDevice(std::initializer_list<DataLocation> locations) {
-    return std::all_of(locations.begin(), locations.end(), [](DataLocation location){
-        return location == DEVICE;
-    });
+    return std::all_of(locations.begin(), locations.end(), [](DataLocation location) { return location == DEVICE; });
 }
-
-

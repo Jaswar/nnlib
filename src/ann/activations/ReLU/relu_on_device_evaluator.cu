@@ -3,15 +3,14 @@
 //
 
 #include "../../../../include/activation.h"
-#include <exceptions/unexpected_cuda_call_exception.h>
-#include <utils/location_verifiers.h>
 #include <exceptions/different_data_location_exception.h>
+#include <exceptions/unexpected_cuda_call_exception.h>
 #include <gpu/assert.cuh>
+#include <utils/location_verifiers.h>
 
 #ifdef HAS_CUDA
 
-__global__
-void ReLUKernel(const DTYPE* vector, DTYPE* result, size_t n) {
+__global__ void ReLUKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -25,8 +24,7 @@ void ReLUKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     }
 }
 
-__global__
-void ReLUKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
+__global__ void ReLUKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -41,8 +39,7 @@ void ReLUKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     }
 }
 
-__global__
-void ReLUDerivativeKernel(const DTYPE* vector, DTYPE* result, size_t n) {
+__global__ void ReLUDerivativeKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -56,8 +53,7 @@ void ReLUDerivativeKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     }
 }
 
-__global__
-void ReLUDerivativeKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
+__global__ void ReLUDerivativeKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -78,8 +74,7 @@ void ReLUOnDeviceEvaluator::forward(const Vector& input, Vector& result) const {
     }
 
     ReLUKernel<<<1, input.n>>>(input.data, result.data, input.n);
-    gpuCheckError( cudaGetLastError() )
-    gpuCheckError( cudaDeviceSynchronize() )
+    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
 }
 
 void ReLUOnDeviceEvaluator::forward(const Matrix& input, Matrix& result) const {
@@ -88,8 +83,7 @@ void ReLUOnDeviceEvaluator::forward(const Matrix& input, Matrix& result) const {
     }
 
     ReLUKernel<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
-    gpuCheckError( cudaGetLastError() )
-    gpuCheckError( cudaDeviceSynchronize() )
+    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
 }
 
 void ReLUOnDeviceEvaluator::computeDerivatives(const Vector& output, Vector& result) const {
@@ -98,8 +92,7 @@ void ReLUOnDeviceEvaluator::computeDerivatives(const Vector& output, Vector& res
     }
 
     ReLUDerivativeKernel<<<1, output.n>>>(output.data, result.data, output.n);
-    gpuCheckError( cudaGetLastError() )
-    gpuCheckError( cudaDeviceSynchronize() )
+    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
 }
 
 void ReLUOnDeviceEvaluator::computeDerivatives(const Matrix& output, Matrix& result) const {
@@ -108,8 +101,7 @@ void ReLUOnDeviceEvaluator::computeDerivatives(const Matrix& output, Matrix& res
     }
 
     ReLUDerivativeKernel<<<output.n, output.m>>>(output.data, result.data, output.n, output.m);
-    gpuCheckError( cudaGetLastError() )
-    gpuCheckError( cudaDeviceSynchronize() )
+    gpuCheckError(cudaGetLastError()) gpuCheckError(cudaDeviceSynchronize())
 }
 
 ReLUOnDeviceEvaluator::~ReLUOnDeviceEvaluator() = default;

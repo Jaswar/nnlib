@@ -2,12 +2,12 @@
 // Created by Jan Warchocki on 03/03/2022.
 //
 
-#include <ctime>
 #include "../../include/network.h"
 #include "../gpu/allocation_gpu.cuh"
 #include <algorithm>
-#include <exceptions/size_mismatch_exception.h>
 #include <cmath>
+#include <ctime>
+#include <exceptions/size_mismatch_exception.h>
 
 std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, DataLocation location) {
     std::vector<Matrix> result;
@@ -30,11 +30,8 @@ std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, Dat
     return result;
 }
 
-Network::Network(size_t inputSize, bool useGPU, long long seed) : seed(seed),
-        layers(),
-        location(HOST),
-        previousSize(inputSize),
-        loss(DEFAULT_BATCH_SIZE, inputSize) {
+Network::Network(size_t inputSize, bool useGPU, long long seed)
+    : seed(seed), layers(), location(HOST), previousSize(inputSize), loss(DEFAULT_BATCH_SIZE, inputSize) {
     if (this->seed == NO_SEED) {
         this->seed = time(nullptr);
     }

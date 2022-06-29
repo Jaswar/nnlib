@@ -5,6 +5,5 @@
 
 #include "../../../../include/activation.h"
 
-ReLUActivation::ReLUActivation() : Activation(new ReLUOnHostEvaluator(),
-                                              new ReLUOnDeviceEvaluator()) {
+ReLUActivation::ReLUActivation() : Activation(new ReLUOnHostEvaluator(), new ReLUOnDeviceEvaluator()) {
 }

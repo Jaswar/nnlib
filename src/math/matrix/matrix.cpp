@@ -1,16 +1,17 @@
 //
 // Created by Jan Warchocki on 03/03/2022.
 //
-#include <utils/location_verifiers.h>
 #include "matrix.h"
 #include "allocation.h"
+#include "exceptions/different_data_location_exception.h"
 #include "exceptions/size_mismatch_exception.h"
 #include "gpu/allocation_gpu.cuh"
-#include "exceptions/different_data_location_exception.h"
 #include "matrix_operations_on_device.cuh"
 #include "matrix_operations_on_host.h"
+#include <utils/location_verifiers.h>
 
-Matrix::Matrix(size_t n, size_t m) : Matrix(n, m, HOST) {}
+Matrix::Matrix(size_t n, size_t m) : Matrix(n, m, HOST) {
+}
 
 Matrix::Matrix(size_t n, size_t m, DataLocation location) : n(n), m(m), location(location) {
     if (location == HOST) {
@@ -28,9 +29,11 @@ Matrix::Matrix(size_t n, size_t m, DataLocation location) : n(n), m(m), location
     }
 }
 
-Matrix::Matrix(DTYPE* data, size_t n, size_t m) : Matrix(data, n, m, HOST) {}
+Matrix::Matrix(DTYPE* data, size_t n, size_t m) : Matrix(data, n, m, HOST) {
+}
 
-Matrix::Matrix(DTYPE* data, size_t n, size_t m, DataLocation location) : data(data), n(n), m(m), location(location) {}
+Matrix::Matrix(DTYPE* data, size_t n, size_t m, DataLocation location) : data(data), n(n), m(m), location(location) {
+}
 
 Matrix::Matrix(const Matrix& matrix) {
     location = matrix.location;
@@ -153,16 +156,18 @@ std::ostream& operator<<(std::ostream& stream, const Matrix& matrix) {
 }
 
 void add(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    // clang-format off
     if (m1.n != m2.n || m1.m != m2.m
         || m1.n != result.n || m1.m != result.m
         || m2.n != result.n || m2.m != result.m ) {
         throw SizeMismatchException();
     }
+    // clang-format on
 
     const std::initializer_list<DataLocation> locations = {m1.location, m2.location, result.location};
     if (allLocationsAreHost(locations)) {
         addMatricesOnHost(m1, m2, result);
-    } else if (allLocationsAreDevice(locations)){
+    } else if (allLocationsAreDevice(locations)) {
         addMatricesOnDevice(m1, m2, result);
     } else {
         throw DifferentDataLocationException();
@@ -185,11 +190,13 @@ void add(const Matrix& m, const Vector& v, Matrix& result) {
 }
 
 void subtract(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    // clang-format off
     if (m1.n != m2.n || m1.m != m2.m
         || m1.n != result.n || m1.m != result.m
         || m2.n != result.n || m2.m != result.m ) {
         throw SizeMismatchException();
     }
+    // clang-format on
 
     const std::initializer_list<DataLocation> locations = {m1.location, m2.location, result.location};
     if (allLocationsAreHost(locations)) {
@@ -251,11 +258,13 @@ void multiply(DTYPE constant, const Matrix& m, Matrix& result) {
 }
 
 void hadamard(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    // clang-format off
     if (m1.n != m2.n || m1.m != m2.m
         || m1.n != result.n || m1.m != result.m
         || m2.n != result.n || m2.m != result.m ) {
         throw SizeMismatchException();
     }
+    // clang-format on
 
     const std::initializer_list<DataLocation> locations = {m1.location, m2.location, result.location};
     if (allLocationsAreHost(locations)) {

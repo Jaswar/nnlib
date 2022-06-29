@@ -5,9 +5,9 @@
 #ifndef NNLIB_LAYER_H
 #define NNLIB_LAYER_H
 
-#include <string>
-#include "matrix.h"
 #include "activation.h"
+#include "matrix.h"
+#include <string>
 
 #define DEFAULT_BATCH_SIZE 32
 
@@ -18,6 +18,7 @@ private:
     Matrix dataT;
     Vector ones;
     Matrix newDeltaT;
+
 public:
     DataLocation location;
 
@@ -44,7 +45,8 @@ public:
 
     void forward(const Matrix& batch);
 
-    void backward(const Matrix& delta, const Matrix& previousWeights, size_t batchSize = DEFAULT_BATCH_SIZE, bool isLastLayer = false);
+    void backward(const Matrix& delta, const Matrix& previousWeights, size_t batchSize = DEFAULT_BATCH_SIZE,
+                  bool isLastLayer = false);
 
     void applyGradients(size_t batchSize, DTYPE learningRate = 0.01);
 

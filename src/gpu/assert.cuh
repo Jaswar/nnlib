@@ -5,18 +5,20 @@
 #ifndef NNLIB_ASSERT_CUH
 #define NNLIB_ASSERT_CUH
 
-#include <cstdio>
 #include "verify.cuh"
+#include <cstdio>
 
 #ifdef HAS_CUDA
 
 // Taken from https://stackoverflow.com/questions/14038589
+// clang-format off
 #define gpuCheckError(ans) { gpuAssert((ans), __FILE__, __LINE__); }
-inline void gpuAssert(cudaError_t code, const char* file, int line, bool abort=true)
-{
+// clang-format on
+inline void gpuAssert(cudaError_t code, const char* file, int line, bool abort = true) {
     if (code != cudaSuccess) {
-        fprintf(stderr,"GPU assertion failed: %s %s %d\n", cudaGetErrorString(code), file, line);
-        if (abort) exit(code);
+        fprintf(stderr, "GPU assertion failed: %s %s %d\n", cudaGetErrorString(code), file, line);
+        if (abort)
+            exit(code);
     }
 }
 

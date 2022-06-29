@@ -4,9 +4,9 @@
 
 
 #include "../../../../include/activation.h"
-#include <utils/location_verifiers.h>
-#include <exceptions/different_data_location_exception.h>
 #include <cmath>
+#include <exceptions/different_data_location_exception.h>
+#include <utils/location_verifiers.h>
 
 DTYPE fSigmoid(DTYPE x) {
     return 1 / (1 + static_cast<DTYPE>(exp(-static_cast<double>(x))));

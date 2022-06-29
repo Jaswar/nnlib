@@ -5,8 +5,8 @@
 #ifndef NNLIB_NETWORK_H
 #define NNLIB_NETWORK_H
 
-#include <vector>
 #include "layer.h"
+#include <vector>
 
 #define NO_SEED (-1)
 
@@ -29,7 +29,8 @@ public:
 
     void backward(const Matrix& predicted, const Matrix& target, DTYPE learningRate = 0.01);
 
-    void train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE, DTYPE learningRate = 0.01);
+    void train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE,
+               DTYPE learningRate = 0.01);
 
 private:
     static void computeAccuracy(const Matrix& X, const Matrix& yHost, const Matrix& predictions);

@@ -5,8 +5,8 @@
 #ifndef NNLIB_READ_H
 #define NNLIB_READ_H
 
-#include <string>
 #include "matrix.h"
+#include <string>
 #include <vector>
 
 bool fileExists(const std::string& filepath);

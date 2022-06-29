@@ -2,15 +2,15 @@
 // Created by Jan Warchocki on 03/03/2022.
 //
 
+#include "../../include/allocation.h"
 #include <cstdlib>
 #include <cstring>
-#include "../../include/allocation.h"
 
 DTYPE** allocate2DArray(size_t n, size_t m) {
-    auto data = static_cast<DTYPE **>(malloc(sizeof(DTYPE*) * n));
+    auto data = static_cast<DTYPE**>(malloc(sizeof(DTYPE*) * n));
 
     for (int i = 0; i < n; i++) {
-        data[i] = static_cast<DTYPE *>(malloc(sizeof(DTYPE) * m));
+        data[i] = static_cast<DTYPE*>(malloc(sizeof(DTYPE) * m));
     }
 
     return data;
@@ -60,4 +60,3 @@ DTYPE** copy2DArray(size_t n, size_t m, DTYPE** original) {
 
     return copy;
 }
-

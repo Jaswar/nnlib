@@ -2,8 +2,8 @@
 // Created by Jan Warchocki on 07/03/2022.
 //
 
-#include <exceptions/size_mismatch_exception.h>
 #include "convert.h"
+#include <exceptions/size_mismatch_exception.h>
 
 Vector convertToVector(const Matrix& matrix) {
     if (matrix.m != 1) {

@@ -5,9 +5,9 @@
 #ifndef NNLIB_ACTIVATION_H
 #define NNLIB_ACTIVATION_H
 
+#include "matrix.h"
 #include "vector.h"
 #include "verify.cuh"
-#include "matrix.h"
 
 class ActivationEvaluator {
 public:
@@ -26,8 +26,7 @@ protected:
     ActivationEvaluator* deviceEvaluator;
 
 public:
-    explicit Activation(ActivationEvaluator* hostEvaluator,
-                        ActivationEvaluator* deviceEvaluator);
+    explicit Activation(ActivationEvaluator* hostEvaluator, ActivationEvaluator* deviceEvaluator);
 
     void forward(const Vector& input, Vector& result) const;
     void forward(const Matrix& input, Matrix& result) const;

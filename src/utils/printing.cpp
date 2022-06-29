@@ -2,9 +2,9 @@
 // Created by Jan Warchocki on 05/04/2022.
 //
 
-#include <utility>
-#include <iostream>
 #include "printing.h"
+#include <iostream>
+#include <utility>
 
 void showProgressBarFinished(int maxSteps) {
     std::cout << "\r[";

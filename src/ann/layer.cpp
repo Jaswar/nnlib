@@ -2,11 +2,11 @@
 // Created by Jan Warchocki on 03/03/2022.
 //
 
-#include <utility>
 #include "../../include/layer.h"
+#include "../gpu/allocation_gpu.cuh"
 #include "backpropagation.h"
 #include "verify.cuh"
-#include "../gpu/allocation_gpu.cuh"
+#include <utility>
 
 DTYPE getRandomValue() {
     // TODO: For large networks, the values at neurons can grow very large rendering them useless
@@ -39,22 +39,23 @@ Matrix initializeWeights(size_t inSize, size_t outSize) {
 }
 
 Layer::Layer(size_t inSize, size_t outSize, Activation* activation, DataLocation location)
-        : location(location),
-          inSize(inSize), outSize(outSize),
-          activation(activation),
-          biases(initializeBiases(outSize)),
-          weights(initializeWeights(inSize, outSize)),
-          data(),
-          dataT(inSize, DEFAULT_BATCH_SIZE),
-          aMatrix(DEFAULT_BATCH_SIZE, outSize),
-          zMatrix(DEFAULT_BATCH_SIZE, outSize),
-          newDelta(DEFAULT_BATCH_SIZE, outSize),
-          newDeltaT(outSize, DEFAULT_BATCH_SIZE),
-          derivatives(DEFAULT_BATCH_SIZE, outSize),
-          previousWeightsT(0, 0),
-          weightsGradients(allocate1DArray(inSize * outSize, 0), inSize, outSize),
-          biasesGradients(allocate1DArray(outSize, 0), outSize),
-          ones(allocate1DArray(DEFAULT_BATCH_SIZE, 1), DEFAULT_BATCH_SIZE) {
+    : location(location),
+      inSize(inSize),
+      outSize(outSize),
+      activation(activation),
+      biases(initializeBiases(outSize)),
+      weights(initializeWeights(inSize, outSize)),
+      data(),
+      dataT(inSize, DEFAULT_BATCH_SIZE),
+      aMatrix(DEFAULT_BATCH_SIZE, outSize),
+      zMatrix(DEFAULT_BATCH_SIZE, outSize),
+      newDelta(DEFAULT_BATCH_SIZE, outSize),
+      newDeltaT(outSize, DEFAULT_BATCH_SIZE),
+      derivatives(DEFAULT_BATCH_SIZE, outSize),
+      previousWeightsT(0, 0),
+      weightsGradients(allocate1DArray(inSize * outSize, 0), inSize, outSize),
+      biasesGradients(allocate1DArray(outSize, 0), outSize),
+      ones(allocate1DArray(DEFAULT_BATCH_SIZE, 1), DEFAULT_BATCH_SIZE) {
 
     if (location == DEVICE) {
         dataT.moveToDevice();

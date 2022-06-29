@@ -5,10 +5,10 @@
 #ifndef NNLIB_VECTOR_H
 #define NNLIB_VECTOR_H
 
-#include <iostream>
 #include "allocation.h"
+#include <iostream>
 
-enum DataLocation {HOST, DEVICE};
+enum DataLocation { HOST, DEVICE };
 
 class Vector {
 

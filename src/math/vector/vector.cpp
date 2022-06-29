@@ -2,15 +2,16 @@
 // Created by Jan Warchocki on 03/03/2022.
 //
 
-#include <utils/location_verifiers.h>
 #include "vector.h"
+#include "exceptions/different_data_location_exception.h"
 #include "exceptions/size_mismatch_exception.h"
 #include "gpu/allocation_gpu.cuh"
-#include "exceptions/different_data_location_exception.h"
 #include "vector_operations_on_device.cuh"
 #include "vector_operations_on_host.h"
+#include <utils/location_verifiers.h>
 
-Vector::Vector(size_t n) : Vector(allocate1DArray(n), n) {}
+Vector::Vector(size_t n) : Vector(allocate1DArray(n), n) {
+}
 
 Vector::Vector(size_t n, DataLocation location) : n(n), data(), location(location) {
     if (location == HOST) {
@@ -28,9 +29,11 @@ Vector::Vector(size_t n, DataLocation location) : n(n), data(), location(locatio
     }
 }
 
-Vector::Vector(DTYPE* data, size_t n) : data(data), n(n), location(HOST) {}
+Vector::Vector(DTYPE* data, size_t n) : data(data), n(n), location(HOST) {
+}
 
-Vector::Vector(DTYPE* data, size_t n, DataLocation location) : data(data), n(n), location(location) {}
+Vector::Vector(DTYPE* data, size_t n, DataLocation location) : data(data), n(n), location(location) {
+}
 
 Vector::Vector(const Vector& vector) {
     location = vector.location;

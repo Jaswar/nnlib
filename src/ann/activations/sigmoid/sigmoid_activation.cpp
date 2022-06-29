@@ -4,6 +4,5 @@
 
 #include "../../../../include/activation.h"
 
-SigmoidActivation::SigmoidActivation() : Activation(new SigmoidOnHostEvaluator(),
-                                                    new SigmoidOnDeviceEvaluator()) {
+SigmoidActivation::SigmoidActivation() : Activation(new SigmoidOnHostEvaluator(), new SigmoidOnDeviceEvaluator()) {
 }

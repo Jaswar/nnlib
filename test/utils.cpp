@@ -23,7 +23,8 @@ Matrix constructMatrix(std::initializer_list<std::initializer_list<DTYPE>> matri
     size_t numColumns = matrixDefinition.begin()->size();
     Matrix matrix = Matrix(matrixDefinition.size(), numColumns);
 
-    int i = 0; int j = 0;
+    int i = 0;
+    int j = 0;
     for (auto& row : matrixDefinition) {
         for (auto value : row) {
             matrix(i, j++) = value;
@@ -38,8 +39,3 @@ Matrix constructMatrix(std::initializer_list<std::initializer_list<DTYPE>> matri
 
     return matrix;
 }
-
-
-
-
-

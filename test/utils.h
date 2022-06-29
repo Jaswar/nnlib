@@ -5,10 +5,11 @@
 #ifndef NNLIB_UTILS_H
 #define NNLIB_UTILS_H
 
-#include <vector.h>
 #include <matrix.h>
+#include <vector.h>
 
 Vector constructVector(std::initializer_list<DTYPE> vectorDefinition, DataLocation location = HOST);
-Matrix constructMatrix(std::initializer_list<std::initializer_list<DTYPE>> matrixDefinition, DataLocation location = HOST);
+Matrix constructMatrix(std::initializer_list<std::initializer_list<DTYPE>> matrixDefinition,
+                       DataLocation location = HOST);
 
 #endif //NNLIB_UTILS_H

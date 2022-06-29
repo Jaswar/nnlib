@@ -2,9 +2,9 @@
 // Created by Jan Warchocki on 28/05/2022.
 //
 
-#include <utils/location_verifiers.h>
-#include <exceptions/different_data_location_exception.h>
 #include "../../../../include/activation.h"
+#include <exceptions/different_data_location_exception.h>
+#include <utils/location_verifiers.h>
 
 void LinearOnHostEvaluator::forward(const Vector& input, Vector& result) const {
     if (!allLocationsAreHost({input.location, result.location})) {

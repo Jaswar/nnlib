@@ -3,9 +3,9 @@
 //
 
 #include "../../../include/activation.h"
+#include <exceptions/different_data_location_exception.h>
 #include <exceptions/size_mismatch_exception.h>
 #include <utils/location_verifiers.h>
-#include <exceptions/different_data_location_exception.h>
 
 void Activation::forward(const Vector& input, Vector& result) const {
     if (result.n != input.n) {
@@ -63,9 +63,9 @@ void Activation::computeDerivatives(const Matrix& output, Matrix& result) const 
     }
 }
 
-Activation::Activation(ActivationEvaluator* hostEvaluator,
-                       ActivationEvaluator* deviceEvaluator) :
-                       hostEvaluator(hostEvaluator), deviceEvaluator(deviceEvaluator) {}
+Activation::Activation(ActivationEvaluator* hostEvaluator, ActivationEvaluator* deviceEvaluator)
+    : hostEvaluator(hostEvaluator), deviceEvaluator(deviceEvaluator) {
+}
 
 Activation::~Activation() {
     delete hostEvaluator;

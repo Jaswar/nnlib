@@ -2,12 +2,12 @@
 // Created by Jan Warchocki on 06/03/2022.
 //
 
-#include <utility>
-#include <fstream>
 #include "read.h"
 #include "printing.h"
-#include <thread>
 #include <cmath>
+#include <fstream>
+#include <thread>
+#include <utility>
 
 std::vector<std::string> split(const std::string& str, const std::string& delim) {
     size_t start = 0, end = 0;
@@ -50,7 +50,8 @@ std::vector<std::string> readFile(const std::string& filepath) {
     return lines;
 }
 
-void threadCSVJob(const std::vector<std::string>& lines, const std::string& delim, Matrix& result, int id, int numThreads) {
+void threadCSVJob(const std::vector<std::string>& lines, const std::string& delim, Matrix& result, int id,
+                  int numThreads) {
     int size = static_cast<int>(lines.size());
     int numIterations = std::ceil(size / static_cast<double>(numThreads));
 

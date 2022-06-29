@@ -4,8 +4,8 @@
 
 
 #include "../../../../include/activation.h"
-#include <utils/location_verifiers.h>
 #include <exceptions/different_data_location_exception.h>
+#include <utils/location_verifiers.h>
 
 void ReLUOnHostEvaluator::forward(const Vector& input, Vector& result) const {
     if (!allLocationsAreHost({input.location, result.location})) {
