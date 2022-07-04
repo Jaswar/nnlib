@@ -16,10 +16,9 @@ jobs:
             chmod +x clang-format
             mkdir -p ~/bin
             mv clang-format ~/bin
-            clang-format --version
-            which clang-format
+            ~/bin/clang-format --version
 
       - name: Run clang-format
         run: |
             chmod +x ./scripts/format.sh
-            ./scripts/format.sh
+            ./scripts/format.sh -p ~/bin/clang-format
