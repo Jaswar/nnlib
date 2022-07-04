@@ -11,7 +11,7 @@
 
 DTYPE* allocate1DArray(size_t n);
 
-DTYPE* allocate1DArray(size_t n, DTYPE DefaultValue);
+DTYPE* allocate1DArray(size_t n, DTYPE defaultValue);
 
 DTYPE** allocate2DArray(size_t n, size_t m);
 
