@@ -13,7 +13,7 @@ should_fail=false
 files=$(find . -regex $regex)
 for file in $files; do
     echo ">>> Checking the format of $file"
-    clang-format --dry-run -Werror -style=file $file
+    ~/bin/clang-format --dry-run -Werror -style=file $file
 	
     if [[ $? -ne 0 ]]; then
 	      echo ">>> Formatting incorrect in $file"
