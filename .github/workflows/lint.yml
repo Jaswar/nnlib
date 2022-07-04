@@ -30,6 +30,11 @@ jobs:
         uses: Jimver/cuda-toolkit@v0.2.7
         id: cuda-toolkit
 
+      - name: Verify CUDA installation
+        run: |
+          echo ">>> Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
+          nvcc -V
+
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
