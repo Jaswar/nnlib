@@ -17,7 +17,7 @@ while getopts ":p:" opt; do
 done
 
 if [[ $path_to_executable != "" ]]; then
-  echo ">>> Using $path_to_exectuble as the clang-tidy executable"
+  echo ">>> Using $path_to_executable as the clang-tidy executable"
 fi
 
 # Navigate to correct directory if script was not moved from "scripts"
@@ -35,10 +35,10 @@ should_fail=false
 files=$(find . -regex $regex)
 for file in $files; do
     echo ">>> Checking the format of $file"
-    if [[ $path_to_exectuble = "" ]]; then
+    if [[ $path_to_executable = "" ]]; then
       clang-format --dry-run -Werror -style=file $file
     else
-      "$path_to_exectuble" --dry-run -Werror -style=file $file
+      $path_to_executable --dry-run -Werror -style=file $file
     fi
 	
     if [[ $? -ne 0 ]]; then
