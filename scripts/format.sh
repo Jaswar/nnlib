@@ -16,6 +16,10 @@ while getopts ":p:" opt; do
   esac
 done
 
+if [[ $path_to_executable != "" ]]; then
+  echo ">>> Using $path_to_exectuble as the clang-tidy executable"
+fi
+
 # Navigate to correct directory if script was not moved from "scripts"
 parent_dir=$(pwd | xargs basename)
 if [[ $parent_dir = "scripts" ]]; then
