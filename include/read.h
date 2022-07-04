@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-bool fileExists(const std::string & filepath);
+bool fileExists(const std::string& filepath);
 
 std::vector<std::string> readFile(const std::string& filepath);
 

@@ -45,7 +45,7 @@ public:
 
     void forward(const Matrix& batch);
 
-    void backward(const Matrix& delta, const Matrix & previousWeights, size_t batchSize = DEFAULT_BATCH_SIZE,
+    void backward(const Matrix& delta, const Matrix& previousWeights, size_t batchSize = DEFAULT_BATCH_SIZE,
                   bool isLastLayer = false);
 
     void applyGradients(size_t batchSize, DTYPE learningRate = 0.01);
