@@ -17,7 +17,7 @@ while getopts ":p:" opt; do
 done
 
 if [[ $path_to_executable != "" ]]; then
-  echo ">>> Using $path_to_executable as the clang-tidy executable"
+  echo ">>> Using $path_to_executable as the clang-format executable"
 fi
 
 # Navigate to correct directory if script was not moved from "scripts"

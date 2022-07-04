@@ -1,3 +1,25 @@
+path_to_executable=""
+# See if the path to clang-tidy executable was passed
+while getopts ":p:" opt; do
+  case $opt in
+    p)
+      path_to_executable=$OPTARG
+      ;;
+    \?)
+      echo ">>> Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo ">>> Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [[ $path_to_executable != "" ]]; then
+  echo ">>> Using $path_to_executable as the clang-tidy executable"
+fi
+
 # Navigate to correct directory if script was not moved from "scripts"
 parent_dir=$(pwd | xargs basename)
 if [[ $parent_dir = "scripts" ]]; then
@@ -31,7 +53,11 @@ should_fail=false
 files=$(find . -regex $regex)
 for file in $files; do
     echo ">>> Linting $file"
-    clang-tidy --quiet -p build $file
+    if [[ $path_to_executable = "" ]]; then
+      clang-tidy --quiet -p build $file
+    else
+      $path_to_executable --quiet -p build $file
+    fi
 	
     if [[ $? -ne 0 ]]; then
 	      echo ">>> Linter failed for $file"
