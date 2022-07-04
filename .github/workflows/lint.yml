@@ -1,7 +1,7 @@
 name: Lint
 on: [push]
 jobs:
-  Lint:
+  Lint-No-CUDA:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
