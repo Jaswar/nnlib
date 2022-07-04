@@ -12,10 +12,12 @@ jobs:
         run: wget https://github.com/ElectricRCAircraftGuy/eRCaGuy_CodeFormatter/raw/main/bin/clang-format
 
       - name: Setup clang-format
-        run: chmod +x clang-format
+        run: |
+            chmod +x clang-format
             mkdir -p ~/bin
             mv clang-format ~/bin
 
       - name: Run clang-format
-        run: chmod +x ./scripts/format.sh
+        run: |
+            chmod +x ./scripts/format.sh
             ./scripts/format.sh
