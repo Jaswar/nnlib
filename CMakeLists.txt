@@ -32,7 +32,8 @@ if (CMAKE_CUDA_COMPILER)
             CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 
     if (NOT "$ENV{CUDA_PATH}" STREQUAL "" AND NOT MSVC)
-        add_compile_options(-isystem "$ENV{CUDA_PATH}")
+        message(STATUS "Adding the -isystem option")
+        add_compile_options(-isystem "$ENV{CUDA_PATH}/targets/x86_64-linux/include")
     endif()
 else()
     # If no CUDA, assume only C++
