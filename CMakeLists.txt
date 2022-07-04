@@ -30,6 +30,10 @@ if (CMAKE_CUDA_COMPILER)
     set_target_properties(nnlib PROPERTIES
             CUDA_SEPARABLE_COMPILATION ON
             CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+
+    if (NOT "$ENV{CUDA_PATH}" STREQUAL "" AND NOT MSVC)
+        add_compile_options(-isystem "$ENV{CUDA_PATH}")
+    endif()
 else()
     # If no CUDA, assume only C++
     get_target_property(SOURCE_FILES nnlib SOURCES)
