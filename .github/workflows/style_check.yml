@@ -16,6 +16,7 @@ jobs:
             chmod +x clang-format
             mkdir -p ~/bin
             mv clang-format ~/bin
+            clang-format --version
 
       - name: Run clang-format
         run: |
