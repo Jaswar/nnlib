@@ -1,13 +1,34 @@
 name: Lint
 on: [push]
 jobs:
-  Lint-No-CUDA:
+  Install:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
       - name: Download clang-tidy
         run: sudo apt install clang-tidy
+
+  Lint-No-CUDA:
+    needs: Install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run clang-tidy
+        run: |
+          chmod +x ./scripts/lint.sh
+          ./scripts/lint.sh
+
+  Lint-CUDA:
+    needs: Install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup CUDA
+        uses: Jimver/cuda-toolkit@v0.2.7
+        id: cuda-toolkit
 
       - name: Run clang-tidy
         run: |
