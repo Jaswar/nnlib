@@ -6,9 +6,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Remove old version of clang-format
-        run: sudo apt remove clang-format
-
       # Get clang-format version 14.0.0 file from https://github.com/ElectricRCAircraftGuy
       # Steps taken from https://stackoverflow.com/questions/20756924/how-can-i-install-clang-format-in-ubuntu
       - name: Download clang-format
@@ -20,6 +17,7 @@ jobs:
             mkdir -p ~/bin
             mv clang-format ~/bin
             clang-format --version
+            which clang-format
 
       - name: Run clang-format
         run: |
