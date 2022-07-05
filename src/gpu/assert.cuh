@@ -12,7 +12,7 @@
 
 // Taken from https://stackoverflow.com/questions/14038589
 // clang-format off
-#define gpuCheckError(ans) gpuAssert((ans), __FILE__, __LINE__)
+#define GPU_CHECK_ERROR(ans) gpuAssert((ans), __FILE__, __LINE__)
 // clang-format on
 inline void gpuAssert(cudaError_t code, const char* file, int line, bool abort = true) {
     if (code != cudaSuccess) {

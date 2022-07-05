@@ -26,8 +26,8 @@ __global__ void addMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* resul
 
 void addMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
     addMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
-    gpuCheckError(cudaGetLastError());
-    gpuCheckError(cudaDeviceSynchronize());
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 __global__ void addBroadcastKernel(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
@@ -43,8 +43,8 @@ __global__ void addBroadcastKernel(const DTYPE* matrix, const DTYPE* vector, DTY
 
 void addBroadcastOnDevice(const Matrix& m, const Vector& v, Matrix& result) {
     addBroadcastKernel<<<m.n, m.m>>>(m.data, v.data, result.data, m.n, m.m);
-    gpuCheckError(cudaGetLastError());
-    gpuCheckError(cudaDeviceSynchronize());
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 __global__ void subtractMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
@@ -59,8 +59,8 @@ __global__ void subtractMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* 
 
 void subtractMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
     subtractMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
-    gpuCheckError(cudaGetLastError());
-    gpuCheckError(cudaDeviceSynchronize());
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 __global__ void mulMatrixVectorKernel(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
@@ -79,8 +79,8 @@ __global__ void mulMatrixVectorKernel(const DTYPE* matrix, const DTYPE* vector, 
 
 void multiplyMatrixVectorOnDevice(const Matrix& matrix, const Vector& vector, Vector& result) {
     mulMatrixVectorKernel<<<1, matrix.n>>>(matrix.data, vector.data, result.data, matrix.n, matrix.m);
-    gpuCheckError(cudaGetLastError());
-    gpuCheckError(cudaDeviceSynchronize());
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 
@@ -147,7 +147,7 @@ void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result
     // Linter says props will not be initialized, but it will be so disable error.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
     cudaDeviceProp props;
-    gpuCheckError(cudaGetDeviceProperties(&props, 0));
+    GPU_CHECK_ERROR(cudaGetDeviceProperties(&props, 0));
     if (m1.m > props.maxThreadsPerBlock) {
         size_t sizeY = std::ceil(static_cast<double>(std::max(m1.n, m2.n)) / TILE_WIDTH);
         size_t sizeX = std::ceil(static_cast<double>(std::max(m1.m, m2.m)) / TILE_WIDTH);
@@ -158,8 +158,8 @@ void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result
     } else {
         multiplyMatricesNoTilingKernel<<<m1.n, m2.m>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
     }
-    gpuCheckError(cudaGetLastError());
-    gpuCheckError(cudaDeviceSynchronize());
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 __global__ void multiplyMatrixKernel(const DTYPE* matrix, DTYPE constant, DTYPE* result, size_t n, size_t m) {
@@ -174,8 +174,8 @@ __global__ void multiplyMatrixKernel(const DTYPE* matrix, DTYPE constant, DTYPE*
 
 void multiplyMatrixOnDevice(const Matrix& m1, DTYPE constant, Matrix& result) {
     multiplyMatrixKernel<<<m1.n, m1.m>>>(m1.data, constant, result.data, m1.n, m1.m);
-    gpuCheckError(cudaGetLastError());
-    gpuCheckError(cudaDeviceSynchronize());
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 __global__ void hadamardMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
@@ -190,8 +190,8 @@ __global__ void hadamardMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* 
 
 void hadamardMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
     hadamardMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
-    gpuCheckError(cudaGetLastError());
-    gpuCheckError(cudaDeviceSynchronize());
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 __global__ void transposeMatrixKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
@@ -207,8 +207,8 @@ __global__ void transposeMatrixKernel(const DTYPE* matrix, DTYPE* result, size_t
 
 void transposeMatrixOnDevice(const Matrix& m, Matrix& result) {
     transposeMatrixKernel<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
-    gpuCheckError(cudaGetLastError());
-    gpuCheckError(cudaDeviceSynchronize());
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 #else
