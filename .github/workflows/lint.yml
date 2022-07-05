@@ -2,7 +2,6 @@ name: Lint
 on: [push]
 jobs:
   Lint-No-CUDA:
-    needs: Install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,7 +18,6 @@ jobs:
           ./scripts/lint.sh -p clang-tidy-14
 
   Lint-CUDA:
-    needs: Install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
