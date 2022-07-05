@@ -1,7 +1,8 @@
 name: Lint
 on: [push]
 jobs:
-  Install:
+  Lint-No-CUDA:
+    needs: Install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -11,12 +12,6 @@ jobs:
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
           sudo apt install clang-tidy-14
           clang-tidy-14 --version
-
-  Lint-No-CUDA:
-    needs: Install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
 
       - name: Run clang-tidy
         run: |
@@ -28,6 +23,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Download clang-tidy
+        run: |
+          sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+          sudo apt install clang-tidy-14
+          clang-tidy-14 --version
 
       - name: Setup CUDA
         uses: Jimver/cuda-toolkit@v0.2.7
