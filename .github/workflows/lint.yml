@@ -8,6 +8,8 @@ jobs:
 
       - name: Download clang-tidy
         run: |
+          echo "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-14 main" | sudo tee -a /etc/apt/sources.list
+          echo "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-14 main" | sudo tee -a /etc/apt/sources.list
           sudo apt update
           sudo apt install clang-tidy-14
           clang-tidy --version
