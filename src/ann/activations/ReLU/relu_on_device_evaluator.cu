@@ -10,7 +10,7 @@
 
 #ifdef HAS_CUDA
 
-__global__ void ReLUKernel(const DTYPE* vector, DTYPE* result, size_t n) {
+__global__ void reluKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -24,7 +24,7 @@ __global__ void ReLUKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     }
 }
 
-__global__ void ReLUKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
+__global__ void reluKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -39,7 +39,7 @@ __global__ void ReLUKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t 
     }
 }
 
-__global__ void ReLUDerivativeKernel(const DTYPE* vector, DTYPE* result, size_t n) {
+__global__ void reluDerivativeKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -53,7 +53,7 @@ __global__ void ReLUDerivativeKernel(const DTYPE* vector, DTYPE* result, size_t 
     }
 }
 
-__global__ void ReLUDerivativeKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
+__global__ void reluDerivativeKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
@@ -73,7 +73,7 @@ void ReLUOnDeviceEvaluator::forward(const Vector& input, Vector& result) const {
         throw DifferentDataLocationException();
     }
 
-    ReLUKernel<<<1, input.n>>>(input.data, result.data, input.n);
+    reluKernel<<<1, input.n>>>(input.data, result.data, input.n);
     gpuCheckError(cudaGetLastError());
     gpuCheckError(cudaDeviceSynchronize());
 }
@@ -83,7 +83,7 @@ void ReLUOnDeviceEvaluator::forward(const Matrix& input, Matrix& result) const {
         throw DifferentDataLocationException();
     }
 
-    ReLUKernel<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
+    reluKernel<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
     gpuCheckError(cudaGetLastError());
     gpuCheckError(cudaDeviceSynchronize());
 }
@@ -93,7 +93,7 @@ void ReLUOnDeviceEvaluator::computeDerivatives(const Vector& output, Vector& res
         throw DifferentDataLocationException();
     }
 
-    ReLUDerivativeKernel<<<1, output.n>>>(output.data, result.data, output.n);
+    reluDerivativeKernel<<<1, output.n>>>(output.data, result.data, output.n);
     gpuCheckError(cudaGetLastError());
     gpuCheckError(cudaDeviceSynchronize());
 }
@@ -103,7 +103,7 @@ void ReLUOnDeviceEvaluator::computeDerivatives(const Matrix& output, Matrix& res
         throw DifferentDataLocationException();
     }
 
-    ReLUDerivativeKernel<<<output.n, output.m>>>(output.data, result.data, output.n, output.m);
+    reluDerivativeKernel<<<output.n, output.m>>>(output.data, result.data, output.n, output.m);
     gpuCheckError(cudaGetLastError());
     gpuCheckError(cudaDeviceSynchronize());
 }
