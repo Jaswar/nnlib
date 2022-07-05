@@ -8,6 +8,7 @@ jobs:
 
       - name: Download clang-tidy
         run: |
+          sudo apt update
           sudo apt install clang-tidy-14
           clang-tidy --version
 
