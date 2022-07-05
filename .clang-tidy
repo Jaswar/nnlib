@@ -1,5 +1,5 @@
 WarningsAsErrors: '*'
-HeaderFilterRegex: '.*'
+HeaderFilterRegex: '(\./(src|include)/.*\.(cpp|cu|h|cuh))|(\./test/(assertions|utils)\.(cpp|h))'
 CheckOptions:
   - key: google-readability-function-size.LineThreshold
     value: 30
