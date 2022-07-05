@@ -7,7 +7,7 @@
 
 #include <matrix.h>
 
-void addMatricesOnHost(const Matrix & m1, const Matrix& m2, Matrix& result);
+void addMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result);
 void addBroadcastOnHost(const Matrix& m, const Vector& v, Matrix& result);
 void subtractMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result);
 
