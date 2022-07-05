@@ -62,8 +62,8 @@ __global__ void mulMatrixVectorKernel(const DTYPE* matrix, const DTYPE* vector, 
 }
 
 // NOLINTNEXTLINE(google-readability-function-size)
-__global__ void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t N, size_t M,
-                                             size_t K) {
+__global__ void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m,
+                                             size_t k) {
     __shared__ DTYPE m1Tile[TILE_WIDTH][TILE_WIDTH];
     __shared__ DTYPE m2Tile[TILE_WIDTH][TILE_WIDTH];
 
@@ -73,51 +73,51 @@ __global__ void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, D
     DTYPE acc = 0;
     // Ignore the downcast here.
     // NOLINTNEXTLINE
-    for (int tileIdx = 0; tileIdx < std::ceil((float) M / TILE_WIDTH); tileIdx++) {
+    for (int tileIdx = 0; tileIdx < std::ceil((float) m / TILE_WIDTH); tileIdx++) {
         auto m1InxColumn = tileIdx * blockDim.x + threadIdx.x;
         auto m2InxRow = tileIdx * blockDim.y + threadIdx.y;
 
-        if (row < N && m1InxColumn < M) {
-            m1Tile[threadIdx.y][threadIdx.x] = m1[row * M + m1InxColumn];
+        if (row < n && m1InxColumn < m) {
+            m1Tile[threadIdx.y][threadIdx.x] = m1[row * m + m1InxColumn];
         } else {
             m1Tile[threadIdx.y][threadIdx.x] = 0;
         }
 
-        if (m2InxRow < M && column < K) {
-            m2Tile[threadIdx.y][threadIdx.x] = m2[m2InxRow * K + column];
+        if (m2InxRow < m && column < k) {
+            m2Tile[threadIdx.y][threadIdx.x] = m2[m2InxRow * k + column];
         } else {
             m2Tile[threadIdx.y][threadIdx.x] = 0;
         }
 
         __syncthreads();
 
-        for (int k = 0; k < TILE_WIDTH; k++) {
-            acc += m1Tile[threadIdx.y][k] * m2Tile[k][threadIdx.x];
+        for (int inx = 0; inx < TILE_WIDTH; inx++) {
+            acc += m1Tile[threadIdx.y][inx] * m2Tile[inx][threadIdx.x];
         }
 
         __syncthreads();
     }
 
-    if (row < N && column < K) {
-        result[row * K + column] = acc;
+    if (row < n && column < k) {
+        result[row * k + column] = acc;
     }
 }
 
-__global__ void multiplyMatricesNoTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t N, size_t M,
-                                               size_t K) {
+__global__ void multiplyMatricesNoTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m,
+                                               size_t k) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
 
-    if (row >= N || column >= K) {
+    if (row >= n || column >= k) {
         return;
     }
 
     DTYPE sum = 0;
-    for (int i = 0; i < M; i++) {
-        sum += m1[row * M + i] * m2[i * K + column];
+    for (int i = 0; i < m; i++) {
+        sum += m1[row * m + i] * m2[i * k + column];
     }
 
-    result[row * K + column] = sum;
+    result[row * k + column] = sum;
 }
 
 __global__ void multiplyMatrixKernel(const DTYPE* matrix, DTYPE constant, DTYPE* result, size_t n, size_t m) {
