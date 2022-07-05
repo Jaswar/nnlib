@@ -66,6 +66,7 @@ jobs:
           ./scripts/build.sh
 
   Install-Linux-CUDA-GXX:
+    needs: Install-Linux-No-CUDA-GXX
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -91,6 +92,7 @@ jobs:
           ./scripts/build.sh
 
   Install-Linux-CUDA-Clang:
+    needs: Install-Linux-No-CUDA-Clang
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
