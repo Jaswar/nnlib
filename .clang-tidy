@@ -3,8 +3,6 @@ HeaderFilterRegex: '(\./(src|include)/.*\.(cpp|cu|h|cuh))|(\./test/(assertions|u
 CheckOptions:
   - key: google-readability-function-size.LineThreshold
     value: 30
-  - key: google-readability-function-size.StatementThreshold
-    value: -1
   - key: google-readability-function-size.BranchThreshold
     value: 5
 
@@ -123,4 +121,5 @@ Checks:   '-*,
           readability-use-anyofallof,
           readability-identifier-naming,
           performance-*,
-          bugprone-*'
+          bugprone-*,
+          -bugprone-easily-swappable-parameters'
