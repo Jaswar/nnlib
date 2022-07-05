@@ -21,7 +21,7 @@ jobs:
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh -p /usr/bin/clang-tidy-14
+          ./scripts/lint.sh -p clang-tidy-14
 
   Lint-CUDA:
     needs: Install
@@ -41,4 +41,4 @@ jobs:
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh -p /usr/bin/clang-tidy-14
+          ./scripts/lint.sh -p clang-tidy-14
