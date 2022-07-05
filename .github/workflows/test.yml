@@ -7,7 +7,9 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run tests
-        run: ./scripts/test.sh
+        run: |
+          chmod +x ./scripts/test.sh
+          ./scripts/test.sh
 
   Test-CUDA:
     runs-on: ubuntu-latest
@@ -24,4 +26,6 @@ jobs:
           nvcc -V
 
       - name: Run tests
-        run: ./scripts/test.sh
+        run: |
+          chmod +x ./scripts/test.sh
+          ./scripts/test.sh
