@@ -6,6 +6,7 @@ project(nnlib
         VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 14)
+message(STATUS "Using ${CMAKE_CXX_COMPILER_ID} compiler")
 
 add_library(${PROJECT_NAME} STATIC)
 

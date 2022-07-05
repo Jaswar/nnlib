@@ -1,0 +1,66 @@
+name: Test
+on: [push]
+jobs:
+  Test-No-CUDA:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run tests
+        run: |
+          chmod +x ./scripts/test.sh
+          ./scripts/test.sh
+
+#  Test-CUDA:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Setup CUDA
+#        uses: Jimver/cuda-toolkit@v0.2.7
+#        id: cuda-toolkit
+#
+#      - name: Verify CUDA installation
+#        run: |
+#          echo ">>> Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
+#          nvcc -V
+#
+#      - name: Run tests
+#        run: |
+#          chmod +x ./scripts/test.sh
+#          ./scripts/test.sh
+#          cat /home/runner/work/nnlib/nnlib/build/test/Testing/Temporary/LastTest.log
+
+  Install-Linux-No-CUDA-GXX:
+    needs: Test-No-CUDA
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup G++
+        run: |
+          sudo apt install g++
+          sudo rm /usr/bin/c++
+          sudo ln -s /usr/bin/g++ /usr/bin/c++
+
+      - name: Install library
+        run: |
+          chmod +x ./scripts/build.sh
+          ./scripts/build.sh
+
+  Install-Linux-No-CUDA-Clang:
+    needs: Test-No-CUDA
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Clang
+        run: |
+          sudo apt install clang
+          sudo rm /usr/bin/c++
+          sudo ln -s /usr/bin/clang /usr/bin/c++
+
+      - name: Install library
+        run: |
+          chmod +x ./scripts/build.sh
+          ./scripts/build.sh
