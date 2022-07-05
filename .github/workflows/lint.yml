@@ -10,9 +10,7 @@ jobs:
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
           sudo apt install clang-tidy-14
-          whereis clang-tidy
-          whereis clang-tidy-14
-          clang-tidy --version
+          clang-tidy-14 --version
 
   Lint-No-CUDA:
     needs: Install
@@ -23,7 +21,7 @@ jobs:
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh
+          ./scripts/lint.sh -p /usr/bin/clang-tidy-14
 
   Lint-CUDA:
     needs: Install
@@ -43,4 +41,4 @@ jobs:
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh
+          ./scripts/lint.sh -p /usr/bin/clang-tidy-14
