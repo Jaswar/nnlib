@@ -6,19 +6,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Get clang-format version 14.0.0 file from https://github.com/ElectricRCAircraftGuy
-      # Steps taken from https://stackoverflow.com/questions/20756924/how-can-i-install-clang-format-in-ubuntu
       - name: Download clang-format
-        run: wget https://github.com/ElectricRCAircraftGuy/eRCaGuy_CodeFormatter/raw/main/bin/clang-format
-
-      - name: Setup clang-format
         run: |
-            chmod +x clang-format
-            mkdir -p ~/bin
-            mv clang-format ~/bin
-            ~/bin/clang-format --version
+          sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+          sudo apt install clang-format-14
+          clang-format-14 --version
 
       - name: Run clang-format
         run: |
             chmod +x ./scripts/format.sh
-            ./scripts/format.sh -p ~/bin/clang-format
+            ./scripts/format.sh -p clang-format-14
