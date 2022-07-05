@@ -16,14 +16,14 @@
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
-__global__ void addMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
+__global__ void addMatricesKernel(const DTYPE* m1, const DTYPE* M2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n * m) {
         return;
     }
 
-    result[index] = m1[index] + m2[index];
+    result[index] = m1[index] + M2[index];
 }
 
 __global__ void addBroadcastKernel(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
@@ -216,7 +216,7 @@ void transposeMatrixOnDevice(const Matrix& m, Matrix& result) {
 
 #else
 
-void addMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
+void addMatricesOnDevice(const Matrix& m1, const Matrix& M2, Matrix& result) {
     throw UnexpectedCUDACallException();
 }
 
