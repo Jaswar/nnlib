@@ -14,6 +14,8 @@
 
 #define TILE_WIDTH 16
 
+//NOLINTBEGIN(readability-static-accessed-through-instance)
+
 __global__ void addMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -22,12 +24,6 @@ __global__ void addMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* resul
     }
 
     result[index] = m1[index] + m2[index];
-}
-
-void addMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
-    addMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
-    GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 __global__ void addBroadcastKernel(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
@@ -41,12 +37,6 @@ __global__ void addBroadcastKernel(const DTYPE* matrix, const DTYPE* vector, DTY
     result[row * m + column] = matrix[row * m + column] + vector[column];
 }
 
-void addBroadcastOnDevice(const Matrix& m, const Vector& v, Matrix& result) {
-    addBroadcastKernel<<<m.n, m.m>>>(m.data, v.data, result.data, m.n, m.m);
-    GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
-}
-
 __global__ void subtractMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -55,12 +45,6 @@ __global__ void subtractMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* 
     }
 
     result[index] = m1[index] - m2[index];
-}
-
-void subtractMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
-    subtractMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
-    GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 __global__ void mulMatrixVectorKernel(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
@@ -76,13 +60,6 @@ __global__ void mulMatrixVectorKernel(const DTYPE* matrix, const DTYPE* vector, 
     }
     result[index] = sum;
 }
-
-void multiplyMatrixVectorOnDevice(const Matrix& matrix, const Vector& vector, Vector& result) {
-    mulMatrixVectorKernel<<<1, matrix.n>>>(matrix.data, vector.data, result.data, matrix.n, matrix.m);
-    GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
-}
-
 
 // NOLINTNEXTLINE(google-readability-function-size)
 __global__ void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t N, size_t M,
@@ -143,6 +120,63 @@ __global__ void multiplyMatricesNoTilingKernel(const DTYPE* m1, const DTYPE* m2,
     result[row * K + column] = sum;
 }
 
+__global__ void multiplyMatrixKernel(const DTYPE* matrix, DTYPE constant, DTYPE* result, size_t n, size_t m) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= n * m) {
+        return;
+    }
+
+    result[index] = matrix[index] * constant;
+}
+
+__global__ void hadamardMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= n * m) {
+        return;
+    }
+
+    result[index] = m1[index] * m2[index];
+}
+
+__global__ void transposeMatrixKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
+    auto row = blockIdx.x;
+    auto column = threadIdx.x;
+
+    if (row >= n || column >= m) {
+        return;
+    }
+
+    result[column * n + row] = matrix[row * m + column];
+}
+
+//NOLINTEND(readability-static-accessed-through-instance)
+
+void addMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    addMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
+}
+
+void addBroadcastOnDevice(const Matrix& m, const Vector& v, Matrix& result) {
+    addBroadcastKernel<<<m.n, m.m>>>(m.data, v.data, result.data, m.n, m.m);
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
+}
+
+void subtractMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
+    subtractMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
+}
+
+void multiplyMatrixVectorOnDevice(const Matrix& matrix, const Vector& vector, Vector& result) {
+    mulMatrixVectorKernel<<<1, matrix.n>>>(matrix.data, vector.data, result.data, matrix.n, matrix.m);
+    GPU_CHECK_ERROR(cudaGetLastError());
+    GPU_CHECK_ERROR(cudaDeviceSynchronize());
+}
+
 void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
     // Linter says props will not be initialized, but it will be so disable error.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
@@ -162,47 +196,16 @@ void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result
     GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
-__global__ void multiplyMatrixKernel(const DTYPE* matrix, DTYPE constant, DTYPE* result, size_t n, size_t m) {
-    auto index = blockIdx.x * blockDim.x + threadIdx.x;
-
-    if (index >= n * m) {
-        return;
-    }
-
-    result[index] = matrix[index] * constant;
-}
-
 void multiplyMatrixOnDevice(const Matrix& m1, DTYPE constant, Matrix& result) {
     multiplyMatrixKernel<<<m1.n, m1.m>>>(m1.data, constant, result.data, m1.n, m1.m);
     GPU_CHECK_ERROR(cudaGetLastError());
     GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
-__global__ void hadamardMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
-    auto index = blockIdx.x * blockDim.x + threadIdx.x;
-
-    if (index >= n * m) {
-        return;
-    }
-
-    result[index] = m1[index] * m2[index];
-}
-
 void hadamardMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
     hadamardMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
     GPU_CHECK_ERROR(cudaGetLastError());
     GPU_CHECK_ERROR(cudaDeviceSynchronize());
-}
-
-__global__ void transposeMatrixKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
-    auto row = blockIdx.x;
-    auto column = threadIdx.x;
-
-    if (row >= n || column >= m) {
-        return;
-    }
-
-    result[column * n + row] = matrix[row * m + column];
 }
 
 void transposeMatrixOnDevice(const Matrix& m, Matrix& result) {

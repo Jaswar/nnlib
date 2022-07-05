@@ -15,6 +15,8 @@ __device__ DTYPE fSigmoidKernel(DTYPE x) {
     return 1 / (1 + expf(-x));
 }
 
+//NOLINTBEGIN(readability-static-accessed-through-instance)
+
 __global__ void sigmoidKernel(DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -57,6 +59,8 @@ __global__ void sigmoidDerivativeKernel(DTYPE* matrix, DTYPE* result, size_t n, 
     result[row * m + column] =
             fSigmoidKernel(matrix[row * m + column]) * (1 - fSigmoidKernel(matrix[row * m + column]));
 }
+
+//NOLINTEND(readability-static-accessed-through-instance)
 
 void SigmoidOnDeviceEvaluator::forward(const Vector& input, Vector& result) const {
     if (!allLocationsAreDevice({input.location, result.location})) {

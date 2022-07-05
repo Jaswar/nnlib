@@ -10,6 +10,8 @@
 
 #ifdef HAS_CUDA
 
+//NOLINTBEGIN(readability-static-accessed-through-instance)
+
 __global__ void reluKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -67,6 +69,8 @@ __global__ void reluDerivativeKernel(const DTYPE* matrix, DTYPE* result, size_t 
         result[row * m + column] = 1;
     }
 }
+
+//NOLINTEND(readability-static-accessed-through-instance)
 
 void ReLUOnDeviceEvaluator::forward(const Vector& input, Vector& result) const {
     if (!allLocationsAreDevice({input.location, result.location})) {
