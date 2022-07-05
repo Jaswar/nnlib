@@ -10,7 +10,7 @@
 
 #ifdef HAS_CUDA
 
-//NOLINTBEGIN(readability-static-accessed-through-instance)
+// NOLINTBEGIN(readability-static-accessed-through-instance)
 
 __global__ void addVectorsKernel(const DTYPE* v1, const DTYPE* v2, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -42,7 +42,7 @@ __global__ void multiplyVectorKernel(const DTYPE* v1, DTYPE constant, DTYPE* res
     result[index] = v1[index] * constant;
 }
 
-//NOLINTEND(readability-static-accessed-through-instance)
+// NOLINTEND(readability-static-accessed-through-instance)
 
 void addVectorsOnDevice(const Vector& v1, const Vector& v2, Vector& result) {
     addVectorsKernel<<<1, v1.n>>>(v1.data, v2.data, result.data, v1.n);

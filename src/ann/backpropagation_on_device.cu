@@ -10,7 +10,7 @@
 
 #ifdef HAS_CUDA
 
-//NOLINTBEGIN(readability-static-accessed-through-instance)
+// NOLINTBEGIN(readability-static-accessed-through-instance)
 
 __global__ void applyGradientsKernel(DTYPE* biases, DTYPE* weights, DTYPE* biasesGradients, DTYPE* weightsGradients,
                                      size_t inSize, size_t outSize, size_t batchSize, DTYPE learningRate) {
@@ -31,7 +31,7 @@ __global__ void applyGradientsKernel(DTYPE* biases, DTYPE* weights, DTYPE* biase
     weightsGradients[inIndex * outSize + outIndex] = 0;
 }
 
-//NOLINTEND(readability-static-accessed-through-instance)
+// NOLINTEND(readability-static-accessed-through-instance)
 
 void applyGradientsOnDevice(Layer& layer, size_t batchSize, DTYPE learningRate) {
     applyGradientsKernel<<<layer.outSize, layer.inSize>>>(layer.biases.data, layer.weights.data,

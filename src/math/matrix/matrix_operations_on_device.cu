@@ -14,7 +14,7 @@
 
 #define TILE_WIDTH 16
 
-//NOLINTBEGIN(readability-static-accessed-through-instance)
+// NOLINTBEGIN(readability-static-accessed-through-instance)
 
 __global__ void addMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -151,7 +151,7 @@ __global__ void transposeMatrixKernel(const DTYPE* matrix, DTYPE* result, size_t
     result[column * n + row] = matrix[row * m + column];
 }
 
-//NOLINTEND(readability-static-accessed-through-instance)
+// NOLINTEND(readability-static-accessed-through-instance)
 
 void addMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
     addMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
