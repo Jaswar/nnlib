@@ -28,7 +28,7 @@ fi
 
 # Clean build directory if it exists
 if [[ -d build ]]; then
-    echo ">>> Clearning build directory"
+    echo ">>> Clearing build directory"
     rm -rf build
 fi
 
