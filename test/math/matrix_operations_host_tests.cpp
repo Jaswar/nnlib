@@ -8,33 +8,33 @@
 #include "../assertions.h"
 
 TEST(matrixOperationsHost, add) {
-    const Matrix& m1 = constructMatrix({{1, 2, 3}, {4, 5, 6}});
-    const Matrix& m2 = constructMatrix({{2, 4, 8}, {16, 32, 64}});
-    Matrix result = Matrix(2, 3);
+    const Matrix& m1 = constructMatrix({{1, 2, 3}, {4, 5, 6}, {1, 2, 3}});
+    const Matrix& m2 = constructMatrix({{2, 4, 8}, {16, 32, 64}, {1, 2, 3}});
+    Matrix result = Matrix(3, 3);
 
     add(m1, m2, result);
 
-    ASSERT_MATRIX_EQ(result, {{3, 6, 11}, {20, 37, 70}});
+    ASSERT_MATRIX_EQ(result, {{3, 6, 11}, {20, 37, 70}, {2, 4, 6}});
 }
 
 TEST(matrixOperationsHost, subtract) {
-    const Matrix& m1 = constructMatrix({{1, 2, 3}, {4, 5, 6}});
-    const Matrix& m2 = constructMatrix({{2, 4, 8}, {16, 32, 64}});
-    Matrix result = Matrix(2, 3);
+    const Matrix& m1 = constructMatrix({{1, 2, 3}, {4, 5, 6}, {1, 2, 3}});
+    const Matrix& m2 = constructMatrix({{2, 4, 8}, {16, 32, 64}, {1, 4, 1}});
+    Matrix result = Matrix(3, 3);
 
     subtract(m1, m2, result);
 
-    ASSERT_MATRIX_EQ(result, {{-1, -2, -5}, {-12, -27, -58}});
+    ASSERT_MATRIX_EQ(result, {{-1, -2, -5}, {-12, -27, -58}, {0, -2, 2}});
 }
 
 TEST(matrixOperationsHost, addBroadcastVector) {
-    const Matrix& m = constructMatrix({{1, 2, 3}, {4, 5, 6}});
-    const Vector& v = constructVector({3, 2, 1});
-    Matrix result = Matrix(2, 3);
+    const Matrix& m = constructMatrix({{1, 2, 3, 4, 5, 4, 3, 2, 1}, {4, 5, 6, 7, 8, 7, 6, 5, 4}});
+    const Vector& v = constructVector({3, 2, 1, 0, -1, -2, -3, -4, -5});
+    Matrix result = Matrix(2, 9);
 
     add(m, v, result);
 
-    ASSERT_MATRIX_EQ(result, {{4, 4, 4}, {7, 7, 7}});
+    ASSERT_MATRIX_EQ(result, {{4, 4, 4, 4, 4, 2, 0, -2, -4}, {7, 7, 7, 7, 7, 5, 3, 1, -1}});
 }
 
 TEST(matrixOperationsHost, multiplyMatrices) {
@@ -70,22 +70,22 @@ TEST(matrixOperationsHost, multiplyMatrixConstant) {
 }
 
 TEST(matrixOperationsHost, multiplyConstantMatrix) {
-    const Matrix& m = constructMatrix({{1, 0}, {0, 1}});
-    Matrix result = Matrix(2, 2);
+    const Matrix& m = constructMatrix({{1, 0, 2, 3, 4}, {0, 1, 3, 5, 6}});
+    Matrix result = Matrix(2, 5);
 
     multiply(2, m, result);
 
-    ASSERT_MATRIX_EQ(result, {{2, 0}, {0, 2}});
+    ASSERT_MATRIX_EQ(result, {{2, 0, 4, 6, 8}, {0, 2, 6, 10, 12}});
 }
 
 TEST(matrixOperationsHost, hadamardProduct) {
-    const Matrix& m1 = constructMatrix({{1, 2, 3}, {4, 5, 6}});
-    const Matrix& m2 = constructMatrix({{2, 4, 8}, {8, 4, 2}});
-    Matrix result = Matrix(2, 3);
+    const Matrix& m1 = constructMatrix({{1, 2, 3}, {4, 5, 6}, {8, 10, 12}});
+    const Matrix& m2 = constructMatrix({{2, 4, 8}, {8, 4, 2}, {-2, 1, 0}});
+    Matrix result = Matrix(3, 3);
 
     hadamard(m1, m2, result);
 
-    ASSERT_MATRIX_EQ(result, {{2, 8, 24}, {32, 20, 12}});
+    ASSERT_MATRIX_EQ(result, {{2, 8, 24}, {32, 20, 12}, {-16, 10, 0}});
 }
 
 TEST(matrixOperationsHost, transpose) {
