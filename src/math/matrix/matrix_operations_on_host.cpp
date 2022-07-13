@@ -74,13 +74,56 @@ void subtractMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
 #endif
 }
 
+#ifdef __AVX2__
+// value = [f7, f6, f5, f4, f3, f2, f1, f0]
+float horizontalAdd(__m256 value) {
+    // [f3, f2, f1, f0]
+    __m128 low128 = _mm256_extractf128_ps(value, 0);
+
+    // [f7, f6, f5, f4]
+    __m128 high128 = _mm256_extractf128_ps(value, 1);
+
+    // [f3 + f7, f2 + f6, f1 + f5, f0 + f4]
+    __m128 sum128 = _mm_add_ps(low128, high128);
+
+    // [f3 + f7, f2 + f6, f3 + f7, f2 + f6]
+    __m128 sum128Moved = _mm_movehl_ps(sum128, sum128);
+
+    // [dc, dc, f1 + f5 + f3 + f7, f0 + f4 + f2 + f6]
+    __m128 sum128PlusMoved = _mm_add_ps(sum128, sum128Moved);
+
+    // [dc, dc, f0 + f4 + f2 + f6, f1 + f5 + f3 + f7]
+    __m128 shuffled = _mm_shuffle_ps(sum128PlusMoved, sum128PlusMoved, _MM_SHUFFLE(3, 2, 0, 1));
+
+    // [dc, dc, dc, f1 + f5 + f3 + f7 + f0 + f4 + f2 + f6]
+    __m128 final128Sum = _mm_add_ps(sum128PlusMoved, shuffled);
+
+    return _mm_cvtss_f32(final128Sum);
+}
+#endif
+
 void multiplyMatrixVectorOnHost(const Matrix& m, const Vector& v, Vector& result) {
+#ifdef __AVX2__
+    for (size_t i = 0; i < m.n; i++) {
+        float accumulator = 0;
+        for (size_t index = 0; index < v.n / 8; index++) {
+            __m256 matrixData = _mm256_loadu_ps(m.data + i * m.m + index * 8);
+            __m256 vectorData = _mm256_loadu_ps(v.data + index * 8);
+            accumulator += horizontalAdd(_mm256_mul_ps(matrixData, vectorData));
+        }
+        for (size_t index = (v.n / 8) * 8; index < v.n; index++) {
+            accumulator += m.data[i * m.m + index] * v.data[index];
+        }
+        result.data[i] = accumulator;
+    }
+#else
     for (int i = 0; i < m.n; i++) {
         result[i] = 0;
         for (int j = 0; j < v.n; j++) {
             result[i] += m(i, j) * v[j];
         }
     }
+#endif
 }
 
 void multiplyMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {

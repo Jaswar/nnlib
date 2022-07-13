@@ -51,13 +51,13 @@ TEST(matrixOperationsHost, multiplyMatrices) {
 }
 
 TEST(matrixOperationsHost, multiplyMatrixVector) {
-    const Matrix& m = constructMatrix({{1, 2}, {3, 4}});
-    const Vector& v = constructVector({2, 3});
+    const Matrix& m = constructMatrix({{1, 2, 3, 4, 5, 6, 7, 8, 9}, {3, 4, 5, 6, 7, 8, 9, 10, 11}});
+    const Vector& v = constructVector({2, 3, 4, 5, 1, 1, 1, -1, 2});
     Vector result = Vector(2);
 
     multiply(m, v, result);
 
-    ASSERT_VECTOR_EQ(result, {8, 18});
+    ASSERT_VECTOR_EQ(result, {68, 104});
 }
 
 TEST(matrixOperationsHost, multiplyMatrixConstant) {
