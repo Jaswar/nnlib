@@ -39,15 +39,44 @@ TEST(matrixOperationsHost, addBroadcastVector) {
 
 TEST(matrixOperationsHost, multiplyMatrices) {
     // 2x3 matrix
-    const Matrix& m1 = constructMatrix({{1, 2, 3}, {4, 5, 6}});
-    // 3x4 matrix
-    const Matrix& m2 = constructMatrix({{2, 4, 8, 10}, {12, 16, 18, 20}, {22, 24, 26, 28}});
+//    const Matrix& m1 = constructMatrix({{1, 2, 3}, {4, 5, 6}});
+//    // 3x4 matrix
+//    const Matrix& m2 = constructMatrix({{2, 4, 8, 10}, {12, 16, 18, 20}, {22, 24, 26, 28}});
+    int n = 16; int m = 8; int k = 16;
+    Matrix m1 = Matrix(n, m);
+    Matrix m2 = Matrix(m, k);
+
+    for (int i = 0; i < n * m; i++) {
+        m1.data[i] = 1;
+    }
+    for (int i = 0; i < m * k; i++) {
+        m2.data[i] = 2;
+    }
+    m1.data[0] = 0;
+    m1.data[8] = 7;
+    m2.data[1] = 5;
     // result should be a 2x4 matrix
-    Matrix result = Matrix(2, 4);
+    Matrix result = Matrix(n, k);
+    Matrix otherResult = Matrix(n, k);
 
     multiply(m1, m2, result);
 
-    ASSERT_MATRIX_EQ(result, {{92, 108, 122, 134}, {200, 240, 278, 308}});
+    std::cout << result << std::endl;
+    for (int row = 0; row < m1.n; row++) {
+        for (int column = 0; column < m2.m; column++) {
+            DTYPE sum = 0;
+            for (int i = 0; i < m1.m; i++) {
+                sum += m1(row, i) * m2(i, column);
+            }
+            otherResult(row, column) = sum;
+        }
+    }
+    std::cout << otherResult << std::endl;
+    for (int i = 0; i < result.n * result.m; i++) {
+        if (result.data[i] != otherResult.data[i]) {
+            ASSERT_MATRIX_EQ(result, {{92, 108, 122, 134}, {200, 240, 278, 308}});
+        }
+    }
 }
 
 TEST(matrixOperationsHost, multiplyMatrixVector) {

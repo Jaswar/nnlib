@@ -4,8 +4,8 @@
 
 #include "matrix_operations_on_host.h"
 
-#ifdef __AVX2__
 #include <immintrin.h>
+#ifdef __AVX2__
 #endif
 
 void addMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
@@ -126,16 +126,41 @@ void multiplyMatrixVectorOnHost(const Matrix& m, const Vector& v, Vector& result
 #endif
 }
 
+// Based on https://github.com/yzhaiustc/Optimizing-DGEMM-on-Intel-CPUs-with-AVX512F/blob/master/include/kernel5.h
 void multiplyMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
-    for (int row = 0; row < m1.n; row++) {
-        for (int column = 0; column < m2.m; column++) {
-            DTYPE sum = 0;
-            for (int i = 0; i < m1.m; i++) {
-                sum += m1(row, i) * m2(i, column);
+    for (size_t row = 0; row < m1.n / 8; row++) {
+        for (size_t column = 0; column < m2.m / 8; column++) {
+            __m256 block[8];
+            for (auto& i : block) {
+                i = _mm256_setzero_ps();
             }
-            result(row, column) = sum;
+
+            for (size_t k = 0; k < m2.n; k++) {
+                // Load 8 floats from a row from m2
+                __m256 m2Row = _mm256_loadu_ps(m2.data + k * m2.m + column * 8);
+
+                for (size_t blockIdx = 0; blockIdx < 8; blockIdx++) {
+                    const __m256 m1ColumnValue = _mm256_broadcast_ss(m1.data + (row * 8 + blockIdx) * m1.m + k);
+                    block[blockIdx] = _mm256_fmadd_ps(m2Row, m1ColumnValue, block[blockIdx]);
+                }
+            }
+
+            for (size_t blockIdx = 0; blockIdx < 8; blockIdx++) {
+                _mm256_storeu_ps(result.data + (row * 8 + blockIdx) * result.m + column * 8, block[blockIdx]);
+            }
         }
     }
+
+//    for (int row = 0; row < m1.n; row++) {
+//        for (int column = 0; column < m2.m; column++) {
+//            DTYPE sum = 0;
+//            for (int i = 0; i < m1.m; i++) {
+//                sum += m1(row, i) * m2(i, column);
+//            }
+//            result(row, column) = sum;
+//        }
+//    }
+
 }
 
 void multiplyMatrixOnHost(const Matrix& m, DTYPE constant, Matrix& result) {
