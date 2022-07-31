@@ -4,12 +4,12 @@
 
 #include "matrix_operations_on_host.h"
 
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
 #include <immintrin.h>
 #endif
 
 void addMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < (m1.n * m1.m) / 8; index++) {
         __m256 a = _mm256_loadu_ps(m1.data + index * 8);
         __m256 b = _mm256_loadu_ps(m2.data + index * 8);
@@ -31,7 +31,7 @@ void addMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
 }
 
 void addBroadcastOnHost(const Matrix& m, const Vector& v, Matrix& result) {
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
     for (size_t row = 0; row < m.n; row++) {
         for (size_t index = 0; index < m.m / 8; index++) {
             __m256 vectorData = _mm256_loadu_ps(v.data + index * 8);
@@ -54,7 +54,7 @@ void addBroadcastOnHost(const Matrix& m, const Vector& v, Matrix& result) {
 }
 
 void subtractMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < (m1.n * m1.m) / 8; index++) {
         __m256 a = _mm256_loadu_ps(m1.data + index * 8);
         __m256 b = _mm256_loadu_ps(m2.data + index * 8);
@@ -74,7 +74,7 @@ void subtractMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
 #endif
 }
 
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
 // value = [f7, f6, f5, f4, f3, f2, f1, f0]
 float horizontalAdd(__m256 value) {
     // [f3, f2, f1, f0]
@@ -103,7 +103,7 @@ float horizontalAdd(__m256 value) {
 #endif
 
 void multiplyMatrixVectorOnHost(const Matrix& m, const Vector& v, Vector& result) {
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
     for (size_t i = 0; i < m.n; i++) {
         float accumulator = 0;
         for (size_t index = 0; index < v.n / 8; index++) {
@@ -125,7 +125,8 @@ void multiplyMatrixVectorOnHost(const Matrix& m, const Vector& v, Vector& result
     }
 #endif
 }
-#ifdef __AVX2__
+
+#if defined __AVX2__ || defined __AVX__
 void handleAVX2MatMulEdgeCases(const Matrix& m1, const Matrix& m2, Matrix& result, size_t rowStart, size_t columnStart) {
     for (size_t row = rowStart; row < m1.n; row++) {
         for (size_t column = columnStart; column < m2.m; column++) {
@@ -153,7 +154,7 @@ void accumulateBlock(const Matrix& m1, const Matrix& m2, __m256* block, size_t r
 
 // Based on https://github.com/yzhaiustc/Optimizing-DGEMM-on-Intel-CPUs-with-AVX512F/blob/master/include/kernel5.h
 void multiplyMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
     for (size_t row = 0; row < m1.n / 8; row++) {
         for (size_t column = 0; column < m2.m / 8; column++) {
             __m256 block[8];
@@ -185,7 +186,7 @@ void multiplyMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
 }
 
 void multiplyMatrixOnHost(const Matrix& m, DTYPE constant, Matrix& result) {
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
     __m256 constValue = _mm256_set1_ps(constant);
     for (size_t index = 0; index < (m.n * m.m) / 8; index++) {
         __m256 matrixValue = _mm256_loadu_ps(m.data + index * 8);
@@ -206,7 +207,7 @@ void multiplyMatrixOnHost(const Matrix& m, DTYPE constant, Matrix& result) {
 }
 
 void hadamardMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < (m1.n * m1.m) / 8; index++) {
         __m256 a = _mm256_loadu_ps(m1.data + index * 8);
         __m256 b = _mm256_loadu_ps(m2.data + index * 8);

@@ -3,12 +3,12 @@
 //
 
 #include "vector_operations_on_host.h"
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
 #include <immintrin.h>
 #endif
 
 void addVectorsOnHost(const Vector& v1, const Vector& v2, Vector& result) {
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < v1.n / 8; index++) {
         __m256 a = _mm256_loadu_ps(v1.data + index * 8);
         __m256 b = _mm256_loadu_ps(v2.data + index * 8);
@@ -27,7 +27,7 @@ void addVectorsOnHost(const Vector& v1, const Vector& v2, Vector& result) {
 }
 
 void subtractVectorsOnHost(const Vector& v1, const Vector& v2, Vector& result) {
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < v1.n / 8; index++) {
         __m256 a = _mm256_loadu_ps(v1.data + index * 8);
         __m256 b = _mm256_loadu_ps(v2.data + index * 8);
@@ -46,7 +46,7 @@ void subtractVectorsOnHost(const Vector& v1, const Vector& v2, Vector& result) {
 }
 
 void multiplyVectorOnHost(const Vector& v1, DTYPE constant, Vector& result) {
-#ifdef __AVX2__
+#if defined __AVX2__ || defined __AVX__
     __m256 b = _mm256_set1_ps(constant);
     for (size_t index = 0; index < v1.n / 8; index++) {
         __m256 a = _mm256_loadu_ps(v1.data + index * 8);
