@@ -27,7 +27,6 @@ void addMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
         }
     }
 #endif
-
 }
 
 void addBroadcastOnHost(const Matrix& m, const Vector& v, Matrix& result) {
@@ -127,7 +126,8 @@ void multiplyMatrixVectorOnHost(const Matrix& m, const Vector& v, Vector& result
 }
 
 #if defined __AVX2__ || defined __AVX__
-void handleAVX2MatMulEdgeCases(const Matrix& m1, const Matrix& m2, Matrix& result, size_t rowStart, size_t columnStart) {
+void handleAVX2MatMulEdgeCases(const Matrix& m1, const Matrix& m2, Matrix& result, size_t rowStart,
+                               size_t columnStart) {
     for (size_t row = rowStart; row < m1.n; row++) {
         for (size_t column = columnStart; column < m2.m; column++) {
             float acc = 0;
