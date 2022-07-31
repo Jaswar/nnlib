@@ -14,7 +14,7 @@ void addMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
         __m256 a = _mm256_loadu_ps(m1.data + index * 8);
         __m256 b = _mm256_loadu_ps(m2.data + index * 8);
         __m256 res = _mm256_add_ps(a, b);
-        _mm256_store_ps(result.data + index * 8, res);
+        _mm256_storeu_ps(result.data + index * 8, res);
     }
 
     for (size_t index = (m1.n * m1.m / 8) * 8; index < m1.n * m1.m; index++) {
@@ -37,7 +37,7 @@ void addBroadcastOnHost(const Matrix& m, const Vector& v, Matrix& result) {
             __m256 vectorData = _mm256_loadu_ps(v.data + index * 8);
             __m256 matrixData = _mm256_loadu_ps(m.data + row * m.m + index * 8);
             __m256 res = _mm256_add_ps(vectorData, matrixData);
-            _mm256_store_ps(result.data + row * m.m + index * 8, res);
+            _mm256_storeu_ps(result.data + row * m.m + index * 8, res);
         }
 
         for (size_t index = (m.m / 8) * 8; index < m.m; index++) {
@@ -59,7 +59,7 @@ void subtractMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
         __m256 a = _mm256_loadu_ps(m1.data + index * 8);
         __m256 b = _mm256_loadu_ps(m2.data + index * 8);
         __m256 res = _mm256_sub_ps(a, b);
-        _mm256_store_ps(result.data + index * 8, res);
+        _mm256_storeu_ps(result.data + index * 8, res);
     }
 
     for (size_t index = (m1.n * m1.m / 8) * 8; index < m1.n * m1.m; index++) {
@@ -146,7 +146,8 @@ void accumulateBlock(const Matrix& m1, const Matrix& m2, __m256* block, size_t r
 
         for (size_t blockIdx = 0; blockIdx < 8; blockIdx++) {
             const __m256 m1ColumnValue = _mm256_broadcast_ss(m1.data + (row * 8 + blockIdx) * m1.m + k);
-            block[blockIdx] = _mm256_fmadd_ps(m2Row, m1ColumnValue, block[blockIdx]);
+            const __m256 mulResult = _mm256_mul_ps(m2Row, m1ColumnValue);
+            block[blockIdx] = _mm256_add_ps(mulResult, block[blockIdx]);
         }
     }
 }
@@ -191,7 +192,7 @@ void multiplyMatrixOnHost(const Matrix& m, DTYPE constant, Matrix& result) {
     for (size_t index = 0; index < (m.n * m.m) / 8; index++) {
         __m256 matrixValue = _mm256_loadu_ps(m.data + index * 8);
         __m256 res = _mm256_mul_ps(matrixValue, constValue);
-        _mm256_store_ps(result.data + index * 8, res);
+        _mm256_storeu_ps(result.data + index * 8, res);
     }
 
     for (size_t index = (m.n * m.m / 8) * 8; index < m.n * m.m; index++) {
@@ -212,7 +213,7 @@ void hadamardMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
         __m256 a = _mm256_loadu_ps(m1.data + index * 8);
         __m256 b = _mm256_loadu_ps(m2.data + index * 8);
         __m256 res = _mm256_mul_ps(a, b);
-        _mm256_store_ps(result.data + index * 8, res);
+        _mm256_storeu_ps(result.data + index * 8, res);
     }
 
     for (size_t index = (m1.n * m1.m / 8) * 8; index < m1.n * m1.m; index++) {

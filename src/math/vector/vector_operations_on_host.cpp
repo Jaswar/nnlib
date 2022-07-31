@@ -13,7 +13,7 @@ void addVectorsOnHost(const Vector& v1, const Vector& v2, Vector& result) {
         __m256 a = _mm256_loadu_ps(v1.data + index * 8);
         __m256 b = _mm256_loadu_ps(v2.data + index * 8);
         __m256 res = _mm256_add_ps(a, b);
-        _mm256_store_ps(result.data + index * 8, res);
+        _mm256_storeu_ps(result.data + index * 8, res);
     }
 
     for (size_t index = (v1.n / 8) * 8; index < v1.n; index++) {
@@ -32,7 +32,7 @@ void subtractVectorsOnHost(const Vector& v1, const Vector& v2, Vector& result) {
         __m256 a = _mm256_loadu_ps(v1.data + index * 8);
         __m256 b = _mm256_loadu_ps(v2.data + index * 8);
         __m256 res = _mm256_sub_ps(a, b);
-        _mm256_store_ps(result.data + index * 8, res);
+        _mm256_storeu_ps(result.data + index * 8, res);
     }
 
     for (size_t index = (v1.n / 8) * 8; index < v1.n; index++) {
@@ -51,7 +51,7 @@ void multiplyVectorOnHost(const Vector& v1, DTYPE constant, Vector& result) {
     for (size_t index = 0; index < v1.n / 8; index++) {
         __m256 a = _mm256_loadu_ps(v1.data + index * 8);
         __m256 res = _mm256_mul_ps(a, b);
-        _mm256_store_ps(result.data + index * 8, res);
+        _mm256_storeu_ps(result.data + index * 8, res);
     }
 
     for (size_t index = (v1.n / 8) * 8; index < v1.n; index++) {

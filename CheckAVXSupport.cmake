@@ -2,6 +2,11 @@
 
 include(CheckCXXSourceRuns)
 
+if (MSVC)
+    set(CMAKE_REQUIRED_FLAGS "/arch:AVX")
+else()
+    set(CMAKE_REQUIRED_FLAGS "-mavx")
+endif()
 check_cxx_source_runs("
         #include <immintrin.h>
         int main()
@@ -22,6 +27,11 @@ check_cxx_source_runs("
         }"
         AVX_SUPPORTED)
 
+if (MSVC)
+    set(CMAKE_REQUIRED_FLAGS "/arch:AVX2")
+else()
+    set(CMAKE_REQUIRED_FLAGS "-mavx2")
+endif()
 check_cxx_source_runs("
         #include <immintrin.h>
         int main()
