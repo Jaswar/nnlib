@@ -77,10 +77,10 @@ void subtractMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
 // value = [f7, f6, f5, f4, f3, f2, f1, f0]
 float horizontalAdd(__m256 value) {
     // [f3, f2, f1, f0]
-    __m128 low128 = _mm256_extractf128_ps(value, 0);
+    auto low128 = _mm256_extractf128_ps(value, 0);
 
     // [f7, f6, f5, f4]
-    __m128 high128 = _mm256_extractf128_ps(value, 1);
+    auto high128 = _mm256_extractf128_ps(value, 1);
 
     // [f3 + f7, f2 + f6, f1 + f5, f0 + f4]
     __m128 sum128 = _mm_add_ps(low128, high128);
@@ -92,7 +92,7 @@ float horizontalAdd(__m256 value) {
     __m128 sum128PlusMoved = _mm_add_ps(sum128, sum128Moved);
 
     // [dc, dc, f0 + f4 + f2 + f6, f1 + f5 + f3 + f7]
-    __m128 shuffled = _mm_shuffle_ps(sum128PlusMoved, sum128PlusMoved, _MM_SHUFFLE(3, 2, 0, 1));
+    auto shuffled = _mm_shuffle_ps(sum128PlusMoved, sum128PlusMoved, _MM_SHUFFLE(3, 2, 0, 1));
 
     // [dc, dc, dc, f1 + f5 + f3 + f7 + f0 + f4 + f2 + f6]
     __m128 final128Sum = _mm_add_ps(sum128PlusMoved, shuffled);
