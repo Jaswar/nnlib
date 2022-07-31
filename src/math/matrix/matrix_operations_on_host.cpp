@@ -4,8 +4,8 @@
 
 #include "matrix_operations_on_host.h"
 
-#include <immintrin.h>
 #ifdef __AVX2__
+#include <immintrin.h>
 #endif
 
 void addMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {

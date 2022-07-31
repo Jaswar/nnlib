@@ -40,10 +40,48 @@ else()
     endif()
 endif()
 
+include(CheckCXXSourceRuns)
+check_cxx_source_runs("
+        #include <immintrin.h>
+        int main()
+        {
+          __m256 a, b, c;
+          const float src[8] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f };
+          float dst[8];
+          a = _mm256_loadu_ps(src);
+          b = _mm256_loadu_ps(src);
+          c = _mm256_add_ps(a, b);
+          _mm256_storeu_ps(dst, c);
+          for (int i = 0; i < 8; i++) {
+            if ((src[i] + src[i]) != dst[i]) {
+              return -1;
+            }
+          }
+          return 0;
+        }"
+
+        AVX2_SUPPORTED)
+
 if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2")
+    if (AVX2_SUPPORTED)
+        # This flag is added by the compiler anyway, but CLion highlighting does not work without adding
+        # this definition manually
+        add_definitions(-D__AVX2__)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2")
+        message(STATUS "AVX2 support detected")
+    else()
+        message(STATUS "AVX2 is not supported")
+    endif()
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+    if (AVX2_SUPPORTED)
+        # This flag is added by the compiler anyway, but CLion highlighting does not work without adding
+        # this definition manually
+        add_definitions(-D__AVX2__)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2")
+        message(STATUS "AVX2 support detected")
+    else()
+        message(STATUS "AVX2 is not supported")
+    endif()
 endif()
 
 target_include_directories(${PROJECT_NAME}
