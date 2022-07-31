@@ -137,7 +137,7 @@ void multiplyMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
 
             for (size_t k = 0; k < m2.n; k++) {
                 // Load 8 floats from a row from m2
-                __m256 m2Row = _mm256_loadu_ps(m2.data + k * m2.m + column * 8);
+                const __m256 m2Row = _mm256_loadu_ps(m2.data + k * m2.m + column * 8);
 
                 for (size_t blockIdx = 0; blockIdx < 8; blockIdx++) {
                     const __m256 m1ColumnValue = _mm256_broadcast_ss(m1.data + (row * 8 + blockIdx) * m1.m + k);
@@ -148,6 +148,26 @@ void multiplyMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
             for (size_t blockIdx = 0; blockIdx < 8; blockIdx++) {
                 _mm256_storeu_ps(result.data + (row * 8 + blockIdx) * result.m + column * 8, block[blockIdx]);
             }
+        }
+    }
+
+    for (size_t row = 0; row < m1.n; row++) {
+        for (size_t column = (m2.m / 8) * 8; column < m2.m; column++) {
+            float acc = 0;
+            for (size_t k = 0; k < m2.n; k++) {
+                acc += m1.data[row * m1.m + k] * m2.data[k * m2.m + column];
+            }
+            result.data[row * result.m + column] = acc;
+        }
+    }
+
+    for (size_t row = (m1.n / 8) * 8; row < m1.n; row++) {
+        for (size_t column = 0; column < m2.m; column++) {
+            float acc = 0;
+            for (size_t k = 0; k < m2.n; k++) {
+                acc += m1.data[row * m1.m + k] * m2.data[k * m2.m + column];
+            }
+            result.data[row * result.m + column] = acc;
         }
     }
 
