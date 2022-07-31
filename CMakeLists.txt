@@ -40,27 +40,7 @@ else()
     endif()
 endif()
 
-include(CheckCXXSourceRuns)
-check_cxx_source_runs("
-        #include <immintrin.h>
-        int main()
-        {
-          __m256 a, b, c;
-          const float src[8] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f };
-          float dst[8];
-          a = _mm256_loadu_ps(src);
-          b = _mm256_loadu_ps(src);
-          c = _mm256_add_ps(a, b);
-          _mm256_storeu_ps(dst, c);
-          for (int i = 0; i < 8; i++) {
-            if ((src[i] + src[i]) != dst[i]) {
-              return -1;
-            }
-          }
-          return 0;
-        }"
-
-        AVX2_SUPPORTED)
+include(CheckAVXSupport.cmake)
 
 if(MSVC)
     if (AVX2_SUPPORTED)
@@ -69,8 +49,12 @@ if(MSVC)
         add_definitions(-D__AVX2__)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2")
         message(STATUS "AVX2 support detected")
+    elseif (AVX_SUPPORTED)
+        add_definitions(-D__AVX__)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX")
+        message(STATUS "AVX support detected")
     else()
-        message(STATUS "AVX2 is not supported")
+        message(STATUS "No SIMD intrinsics detected")
     endif()
 else()
     if (AVX2_SUPPORTED)
@@ -79,8 +63,12 @@ else()
         add_definitions(-D__AVX2__)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2")
         message(STATUS "AVX2 support detected")
+    elseif (AVX_SUPPORTED)
+        add_definitions(-D__AVX__)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx")
+        message(STATUS "AVX support detected")
     else()
-        message(STATUS "AVX2 is not supported")
+        message(STATUS "No SIMD intrinsics detected")
     endif()
 endif()
 
