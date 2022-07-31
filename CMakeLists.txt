@@ -42,34 +42,26 @@ endif()
 
 include(CheckAVXSupport.cmake)
 
-if(MSVC)
-    if (AVX2_SUPPORTED)
-        # This flag is added by the compiler anyway, but CLion highlighting does not work without adding
-        # this definition manually
-        add_definitions(-D__AVX2__)
+if (AVX2_SUPPORTED)
+    # This flag is added by the compiler anyway, but CLion highlighting does not work without adding
+    # this definition manually
+    add_definitions(-D__AVX2__)
+    if (MSVC)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2")
-        message(STATUS "AVX2 support detected")
-    elseif (AVX_SUPPORTED)
-        add_definitions(-D__AVX__)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX")
-        message(STATUS "AVX support detected")
     else()
-        message(STATUS "No SIMD intrinsics detected")
-    endif()
-else()
-    if (AVX2_SUPPORTED)
-        # This flag is added by the compiler anyway, but CLion highlighting does not work without adding
-        # this definition manually
-        add_definitions(-D__AVX2__)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2")
-        message(STATUS "AVX2 support detected")
-    elseif (AVX_SUPPORTED)
-        add_definitions(-D__AVX__)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx")
-        message(STATUS "AVX support detected")
-    else()
-        message(STATUS "No SIMD intrinsics detected")
     endif()
+    message(STATUS "AVX2 support detected")
+elseif (AVX_SUPPORTED)
+    add_definitions(-D__AVX__)
+    if (MSVC)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX")
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx")
+    endif()
+    message(STATUS "AVX support detected")
+else()
+    message(STATUS "No SIMD intrinsics detected")
 endif()
 
 target_include_directories(${PROJECT_NAME}
