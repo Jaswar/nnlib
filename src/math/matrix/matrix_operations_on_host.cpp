@@ -125,9 +125,35 @@ void multiplyMatrixVectorOnHost(const Matrix& m, const Vector& v, Vector& result
     }
 #endif
 }
+#ifdef __AVX2__
+void handleAVX2MatMulEdgeCases(const Matrix& m1, const Matrix& m2, Matrix& result, size_t rowStart, size_t columnStart) {
+    for (size_t row = rowStart; row < m1.n; row++) {
+        for (size_t column = columnStart; column < m2.m; column++) {
+            float acc = 0;
+            for (size_t k = 0; k < m2.n; k++) {
+                acc += m1.data[row * m1.m + k] * m2.data[k * m2.m + column];
+            }
+            result.data[row * result.m + column] = acc;
+        }
+    }
+}
+
+void accumulateBlock(const Matrix& m1, const Matrix& m2, __m256* block, size_t row, size_t column) {
+    for (size_t k = 0; k < m2.n; k++) {
+        // Load 8 floats from a row from m2
+        const __m256 m2Row = _mm256_loadu_ps(m2.data + k * m2.m + column * 8);
+
+        for (size_t blockIdx = 0; blockIdx < 8; blockIdx++) {
+            const __m256 m1ColumnValue = _mm256_broadcast_ss(m1.data + (row * 8 + blockIdx) * m1.m + k);
+            block[blockIdx] = _mm256_fmadd_ps(m2Row, m1ColumnValue, block[blockIdx]);
+        }
+    }
+}
+#endif
 
 // Based on https://github.com/yzhaiustc/Optimizing-DGEMM-on-Intel-CPUs-with-AVX512F/blob/master/include/kernel5.h
 void multiplyMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
+#ifdef __AVX2__
     for (size_t row = 0; row < m1.n / 8; row++) {
         for (size_t column = 0; column < m2.m / 8; column++) {
             __m256 block[8];
@@ -135,15 +161,7 @@ void multiplyMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
                 i = _mm256_setzero_ps();
             }
 
-            for (size_t k = 0; k < m2.n; k++) {
-                // Load 8 floats from a row from m2
-                const __m256 m2Row = _mm256_loadu_ps(m2.data + k * m2.m + column * 8);
-
-                for (size_t blockIdx = 0; blockIdx < 8; blockIdx++) {
-                    const __m256 m1ColumnValue = _mm256_broadcast_ss(m1.data + (row * 8 + blockIdx) * m1.m + k);
-                    block[blockIdx] = _mm256_fmadd_ps(m2Row, m1ColumnValue, block[blockIdx]);
-                }
-            }
+            accumulateBlock(m1, m2, block, row, column);
 
             for (size_t blockIdx = 0; blockIdx < 8; blockIdx++) {
                 _mm256_storeu_ps(result.data + (row * 8 + blockIdx) * result.m + column * 8, block[blockIdx]);
@@ -151,36 +169,19 @@ void multiplyMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
         }
     }
 
-    for (size_t row = 0; row < m1.n; row++) {
-        for (size_t column = (m2.m / 8) * 8; column < m2.m; column++) {
-            float acc = 0;
-            for (size_t k = 0; k < m2.n; k++) {
-                acc += m1.data[row * m1.m + k] * m2.data[k * m2.m + column];
+    handleAVX2MatMulEdgeCases(m1, m2, result, 0, (m2.m / 8) * 8);
+    handleAVX2MatMulEdgeCases(m1, m2, result, (m1.n / 8) * 8, 0);
+#else
+    for (int row = 0; row < m1.n; row++) {
+        for (int column = 0; column < m2.m; column++) {
+            DTYPE sum = 0;
+            for (int i = 0; i < m1.m; i++) {
+                sum += m1(row, i) * m2(i, column);
             }
-            result.data[row * result.m + column] = acc;
+            result(row, column) = sum;
         }
     }
-
-    for (size_t row = (m1.n / 8) * 8; row < m1.n; row++) {
-        for (size_t column = 0; column < m2.m; column++) {
-            float acc = 0;
-            for (size_t k = 0; k < m2.n; k++) {
-                acc += m1.data[row * m1.m + k] * m2.data[k * m2.m + column];
-            }
-            result.data[row * result.m + column] = acc;
-        }
-    }
-
-//    for (int row = 0; row < m1.n; row++) {
-//        for (int column = 0; column < m2.m; column++) {
-//            DTYPE sum = 0;
-//            for (int i = 0; i < m1.m; i++) {
-//                sum += m1(row, i) * m2(i, column);
-//            }
-//            result(row, column) = sum;
-//        }
-//    }
-
+#endif
 }
 
 void multiplyMatrixOnHost(const Matrix& m, DTYPE constant, Matrix& result) {
