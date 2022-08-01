@@ -8,6 +8,8 @@
 #include <cmath>
 #include <ctime>
 #include <exceptions/size_mismatch_exception.h>
+#include <utils/printing.h>
+#include <iomanip>
 
 std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, DataLocation location) {
     std::vector<Matrix> result;
@@ -119,10 +121,11 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
             const Matrix* output = forward(batch);
 
             correct += computeCorrect(target, *output);
-            total += static_cast<int>(batch.n);
-            std::cout << "\rAccuracy: " << static_cast<double>(correct) / total;
+            total += static_cast<int>(batchSize);
 
             backward(*output, target, learningRate);
+
+            displayEpochProgress((row + 1) * batchSize, X.n, static_cast<double>(correct) / total);
         }
         std::cout << std::endl;
     }
@@ -145,4 +148,11 @@ int Network::computeCorrect(const Matrix& expected, const Matrix& predictions) {
         }
     }
     return correct;
+}
+
+void Network::displayEpochProgress(size_t processedRows, size_t totalRows, double accuracy) {
+    std::cout << "\r"
+              << constructProgressBar(processedRows, totalRows) << " "
+              << constructPercentage(processedRows, totalRows) << ": accuracy = "
+              << std::setprecision(3) << accuracy << std::flush;
 }

@@ -36,6 +36,7 @@ public:
 private:
     //NOLINTNEXTLINE(readability-identifier-naming)
     static int computeCorrect(const Matrix& yHost, const Matrix& predictions);
+    static void displayEpochProgress(size_t processedRows, size_t totalRows, double accuracy);
 };
 
 

@@ -15,7 +15,7 @@ std::string constructFinishedProgressBar() {
     return result;
 }
 
-std::string constructProgressBar(int currentStep, int maxSteps) {
+std::string constructProgressBar(size_t currentStep, size_t maxSteps) {
     if (maxSteps == 0) {
         return constructFinishedProgressBar();
     }
@@ -23,7 +23,7 @@ std::string constructProgressBar(int currentStep, int maxSteps) {
         return constructFinishedProgressBar();
     }
 
-    double currentProgress = static_cast<double>(currentStep) / maxSteps;
+    double currentProgress = static_cast<double>(currentStep) / static_cast<double>(maxSteps);
     double increment = 1.0 / 20;
 
     std::string result = "[";
@@ -46,8 +46,15 @@ std::string constructProgressBar(int currentStep, int maxSteps) {
     return result;
 }
 
-std::string constructPercentage(int currentStep, int maxSteps) {
-    int percentage = static_cast<int>(static_cast<double>(currentStep) / maxSteps * 100);
+std::string constructPercentage(size_t currentStep, size_t maxSteps) {
+    if (maxSteps == 0) {
+        return "[0/0 (100%)]";
+    }
+    if (currentStep >= maxSteps) {
+        return "[" + std::to_string(maxSteps) + "/" + std::to_string(maxSteps) + " (100%)]";
+    }
+
+    int percentage = static_cast<int>(static_cast<double>(currentStep) / static_cast<double>(maxSteps) * 100);
 
     return "[" + std::to_string(currentStep) + "/" + std::to_string(maxSteps)
                 + " (" + std::to_string(percentage) + "%)]";
