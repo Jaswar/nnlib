@@ -4,7 +4,6 @@
 
 #include "../../include/layer.h"
 #include "../gpu/allocation_gpu.cuh"
-#include "backpropagation.h"
 #include "verify.cuh"
 #include <utility>
 
@@ -118,7 +117,11 @@ void Layer::backward(const Matrix& delta, const Matrix& previousWeights, size_t 
 }
 
 void Layer::applyGradients(size_t batchSize, DTYPE learningRate) {
-    ::applyGradients(*this, batchSize, learningRate);
+    multiply(biasesGradients, learningRate / static_cast<DTYPE>(batchSize), biasesGradients);
+    subtract(biases, biasesGradients, biases);
+
+    multiply(weightsGradients, learningRate / static_cast<DTYPE>(batchSize), weightsGradients);
+    subtract(weights, weightsGradients, weights);
 }
 
 void Layer::calculateDerivatives() {
