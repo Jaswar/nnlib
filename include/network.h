@@ -32,11 +32,6 @@ public:
     //NOLINTNEXTLINE(readability-identifier-naming)
     void train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE,
                DTYPE learningRate = 0.01);
-
-private:
-    //NOLINTNEXTLINE(readability-identifier-naming)
-    static int computeCorrect(const Matrix& yHost, const Matrix& predictions);
-    static void displayEpochProgress(size_t processedRows, size_t totalRows, double accuracy);
 };
 
 

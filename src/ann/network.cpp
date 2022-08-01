@@ -98,41 +98,18 @@ void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE lear
     }
 }
 
-//NOLINTNEXTLINE(readability-identifier-naming)
-void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize, DTYPE learningRate) {
-    if (X.n != y.n) {
-        throw SizeMismatchException();
+bool moveToHost(Matrix& expected, Matrix& predictions) {
+    if (expected.location == DEVICE) {
+        expected.moveToHost();
+        predictions.moveToHost();
+        return true;
     }
-
-    Matrix yHost = y;
-    yHost.moveToHost();
-
-    std::vector<Matrix> batches = splitIntoBatches(X, batchSize, location);
-    std::vector<Matrix> targets = splitIntoBatches(y, batchSize, location);
-
-    for (int epoch = 1; epoch <= epochs; epoch++) {
-        std::cout << "Epoch: " << epoch << std::endl;
-        int correct = 0;
-        int total = 0;
-        for (int row = 0; row < batches.size(); row++) {
-            const Matrix& batch = batches.at(row);
-            const Matrix& target = targets.at(row);
-
-            const Matrix* output = forward(batch);
-
-            correct += computeCorrect(target, *output);
-            total += static_cast<int>(batchSize);
-
-            backward(*output, target, learningRate);
-
-            displayEpochProgress((row + 1) * batchSize, X.n, static_cast<double>(correct) / total);
-        }
-        std::cout << std::endl;
-    }
+    return false;
 }
 
-//NOLINTNEXTLINE(readability-identifier-naming)
-int Network::computeCorrect(const Matrix& expected, const Matrix& predictions) {
+int computeCorrect(Matrix& expected, Matrix& predictions) {
+    bool shouldRestoreToDevice = moveToHost(expected, predictions);
+
     // Calculate the accuracy on the training set.
     int correct = 0;
     for (int row = 0; row < expected.n; row++) {
@@ -147,12 +124,48 @@ int Network::computeCorrect(const Matrix& expected, const Matrix& predictions) {
             correct++;
         }
     }
+    if (shouldRestoreToDevice) {
+        expected.moveToDevice();
+        predictions.moveToDevice();
+    }
+
     return correct;
 }
 
-void Network::displayEpochProgress(size_t processedRows, size_t totalRows, double accuracy) {
+void displayEpochProgress(size_t processedRows, size_t totalRows, double accuracy) {
     std::cout << "\r"
               << constructProgressBar(processedRows, totalRows) << " "
               << constructPercentage(processedRows, totalRows) << ": accuracy = "
               << std::setprecision(3) << accuracy << std::flush;
 }
+
+//NOLINTNEXTLINE(readability-identifier-naming)
+void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize, DTYPE learningRate) {
+    if (X.n != y.n) {
+        throw SizeMismatchException();
+    }
+
+    std::vector<Matrix> batches = splitIntoBatches(X, batchSize, location);
+    std::vector<Matrix> targets = splitIntoBatches(y, batchSize, location);
+
+    for (int epoch = 1; epoch <= epochs; epoch++) {
+        std::cout << "Epoch: " << epoch << std::endl;
+        int correct = 0;
+        int total = 0;
+        for (int row = 0; row < batches.size(); row++) {
+            const Matrix& batch = batches.at(row);
+            Matrix& target = targets.at(row);
+
+            Matrix* output = forward(batch);
+
+            correct += computeCorrect(target, *output);
+            total += static_cast<int>(batchSize);
+
+            backward(*output, target, learningRate);
+
+            displayEpochProgress((row + 1) * batchSize, X.n, static_cast<double>(correct) / total);
+        }
+        std::cout << std::endl;
+    }
+}
+
