@@ -32,7 +32,24 @@ jobs:
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh -p clang-tidy-14
+          ./scripts/lint.sh -p clang-tidy-14 -a None
+
+  Lint-No-CUDA-AVX:
+    needs: Style-Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download clang-tidy
+        run: |
+          sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+          sudo apt install clang-tidy-14
+          clang-tidy-14 --version
+
+      - name: Run clang-tidy
+        run: |
+          chmod +x ./scripts/lint.sh
+          ./scripts/lint.sh -p clang-tidy-14 -a AVX2
 
   Lint-CUDA:
     needs: Style-Check

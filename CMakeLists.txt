@@ -42,6 +42,17 @@ endif()
 
 include(CheckAVXSupport.cmake)
 
+if (CMAKE_FORCE_ARCHITECTURE STREQUAL "None")
+    set(AVX2_SUPPORTED FALSE)
+    set(AVX_SUPPORTED FALSE)
+elseif (CMAKE_FORCE_ARCHITECTURE STREQUAL "AVX2")
+    set(AVX2_SUPPORTED TRUE)
+    set(AVX_SUPPORTED FALSE)
+elseif (CMAKE_FORCE_ARCHITECTURE STREQUAL "AVX")
+    set(AVX2_SUPPORTED FALSE)
+    set(AVX_SUPPORTED TRUE)
+endif()
+
 if (AVX2_SUPPORTED)
     # This flag is added by the compiler anyway, but CLion highlighting does not work without adding
     # this definition manually

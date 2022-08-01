@@ -1,9 +1,13 @@
 path_to_executable=""
+architecture=""
 # See if the path to clang-tidy executable was passed
-while getopts ":p:" opt; do
+while getopts ":p:a:" opt; do
   case $opt in
     p)
       path_to_executable=$OPTARG
+      ;;
+    a)
+      architecture=$OPTARG
       ;;
     \?)
       echo ">>> Invalid option: -$OPTARG" >&2
@@ -38,7 +42,7 @@ mkdir build && cd build
 
 # Build the library while exporting compilation database and testing
 echo ">>> Building the library for linting"
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TEST_NNLIB=ON ..
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TEST_NNLIB=ON -DCMAKE_FORCE_ARCHITECTURE=architecture ..
 cmake --build .
 
 # Try to remove CUDA compile flags (otherwise clang-tidy throws errors)
