@@ -42,6 +42,10 @@ endif()
 
 include(CheckAVXSupport.cmake)
 
+if (DEFINED CMAKE_FORCE_ARCHITECTURE)
+    message(STATUS "Forcing architecture ${CMAKE_FORCE_ARCHITECTURE}")
+endif()
+
 if (CMAKE_FORCE_ARCHITECTURE STREQUAL "None")
     set(AVX2_SUPPORTED FALSE)
     set(AVX_SUPPORTED FALSE)

@@ -42,7 +42,7 @@ mkdir build && cd build
 
 # Build the library while exporting compilation database and testing
 echo ">>> Building the library for linting"
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TEST_NNLIB=ON -DCMAKE_FORCE_ARCHITECTURE=architecture ..
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TEST_NNLIB=ON -DCMAKE_FORCE_ARCHITECTURE=$architecture ..
 cmake --build .
 
 # Try to remove CUDA compile flags (otherwise clang-tidy throws errors)
