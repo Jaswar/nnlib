@@ -6,6 +6,8 @@
 
 #if defined __AVX2__ || defined __AVX__
 #include <immintrin.h>
+#include <device_launch_parameters.h>
+
 #endif
 
 void addMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
@@ -139,35 +141,64 @@ void handleAVX2MatMulEdgeCases(const Matrix& m1, const Matrix& m2, Matrix& resul
     }
 }
 
-void accumulateBlock(const Matrix& m1, const Matrix& m2, __m256* block, size_t row, size_t column) {
-    for (size_t k = 0; k < m2.n; k++) {
-        // Load 8 floats from a row from m2
-        const __m256 m2Row = _mm256_loadu_ps(m2.data + k * m2.m + column * 8);
+#define SET_ROW_TO_ZERO(index) \
+    __m256 v##index = _mm256_setzero_ps()
+#define SET_ALL_ROWS_TO_ZERO() \
+    SET_ROW_TO_ZERO(0); \
+    SET_ROW_TO_ZERO(1); \
+    SET_ROW_TO_ZERO(2); \
+    SET_ROW_TO_ZERO(3); \
+    SET_ROW_TO_ZERO(4); \
+    SET_ROW_TO_ZERO(5); \
+    SET_ROW_TO_ZERO(6); \
+    SET_ROW_TO_ZERO(7)
 
-        for (size_t blockIdx = 0; blockIdx < 8; blockIdx++) {
-            const __m256 m1ColumnValue = _mm256_broadcast_ss(m1.data + (row * 8 + blockIdx) * m1.m + k);
-            const __m256 mulResult = _mm256_mul_ps(m2Row, m1ColumnValue);
-            block[blockIdx] = _mm256_add_ps(mulResult, block[blockIdx]);
-        }
-    }
-}
+#define COMPUTE_ROW(index) \
+    m1ColumnValue = _mm256_broadcast_ss(m1.data + (row * 8 + (index)) * m1.m + k);\
+    mulResult = _mm256_mul_ps(m2Row, m1ColumnValue);\
+    v##index = _mm256_add_ps(mulResult, v##index)
+#define COMPUTE_ALL_ROWS() \
+    COMPUTE_ROW(0); \
+    COMPUTE_ROW(1); \
+    COMPUTE_ROW(2); \
+    COMPUTE_ROW(3); \
+    COMPUTE_ROW(4); \
+    COMPUTE_ROW(5); \
+    COMPUTE_ROW(6); \
+    COMPUTE_ROW(7)
+
+#define STORE_ROW(index) \
+    _mm256_storeu_ps(result.data + (row * 8 + (index)) * result.m + column * 8, v##index)
+#define STORE_ALL_ROWS() \
+    STORE_ROW(0); \
+    STORE_ROW(1); \
+    STORE_ROW(2); \
+    STORE_ROW(3); \
+    STORE_ROW(4); \
+    STORE_ROW(5); \
+    STORE_ROW(6); \
+    STORE_ROW(7)
+
 #endif
 
 // Based on https://github.com/yzhaiustc/Optimizing-DGEMM-on-Intel-CPUs-with-AVX512F/blob/master/include/kernel5.h
+// Disable linter about the number of lines. That's the tradeoff for a slightly faster method.
+// NOLINTNEXTLINE(google-readability-function-size)
 void multiplyMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t row = 0; row < m1.n / 8; row++) {
         for (size_t column = 0; column < m2.m / 8; column++) {
-            __m256 block[8];
-            for (auto& i : block) {
-                i = _mm256_setzero_ps();
-            }
+            SET_ALL_ROWS_TO_ZERO();
 
-            accumulateBlock(m1, m2, block, row, column);
+            __m256 m1ColumnValue;
+            __m256 mulResult;
+            for (size_t k = 0; k < m2.n; k++) {
+                // Load 8 floats from a row from m2
+                const __m256 m2Row = _mm256_loadu_ps(m2.data + k * m2.m + column * 8);
 
-            for (size_t blockIdx = 0; blockIdx < 8; blockIdx++) {
-                _mm256_storeu_ps(result.data + (row * 8 + blockIdx) * result.m + column * 8, block[blockIdx]);
+                COMPUTE_ALL_ROWS();
             }
+            STORE_ALL_ROWS();
         }
     }
 
