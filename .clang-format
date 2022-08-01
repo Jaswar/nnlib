@@ -65,3 +65,4 @@ SpacesInSquareBrackets: false
 TabWidth: 4
 UseTab: Never
 PackConstructorInitializers: NextLine
+AlignEscapedNewlines: DontAlign
