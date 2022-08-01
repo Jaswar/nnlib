@@ -35,7 +35,7 @@ public:
 
 private:
     //NOLINTNEXTLINE(readability-identifier-naming)
-    static void computeAccuracy(const Matrix& X, const Matrix& yHost, const Matrix& predictions);
+    static int computeCorrect(const Matrix& yHost, const Matrix& predictions);
 };
 
 

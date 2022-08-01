@@ -110,34 +110,39 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
 
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << std::endl;
+        int correct = 0;
+        int total = 0;
         for (int row = 0; row < batches.size(); row++) {
-            const Matrix* output = forward(batches.at(row));
+            const Matrix& batch = batches.at(row);
+            const Matrix& target = targets.at(row);
 
-            backward(*output, targets.at(row), learningRate);
+            const Matrix* output = forward(batch);
+
+            correct += computeCorrect(target, *output);
+            total += static_cast<int>(batch.n);
+            std::cout << "\rAccuracy: " << static_cast<double>(correct) / total;
+
+            backward(*output, target, learningRate);
         }
-
-        Matrix predictions = *forward(X);
-        predictions.moveToHost();
-
-        computeAccuracy(X, yHost, predictions);
+        std::cout << std::endl;
     }
 }
 
 //NOLINTNEXTLINE(readability-identifier-naming)
-void Network::computeAccuracy(const Matrix& X, const Matrix& y, const Matrix& predictions) {
+int Network::computeCorrect(const Matrix& expected, const Matrix& predictions) {
     // Calculate the accuracy on the training set.
     int correct = 0;
-    for (int row = 0; row < X.n; row++) {
+    for (int row = 0; row < expected.n; row++) {
         int maxInx = 0;
-        for (int i = 0; i < y.m; i++) {
+        for (int i = 0; i < expected.m; i++) {
             if (predictions(row, i) > predictions(row, maxInx)) {
                 maxInx = i;
             }
         }
 
-        if (y(row, maxInx) == 1) {
+        if (expected(row, maxInx) == 1) {
             correct++;
         }
     }
-    std::cout << (static_cast<double>(correct)) / static_cast<double>(X.n) << std::endl;
+    return correct;
 }
