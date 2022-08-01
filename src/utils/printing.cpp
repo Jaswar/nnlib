@@ -6,28 +6,49 @@
 #include <iostream>
 #include <utility>
 
-void showProgressBarFinished(int maxSteps) {
-    std::cout << "\r[";
-    for (int j = 0; j < 20; j++) {
-        std::cout << "=";
+std::string constructFinishedProgressBar() {
+    std::string result = "[";
+    for (int step = 0; step < 20; step++) {
+        result += "=";
     }
-    std::cout << "] (" << maxSteps << "/" << maxSteps << ")" << std::flush;
+    result += "]";
+    return result;
 }
 
-void showProgressBar(int currentStep, int maxSteps) {
-    if (currentStep % (maxSteps / 20) == 0) {
-        std::cout << "\r[";
-        for (int j = 0; j < 20; j++) {
-            if (j < currentStep / (maxSteps / 20)) {
-                std::cout << "=";
-            } else if (j == currentStep / (maxSteps / 20)) {
-                std::cout << ">";
-            } else {
-                std::cout << "-";
-            }
-        }
-        std::cout << "] (" << currentStep << "/" << maxSteps << ")" << std::flush;
-    } else if (currentStep >= maxSteps) {
-        showProgressBarFinished(maxSteps);
+std::string constructProgressBar(int currentStep, int maxSteps) {
+    if (maxSteps == 0) {
+        return constructFinishedProgressBar();
     }
+    if (currentStep >= maxSteps) {
+        return constructFinishedProgressBar();
+    }
+
+    double currentProgress = static_cast<double>(currentStep) / maxSteps;
+    double increment = 1.0 / 20;
+
+    std::string result = "[";
+    for (int step = 0; step < 20; step++) {
+        double percentage = step * increment;
+        double nextPercentage = (step + 1) * increment;
+
+        if (currentProgress >= percentage) {
+            if (currentProgress <= nextPercentage) {
+                result += ">";
+            } else {
+                result += "=";
+            }
+        } else {
+            result += "-";
+        }
+    }
+    result += "]";
+
+    return result;
+}
+
+std::string constructPercentage(int currentStep, int maxSteps) {
+    int percentage = static_cast<int>(static_cast<double>(currentStep) / maxSteps * 100);
+
+    return "[" + std::to_string(currentStep) + "/" + std::to_string(maxSteps)
+                + " (" + std::to_string(percentage) + "%)]";
 }
