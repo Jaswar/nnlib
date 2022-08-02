@@ -154,27 +154,37 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << std::endl;
 
-        int correct = 0;
-        int total = 0;
-        auto epochStart = std::chrono::steady_clock::now();
+        processEpoch(batches, targets, yHost, learningRate);
 
-        for (int row = 0; row < batches.size(); row++) {
-            const Matrix& batch = batches.at(row);
-            Matrix& target = targets.at(row);
-
-            Matrix* output = forward(batch);
-
-            correct += computeCorrect(yHost, *output, row * batchSize);
-            total += static_cast<int>(batchSize);
-
-            backward(*output, target, learningRate);
-
-            auto batchEnd = std::chrono::steady_clock::now();
-            size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(batchEnd - epochStart).count();
-
-            displayEpochProgress((row + 1) * batchSize, X.n, milliseconds, static_cast<double>(correct) / total);
-        }
         std::cout << std::endl;
     }
+}
+
+void Network::processEpoch(std::vector<Matrix>& batches, std::vector<Matrix>& targets, Matrix& yHost, DTYPE learningRate) {
+    int correct = 0;
+    int total = 0;
+    auto epochStart = std::chrono::steady_clock::now();
+
+    for (int row = 0; row < batches.size(); row++) {
+        const Matrix& batch = batches.at(row);
+        Matrix& target = targets.at(row);
+
+        Matrix* output = forward(batch);
+
+        correct += computeCorrect(yHost, *output, row * batch.n);
+        total += static_cast<int>(batch.n);
+
+        backward(*output, target, learningRate);
+
+        auto batchEnd = std::chrono::steady_clock::now();
+        size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(batchEnd - epochStart).count();
+
+        displayEpochProgress((row + 1) * batch.n, yHost.n, milliseconds, static_cast<double>(correct) / total);
+    }
+
+    auto epochEnd = std::chrono::steady_clock::now();
+    size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(epochEnd - epochStart).count();
+
+    displayEpochProgress(yHost.n, yHost.n, milliseconds, static_cast<double>(correct) / total);
 }
 

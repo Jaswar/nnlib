@@ -32,6 +32,8 @@ public:
     //NOLINTNEXTLINE(readability-identifier-naming)
     void train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE,
                DTYPE learningRate = 0.01);
+private:
+    void processEpoch(std::vector<Matrix>& batches, std::vector<Matrix>& targets, Matrix& yHost, DTYPE learningRate);
 };
 
 
