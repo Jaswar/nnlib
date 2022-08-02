@@ -150,7 +150,7 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
     yHost.moveToHost();
 
     for (int epoch = 1; epoch <= epochs; epoch++) {
-        std::cout << "Epoch: " << epoch << std::endl;
+        std::cout << "Epoch: " << epoch << "/" << epochs << std::endl;
 
         processEpoch(batches, targets, yHost, learningRate);
 
