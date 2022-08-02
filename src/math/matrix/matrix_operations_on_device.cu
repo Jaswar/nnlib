@@ -105,8 +105,9 @@ __global__ void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, D
 
 __global__ void multiplyMatricesNoTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m,
                                                size_t k) {
-    auto row = blockIdx.x;
-    auto column = threadIdx.x;
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+    auto row = index / k;
+    auto column = index % k;
 
     if (row >= n || column >= k) {
         return;
@@ -178,16 +179,8 @@ void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
     cudaDeviceProp props;
     GPU_CHECK_ERROR(cudaGetDeviceProperties(&props, 0));
-    if (m1.m > props.maxThreadsPerBlock) {
-        size_t sizeY = std::ceil(static_cast<double>(std::max(m1.n, m2.n)) / TILE_WIDTH);
-        size_t sizeX = std::ceil(static_cast<double>(std::max(m1.m, m2.m)) / TILE_WIDTH);
-
-        dim3 blocks(sizeX, sizeY);
-        dim3 threads(TILE_WIDTH, TILE_WIDTH);
-        multiplyMatricesTilingKernel<<<blocks, threads>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
-    } else {
-        multiplyMatricesNoTilingKernel<<<m1.n, m2.m>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
-    }
+    size_t threads = props.maxThreadsPerBlock;
+    multiplyMatricesNoTilingKernel<<<(m1.n * m2.m) / threads + 1, threads>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
