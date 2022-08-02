@@ -10,6 +10,7 @@
 #include <exceptions/size_mismatch_exception.h>
 #include <utils/printing.h>
 #include <iomanip>
+#include <chrono>
 
 std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, DataLocation location) {
     std::vector<Matrix> result;
@@ -99,43 +100,42 @@ void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE lear
 }
 
 bool moveToHost(Matrix& expected, Matrix& predictions) {
-    if (expected.location == DEVICE) {
-        expected.moveToHost();
+    if (predictions.location == DEVICE) {
         predictions.moveToHost();
         return true;
     }
     return false;
 }
 
-int computeCorrect(Matrix& expected, Matrix& predictions) {
+int computeCorrect(Matrix& expected, Matrix& predictions, size_t start) {
     bool shouldRestoreToDevice = moveToHost(expected, predictions);
 
     // Calculate the accuracy on the training set.
     int correct = 0;
-    for (int row = 0; row < expected.n; row++) {
+    for (int row = 0; row < predictions.n; row++) {
         int maxInx = 0;
-        for (int i = 0; i < expected.m; i++) {
+        for (int i = 0; i < predictions.m; i++) {
             if (predictions(row, i) > predictions(row, maxInx)) {
                 maxInx = i;
             }
         }
 
-        if (expected(row, maxInx) == 1) {
+        if (expected(start + row, maxInx) == 1) {
             correct++;
         }
     }
     if (shouldRestoreToDevice) {
-        expected.moveToDevice();
         predictions.moveToDevice();
     }
 
     return correct;
 }
 
-void displayEpochProgress(size_t processedRows, size_t totalRows, double accuracy) {
+void displayEpochProgress(size_t processedRows, size_t totalRows, size_t milliseconds, double accuracy) {
     std::cout << "\r"
               << constructProgressBar(processedRows, totalRows) << " "
-              << constructPercentage(processedRows, totalRows) << ": accuracy = "
+              << constructPercentage(processedRows, totalRows) << " "
+              << constructTime(milliseconds) << ": accuracy = "
               << std::setprecision(3) << accuracy << std::flush;
 }
 
@@ -148,22 +148,31 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
     std::vector<Matrix> batches = splitIntoBatches(X, batchSize, location);
     std::vector<Matrix> targets = splitIntoBatches(y, batchSize, location);
 
+    Matrix yHost = y;
+    yHost.moveToHost();
+
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << std::endl;
+
         int correct = 0;
         int total = 0;
+        auto epochStart = std::chrono::steady_clock::now();
+
         for (int row = 0; row < batches.size(); row++) {
             const Matrix& batch = batches.at(row);
             Matrix& target = targets.at(row);
 
             Matrix* output = forward(batch);
 
-            correct += computeCorrect(target, *output);
+            correct += computeCorrect(yHost, *output, row * batchSize);
             total += static_cast<int>(batchSize);
 
             backward(*output, target, learningRate);
 
-            displayEpochProgress((row + 1) * batchSize, X.n, static_cast<double>(correct) / total);
+            auto batchEnd = std::chrono::steady_clock::now();
+            size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(batchEnd - epochStart).count();
+
+            displayEpochProgress((row + 1) * batchSize, X.n, milliseconds, static_cast<double>(correct) / total);
         }
         std::cout << std::endl;
     }

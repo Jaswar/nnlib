@@ -59,3 +59,13 @@ std::string constructPercentage(size_t currentStep, size_t maxSteps) {
     return "[" + std::to_string(currentStep) + "/" + std::to_string(maxSteps)
                 + " (" + std::to_string(percentage) + "%)]";
 }
+
+std::string constructTime(size_t milliseconds) {
+    size_t mil = milliseconds % 1000;
+    size_t seconds = (milliseconds / 1000) % 60;
+    size_t minutes = (milliseconds / (1000LL * 60)) % 60;
+    size_t hours = (milliseconds / (1000LL * 60 * 60));
+
+    return "(" + std::to_string(hours) + "h " + std::to_string(minutes) + "m "
+            + std::to_string(seconds) + "s " + std::to_string(mil) + "ms)";
+}
