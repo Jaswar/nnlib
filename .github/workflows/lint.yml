@@ -9,13 +9,13 @@ jobs:
       - name: Download clang-format
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
-          sudo apt install clang-format-14
-          clang-format-14 --version
+          sudo apt install clang-format-15
+          clang-format-15 --version
 
       - name: Run clang-format
         run: |
           chmod +x ./scripts/format.sh
-          ./scripts/format.sh -p clang-format-14
+          ./scripts/format.sh -p clang-format-15
 
   Lint-No-CUDA:
     needs: Style-Check
@@ -26,13 +26,13 @@ jobs:
       - name: Download clang-tidy
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
-          sudo apt install clang-tidy-14
-          clang-tidy-14 --version
+          sudo apt install clang-tidy-15
+          clang-tidy-15 --version
 
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh -p clang-tidy-14 -a None
+          ./scripts/lint.sh -p clang-tidy-15 -a None
 
   Lint-No-CUDA-AVX:
     needs: Style-Check
@@ -43,13 +43,13 @@ jobs:
       - name: Download clang-tidy
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
-          sudo apt install clang-tidy-14
-          clang-tidy-14 --version
+          sudo apt install clang-tidy-15
+          clang-tidy-15 --version
 
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh -p clang-tidy-14 -a AVX2
+          ./scripts/lint.sh -p clang-tidy-15 -a AVX2
 
   Lint-CUDA:
     needs: Style-Check
@@ -60,8 +60,8 @@ jobs:
       - name: Download clang-tidy
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
-          sudo apt install clang-tidy-14
-          clang-tidy-14 --version
+          sudo apt install clang-tidy-15
+          clang-tidy-15 --version
 
       - name: Setup CUDA
         uses: Jimver/cuda-toolkit@v0.2.7
@@ -75,4 +75,4 @@ jobs:
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh -p clang-tidy-14
+          ./scripts/lint.sh -p clang-tidy-15
