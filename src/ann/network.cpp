@@ -5,12 +5,12 @@
 #include "../../include/network.h"
 #include "../gpu/allocation_gpu.cuh"
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <ctime>
 #include <exceptions/size_mismatch_exception.h>
-#include <utils/printing.h>
 #include <iomanip>
-#include <chrono>
+#include <utils/printing.h>
 
 std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, DataLocation location) {
     std::vector<Matrix> result;
@@ -132,11 +132,9 @@ int computeCorrect(Matrix& expected, Matrix& predictions, size_t start) {
 }
 
 void displayEpochProgress(size_t processedRows, size_t totalRows, size_t milliseconds, double accuracy) {
-    std::cout << "\r"
-              << constructProgressBar(processedRows, totalRows) << " "
-              << constructPercentage(processedRows, totalRows) << " "
-              << constructTime(milliseconds) << ": accuracy = "
-              << std::setprecision(3) << accuracy << std::flush;
+    std::cout << "\r" << constructProgressBar(processedRows, totalRows) << " "
+              << constructPercentage(processedRows, totalRows) << " " << constructTime(milliseconds)
+              << ": accuracy = " << std::setprecision(3) << accuracy << std::flush;
 }
 
 //NOLINTNEXTLINE(readability-identifier-naming)
@@ -160,7 +158,8 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
     }
 }
 
-void Network::processEpoch(std::vector<Matrix>& batches, std::vector<Matrix>& targets, Matrix& yHost, DTYPE learningRate) {
+void Network::processEpoch(std::vector<Matrix>& batches, std::vector<Matrix>& targets, Matrix& yHost,
+                           DTYPE learningRate) {
     int correct = 0;
     int total = 0;
     auto epochStart = std::chrono::steady_clock::now();
@@ -187,4 +186,3 @@ void Network::processEpoch(std::vector<Matrix>& batches, std::vector<Matrix>& ta
 
     displayEpochProgress(yHost.n, yHost.n, milliseconds, static_cast<double>(correct) / total);
 }
-

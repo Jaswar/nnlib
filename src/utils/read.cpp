@@ -55,13 +55,12 @@ void threadCSVJob(const std::vector<std::string>& lines, const std::string& deli
     int size = static_cast<int>(lines.size());
     int numIterations = std::ceil(size / static_cast<double>(numThreads));
 
-    for (int i = 0; i < numIterations; i++) {
+    for (size_t i = 0; i < numIterations; i++) {
         if (id == 0) {
-            std::cout << "\r"
-                << constructProgressBar(i * numThreads, size) << " "
-                << constructPercentage(i * numThreads, size) << std::flush;
+            std::cout << "\r" << constructProgressBar(i * numThreads, size) << " "
+                      << constructPercentage(i * numThreads, size) << std::flush;
         }
-        int index = id + numThreads * i;
+        size_t index = id + numThreads * i;
         if (index >= lines.size()) {
             return;
         }
@@ -77,9 +76,7 @@ void threadCSVJob(const std::vector<std::string>& lines, const std::string& deli
     }
 
     if (id == 0) {
-        std::cout << "\r"
-                  << constructProgressBar(size, size) << " "
-                  << constructPercentage(size, size) << std::flush;
+        std::cout << "\r" << constructProgressBar(size, size) << " " << constructPercentage(size, size) << std::flush;
     }
 }
 
