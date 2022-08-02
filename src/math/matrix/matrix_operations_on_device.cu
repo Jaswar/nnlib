@@ -180,7 +180,8 @@ void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result
     cudaDeviceProp props;
     GPU_CHECK_ERROR(cudaGetDeviceProperties(&props, 0));
     size_t threads = props.maxThreadsPerBlock;
-    multiplyMatricesNoTilingKernel<<<(m1.n * m2.m) / threads + 1, threads>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
+    multiplyMatricesNoTilingKernel<<<(m1.n * m2.m) / threads + 1, threads>>>(m1.data, m2.data, result.data, m1.n, m1.m,
+                                                                             m2.m);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
