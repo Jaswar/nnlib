@@ -92,7 +92,7 @@ void Layer::forward(const Matrix& batch) {
 }
 
 void Layer::backward(const Matrix& delta, const Matrix& previousWeights, size_t batchSize, bool isLastLayer) {
-    if (previousWeightsT.n != previousWeights.n || previousWeightsT.m != previousWeights.m) {
+    if (previousWeightsT.n != previousWeights.m || previousWeightsT.m != previousWeights.n) {
         previousWeightsT = Matrix(previousWeights.m, previousWeights.n, previousWeights.location);
     }
     calculateDerivatives();

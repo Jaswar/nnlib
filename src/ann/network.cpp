@@ -166,7 +166,7 @@ void Network::processEpoch(std::vector<Matrix>& batches, std::vector<Matrix>& ta
 
     for (int row = 0; row < batches.size(); row++) {
         const Matrix& batch = batches.at(row);
-        Matrix& target = targets.at(row);
+        const Matrix& target = targets.at(row);
 
         Matrix* output = forward(batch);
 
