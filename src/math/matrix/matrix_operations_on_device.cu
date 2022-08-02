@@ -156,25 +156,21 @@ __global__ void transposeMatrixKernel(const DTYPE* matrix, DTYPE* result, size_t
 void addMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
     addMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
     GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 void addBroadcastOnDevice(const Matrix& m, const Vector& v, Matrix& result) {
     addBroadcastKernel<<<m.n, m.m>>>(m.data, v.data, result.data, m.n, m.m);
     GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 void subtractMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
     subtractMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
     GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 void multiplyMatrixVectorOnDevice(const Matrix& matrix, const Vector& vector, Vector& result) {
     mulMatrixVectorKernel<<<1, matrix.n>>>(matrix.data, vector.data, result.data, matrix.n, matrix.m);
     GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
@@ -193,25 +189,21 @@ void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result
         multiplyMatricesNoTilingKernel<<<m1.n, m2.m>>>(m1.data, m2.data, result.data, m1.n, m1.m, m2.m);
     }
     GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 void multiplyMatrixOnDevice(const Matrix& m1, DTYPE constant, Matrix& result) {
     multiplyMatrixKernel<<<m1.n, m1.m>>>(m1.data, constant, result.data, m1.n, m1.m);
     GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 void hadamardMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result) {
     hadamardMatricesKernel<<<m1.n, m1.m>>>(m1.data, m2.data, result.data, m1.n, m1.m);
     GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 void transposeMatrixOnDevice(const Matrix& m, Matrix& result) {
     transposeMatrixKernel<<<m.n, m.m>>>(m.data, result.data, m.n, m.m);
     GPU_CHECK_ERROR(cudaGetLastError());
-    GPU_CHECK_ERROR(cudaDeviceSynchronize());
 }
 
 #else
