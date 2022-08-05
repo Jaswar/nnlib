@@ -25,9 +25,10 @@ int main(int argc, char** argv) {
         }
     }
 
-    std::cout << yv << std::endl;
-
     Matrix y = oneHotEncode(yv);
+
+    std::cout << y << std::endl;
+
     if (isCudaAvailable()) {
         X.moveToDevice();
         y.moveToDevice();
