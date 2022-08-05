@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['train_0',['train',['../class_network.html#a303315a1bd86862bac0e5b06bf08f6fc',1,'Network']]]
+  ['reluactivation_0',['ReLUActivation',['../class_re_l_u_activation.html',1,'']]],
+  ['reluondeviceevaluator_1',['ReLUOnDeviceEvaluator',['../class_re_l_u_on_device_evaluator.html',1,'']]],
+  ['reluonhostevaluator_2',['ReLUOnHostEvaluator',['../class_re_l_u_on_host_evaluator.html',1,'']]]
 ];

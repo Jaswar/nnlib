@@ -90,7 +90,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4a69874ed0598be0a616073a0a1c2366"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a4a69874ed0598be0a616073a0a1c2366">backward</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;predicted, const <a class="el" href="class_matrix.html">Matrix</a> &amp;target, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> learningRate=0.01)</td></tr>
 <tr class="memdesc:a4a69874ed0598be0a616073a0a1c2366"><td class="mdescLeft">&#160;</td><td class="mdescRight">Backward-propagate a batch through the network.  <a href="class_network.html#a4a69874ed0598be0a616073a0a1c2366">More...</a><br /></td></tr>
 <tr class="separator:a4a69874ed0598be0a616073a0a1c2366"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a303315a1bd86862bac0e5b06bf08f6fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc">train</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;X, const <a class="el" href="class_matrix.html">Matrix</a> &amp;y, int epochs, size_t batchSize=DEFAULT_BATCH_SIZE, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> learningRate=0.01)</td></tr>
+<tr class="memitem:a303315a1bd86862bac0e5b06bf08f6fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc">train</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;X, const <a class="el" href="class_matrix.html">Matrix</a> &amp;y, int epochs, size_t batchSize=<a class="el" href="layer_8h.html#a123fa013ecd2c91686ad58c0b8d985b3">DEFAULT_BATCH_SIZE</a>, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> learningRate=0.01)</td></tr>
 <tr class="memdesc:a303315a1bd86862bac0e5b06bf08f6fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Train the network.  <a href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc">More...</a><br /></td></tr>
 <tr class="separator:a303315a1bd86862bac0e5b06bf08f6fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -284,7 +284,7 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The pointer to the output of the network. This returns Layer::aMatrix of the last layer. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The pointer to the output of the network. This returns <a class="el" href="class_layer.html#af0845a71fb5abcfc54a9bfc67fa771e1" title="The output of the layer before applying the activation function.">Layer::aMatrix</a> of the last layer. </dd></dl>
 
 </div>
 </div>
@@ -376,7 +376,7 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>batchSize</em> = <code>DEFAULT_BATCH_SIZE</code>, </td>
+          <td class="paramname"><em>batchSize</em> = <code><a class="el" href="layer_8h.html#a123fa013ecd2c91686ad58c0b8d985b3">DEFAULT_BATCH_SIZE</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -430,7 +430,7 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
 </div><div class="memdoc">
 
 <p>The location of the network. </p>
-<p >Specifies the location of all the data used by the network. Can be either HOST (data in RAM/CPU) or DEVICE (data in VRAM/GPU). The latter is only possible if GPU acceleration is available. </p>
+<p >Specifies the location of all the data used by the network. See DataLocation for more info. </p>
 
 </div>
 </div>
@@ -455,7 +455,7 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
 </div><div class="memdoc">
 
 <p>Pre-allocated space for loss. </p>
-<p >Might require resizing/reallocating if batchSize != #DEFAULT_BATCH_SIZE during training. In that case, the reshaping will still only happen once. The data is pre-allocated to avoid unnecessary allocation during runtime. </p>
+<p >Might require resizing/reallocating if <code>batchSize</code> != <a class="el" href="layer_8h.html#a123fa013ecd2c91686ad58c0b8d985b3" title="The default batch size if no batch size is specified.">DEFAULT_BATCH_SIZE</a> during training. In that case, the reshaping will still only happen once. The data is pre-allocated to avoid unnecessary allocation during runtime. </p>
 
 </div>
 </div>

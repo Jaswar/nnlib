@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['layers_0',['layers',['../class_network.html#a50f4a527788dfa71d67984a939ed3ee5',1,'Network']]],
-  ['location_1',['location',['../class_network.html#a0bf126265345f2e6aa85aeeffa2f9afd',1,'Network']]],
-  ['loss_2',['loss',['../class_network.html#af75849d87721bf356380855281c11852',1,'Network']]]
+  ['activation_0',['activation',['../class_layer.html#a5234b3bcf11a0b626b529ef23c7624db',1,'Layer']]],
+  ['amatrix_1',['aMatrix',['../class_layer.html#af0845a71fb5abcfc54a9bfc67fa771e1',1,'Layer']]]
 ];

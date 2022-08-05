@@ -17,7 +17,7 @@
  * The matrix should be an n x 1 matrix (consisting of only one column).
  *
  * @param matrix The matrix to convert to a vector.
- * @return Vector corresponding to the passed matrix.
+ * @return %Vector corresponding to the passed matrix.
  *
  * @throws SizeMismatchException if matrix has more than one column.
  */

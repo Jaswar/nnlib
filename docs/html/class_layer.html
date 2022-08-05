@@ -71,109 +71,804 @@ $(function() {
   <div class="headertitle"><div class="title">Layer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Represents a single layer of a neural network.  
+ <a href="class_layer.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="layer_8h_source.html">layer.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a05e44ab517881bd3dfe9319faebb4006"><td class="memItemLeft" align="right" valign="top"><a id="a05e44ab517881bd3dfe9319faebb4006" name="a05e44ab517881bd3dfe9319faebb4006"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Layer</b> (size_t inSize, size_t outSize, <a class="el" href="class_activation.html">Activation</a> *activation, DataLocation location)</td></tr>
+<tr class="memitem:a05e44ab517881bd3dfe9319faebb4006"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a05e44ab517881bd3dfe9319faebb4006">Layer</a> (size_t <a class="el" href="class_layer.html#a4ec6dd239834e32835f2cfffd0506e2d">inSize</a>, size_t <a class="el" href="class_layer.html#a0fc72a7936b05bfa0567df96b7abd08c">outSize</a>, <a class="el" href="class_activation.html">Activation</a> *<a class="el" href="class_layer.html#a5234b3bcf11a0b626b529ef23c7624db">activation</a>, DataLocation <a class="el" href="class_layer.html#a248df76aa48278b0f8ca07c4d4f0a738">location</a>)</td></tr>
+<tr class="memdesc:a05e44ab517881bd3dfe9319faebb4006"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new layer.  <a href="class_layer.html#a05e44ab517881bd3dfe9319faebb4006">More...</a><br /></td></tr>
 <tr class="separator:a05e44ab517881bd3dfe9319faebb4006"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc1b20ea056d1905a926452e7400d702"><td class="memItemLeft" align="right" valign="top"><a id="adc1b20ea056d1905a926452e7400d702" name="adc1b20ea056d1905a926452e7400d702"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>forward</b> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;batch)</td></tr>
+<tr class="memitem:a1b1ba4804451dfe6cc357194e42762ae"><td class="memItemLeft" align="right" valign="top"><a id="a1b1ba4804451dfe6cc357194e42762ae" name="a1b1ba4804451dfe6cc357194e42762ae"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>~Layer</b> ()</td></tr>
+<tr class="memdesc:a1b1ba4804451dfe6cc357194e42762ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">The destructor of the layer object. <br /></td></tr>
+<tr class="separator:a1b1ba4804451dfe6cc357194e42762ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc1b20ea056d1905a926452e7400d702"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#adc1b20ea056d1905a926452e7400d702">forward</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;batch)</td></tr>
+<tr class="memdesc:adc1b20ea056d1905a926452e7400d702"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward one batch of data through the layer.  <a href="class_layer.html#adc1b20ea056d1905a926452e7400d702">More...</a><br /></td></tr>
 <tr class="separator:adc1b20ea056d1905a926452e7400d702"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a902ce213e21837685c0d29e35417e691"><td class="memItemLeft" align="right" valign="top"><a id="a902ce213e21837685c0d29e35417e691" name="a902ce213e21837685c0d29e35417e691"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>backward</b> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;delta, const <a class="el" href="class_matrix.html">Matrix</a> &amp;previousWeights, size_t batchSize=DEFAULT_BATCH_SIZE, bool isLastLayer=false)</td></tr>
+<tr class="memitem:a902ce213e21837685c0d29e35417e691"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a902ce213e21837685c0d29e35417e691">backward</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;delta, const <a class="el" href="class_matrix.html">Matrix</a> &amp;previousWeights, size_t batchSize=<a class="el" href="layer_8h.html#a123fa013ecd2c91686ad58c0b8d985b3">DEFAULT_BATCH_SIZE</a>, bool isLastLayer=false)</td></tr>
+<tr class="memdesc:a902ce213e21837685c0d29e35417e691"><td class="mdescLeft">&#160;</td><td class="mdescRight">Backward-propagate one batch of data through the network.  <a href="class_layer.html#a902ce213e21837685c0d29e35417e691">More...</a><br /></td></tr>
 <tr class="separator:a902ce213e21837685c0d29e35417e691"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99e07431accbdbb8910a2e1cbd6852b5"><td class="memItemLeft" align="right" valign="top"><a id="a99e07431accbdbb8910a2e1cbd6852b5" name="a99e07431accbdbb8910a2e1cbd6852b5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>applyGradients</b> (size_t batchSize, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> learningRate=0.01)</td></tr>
+<tr class="memitem:a99e07431accbdbb8910a2e1cbd6852b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a99e07431accbdbb8910a2e1cbd6852b5">applyGradients</a> (size_t batchSize, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> learningRate=0.01)</td></tr>
+<tr class="memdesc:a99e07431accbdbb8910a2e1cbd6852b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the computed gradients.  <a href="class_layer.html#a99e07431accbdbb8910a2e1cbd6852b5">More...</a><br /></td></tr>
 <tr class="separator:a99e07431accbdbb8910a2e1cbd6852b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a248df76aa48278b0f8ca07c4d4f0a738"><td class="memItemLeft" align="right" valign="top"><a id="a248df76aa48278b0f8ca07c4d4f0a738" name="a248df76aa48278b0f8ca07c4d4f0a738"></a>
-DataLocation&#160;</td><td class="memItemRight" valign="bottom"><b>location</b></td></tr>
+<tr class="memitem:a248df76aa48278b0f8ca07c4d4f0a738"><td class="memItemLeft" align="right" valign="top">DataLocation&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a248df76aa48278b0f8ca07c4d4f0a738">location</a></td></tr>
+<tr class="memdesc:a248df76aa48278b0f8ca07c4d4f0a738"><td class="mdescLeft">&#160;</td><td class="mdescRight">The location of the layer.  <a href="class_layer.html#a248df76aa48278b0f8ca07c4d4f0a738">More...</a><br /></td></tr>
 <tr class="separator:a248df76aa48278b0f8ca07c4d4f0a738"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fc72a7936b05bfa0567df96b7abd08c"><td class="memItemLeft" align="right" valign="top"><a id="a0fc72a7936b05bfa0567df96b7abd08c" name="a0fc72a7936b05bfa0567df96b7abd08c"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>outSize</b></td></tr>
+<tr class="memitem:a0fc72a7936b05bfa0567df96b7abd08c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a0fc72a7936b05bfa0567df96b7abd08c">outSize</a></td></tr>
+<tr class="memdesc:a0fc72a7936b05bfa0567df96b7abd08c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The output size of the layer.  <a href="class_layer.html#a0fc72a7936b05bfa0567df96b7abd08c">More...</a><br /></td></tr>
 <tr class="separator:a0fc72a7936b05bfa0567df96b7abd08c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ec6dd239834e32835f2cfffd0506e2d"><td class="memItemLeft" align="right" valign="top"><a id="a4ec6dd239834e32835f2cfffd0506e2d" name="a4ec6dd239834e32835f2cfffd0506e2d"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>inSize</b></td></tr>
+<tr class="memitem:a4ec6dd239834e32835f2cfffd0506e2d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a4ec6dd239834e32835f2cfffd0506e2d">inSize</a></td></tr>
+<tr class="memdesc:a4ec6dd239834e32835f2cfffd0506e2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input size to the layer.  <a href="class_layer.html#a4ec6dd239834e32835f2cfffd0506e2d">More...</a><br /></td></tr>
 <tr class="separator:a4ec6dd239834e32835f2cfffd0506e2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5234b3bcf11a0b626b529ef23c7624db"><td class="memItemLeft" align="right" valign="top"><a id="a5234b3bcf11a0b626b529ef23c7624db" name="a5234b3bcf11a0b626b529ef23c7624db"></a>
-<a class="el" href="class_activation.html">Activation</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>activation</b></td></tr>
+<tr class="memitem:a5234b3bcf11a0b626b529ef23c7624db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_activation.html">Activation</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a5234b3bcf11a0b626b529ef23c7624db">activation</a></td></tr>
+<tr class="memdesc:a5234b3bcf11a0b626b529ef23c7624db"><td class="mdescLeft">&#160;</td><td class="mdescRight">The activation function.  <a href="class_layer.html#a5234b3bcf11a0b626b529ef23c7624db">More...</a><br /></td></tr>
 <tr class="separator:a5234b3bcf11a0b626b529ef23c7624db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1588152248ef49963d47a8af56f89789"><td class="memItemLeft" align="right" valign="top"><a id="a1588152248ef49963d47a8af56f89789" name="a1588152248ef49963d47a8af56f89789"></a>
 <a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>weights</b></td></tr>
+<tr class="memdesc:a1588152248ef49963d47a8af56f89789"><td class="mdescLeft">&#160;</td><td class="mdescRight">The weights of the layer. <br /></td></tr>
 <tr class="separator:a1588152248ef49963d47a8af56f89789"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a487f4e4d03c523b3c1b88fdb22eeaa09"><td class="memItemLeft" align="right" valign="top"><a id="a487f4e4d03c523b3c1b88fdb22eeaa09" name="a487f4e4d03c523b3c1b88fdb22eeaa09"></a>
 <a class="el" href="class_vector.html">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><b>biases</b></td></tr>
+<tr class="memdesc:a487f4e4d03c523b3c1b88fdb22eeaa09"><td class="mdescLeft">&#160;</td><td class="mdescRight">The biases of the layer. <br /></td></tr>
 <tr class="separator:a487f4e4d03c523b3c1b88fdb22eeaa09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a585ee0ab655bc35af704fbf54bc5ab7b"><td class="memItemLeft" align="right" valign="top"><a id="a585ee0ab655bc35af704fbf54bc5ab7b" name="a585ee0ab655bc35af704fbf54bc5ab7b"></a>
-const <a class="el" href="class_matrix.html">Matrix</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>data</b></td></tr>
+<tr class="memitem:a585ee0ab655bc35af704fbf54bc5ab7b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_matrix.html">Matrix</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a585ee0ab655bc35af704fbf54bc5ab7b">data</a></td></tr>
+<tr class="memdesc:a585ee0ab655bc35af704fbf54bc5ab7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix storing data passed to the layer.  <a href="class_layer.html#a585ee0ab655bc35af704fbf54bc5ab7b">More...</a><br /></td></tr>
 <tr class="separator:a585ee0ab655bc35af704fbf54bc5ab7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0845a71fb5abcfc54a9bfc67fa771e1"><td class="memItemLeft" align="right" valign="top"><a id="af0845a71fb5abcfc54a9bfc67fa771e1" name="af0845a71fb5abcfc54a9bfc67fa771e1"></a>
 <a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>aMatrix</b></td></tr>
+<tr class="memdesc:af0845a71fb5abcfc54a9bfc67fa771e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The output of the layer before applying the activation function. <br /></td></tr>
 <tr class="separator:af0845a71fb5abcfc54a9bfc67fa771e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a241b7721e392b4a9c281e592aa76049f"><td class="memItemLeft" align="right" valign="top"><a id="a241b7721e392b4a9c281e592aa76049f" name="a241b7721e392b4a9c281e592aa76049f"></a>
 <a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>zMatrix</b></td></tr>
+<tr class="memdesc:a241b7721e392b4a9c281e592aa76049f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The output of the layer. <br /></td></tr>
 <tr class="separator:a241b7721e392b4a9c281e592aa76049f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a6ffa21a68f2df1c1abdeef9e4c05ea"><td class="memItemLeft" align="right" valign="top"><a id="a4a6ffa21a68f2df1c1abdeef9e4c05ea" name="a4a6ffa21a68f2df1c1abdeef9e4c05ea"></a>
 <a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>newDelta</b></td></tr>
+<tr class="memdesc:a4a6ffa21a68f2df1c1abdeef9e4c05ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delta that should be passed to the previous layer in the backpropagation step. <br /></td></tr>
 <tr class="separator:a4a6ffa21a68f2df1c1abdeef9e4c05ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1ecda24d8a36b553ac4e7261da9bdfe"><td class="memItemLeft" align="right" valign="top"><a id="aa1ecda24d8a36b553ac4e7261da9bdfe" name="aa1ecda24d8a36b553ac4e7261da9bdfe"></a>
-<a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>derivatives</b></td></tr>
+<tr class="memitem:aa1ecda24d8a36b553ac4e7261da9bdfe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#aa1ecda24d8a36b553ac4e7261da9bdfe">derivatives</a></td></tr>
+<tr class="memdesc:aa1ecda24d8a36b553ac4e7261da9bdfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">The derivatives of the output.  <a href="class_layer.html#aa1ecda24d8a36b553ac4e7261da9bdfe">More...</a><br /></td></tr>
 <tr class="separator:aa1ecda24d8a36b553ac4e7261da9bdfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a358267b53e907e1272570c21febc855e"><td class="memItemLeft" align="right" valign="top"><a id="a358267b53e907e1272570c21febc855e" name="a358267b53e907e1272570c21febc855e"></a>
 <a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>weightsGradients</b></td></tr>
+<tr class="memdesc:a358267b53e907e1272570c21febc855e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The weights gradients computed by the backpropagation algorithm. <br /></td></tr>
 <tr class="separator:a358267b53e907e1272570c21febc855e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a891c8acd17b2ca60a3a7ffffd6486946"><td class="memItemLeft" align="right" valign="top"><a id="a891c8acd17b2ca60a3a7ffffd6486946" name="a891c8acd17b2ca60a3a7ffffd6486946"></a>
 <a class="el" href="class_vector.html">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><b>biasesGradients</b></td></tr>
+<tr class="memdesc:a891c8acd17b2ca60a3a7ffffd6486946"><td class="mdescLeft">&#160;</td><td class="mdescRight">The biases gradients computed by the backpropagation algorithm. <br /></td></tr>
 <tr class="separator:a891c8acd17b2ca60a3a7ffffd6486946"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:afc6550146278f5dfb3241189b7b236eb"><td class="memItemLeft" align="right" valign="top"><a id="afc6550146278f5dfb3241189b7b236eb" name="afc6550146278f5dfb3241189b7b236eb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>calculateDerivatives</b> ()</td></tr>
+<tr class="memitem:afc6550146278f5dfb3241189b7b236eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#afc6550146278f5dfb3241189b7b236eb">calculateDerivatives</a> ()</td></tr>
+<tr class="memdesc:afc6550146278f5dfb3241189b7b236eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the derivatives of the output.  <a href="class_layer.html#afc6550146278f5dfb3241189b7b236eb">More...</a><br /></td></tr>
 <tr class="separator:afc6550146278f5dfb3241189b7b236eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5b1d7d2cc1c06458280174c743f3982"><td class="memItemLeft" align="right" valign="top"><a id="ae5b1d7d2cc1c06458280174c743f3982" name="ae5b1d7d2cc1c06458280174c743f3982"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>allocate</b> (size_t batchSize)</td></tr>
+<tr class="memitem:ae5b1d7d2cc1c06458280174c743f3982"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#ae5b1d7d2cc1c06458280174c743f3982">allocate</a> (size_t batchSize)</td></tr>
+<tr class="memdesc:ae5b1d7d2cc1c06458280174c743f3982"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate data required for computation.  <a href="class_layer.html#ae5b1d7d2cc1c06458280174c743f3982">More...</a><br /></td></tr>
 <tr class="separator:ae5b1d7d2cc1c06458280174c743f3982"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22a8850c4dc221dd3499df96f65da79a"><td class="memItemLeft" align="right" valign="top"><a id="a22a8850c4dc221dd3499df96f65da79a" name="a22a8850c4dc221dd3499df96f65da79a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>allocateOnes</b> (size_t batchSize)</td></tr>
+<tr class="memitem:a22a8850c4dc221dd3499df96f65da79a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a22a8850c4dc221dd3499df96f65da79a">allocateOnes</a> (size_t batchSize)</td></tr>
+<tr class="memdesc:a22a8850c4dc221dd3499df96f65da79a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate <a class="el" href="class_layer.html#abcece29618281bd522802d2c396ab9cf" title="Store a vector of ones.">Layer::ones</a>.  <a href="class_layer.html#a22a8850c4dc221dd3499df96f65da79a">More...</a><br /></td></tr>
 <tr class="separator:a22a8850c4dc221dd3499df96f65da79a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0ae9585a98dbb1e03e8018d467fc981"><td class="memItemLeft" align="right" valign="top"><a id="ab0ae9585a98dbb1e03e8018d467fc981" name="ab0ae9585a98dbb1e03e8018d467fc981"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>allocateDataT</b> (size_t batchSize)</td></tr>
+<tr class="memitem:ab0ae9585a98dbb1e03e8018d467fc981"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#ab0ae9585a98dbb1e03e8018d467fc981">allocateDataT</a> (size_t batchSize)</td></tr>
+<tr class="memdesc:ab0ae9585a98dbb1e03e8018d467fc981"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate <a class="el" href="class_layer.html#ae2527411390f6d2df31f130e99db31cf" title="Matrix storing the transpose of the data passed in the forward propagation step.">Layer::dataT</a>.  <a href="class_layer.html#ab0ae9585a98dbb1e03e8018d467fc981">More...</a><br /></td></tr>
 <tr class="separator:ab0ae9585a98dbb1e03e8018d467fc981"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad752715680f42fd083c3a2bb9cb2aee4"><td class="memItemLeft" align="right" valign="top"><a id="ad752715680f42fd083c3a2bb9cb2aee4" name="ad752715680f42fd083c3a2bb9cb2aee4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>allocateAMatrix</b> (size_t batchSize)</td></tr>
+<tr class="memitem:ad752715680f42fd083c3a2bb9cb2aee4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#ad752715680f42fd083c3a2bb9cb2aee4">allocateAMatrix</a> (size_t batchSize)</td></tr>
+<tr class="memdesc:ad752715680f42fd083c3a2bb9cb2aee4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate <a class="el" href="class_layer.html#af0845a71fb5abcfc54a9bfc67fa771e1" title="The output of the layer before applying the activation function.">Layer::aMatrix</a>.  <a href="class_layer.html#ad752715680f42fd083c3a2bb9cb2aee4">More...</a><br /></td></tr>
 <tr class="separator:ad752715680f42fd083c3a2bb9cb2aee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf090d094188ab74a66e406d1d4e36dc"><td class="memItemLeft" align="right" valign="top"><a id="aaf090d094188ab74a66e406d1d4e36dc" name="aaf090d094188ab74a66e406d1d4e36dc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>allocateZMatrix</b> (size_t batchSize)</td></tr>
+<tr class="memitem:aaf090d094188ab74a66e406d1d4e36dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#aaf090d094188ab74a66e406d1d4e36dc">allocateZMatrix</a> (size_t batchSize)</td></tr>
+<tr class="memdesc:aaf090d094188ab74a66e406d1d4e36dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate <a class="el" href="class_layer.html#a241b7721e392b4a9c281e592aa76049f" title="The output of the layer.">Layer::zMatrix</a>.  <a href="class_layer.html#aaf090d094188ab74a66e406d1d4e36dc">More...</a><br /></td></tr>
 <tr class="separator:aaf090d094188ab74a66e406d1d4e36dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e5405ec42f4c6aca9842fa975e47e2b"><td class="memItemLeft" align="right" valign="top"><a id="a8e5405ec42f4c6aca9842fa975e47e2b" name="a8e5405ec42f4c6aca9842fa975e47e2b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>allocateNewDelta</b> (size_t batchSize)</td></tr>
+<tr class="memitem:a8e5405ec42f4c6aca9842fa975e47e2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a8e5405ec42f4c6aca9842fa975e47e2b">allocateNewDelta</a> (size_t batchSize)</td></tr>
+<tr class="memdesc:a8e5405ec42f4c6aca9842fa975e47e2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate <a class="el" href="class_layer.html#a4a6ffa21a68f2df1c1abdeef9e4c05ea" title="Delta that should be passed to the previous layer in the backpropagation step.">Layer::newDelta</a>.  <a href="class_layer.html#a8e5405ec42f4c6aca9842fa975e47e2b">More...</a><br /></td></tr>
 <tr class="separator:a8e5405ec42f4c6aca9842fa975e47e2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f0ddedb289f8ca8e85260c01fb9e07c"><td class="memItemLeft" align="right" valign="top"><a id="a4f0ddedb289f8ca8e85260c01fb9e07c" name="a4f0ddedb289f8ca8e85260c01fb9e07c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>allocateNewDeltaT</b> (size_t batchSize)</td></tr>
+<tr class="memitem:a4f0ddedb289f8ca8e85260c01fb9e07c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a4f0ddedb289f8ca8e85260c01fb9e07c">allocateNewDeltaT</a> (size_t batchSize)</td></tr>
+<tr class="memdesc:a4f0ddedb289f8ca8e85260c01fb9e07c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate <a class="el" href="class_layer.html#a3e4b32c5dea58c3efde768971c415f17" title="Transpose of Layer::newDelta.">Layer::newDeltaT</a>.  <a href="class_layer.html#a4f0ddedb289f8ca8e85260c01fb9e07c">More...</a><br /></td></tr>
 <tr class="separator:a4f0ddedb289f8ca8e85260c01fb9e07c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af50880aa53bc7e5257840dd9646ea1fe"><td class="memItemLeft" align="right" valign="top"><a id="af50880aa53bc7e5257840dd9646ea1fe" name="af50880aa53bc7e5257840dd9646ea1fe"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>allocateDerivatives</b> (size_t batchSize)</td></tr>
+<tr class="memitem:af50880aa53bc7e5257840dd9646ea1fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#af50880aa53bc7e5257840dd9646ea1fe">allocateDerivatives</a> (size_t batchSize)</td></tr>
+<tr class="memdesc:af50880aa53bc7e5257840dd9646ea1fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate <a class="el" href="class_layer.html#aa1ecda24d8a36b553ac4e7261da9bdfe" title="The derivatives of the output.">Layer::derivatives</a>.  <a href="class_layer.html#af50880aa53bc7e5257840dd9646ea1fe">More...</a><br /></td></tr>
 <tr class="separator:af50880aa53bc7e5257840dd9646ea1fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:acc5ea3a124ecfbaad5f0ee71c48abc00"><td class="memItemLeft" align="right" valign="top"><a id="acc5ea3a124ecfbaad5f0ee71c48abc00" name="acc5ea3a124ecfbaad5f0ee71c48abc00"></a>
-<a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>previousWeightsT</b></td></tr>
+<tr class="memitem:acc5ea3a124ecfbaad5f0ee71c48abc00"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#acc5ea3a124ecfbaad5f0ee71c48abc00">previousWeightsT</a></td></tr>
+<tr class="memdesc:acc5ea3a124ecfbaad5f0ee71c48abc00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix storing the transpose of the weights of the previous layer.  <a href="class_layer.html#acc5ea3a124ecfbaad5f0ee71c48abc00">More...</a><br /></td></tr>
 <tr class="separator:acc5ea3a124ecfbaad5f0ee71c48abc00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2527411390f6d2df31f130e99db31cf"><td class="memItemLeft" align="right" valign="top"><a id="ae2527411390f6d2df31f130e99db31cf" name="ae2527411390f6d2df31f130e99db31cf"></a>
-<a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>dataT</b></td></tr>
+<tr class="memitem:ae2527411390f6d2df31f130e99db31cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#ae2527411390f6d2df31f130e99db31cf">dataT</a></td></tr>
+<tr class="memdesc:ae2527411390f6d2df31f130e99db31cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix storing the transpose of the data passed in the forward propagation step.  <a href="class_layer.html#ae2527411390f6d2df31f130e99db31cf">More...</a><br /></td></tr>
 <tr class="separator:ae2527411390f6d2df31f130e99db31cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcece29618281bd522802d2c396ab9cf"><td class="memItemLeft" align="right" valign="top"><a id="abcece29618281bd522802d2c396ab9cf" name="abcece29618281bd522802d2c396ab9cf"></a>
-<a class="el" href="class_vector.html">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ones</b></td></tr>
+<tr class="memitem:abcece29618281bd522802d2c396ab9cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vector.html">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#abcece29618281bd522802d2c396ab9cf">ones</a></td></tr>
+<tr class="memdesc:abcece29618281bd522802d2c396ab9cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store a vector of ones.  <a href="class_layer.html#abcece29618281bd522802d2c396ab9cf">More...</a><br /></td></tr>
 <tr class="separator:abcece29618281bd522802d2c396ab9cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e4b32c5dea58c3efde768971c415f17"><td class="memItemLeft" align="right" valign="top"><a id="a3e4b32c5dea58c3efde768971c415f17" name="a3e4b32c5dea58c3efde768971c415f17"></a>
-<a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>newDeltaT</b></td></tr>
+<tr class="memitem:a3e4b32c5dea58c3efde768971c415f17"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a3e4b32c5dea58c3efde768971c415f17">newDeltaT</a></td></tr>
+<tr class="memdesc:a3e4b32c5dea58c3efde768971c415f17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transpose of <a class="el" href="class_layer.html#a4a6ffa21a68f2df1c1abdeef9e4c05ea" title="Delta that should be passed to the previous layer in the backpropagation step.">Layer::newDelta</a>.  <a href="class_layer.html#a3e4b32c5dea58c3efde768971c415f17">More...</a><br /></td></tr>
 <tr class="separator:a3e4b32c5dea58c3efde768971c415f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Represents a single layer of a neural network. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a05e44ab517881bd3dfe9319faebb4006" name="a05e44ab517881bd3dfe9319faebb4006"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05e44ab517881bd3dfe9319faebb4006">&#9670;&nbsp;</a></span>Layer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Layer::Layer </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>inSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>outSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_activation.html">Activation</a> *&#160;</td>
+          <td class="paramname"><em>activation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DataLocation&#160;</td>
+          <td class="paramname"><em>location</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct a new layer. </p>
+<p >Also allocates space that will be used during computation. This allows for in-place computation, which avoids allocating/freeing memory during training.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inSize</td><td>The input size to the layer. </td></tr>
+    <tr><td class="paramname">outSize</td><td>The output size of the layer (equal to the number of neurons). </td></tr>
+    <tr><td class="paramname">activation</td><td>The activation function that should be used. </td></tr>
+    <tr><td class="paramname">location</td><td>The location of the layer. See <a class="el" href="class_layer.html#a248df76aa48278b0f8ca07c4d4f0a738" title="The location of the layer.">Layer::location</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae5b1d7d2cc1c06458280174c743f3982" name="ae5b1d7d2cc1c06458280174c743f3982"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5b1d7d2cc1c06458280174c743f3982">&#9670;&nbsp;</a></span>allocate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::allocate </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>batchSize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allocate data required for computation. </p>
+<p >Step called during forward propagation. If some matrices are in incorrect shape, this method will reallocate their memory to match the correct shape. This method calls all <em>allocate*</em> methods.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">batchSize</td><td>The size of the batch. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad752715680f42fd083c3a2bb9cb2aee4" name="ad752715680f42fd083c3a2bb9cb2aee4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad752715680f42fd083c3a2bb9cb2aee4">&#9670;&nbsp;</a></span>allocateAMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::allocateAMatrix </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>batchSize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allocate <a class="el" href="class_layer.html#af0845a71fb5abcfc54a9bfc67fa771e1" title="The output of the layer before applying the activation function.">Layer::aMatrix</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">batchSize</td><td>The size of the batch. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab0ae9585a98dbb1e03e8018d467fc981" name="ab0ae9585a98dbb1e03e8018d467fc981"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0ae9585a98dbb1e03e8018d467fc981">&#9670;&nbsp;</a></span>allocateDataT()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::allocateDataT </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>batchSize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allocate <a class="el" href="class_layer.html#ae2527411390f6d2df31f130e99db31cf" title="Matrix storing the transpose of the data passed in the forward propagation step.">Layer::dataT</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">batchSize</td><td>The size of the batch. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af50880aa53bc7e5257840dd9646ea1fe" name="af50880aa53bc7e5257840dd9646ea1fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af50880aa53bc7e5257840dd9646ea1fe">&#9670;&nbsp;</a></span>allocateDerivatives()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::allocateDerivatives </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>batchSize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allocate <a class="el" href="class_layer.html#aa1ecda24d8a36b553ac4e7261da9bdfe" title="The derivatives of the output.">Layer::derivatives</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">batchSize</td><td>The size of the batch. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8e5405ec42f4c6aca9842fa975e47e2b" name="a8e5405ec42f4c6aca9842fa975e47e2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e5405ec42f4c6aca9842fa975e47e2b">&#9670;&nbsp;</a></span>allocateNewDelta()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::allocateNewDelta </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>batchSize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allocate <a class="el" href="class_layer.html#a4a6ffa21a68f2df1c1abdeef9e4c05ea" title="Delta that should be passed to the previous layer in the backpropagation step.">Layer::newDelta</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">batchSize</td><td>The size of the batch. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4f0ddedb289f8ca8e85260c01fb9e07c" name="a4f0ddedb289f8ca8e85260c01fb9e07c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f0ddedb289f8ca8e85260c01fb9e07c">&#9670;&nbsp;</a></span>allocateNewDeltaT()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::allocateNewDeltaT </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>batchSize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allocate <a class="el" href="class_layer.html#a3e4b32c5dea58c3efde768971c415f17" title="Transpose of Layer::newDelta.">Layer::newDeltaT</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">batchSize</td><td>The size of the batch. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a22a8850c4dc221dd3499df96f65da79a" name="a22a8850c4dc221dd3499df96f65da79a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22a8850c4dc221dd3499df96f65da79a">&#9670;&nbsp;</a></span>allocateOnes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::allocateOnes </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>batchSize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allocate <a class="el" href="class_layer.html#abcece29618281bd522802d2c396ab9cf" title="Store a vector of ones.">Layer::ones</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">batchSize</td><td>The size of the batch. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aaf090d094188ab74a66e406d1d4e36dc" name="aaf090d094188ab74a66e406d1d4e36dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf090d094188ab74a66e406d1d4e36dc">&#9670;&nbsp;</a></span>allocateZMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::allocateZMatrix </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>batchSize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allocate <a class="el" href="class_layer.html#a241b7721e392b4a9c281e592aa76049f" title="The output of the layer.">Layer::zMatrix</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">batchSize</td><td>The size of the batch. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a99e07431accbdbb8910a2e1cbd6852b5" name="a99e07431accbdbb8910a2e1cbd6852b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99e07431accbdbb8910a2e1cbd6852b5">&#9670;&nbsp;</a></span>applyGradients()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::applyGradients </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>batchSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a>&#160;</td>
+          <td class="paramname"><em>learningRate</em> = <code>0.01</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Apply the computed gradients. </p>
+<p >The method should be called only when all the gradients have been computed for all the layers in the network.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">batchSize</td><td>The size of the batch. </td></tr>
+    <tr><td class="paramname">learningRate</td><td>The learning rate of the model. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a902ce213e21837685c0d29e35417e691" name="a902ce213e21837685c0d29e35417e691"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a902ce213e21837685c0d29e35417e691">&#9670;&nbsp;</a></span>backward()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::backward </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>delta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>previousWeights</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>batchSize</em> = <code><a class="el" href="layer_8h.html#a123fa013ecd2c91686ad58c0b8d985b3">DEFAULT_BATCH_SIZE</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isLastLayer</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Backward-propagate one batch of data through the network. </p>
+<p >Takes a boolean to specify if this layer is the output layer in the network. If it is, a slightly different algorithm must be used to compute the gradients.</p>
+<p >This method only computes the gradients, it does not apply them. The gradients can only be applied once they have been calculated for all the layers. Otherwise, the passed <code>previousWeights</code> would change before the gradients have been computed. The gradients are applied in the <a class="el" href="class_layer.html#a99e07431accbdbb8910a2e1cbd6852b5" title="Apply the computed gradients.">Layer::applyGradients()</a> method.</p>
+<p >Uses algorithm adapted from <a href="http://neuralnetworksanddeeplearning.com/chap2.html">http://neuralnetworksanddeeplearning.com/chap2.html</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">delta</td><td><code>newDelta</code> passed from the previous layer (next in the model's architecture). </td></tr>
+    <tr><td class="paramname">previousWeights</td><td>The weights of the previous layer (next in the model's architecture). </td></tr>
+    <tr><td class="paramname">batchSize</td><td>The size of the batch. </td></tr>
+    <tr><td class="paramname">isLastLayer</td><td>Boolean to specify if this layer is the last one (the output layer). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="afc6550146278f5dfb3241189b7b236eb" name="afc6550146278f5dfb3241189b7b236eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc6550146278f5dfb3241189b7b236eb">&#9670;&nbsp;</a></span>calculateDerivatives()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::calculateDerivatives </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculate the derivatives of the output. </p>
+<p >This calls Activation::computeDerivatives() on the <a class="el" href="class_layer.html#a5234b3bcf11a0b626b529ef23c7624db" title="The activation function.">Layer::activation</a> object. </p>
+
+</div>
+</div>
+<a id="adc1b20ea056d1905a926452e7400d702" name="adc1b20ea056d1905a926452e7400d702"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc1b20ea056d1905a926452e7400d702">&#9670;&nbsp;</a></span>forward()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Layer::forward </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>batch</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Forward one batch of data through the layer. </p>
+<p >This includes allocating space that could not be allocated in the constructor as it depends on the batch size. The additional data will only be allocated if batch size changes. This means, if all batches are of the same size, the data will not be allocated again. This is performed in the <a class="el" href="class_layer.html#ae5b1d7d2cc1c06458280174c743f3982" title="Allocate data required for computation.">Layer::allocate()</a> method.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">batch</td><td>The batch that should be propagated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a5234b3bcf11a0b626b529ef23c7624db" name="a5234b3bcf11a0b626b529ef23c7624db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5234b3bcf11a0b626b529ef23c7624db">&#9670;&nbsp;</a></span>activation</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_activation.html">Activation</a>* Layer::activation</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The activation function. </p>
+<p >Pointer to the activation function object. Can be <a class="el" href="class_linear_activation.html">LinearActivation</a>, <a class="el" href="class_re_l_u_activation.html">ReLUActivation</a> or <a class="el" href="class_sigmoid_activation.html">SigmoidActivation</a>. </p>
+
+</div>
+</div>
+<a id="a585ee0ab655bc35af704fbf54bc5ab7b" name="a585ee0ab655bc35af704fbf54bc5ab7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a585ee0ab655bc35af704fbf54bc5ab7b">&#9670;&nbsp;</a></span>data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_matrix.html">Matrix</a>* Layer::data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Matrix storing data passed to the layer. </p>
+<p >Stores a pointer reference to the batch that was most recently forward-propagated through the layer. </p>
+
+</div>
+</div>
+<a id="ae2527411390f6d2df31f130e99db31cf" name="ae2527411390f6d2df31f130e99db31cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2527411390f6d2df31f130e99db31cf">&#9670;&nbsp;</a></span>dataT</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_matrix.html">Matrix</a> Layer::dataT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Matrix storing the transpose of the data passed in the forward propagation step. </p>
+<p >Helper variable used during backpropagation. </p>
+
+</div>
+</div>
+<a id="aa1ecda24d8a36b553ac4e7261da9bdfe" name="aa1ecda24d8a36b553ac4e7261da9bdfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1ecda24d8a36b553ac4e7261da9bdfe">&#9670;&nbsp;</a></span>derivatives</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_matrix.html">Matrix</a> Layer::derivatives</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The derivatives of the output. </p>
+<p >The derivatives are computed by the activation function and stored in this variable. </p>
+
+</div>
+</div>
+<a id="a4ec6dd239834e32835f2cfffd0506e2d" name="a4ec6dd239834e32835f2cfffd0506e2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ec6dd239834e32835f2cfffd0506e2d">&#9670;&nbsp;</a></span>inSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t Layer::inSize</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The input size to the layer. </p>
+<p >Equal to the number of neurons in the previous layer, or the size of the input in the case of the input layer. </p>
+
+</div>
+</div>
+<a id="a248df76aa48278b0f8ca07c4d4f0a738" name="a248df76aa48278b0f8ca07c4d4f0a738"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a248df76aa48278b0f8ca07c4d4f0a738">&#9670;&nbsp;</a></span>location</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DataLocation Layer::location</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The location of the layer. </p>
+<p >Specifies the location of all the data used by the layer. See DataLocation for more info. </p>
+
+</div>
+</div>
+<a id="a3e4b32c5dea58c3efde768971c415f17" name="a3e4b32c5dea58c3efde768971c415f17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e4b32c5dea58c3efde768971c415f17">&#9670;&nbsp;</a></span>newDeltaT</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_matrix.html">Matrix</a> Layer::newDeltaT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Transpose of <a class="el" href="class_layer.html#a4a6ffa21a68f2df1c1abdeef9e4c05ea" title="Delta that should be passed to the previous layer in the backpropagation step.">Layer::newDelta</a>. </p>
+<p >Helper variable used during backpropagation. </p>
+
+</div>
+</div>
+<a id="abcece29618281bd522802d2c396ab9cf" name="abcece29618281bd522802d2c396ab9cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcece29618281bd522802d2c396ab9cf">&#9670;&nbsp;</a></span>ones</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vector.html">Vector</a> Layer::ones</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Store a vector of ones. </p>
+<p >Required for the backpropagation algorithm. It is used to sum <a class="el" href="class_layer.html#a3e4b32c5dea58c3efde768971c415f17" title="Transpose of Layer::newDelta.">Layer::newDeltaT</a> along first axis into bias gradients. </p>
+
+</div>
+</div>
+<a id="a0fc72a7936b05bfa0567df96b7abd08c" name="a0fc72a7936b05bfa0567df96b7abd08c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fc72a7936b05bfa0567df96b7abd08c">&#9670;&nbsp;</a></span>outSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t Layer::outSize</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The output size of the layer. </p>
+<p >Equal to the number of neurons in the layer. </p>
+
+</div>
+</div>
+<a id="acc5ea3a124ecfbaad5f0ee71c48abc00" name="acc5ea3a124ecfbaad5f0ee71c48abc00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc5ea3a124ecfbaad5f0ee71c48abc00">&#9670;&nbsp;</a></span>previousWeightsT</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_matrix.html">Matrix</a> Layer::previousWeightsT</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Matrix storing the transpose of the weights of the previous layer. </p>
+<p >Helper variable used during backpropagation. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/<a class="el" href="layer_8h_source.html">layer.h</a></li>
 <li>src/ann/layer.cpp</li>

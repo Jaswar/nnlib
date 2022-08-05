@@ -1,6 +1,6 @@
 /**
  * @file network.h
- * @brief Header file to declare a Network class.
+ * @brief Header file declaring the Network class.
  * @author Jan Warchocki
  * @date 03/03/2022
  */
@@ -23,15 +23,14 @@ class Network {
     /**
      * @brief The location of the network.
      *
-     * Specifies the location of all the data used by the network. Can be either HOST (data in RAM/CPU) or DEVICE
-     * (data in VRAM/GPU). The latter is only possible if GPU acceleration is available.
+     * Specifies the location of all the data used by the network. See DataLocation for more info.
      */
     DataLocation location;
 
     /**
      * @brief Pre-allocated space for loss.
      *
-     * Might require resizing/reallocating if batchSize != #DEFAULT_BATCH_SIZE during training. In that case,
+     * Might require resizing/reallocating if @p batchSize != #DEFAULT_BATCH_SIZE during training. In that case,
      * the reshaping will still only happen once. The data is pre-allocated to avoid unnecessary allocation
      * during runtime.
      */
