@@ -2,7 +2,7 @@
  * @file convert.h
  * @brief Header file consisting of functions to convert between matrices and vectors.
  * @author Jan Warchocki
- * @date 07/03/2022
+ * @date 07 March 2022
  */
 
 #ifndef NNLIB_CONVERT_H

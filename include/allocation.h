@@ -5,7 +5,7 @@
  * All functions in the file only allocate/copy memory of type #DTYPE.
  *
  * @author Jan Warchocki
- * @date 03/03/2022
+ * @date 03 March 2022
  *
  */
 

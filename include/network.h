@@ -2,7 +2,7 @@
  * @file network.h
  * @brief Header file declaring the Network class.
  * @author Jan Warchocki
- * @date 03/03/2022
+ * @date 03 March 2022
  */
 
 #ifndef NNLIB_NETWORK_H
