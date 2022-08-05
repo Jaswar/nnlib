@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vector_0',['Vector',['../class_vector.html',1,'']]]
+  ['unexpectedcudacallexception_0',['UnexpectedCUDACallException',['../class_unexpected_c_u_d_a_call_exception.html',1,'']]]
 ];

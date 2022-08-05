@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['no_5fseed_0',['NO_SEED',['../network_8h.html#adba0995ed878e291e51428000dfc5dfa',1,'network.h']]]
+  ['dtype_0',['DTYPE',['../allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a',1,'allocation.h']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['network_0',['Network',['../class_network.html#abb189f45f3baad1a367d4206d67269f3',1,'Network']]]
+  ['forward_0',['forward',['../class_network.html#ab96a04290ddb2396a43080e4bf7b277b',1,'Network']]]
 ];

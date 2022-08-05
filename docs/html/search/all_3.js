@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['forward_0',['forward',['../class_network.html#ab96a04290ddb2396a43080e4bf7b277b',1,'Network']]]
+  ['differentdatalocationexception_0',['DifferentDataLocationException',['../class_different_data_location_exception.html',1,'']]],
+  ['dtype_1',['DTYPE',['../allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a',1,'allocation.h']]]
 ];

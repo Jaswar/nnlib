@@ -87,16 +87,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab96a04290ddb2396a43080e4bf7b277b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_matrix.html">Matrix</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#ab96a04290ddb2396a43080e4bf7b277b">forward</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;batch)</td></tr>
 <tr class="memdesc:ab96a04290ddb2396a43080e4bf7b277b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward-propagate a batch through the network.  <a href="class_network.html#ab96a04290ddb2396a43080e4bf7b277b">More...</a><br /></td></tr>
 <tr class="separator:ab96a04290ddb2396a43080e4bf7b277b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a69874ed0598be0a616073a0a1c2366"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a4a69874ed0598be0a616073a0a1c2366">backward</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;predicted, const <a class="el" href="class_matrix.html">Matrix</a> &amp;target, DTYPE learningRate=0.01)</td></tr>
+<tr class="memitem:a4a69874ed0598be0a616073a0a1c2366"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a4a69874ed0598be0a616073a0a1c2366">backward</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;predicted, const <a class="el" href="class_matrix.html">Matrix</a> &amp;target, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> learningRate=0.01)</td></tr>
 <tr class="memdesc:a4a69874ed0598be0a616073a0a1c2366"><td class="mdescLeft">&#160;</td><td class="mdescRight">Backward-propagate a batch through the network.  <a href="class_network.html#a4a69874ed0598be0a616073a0a1c2366">More...</a><br /></td></tr>
 <tr class="separator:a4a69874ed0598be0a616073a0a1c2366"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a303315a1bd86862bac0e5b06bf08f6fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc">train</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;X, const <a class="el" href="class_matrix.html">Matrix</a> &amp;y, int epochs, size_t batchSize=DEFAULT_BATCH_SIZE, DTYPE learningRate=0.01)</td></tr>
+<tr class="memitem:a303315a1bd86862bac0e5b06bf08f6fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc">train</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;X, const <a class="el" href="class_matrix.html">Matrix</a> &amp;y, int epochs, size_t batchSize=DEFAULT_BATCH_SIZE, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> learningRate=0.01)</td></tr>
 <tr class="memdesc:a303315a1bd86862bac0e5b06bf08f6fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Train the network.  <a href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc">More...</a><br /></td></tr>
 <tr class="separator:a303315a1bd86862bac0e5b06bf08f6fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a27c86f9946b5cf76d5caf25af8af9db9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a27c86f9946b5cf76d5caf25af8af9db9">processEpoch</a> (std::vector&lt; <a class="el" href="class_matrix.html">Matrix</a> &gt; &amp;batches, std::vector&lt; <a class="el" href="class_matrix.html">Matrix</a> &gt; &amp;targets, <a class="el" href="class_matrix.html">Matrix</a> &amp;yHost, DTYPE learningRate)</td></tr>
+<tr class="memitem:a27c86f9946b5cf76d5caf25af8af9db9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network.html#a27c86f9946b5cf76d5caf25af8af9db9">processEpoch</a> (std::vector&lt; <a class="el" href="class_matrix.html">Matrix</a> &gt; &amp;batches, std::vector&lt; <a class="el" href="class_matrix.html">Matrix</a> &gt; &amp;targets, <a class="el" href="class_matrix.html">Matrix</a> &amp;yHost, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> learningRate)</td></tr>
 <tr class="memdesc:a27c86f9946b5cf76d5caf25af8af9db9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trains the model on a single epoch.  <a href="class_network.html#a27c86f9946b5cf76d5caf25af8af9db9">More...</a><br /></td></tr>
 <tr class="separator:a27c86f9946b5cf76d5caf25af8af9db9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -236,7 +236,7 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">DTYPE&#160;</td>
+          <td class="paramtype"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a>&#160;</td>
           <td class="paramname"><em>learningRate</em> = <code>0.01</code>&#160;</td>
         </tr>
         <tr>
@@ -318,7 +318,7 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">DTYPE&#160;</td>
+          <td class="paramtype"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a>&#160;</td>
           <td class="paramname"><em>learningRate</em>&#160;</td>
         </tr>
         <tr>
@@ -381,7 +381,7 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">DTYPE&#160;</td>
+          <td class="paramtype"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a>&#160;</td>
           <td class="paramname"><em>learningRate</em> = <code>0.01</code>&#160;</td>
         </tr>
         <tr>

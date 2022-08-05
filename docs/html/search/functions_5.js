@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['train_0',['train',['../class_network.html#a303315a1bd86862bac0e5b06bf08f6fc',1,'Network']]]
+  ['processepoch_0',['processEpoch',['../class_network.html#a27c86f9946b5cf76d5caf25af8af9db9',1,'Network']]]
 ];
