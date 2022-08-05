@@ -1,10 +1,12 @@
 /**
  * @file allocation.h
  * @brief Header file to declare common functions regarding memory allocation.
+ *
+ * All functions in the file only allocate/copy memory of type #DTYPE.
+ *
  * @author Jan Warchocki
  * @date 03/03/2022
  *
- * All functions in the file only allocate/copy memory of type #DTYPE.
  */
 
 #ifndef NNLIB_ALLOCATION_H
@@ -21,7 +23,7 @@
  * @brief Allocate 1D array.
  *
  * @param n The size of the array to allocate.
- * @return Allocated #DTYPE array of size n.
+ * @return Allocated #DTYPE array of size @p n.
  */
 DTYPE* allocate1DArray(size_t n);
 
@@ -30,7 +32,7 @@ DTYPE* allocate1DArray(size_t n);
  *
  * @param n The size of the array to allocate.
  * @param defaultValue The default value to fill the array with.
- * @return Allocated #DTYPE array of size n.
+ * @return Allocated #DTYPE array of size @p n.
  */
 DTYPE* allocate1DArray(size_t n, DTYPE defaultValue);
 
@@ -41,7 +43,7 @@ DTYPE* allocate1DArray(size_t n, DTYPE defaultValue);
  *
  * @param n The number of rows of the array.
  * @param m The number of columns of the array.
- * @return Allocated #DTYPE array of size n x m.
+ * @return Allocated #DTYPE array of size @p n x @p m.
  */
 DTYPE** allocate2DArray(size_t n, size_t m);
 
@@ -53,7 +55,7 @@ DTYPE** allocate2DArray(size_t n, size_t m);
  * @param n The number of rows of the array.
  * @param m The number of columns of the array.
  * @param defaultValue The default value to fill the array with.
- * @return Allocated #DTYPE array of size n x m.
+ * @return Allocated #DTYPE array of size @p n x @p m.
  */
 DTYPE** allocate2DArray(size_t n, size_t m, DTYPE defaultValue);
 

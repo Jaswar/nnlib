@@ -164,7 +164,7 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
 </div><div class="memdoc">
 
 <p>Construct a new network. </p>
-<p >The constructed network can use GPU acceleration if a GPU and CUDA are available, and the useGPU parameter is set to true.</p>
+<p >The constructed network can use GPU acceleration if a GPU and CUDA are available, and the <code>useGPU</code> parameter is set to true.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">inputSize</td><td>The number of inputs to the neural network. </td></tr>
@@ -251,7 +251,7 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
 <p >Squared error loss is used as the loss metric. The network first calculates the gradients on all layers and only then applies them. This is because layers require weights from following layers to compute the correct gradients.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">predicted</td><td>The predictions of the network as retrieved from <a class="el" href="class_network.html#ab96a04290ddb2396a43080e4bf7b277b" title="Forward-propagate a batch through the network.">forward()</a>. </td></tr>
+    <tr><td class="paramname">predicted</td><td>The predictions of the network as retrieved from <a class="el" href="class_network.html#ab96a04290ddb2396a43080e4bf7b277b" title="Forward-propagate a batch through the network.">Network::forward</a>. </td></tr>
     <tr><td class="paramname">target</td><td>The targets for that batch of data. </td></tr>
     <tr><td class="paramname">learningRate</td><td>The learning rate of the model. </td></tr>
   </table>
@@ -284,7 +284,7 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The pointer to the output of the network. This returns the aMatrix from <a class="el" href="class_layer.html">Layer</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The pointer to the output of the network. This returns Layer::aMatrix of the last layer. </dd></dl>
 
 </div>
 </div>
@@ -335,11 +335,11 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
 </div><div class="memdoc">
 
 <p>Trains the model on a single epoch. </p>
-<p >Helper method used in <a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc" title="Train the network.">train()</a>. The method computes accuracy, which is why yHost is passed as an argument. In this way, when the network is running on GPU, the targets will not have to be copied to host memory when computing accuracy.</p>
+<p >Helper method used in <a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc" title="Train the network.">Network::train()</a>. The method computes accuracy, which is why yHost is passed as an argument. In this way, when the network is running on GPU, the targets will not have to be copied to host memory when computing accuracy.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">batches</td><td>The list of batches to process. These have been split in <a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc" title="Train the network.">train()</a> method. </td></tr>
-    <tr><td class="paramname">targets</td><td>The list of targets to process. These have been split in <a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc" title="Train the network.">train()</a> method. </td></tr>
+    <tr><td class="paramname">batches</td><td>The list of batches to process. These have been split in <a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc" title="Train the network.">Network::train()</a> method. </td></tr>
+    <tr><td class="paramname">targets</td><td>The list of targets to process. These have been split in <a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc" title="Train the network.">Network::train()</a> method. </td></tr>
     <tr><td class="paramname">yHost</td><td><a class="el" href="class_matrix.html">Matrix</a> that stores the whole y array on host. </td></tr>
     <tr><td class="paramname">learningRate</td><td>The learning rate used during training. </td></tr>
   </table>
@@ -455,7 +455,7 @@ long long&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b></td></t
 </div><div class="memdoc">
 
 <p>Pre-allocated space for loss. </p>
-<p >Might require resizing/reallocating if batchSize != DEFAULT_BATCH_SIZE during training. In that case, the reshaping will still only happen once. The data is pre-allocated to avoid unnecessary allocation during runtime. </p>
+<p >Might require resizing/reallocating if batchSize != #DEFAULT_BATCH_SIZE during training. In that case, the reshaping will still only happen once. The data is pre-allocated to avoid unnecessary allocation during runtime. </p>
 
 </div>
 </div>

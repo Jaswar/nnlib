@@ -31,7 +31,7 @@ class Network {
     /**
      * @brief Pre-allocated space for loss.
      *
-     * Might require resizing/reallocating if batchSize != DEFAULT_BATCH_SIZE during training. In that case,
+     * Might require resizing/reallocating if batchSize != #DEFAULT_BATCH_SIZE during training. In that case,
      * the reshaping will still only happen once. The data is pre-allocated to avoid unnecessary allocation
      * during runtime.
      */
@@ -56,18 +56,17 @@ class Network {
      */
     size_t previousSize;
 
-public:
-
     /**
      * @brief Construct a new network.
      *
-     * The constructed network can use GPU acceleration if a GPU and CUDA are available, and the useGPU parameter
+     * The constructed network can use GPU acceleration if a GPU and CUDA are available, and the @p useGPU parameter
      * is set to true.
      *
      * @param inputSize The number of inputs to the neural network.
      * @param useGPU Boolean to specify whether the network should use GPU acceleration.
      * @param seed Seed that should be used for random initialization of the network.
      */
+public:
     explicit Network(size_t inputSize, bool useGPU = true, long long seed = NO_SEED);
 
     /**
@@ -88,7 +87,7 @@ public:
      * The samples should be aligned along the first axis.
      *
      * @param batch The batch to propagate.
-     * @return The pointer to the output of the network. This returns the aMatrix from Layer.
+     * @return The pointer to the output of the network. This returns Layer::aMatrix of the last layer.
      */
     Matrix* forward(const Matrix& batch);
 
@@ -99,7 +98,7 @@ public:
      * all layers and only then applies them. This is because layers require weights from following
      * layers to compute the correct gradients.
      *
-     * @param predicted The predictions of the network as retrieved from forward().
+     * @param predicted The predictions of the network as retrieved from Network::forward.
      * @param target The targets for that batch of data.
      * @param learningRate The learning rate of the model.
      */
@@ -128,12 +127,12 @@ private:
     /**
      * @brief Trains the model on a single epoch.
      *
-     * Helper method used in train(). The method computes accuracy, which is why yHost is passed as an argument.
+     * Helper method used in Network::train(). The method computes accuracy, which is why yHost is passed as an argument.
      * In this way, when the network is running on GPU, the targets will not have to be copied to host memory when
      * computing accuracy.
      *
-     * @param batches The list of batches to process. These have been split in train() method.
-     * @param targets The list of targets to process. These have been split in train() method.
+     * @param batches The list of batches to process. These have been split in Network::train() method.
+     * @param targets The list of targets to process. These have been split in Network::train() method.
      * @param yHost Matrix that stores the whole y array on host.
      * @param learningRate The learning rate used during training.
      */
