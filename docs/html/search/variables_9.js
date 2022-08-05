@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['weights_0',['weights',['../class_layer.html#a1588152248ef49963d47a8af56f89789',1,'Layer']]],
-  ['weightsgradients_1',['weightsGradients',['../class_layer.html#a358267b53e907e1272570c21febc855e',1,'Layer']]]
+  ['seed_0',['seed',['../class_network.html#a5797bfb98b106399af222c69082073ed',1,'Network']]]
 ];

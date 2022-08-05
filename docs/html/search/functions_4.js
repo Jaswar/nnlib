@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['layer_0',['Layer',['../class_layer.html#a05e44ab517881bd3dfe9319faebb4006',1,'Layer']]]
+  ['hadamard_0',['hadamard',['../matrix_8h.html#acd945945a63e9c1cf2f395d565419f4b',1,'matrix.cpp']]]
 ];

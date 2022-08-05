@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['network_0',['Network',['../class_network.html#abb189f45f3baad1a367d4206d67269f3',1,'Network']]]
+  ['layer_0',['Layer',['../class_layer.html#a05e44ab517881bd3dfe9319faebb4006',1,'Layer']]]
 ];

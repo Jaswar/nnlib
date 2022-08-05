@@ -69,52 +69,394 @@ $(function() {
   <div class="headertitle"><div class="title">Matrix Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Represents a matrix (2D array).  
+ <a href="class_matrix.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="matrix_8h_source.html">matrix.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1cd5c68704eb1d810998ec3a507ab01e"><td class="memItemLeft" align="right" valign="top"><a id="a1cd5c68704eb1d810998ec3a507ab01e" name="a1cd5c68704eb1d810998ec3a507ab01e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Matrix</b> (size_t n, size_t m)</td></tr>
+<tr class="memitem:a1cd5c68704eb1d810998ec3a507ab01e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_matrix.html#a1cd5c68704eb1d810998ec3a507ab01e">Matrix</a> (size_t <a class="el" href="class_matrix.html#ab0a9be8e0667f96ee806deeaa52a1c37">n</a>, size_t <a class="el" href="class_matrix.html#ac4aa85578f84b0df7a3d9d1a0f051d69">m</a>)</td></tr>
+<tr class="memdesc:a1cd5c68704eb1d810998ec3a507ab01e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the matrix using only size of the matrix.  <a href="class_matrix.html#a1cd5c68704eb1d810998ec3a507ab01e">More...</a><br /></td></tr>
 <tr class="separator:a1cd5c68704eb1d810998ec3a507ab01e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4036a033b2d878c8b220df3f78cae4ab"><td class="memItemLeft" align="right" valign="top"><a id="a4036a033b2d878c8b220df3f78cae4ab" name="a4036a033b2d878c8b220df3f78cae4ab"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Matrix</b> (size_t n, size_t m, DataLocation location)</td></tr>
+<tr class="memitem:a4036a033b2d878c8b220df3f78cae4ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_matrix.html#a4036a033b2d878c8b220df3f78cae4ab">Matrix</a> (size_t <a class="el" href="class_matrix.html#ab0a9be8e0667f96ee806deeaa52a1c37">n</a>, size_t <a class="el" href="class_matrix.html#ac4aa85578f84b0df7a3d9d1a0f051d69">m</a>, DataLocation <a class="el" href="class_matrix.html#a8f4d5b36c275feda42751c66893f54b6">location</a>)</td></tr>
+<tr class="memdesc:a4036a033b2d878c8b220df3f78cae4ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the matrix using size and location as specified.  <a href="class_matrix.html#a4036a033b2d878c8b220df3f78cae4ab">More...</a><br /></td></tr>
 <tr class="separator:a4036a033b2d878c8b220df3f78cae4ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebe0f47f79c7d6192ac28d61adcc842b"><td class="memItemLeft" align="right" valign="top"><a id="aebe0f47f79c7d6192ac28d61adcc842b" name="aebe0f47f79c7d6192ac28d61adcc842b"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Matrix</b> (<a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *data, size_t n, size_t m)</td></tr>
+<tr class="memitem:aebe0f47f79c7d6192ac28d61adcc842b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_matrix.html#aebe0f47f79c7d6192ac28d61adcc842b">Matrix</a> (<a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *<a class="el" href="class_matrix.html#af91ec2c07fa2d9003a91362fd3b9e798">data</a>, size_t <a class="el" href="class_matrix.html#ab0a9be8e0667f96ee806deeaa52a1c37">n</a>, size_t <a class="el" href="class_matrix.html#ac4aa85578f84b0df7a3d9d1a0f051d69">m</a>)</td></tr>
+<tr class="memdesc:aebe0f47f79c7d6192ac28d61adcc842b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct matrix using existing data and size.  <a href="class_matrix.html#aebe0f47f79c7d6192ac28d61adcc842b">More...</a><br /></td></tr>
 <tr class="separator:aebe0f47f79c7d6192ac28d61adcc842b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5b21fc63fc0395581f59ad37b047e6d"><td class="memItemLeft" align="right" valign="top"><a id="ac5b21fc63fc0395581f59ad37b047e6d" name="ac5b21fc63fc0395581f59ad37b047e6d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Matrix</b> (<a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *data, size_t n, size_t m, DataLocation location)</td></tr>
+<tr class="memitem:ac5b21fc63fc0395581f59ad37b047e6d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_matrix.html#ac5b21fc63fc0395581f59ad37b047e6d">Matrix</a> (<a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *<a class="el" href="class_matrix.html#af91ec2c07fa2d9003a91362fd3b9e798">data</a>, size_t <a class="el" href="class_matrix.html#ab0a9be8e0667f96ee806deeaa52a1c37">n</a>, size_t <a class="el" href="class_matrix.html#ac4aa85578f84b0df7a3d9d1a0f051d69">m</a>, DataLocation <a class="el" href="class_matrix.html#a8f4d5b36c275feda42751c66893f54b6">location</a>)</td></tr>
+<tr class="memdesc:ac5b21fc63fc0395581f59ad37b047e6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a matrix using all attributes.  <a href="class_matrix.html#ac5b21fc63fc0395581f59ad37b047e6d">More...</a><br /></td></tr>
 <tr class="separator:ac5b21fc63fc0395581f59ad37b047e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b1fedfb1b076d4ae504d2c61019871f"><td class="memItemLeft" align="right" valign="top"><a id="a2b1fedfb1b076d4ae504d2c61019871f" name="a2b1fedfb1b076d4ae504d2c61019871f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Matrix</b> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;matrix)</td></tr>
+<tr class="memitem:a2b1fedfb1b076d4ae504d2c61019871f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_matrix.html#a2b1fedfb1b076d4ae504d2c61019871f">Matrix</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;matrix)</td></tr>
+<tr class="memdesc:a2b1fedfb1b076d4ae504d2c61019871f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The copy constructor.  <a href="class_matrix.html#a2b1fedfb1b076d4ae504d2c61019871f">More...</a><br /></td></tr>
 <tr class="separator:a2b1fedfb1b076d4ae504d2c61019871f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4854ebc65ba681738639c5cefb2839d"><td class="memItemLeft" align="right" valign="top"><a id="ab4854ebc65ba681738639c5cefb2839d" name="ab4854ebc65ba681738639c5cefb2839d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>moveToDevice</b> ()</td></tr>
+<tr class="memdesc:ab4854ebc65ba681738639c5cefb2839d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move the data of the matrix to device. <br /></td></tr>
 <tr class="separator:ab4854ebc65ba681738639c5cefb2839d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7577cd2722a55c390864be7af86dbffd"><td class="memItemLeft" align="right" valign="top"><a id="a7577cd2722a55c390864be7af86dbffd" name="a7577cd2722a55c390864be7af86dbffd"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>moveToHost</b> ()</td></tr>
+<tr class="memdesc:a7577cd2722a55c390864be7af86dbffd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move the data of the matrix to host. <br /></td></tr>
 <tr class="separator:a7577cd2722a55c390864be7af86dbffd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45e4814b752129bed1f1316632f8543a"><td class="memItemLeft" align="right" valign="top"><a id="a45e4814b752129bed1f1316632f8543a" name="a45e4814b752129bed1f1316632f8543a"></a>
-<a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;matrix)</td></tr>
+<tr class="memitem:a9b1c3627f573d78a2f08623fdfef990f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_matrix.html#a9b1c3627f573d78a2f08623fdfef990f">~Matrix</a> ()</td></tr>
+<tr class="memdesc:a9b1c3627f573d78a2f08623fdfef990f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The destructor of a matrix.  <a href="class_matrix.html#a9b1c3627f573d78a2f08623fdfef990f">More...</a><br /></td></tr>
+<tr class="separator:a9b1c3627f573d78a2f08623fdfef990f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45e4814b752129bed1f1316632f8543a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_matrix.html#a45e4814b752129bed1f1316632f8543a">operator=</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;matrix)</td></tr>
+<tr class="memdesc:a45e4814b752129bed1f1316632f8543a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The assignment operator.  <a href="class_matrix.html#a45e4814b752129bed1f1316632f8543a">More...</a><br /></td></tr>
 <tr class="separator:a45e4814b752129bed1f1316632f8543a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa078b35f492c4d7212f117949eec6025"><td class="memItemLeft" align="right" valign="top"><a id="aa078b35f492c4d7212f117949eec6025" name="aa078b35f492c4d7212f117949eec6025"></a>
-<a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator()</b> (size_t x, size_t y) const</td></tr>
+<tr class="memitem:aa078b35f492c4d7212f117949eec6025"><td class="memItemLeft" align="right" valign="top"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_matrix.html#aa078b35f492c4d7212f117949eec6025">operator()</a> (size_t x, size_t y) const</td></tr>
+<tr class="memdesc:aa078b35f492c4d7212f117949eec6025"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access a specific element of the matrix.  <a href="class_matrix.html#aa078b35f492c4d7212f117949eec6025">More...</a><br /></td></tr>
 <tr class="separator:aa078b35f492c4d7212f117949eec6025"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:af91ec2c07fa2d9003a91362fd3b9e798"><td class="memItemLeft" align="right" valign="top"><a id="af91ec2c07fa2d9003a91362fd3b9e798" name="af91ec2c07fa2d9003a91362fd3b9e798"></a>
-<a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>data</b></td></tr>
+<tr class="memitem:af91ec2c07fa2d9003a91362fd3b9e798"><td class="memItemLeft" align="right" valign="top"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_matrix.html#af91ec2c07fa2d9003a91362fd3b9e798">data</a></td></tr>
+<tr class="memdesc:af91ec2c07fa2d9003a91362fd3b9e798"><td class="mdescLeft">&#160;</td><td class="mdescRight">The data stored by the matrix.  <a href="class_matrix.html#af91ec2c07fa2d9003a91362fd3b9e798">More...</a><br /></td></tr>
 <tr class="separator:af91ec2c07fa2d9003a91362fd3b9e798"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0a9be8e0667f96ee806deeaa52a1c37"><td class="memItemLeft" align="right" valign="top"><a id="ab0a9be8e0667f96ee806deeaa52a1c37" name="ab0a9be8e0667f96ee806deeaa52a1c37"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>n</b></td></tr>
+<tr class="memdesc:ab0a9be8e0667f96ee806deeaa52a1c37"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of rows of the matrix. <br /></td></tr>
 <tr class="separator:ab0a9be8e0667f96ee806deeaa52a1c37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4aa85578f84b0df7a3d9d1a0f051d69"><td class="memItemLeft" align="right" valign="top"><a id="ac4aa85578f84b0df7a3d9d1a0f051d69" name="ac4aa85578f84b0df7a3d9d1a0f051d69"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>m</b></td></tr>
+<tr class="memdesc:ac4aa85578f84b0df7a3d9d1a0f051d69"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of columns of the matrix. <br /></td></tr>
 <tr class="separator:ac4aa85578f84b0df7a3d9d1a0f051d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f4d5b36c275feda42751c66893f54b6"><td class="memItemLeft" align="right" valign="top"><a id="a8f4d5b36c275feda42751c66893f54b6" name="a8f4d5b36c275feda42751c66893f54b6"></a>
-DataLocation&#160;</td><td class="memItemRight" valign="bottom"><b>location</b></td></tr>
+<tr class="memitem:a8f4d5b36c275feda42751c66893f54b6"><td class="memItemLeft" align="right" valign="top">DataLocation&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_matrix.html#a8f4d5b36c275feda42751c66893f54b6">location</a></td></tr>
+<tr class="memdesc:a8f4d5b36c275feda42751c66893f54b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The location of <a class="el" href="class_matrix.html#af91ec2c07fa2d9003a91362fd3b9e798" title="The data stored by the matrix.">Matrix::data</a>.  <a href="class_matrix.html#a8f4d5b36c275feda42751c66893f54b6">More...</a><br /></td></tr>
 <tr class="separator:a8f4d5b36c275feda42751c66893f54b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Represents a matrix (2D array). </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a1cd5c68704eb1d810998ec3a507ab01e" name="a1cd5c68704eb1d810998ec3a507ab01e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cd5c68704eb1d810998ec3a507ab01e">&#9670;&nbsp;</a></span>Matrix() <span class="overload">[1/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix::Matrix </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>m</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct the matrix using only size of the matrix. </p>
+<p >By default, the matrix is initialized on host memory. The data is allocated in the constructor.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">n</td><td>The number of rows of the matrix. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4036a033b2d878c8b220df3f78cae4ab" name="a4036a033b2d878c8b220df3f78cae4ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4036a033b2d878c8b220df3f78cae4ab">&#9670;&nbsp;</a></span>Matrix() <span class="overload">[2/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix::Matrix </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DataLocation&#160;</td>
+          <td class="paramname"><em>location</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct the matrix using size and location as specified. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">n</td><td>The number of rows of the matrix. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the matrix. </td></tr>
+    <tr><td class="paramname">location</td><td>The destined location of the matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aebe0f47f79c7d6192ac28d61adcc842b" name="aebe0f47f79c7d6192ac28d61adcc842b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebe0f47f79c7d6192ac28d61adcc842b">&#9670;&nbsp;</a></span>Matrix() <span class="overload">[3/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix::Matrix </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>m</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct matrix using existing data and size. </p>
+<p >Assumes the data is stored on host.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>The already-allocated on-host data. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of the matrix. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac5b21fc63fc0395581f59ad37b047e6d" name="ac5b21fc63fc0395581f59ad37b047e6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5b21fc63fc0395581f59ad37b047e6d">&#9670;&nbsp;</a></span>Matrix() <span class="overload">[4/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix::Matrix </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DataLocation&#160;</td>
+          <td class="paramname"><em>location</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct a matrix using all attributes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>The already-allocated data. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of the matrix. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the matrix. </td></tr>
+    <tr><td class="paramname">location</td><td>The location of data. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2b1fedfb1b076d4ae504d2c61019871f" name="a2b1fedfb1b076d4ae504d2c61019871f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b1fedfb1b076d4ae504d2c61019871f">&#9670;&nbsp;</a></span>Matrix() <span class="overload">[5/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix::Matrix </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>matrix</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The copy constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>The other matrix to copy into this matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9b1c3627f573d78a2f08623fdfef990f" name="a9b1c3627f573d78a2f08623fdfef990f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b1c3627f573d78a2f08623fdfef990f">&#9670;&nbsp;</a></span>~Matrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix::~Matrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The destructor of a matrix. </p>
+<p >Ensures that correct method is called depending if the location of the matrix is host or device. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa078b35f492c4d7212f117949eec6025" name="aa078b35f492c4d7212f117949eec6025"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa078b35f492c4d7212f117949eec6025">&#9670;&nbsp;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> &amp; Matrix::operator() </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Access a specific element of the matrix. </p>
+<p >Returns a reference to the element, so that it can be modified using this method.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>The row index of the element to access. </td></tr>
+    <tr><td class="paramname">y</td><td>The column index of the element to access. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Reference to the requested element. </dd></dl>
+
+</div>
+</div>
+<a id="a45e4814b752129bed1f1316632f8543a" name="a45e4814b752129bed1f1316632f8543a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45e4814b752129bed1f1316632f8543a">&#9670;&nbsp;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_matrix.html">Matrix</a> &amp; Matrix::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>matrix</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The assignment operator. </p>
+<p >Frees the current memory of the matrix and copies the data taken from <code>matrix</code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>The other matrix to assign this one into. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Assigned matrix. Always returns <code>*this</code>. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="af91ec2c07fa2d9003a91362fd3b9e798" name="af91ec2c07fa2d9003a91362fd3b9e798"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af91ec2c07fa2d9003a91362fd3b9e798">&#9670;&nbsp;</a></span>data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a>* Matrix::data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The data stored by the matrix. </p>
+<p >Although the matrix is a 2D array, the data is stored in 1D format. This allows for easier GPU integration. </p>
+
+</div>
+</div>
+<a id="a8f4d5b36c275feda42751c66893f54b6" name="a8f4d5b36c275feda42751c66893f54b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f4d5b36c275feda42751c66893f54b6">&#9670;&nbsp;</a></span>location</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DataLocation Matrix::location</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The location of <a class="el" href="class_matrix.html#af91ec2c07fa2d9003a91362fd3b9e798" title="The data stored by the matrix.">Matrix::data</a>. </p>
+<p >Can be either HOST or DEVICE. See DataLocation for more information. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/<a class="el" href="matrix_8h_source.html">matrix.h</a></li>
 <li>src/math/matrix/matrix.cpp</li>

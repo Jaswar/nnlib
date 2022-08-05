@@ -19,7 +19,7 @@
  * @param matrix The matrix to convert to a vector.
  * @return %Vector corresponding to the passed matrix.
  *
- * @throws SizeMismatchException if matrix has more than one column.
+ * @throws SizeMismatchException If matrix has more than one column.
  */
 Vector convertToVector(const Matrix& matrix);
 

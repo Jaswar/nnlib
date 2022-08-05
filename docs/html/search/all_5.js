@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['insize_0',['inSize',['../class_layer.html#a4ec6dd239834e32835f2cfffd0506e2d',1,'Layer']]]
+  ['hadamard_0',['hadamard',['../matrix_8h.html#acd945945a63e9c1cf2f395d565419f4b',1,'matrix.cpp']]]
 ];
