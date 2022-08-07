@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['n_0',['n',['../class_matrix.html#ab0a9be8e0667f96ee806deeaa52a1c37',1,'Matrix::n()'],['../class_vector.html#a8ab8d32a82cb3c50b50a6dc0d55baf6b',1,'Vector::n()']]],
-  ['newdelta_1',['newDelta',['../class_layer.html#a4a6ffa21a68f2df1c1abdeef9e4c05ea',1,'Layer']]],
-  ['newdeltat_2',['newDeltaT',['../class_layer.html#a3e4b32c5dea58c3efde768971c415f17',1,'Layer']]]
+  ['m_0',['m',['../class_matrix.html#ac4aa85578f84b0df7a3d9d1a0f051d69',1,'Matrix']]]
 ];

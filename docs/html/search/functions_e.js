@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['_7elayer_0',['~Layer',['../class_layer.html#a1b1ba4804451dfe6cc357194e42762ae',1,'Layer']]],
-  ['_7ematrix_1',['~Matrix',['../class_matrix.html#a9b1c3627f573d78a2f08623fdfef990f',1,'Matrix']]],
-  ['_7evector_2',['~Vector',['../class_vector.html#a2eb3c49587a4f12cade7895ccb73f6a0',1,'Vector']]]
+  ['threadcsvjob_0',['threadCSVJob',['../read_8cpp.html#af4517b221cd1df344f2fc55955eb0ca8',1,'read.cpp']]],
+  ['train_1',['train',['../class_network.html#a303315a1bd86862bac0e5b06bf08f6fc',1,'Network']]],
+  ['transpose_2',['transpose',['../matrix_8cpp.html#ac3bb8aaca8fc2c3e37655fefe1164fa9',1,'transpose(const Matrix &amp;m, Matrix &amp;result):&#160;matrix.cpp'],['../matrix_8h.html#ac3bb8aaca8fc2c3e37655fefe1164fa9',1,'transpose(const Matrix &amp;m, Matrix &amp;result):&#160;matrix.cpp']]],
+  ['transposematrixondevice_3',['transposeMatrixOnDevice',['../matrix__operations__on__device_8cu.html#af8631f03d14ed1133c131c7f4f5cc638',1,'transposeMatrixOnDevice(const Matrix &amp;m, Matrix &amp;result):&#160;matrix_operations_on_device.cu'],['../matrix__operations__on__device_8cuh.html#af8631f03d14ed1133c131c7f4f5cc638',1,'transposeMatrixOnDevice(const Matrix &amp;m, Matrix &amp;result):&#160;matrix_operations_on_device.cu']]],
+  ['transposematrixonhost_4',['transposeMatrixOnHost',['../matrix__operations__on__host_8cpp.html#a120bed7cac332078911d4f7d57c6ff07',1,'transposeMatrixOnHost(const Matrix &amp;m, Matrix &amp;result):&#160;matrix_operations_on_host.cpp'],['../matrix__operations__on__host_8h.html#a120bed7cac332078911d4f7d57c6ff07',1,'transposeMatrixOnHost(const Matrix &amp;m, Matrix &amp;result):&#160;matrix_operations_on_host.cpp']]]
 ];

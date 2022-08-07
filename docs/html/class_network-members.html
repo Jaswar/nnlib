@@ -23,6 +23,7 @@
   <td id="projectalign">
    <div id="projectname">nnlib
    </div>
+   <div id="projectbrief">GPU-accelerated, C/C++ neural network library.</div>
   </td>
  </tr>
  </tbody>
@@ -71,13 +72,7 @@ $(function() {
   <tr class="even"><td class="entry"><a class="el" href="class_network.html#a8514cc002fd8cdf043214256be0ca994">add</a>(size_t numNeurons, const std::string &amp;activation=&quot;linear&quot;)</td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_network.html#a4a69874ed0598be0a616073a0a1c2366">backward</a>(const Matrix &amp;predicted, const Matrix &amp;target, DTYPE learningRate=0.01)</td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_network.html#ab96a04290ddb2396a43080e4bf7b277b">forward</a>(const Matrix &amp;batch)</td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_network.html#a50f4a527788dfa71d67984a939ed3ee5">layers</a></td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_network.html#a0bf126265345f2e6aa85aeeffa2f9afd">location</a></td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_network.html#af75849d87721bf356380855281c11852">loss</a></td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_network.html#abb189f45f3baad1a367d4206d67269f3">Network</a>(size_t inputSize, bool useGPU=true, long long seed=NO_SEED)</td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_network.html#aa09d16878ecb7f6fe09dd3d5d0f919b6">previousSize</a></td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_network.html#a27c86f9946b5cf76d5caf25af8af9db9">processEpoch</a>(std::vector&lt; Matrix &gt; &amp;batches, std::vector&lt; Matrix &gt; &amp;targets, Matrix &amp;yHost, DTYPE learningRate)</td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_network.html#a5797bfb98b106399af222c69082073ed">seed</a></td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_network.html#abb189f45f3baad1a367d4206d67269f3">Network</a>(size_t inputSize, bool useGPU=true, long long seed=NO_SEED)</td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc">train</a>(const Matrix &amp;X, const Matrix &amp;y, int epochs, size_t batchSize=DEFAULT_BATCH_SIZE, DTYPE learningRate=0.01)</td><td class="entry"><a class="el" href="class_network.html">Network</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->

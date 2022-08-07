@@ -23,6 +23,7 @@
   <td id="projectalign">
    <div id="projectname">nnlib
    </div>
+   <div id="projectbrief">GPU-accelerated, C/C++ neural network library.</div>
   </td>
  </tr>
  </tbody>
@@ -69,6 +70,8 @@ $(function() {
   <div class="headertitle"><div class="title">Activation Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="activation_8h_source.html">activation.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Activation:</div>
 <div class="dyncontent">
@@ -83,34 +86,249 @@ Inheritance diagram for Activation:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4b43c4a24cdf69655d42ce7088d66161"><td class="memItemLeft" align="right" valign="top"><a id="a4b43c4a24cdf69655d42ce7088d66161" name="a4b43c4a24cdf69655d42ce7088d66161"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Activation</b> (<a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a> *hostEvaluator, <a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a> *deviceEvaluator)</td></tr>
+<tr class="memitem:a4b43c4a24cdf69655d42ce7088d66161"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation.html#a4b43c4a24cdf69655d42ce7088d66161">Activation</a> (<a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a> *<a class="el" href="class_activation.html#a68db652c8bb951ba93b3ef5e33f4c8d8">hostEvaluator</a>, <a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a> *<a class="el" href="class_activation.html#a39cceaecf175210dc0b65b9b96ffb683">deviceEvaluator</a>)</td></tr>
 <tr class="separator:a4b43c4a24cdf69655d42ce7088d66161"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f2716046d35c768fea56bb5f869275f"><td class="memItemLeft" align="right" valign="top"><a id="a9f2716046d35c768fea56bb5f869275f" name="a9f2716046d35c768fea56bb5f869275f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>forward</b> (const <a class="el" href="class_vector.html">Vector</a> &amp;input, <a class="el" href="class_vector.html">Vector</a> &amp;result) const</td></tr>
+<tr class="memitem:a9f2716046d35c768fea56bb5f869275f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation.html#a9f2716046d35c768fea56bb5f869275f">forward</a> (const <a class="el" href="class_vector.html">Vector</a> &amp;input, <a class="el" href="class_vector.html">Vector</a> &amp;result) const</td></tr>
 <tr class="separator:a9f2716046d35c768fea56bb5f869275f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88ce217370543bf41e31e83c44d5353e"><td class="memItemLeft" align="right" valign="top"><a id="a88ce217370543bf41e31e83c44d5353e" name="a88ce217370543bf41e31e83c44d5353e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>forward</b> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;input, <a class="el" href="class_matrix.html">Matrix</a> &amp;result) const</td></tr>
+<tr class="memitem:a88ce217370543bf41e31e83c44d5353e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation.html#a88ce217370543bf41e31e83c44d5353e">forward</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;input, <a class="el" href="class_matrix.html">Matrix</a> &amp;result) const</td></tr>
 <tr class="separator:a88ce217370543bf41e31e83c44d5353e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5305beda79ea71a65457e123c67bb556"><td class="memItemLeft" align="right" valign="top"><a id="a5305beda79ea71a65457e123c67bb556" name="a5305beda79ea71a65457e123c67bb556"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>computeDerivatives</b> (const <a class="el" href="class_vector.html">Vector</a> &amp;output, <a class="el" href="class_vector.html">Vector</a> &amp;result) const</td></tr>
+<tr class="memitem:a5305beda79ea71a65457e123c67bb556"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation.html#a5305beda79ea71a65457e123c67bb556">computeDerivatives</a> (const <a class="el" href="class_vector.html">Vector</a> &amp;output, <a class="el" href="class_vector.html">Vector</a> &amp;result) const</td></tr>
 <tr class="separator:a5305beda79ea71a65457e123c67bb556"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a577873d63f5a402f54bf9c90ef7c4fe5"><td class="memItemLeft" align="right" valign="top"><a id="a577873d63f5a402f54bf9c90ef7c4fe5" name="a577873d63f5a402f54bf9c90ef7c4fe5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>computeDerivatives</b> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;output, <a class="el" href="class_matrix.html">Matrix</a> &amp;result) const</td></tr>
+<tr class="memitem:a577873d63f5a402f54bf9c90ef7c4fe5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation.html#a577873d63f5a402f54bf9c90ef7c4fe5">computeDerivatives</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;output, <a class="el" href="class_matrix.html">Matrix</a> &amp;result) const</td></tr>
 <tr class="separator:a577873d63f5a402f54bf9c90ef7c4fe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10147e8450186c17b7ad0c4235148cd0"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation.html#a10147e8450186c17b7ad0c4235148cd0">~Activation</a> ()=0</td></tr>
+<tr class="separator:a10147e8450186c17b7ad0c4235148cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a68db652c8bb951ba93b3ef5e33f4c8d8"><td class="memItemLeft" align="right" valign="top"><a id="a68db652c8bb951ba93b3ef5e33f4c8d8" name="a68db652c8bb951ba93b3ef5e33f4c8d8"></a>
-<a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>hostEvaluator</b></td></tr>
+<tr class="memitem:a68db652c8bb951ba93b3ef5e33f4c8d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation.html#a68db652c8bb951ba93b3ef5e33f4c8d8">hostEvaluator</a></td></tr>
 <tr class="separator:a68db652c8bb951ba93b3ef5e33f4c8d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39cceaecf175210dc0b65b9b96ffb683"><td class="memItemLeft" align="right" valign="top"><a id="a39cceaecf175210dc0b65b9b96ffb683" name="a39cceaecf175210dc0b65b9b96ffb683"></a>
-<a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>deviceEvaluator</b></td></tr>
+<tr class="memitem:a39cceaecf175210dc0b65b9b96ffb683"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation.html#a39cceaecf175210dc0b65b9b96ffb683">deviceEvaluator</a></td></tr>
 <tr class="separator:a39cceaecf175210dc0b65b9b96ffb683"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a4b43c4a24cdf69655d42ce7088d66161" name="a4b43c4a24cdf69655d42ce7088d66161"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b43c4a24cdf69655d42ce7088d66161">&#9670;&nbsp;</a></span>Activation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Activation::Activation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a> *&#160;</td>
+          <td class="paramname"><em>hostEvaluator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a> *&#160;</td>
+          <td class="paramname"><em>deviceEvaluator</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a10147e8450186c17b7ad0c4235148cd0" name="a10147e8450186c17b7ad0c4235148cd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10147e8450186c17b7ad0c4235148cd0">&#9670;&nbsp;</a></span>~Activation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Activation::~Activation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a577873d63f5a402f54bf9c90ef7c4fe5" name="a577873d63f5a402f54bf9c90ef7c4fe5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a577873d63f5a402f54bf9c90ef7c4fe5">&#9670;&nbsp;</a></span>computeDerivatives() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Activation::computeDerivatives </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>output</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5305beda79ea71a65457e123c67bb556" name="a5305beda79ea71a65457e123c67bb556"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5305beda79ea71a65457e123c67bb556">&#9670;&nbsp;</a></span>computeDerivatives() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Activation::computeDerivatives </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vector.html">Vector</a> &amp;&#160;</td>
+          <td class="paramname"><em>output</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vector.html">Vector</a> &amp;&#160;</td>
+          <td class="paramname"><em>result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a88ce217370543bf41e31e83c44d5353e" name="a88ce217370543bf41e31e83c44d5353e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88ce217370543bf41e31e83c44d5353e">&#9670;&nbsp;</a></span>forward() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Activation::forward </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9f2716046d35c768fea56bb5f869275f" name="a9f2716046d35c768fea56bb5f869275f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f2716046d35c768fea56bb5f869275f">&#9670;&nbsp;</a></span>forward() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Activation::forward </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vector.html">Vector</a> &amp;&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vector.html">Vector</a> &amp;&#160;</td>
+          <td class="paramname"><em>result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a39cceaecf175210dc0b65b9b96ffb683" name="a39cceaecf175210dc0b65b9b96ffb683"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39cceaecf175210dc0b65b9b96ffb683">&#9670;&nbsp;</a></span>deviceEvaluator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a>* Activation::deviceEvaluator</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a68db652c8bb951ba93b3ef5e33f4c8d8" name="a68db652c8bb951ba93b3ef5e33f4c8d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68db652c8bb951ba93b3ef5e33f4c8d8">&#9670;&nbsp;</a></span>hostEvaluator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_activation_evaluator.html">ActivationEvaluator</a>* Activation::hostEvaluator</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/<a class="el" href="activation_8h_source.html">activation.h</a></li>
-<li>src/ann/activations/activation.cpp</li>
+<li>src/ann/activations/<a class="el" href="activation_8cpp.html">activation.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

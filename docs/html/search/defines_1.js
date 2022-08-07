@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['no_5fseed_0',['NO_SEED',['../network_8h.html#adba0995ed878e291e51428000dfc5dfa',1,'network.h']]]
+  ['has_5fcuda_0',['HAS_CUDA',['../verify_8cuh.html#a53392b66c47d881a3b78b9d966bc0776',1,'verify.cuh']]]
 ];

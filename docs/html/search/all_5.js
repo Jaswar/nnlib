@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hadamard_0',['hadamard',['../matrix_8h.html#acd945945a63e9c1cf2f395d565419f4b',1,'matrix.cpp']]]
+  ['getrandomvalue_0',['getRandomValue',['../layer_8cpp.html#aa057ccfe2744d535f72cac658edaaac8',1,'layer.cpp']]]
 ];

@@ -23,6 +23,7 @@
   <td id="projectalign">
    <div id="projectname">nnlib
    </div>
+   <div id="projectbrief">GPU-accelerated, C/C++ neural network library.</div>
   </td>
  </tr>
  </tbody>
@@ -69,36 +70,23 @@ $(function() {
 <p>This is the complete list of members for <a class="el" href="class_layer.html">Layer</a>, including all inherited members.</p>
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="class_layer.html#a5234b3bcf11a0b626b529ef23c7624db">activation</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#ae5b1d7d2cc1c06458280174c743f3982">allocate</a>(size_t batchSize)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#ad752715680f42fd083c3a2bb9cb2aee4">allocateAMatrix</a>(size_t batchSize)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#ab0ae9585a98dbb1e03e8018d467fc981">allocateDataT</a>(size_t batchSize)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#af50880aa53bc7e5257840dd9646ea1fe">allocateDerivatives</a>(size_t batchSize)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a8e5405ec42f4c6aca9842fa975e47e2b">allocateNewDelta</a>(size_t batchSize)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#a4f0ddedb289f8ca8e85260c01fb9e07c">allocateNewDeltaT</a>(size_t batchSize)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a22a8850c4dc221dd3499df96f65da79a">allocateOnes</a>(size_t batchSize)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#aaf090d094188ab74a66e406d1d4e36dc">allocateZMatrix</a>(size_t batchSize)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#af0845a71fb5abcfc54a9bfc67fa771e1">aMatrix</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_layer.html#a99e07431accbdbb8910a2e1cbd6852b5">applyGradients</a>(size_t batchSize, DTYPE learningRate=0.01)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a902ce213e21837685c0d29e35417e691">backward</a>(const Matrix &amp;delta, const Matrix &amp;previousWeights, size_t batchSize=DEFAULT_BATCH_SIZE, bool isLastLayer=false)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_layer.html#a487f4e4d03c523b3c1b88fdb22eeaa09">biases</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a891c8acd17b2ca60a3a7ffffd6486946">biasesGradients</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#afc6550146278f5dfb3241189b7b236eb">calculateDerivatives</a>()</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a585ee0ab655bc35af704fbf54bc5ab7b">data</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#ae2527411390f6d2df31f130e99db31cf">dataT</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#a585ee0ab655bc35af704fbf54bc5ab7b">data</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#aa1ecda24d8a36b553ac4e7261da9bdfe">derivatives</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_layer.html#adc1b20ea056d1905a926452e7400d702">forward</a>(const Matrix &amp;batch)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a4ec6dd239834e32835f2cfffd0506e2d">inSize</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_layer.html#a05e44ab517881bd3dfe9319faebb4006">Layer</a>(size_t inSize, size_t outSize, Activation *activation, DataLocation location)</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a248df76aa48278b0f8ca07c4d4f0a738">location</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_layer.html#a4a6ffa21a68f2df1c1abdeef9e4c05ea">newDelta</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a3e4b32c5dea58c3efde768971c415f17">newDeltaT</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#abcece29618281bd522802d2c396ab9cf">ones</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a0fc72a7936b05bfa0567df96b7abd08c">outSize</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#acc5ea3a124ecfbaad5f0ee71c48abc00">previousWeightsT</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a1588152248ef49963d47a8af56f89789">weights</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#a358267b53e907e1272570c21febc855e">weightsGradients</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a241b7721e392b4a9c281e592aa76049f">zMatrix</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#a1b1ba4804451dfe6cc357194e42762ae">~Layer</a>()</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#a1588152248ef49963d47a8af56f89789">weights</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a358267b53e907e1272570c21febc855e">weightsGradients</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_layer.html#a241b7721e392b4a9c281e592aa76049f">zMatrix</a></td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_layer.html#a1b1ba4804451dfe6cc357194e42762ae">~Layer</a>()</td><td class="entry"><a class="el" href="class_layer.html">Layer</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

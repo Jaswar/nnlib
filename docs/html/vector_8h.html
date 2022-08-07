@@ -23,6 +23,7 @@
   <td id="projectalign">
    <div id="projectname">nnlib
    </div>
+   <div id="projectbrief">GPU-accelerated, C/C++ neural network library.</div>
   </td>
  </tr>
  </tbody>
@@ -89,8 +90,8 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a06ba0cdbafc0c9af69e3bd23b27e5ce3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector_8h.html#a06ba0cdbafc0c9af69e3bd23b27e5ce3">DataLocation</a> { <b>HOST</b>
-, <b>DEVICE</b>
+<tr class="memitem:a06ba0cdbafc0c9af69e3bd23b27e5ce3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector_8h.html#a06ba0cdbafc0c9af69e3bd23b27e5ce3">DataLocation</a> { <a class="el" href="vector_8h.html#a06ba0cdbafc0c9af69e3bd23b27e5ce3a1e8b0083abfe3fb8f02bcb3a1c26a766">HOST</a>
+, <a class="el" href="vector_8h.html#a06ba0cdbafc0c9af69e3bd23b27e5ce3a28b8a7b4b6c2a98af7cf438255207174">DEVICE</a>
  }</td></tr>
 <tr class="memdesc:a06ba0cdbafc0c9af69e3bd23b27e5ce3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerate to specify where data is located.  <a href="vector_8h.html#a06ba0cdbafc0c9af69e3bd23b27e5ce3">More...</a><br /></td></tr>
 <tr class="separator:a06ba0cdbafc0c9af69e3bd23b27e5ce3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,6 +135,10 @@ Functions</h2></td></tr>
 
 <p>Enumerate to specify where data is located. </p>
 <p >Can be either HOST or DEVICE. In case it is set to HOST, the data is stored in RAM and is processed by the CPU. In case it is set to DEVICE, the data is in VRAM and processed by the GPU. The latter is only possible if CUDA is installed and there is a CUDA enabled GPU on the system. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a06ba0cdbafc0c9af69e3bd23b27e5ce3a1e8b0083abfe3fb8f02bcb3a1c26a766" name="a06ba0cdbafc0c9af69e3bd23b27e5ce3a1e8b0083abfe3fb8f02bcb3a1c26a766"></a>HOST&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a06ba0cdbafc0c9af69e3bd23b27e5ce3a28b8a7b4b6c2a98af7cf438255207174" name="a06ba0cdbafc0c9af69e3bd23b27e5ce3a28b8a7b4b6c2a98af7cf438255207174"></a>DEVICE&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 </div>
 </div>

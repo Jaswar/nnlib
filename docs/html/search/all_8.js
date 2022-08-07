@@ -1,9 +1,17 @@
 var searchData=
 [
-  ['m_0',['m',['../class_matrix.html#ac4aa85578f84b0df7a3d9d1a0f051d69',1,'Matrix']]],
-  ['matrix_1',['Matrix',['../class_matrix.html',1,'Matrix'],['../class_matrix.html#a1cd5c68704eb1d810998ec3a507ab01e',1,'Matrix::Matrix(size_t n, size_t m)'],['../class_matrix.html#a4036a033b2d878c8b220df3f78cae4ab',1,'Matrix::Matrix(size_t n, size_t m, DataLocation location)'],['../class_matrix.html#aebe0f47f79c7d6192ac28d61adcc842b',1,'Matrix::Matrix(DTYPE *data, size_t n, size_t m)'],['../class_matrix.html#ac5b21fc63fc0395581f59ad37b047e6d',1,'Matrix::Matrix(DTYPE *data, size_t n, size_t m, DataLocation location)'],['../class_matrix.html#a2b1fedfb1b076d4ae504d2c61019871f',1,'Matrix::Matrix(const Matrix &amp;matrix)']]],
-  ['matrix_2eh_2',['matrix.h',['../matrix_8h.html',1,'']]],
-  ['movetodevice_3',['moveToDevice',['../class_matrix.html#ab4854ebc65ba681738639c5cefb2839d',1,'Matrix::moveToDevice()'],['../class_vector.html#a06ef51dc5a095d7fc22b459cb69e83a3',1,'Vector::moveToDevice()']]],
-  ['movetohost_4',['moveToHost',['../class_matrix.html#a7577cd2722a55c390864be7af86dbffd',1,'Matrix::moveToHost()'],['../class_vector.html#afcd9dda735d53024717645bbefae269c',1,'Vector::moveToHost()']]],
-  ['multiply_5',['multiply',['../matrix_8h.html#ab043b61be6f24c072162d244b194142c',1,'multiply(const Matrix &amp;m1, const Matrix &amp;m2, Matrix &amp;result):&#160;matrix.cpp'],['../matrix_8h.html#adb6c30325d3ea492a36cca5495d31f9c',1,'multiply(const Matrix &amp;m, const Vector &amp;v, Vector &amp;result):&#160;matrix.cpp'],['../matrix_8h.html#a5c949ee0af229287e1b024ad1b364754',1,'multiply(const Matrix &amp;m, DTYPE constant, Matrix &amp;result):&#160;matrix.cpp'],['../matrix_8h.html#a6c001e5fc1b99f8e9837e3a73cb33b66',1,'multiply(DTYPE constant, const Matrix &amp;m, Matrix &amp;result):&#160;matrix.cpp'],['../vector_8h.html#a6851f1a6acbd2f06deed575040c99cd4',1,'multiply(const Vector &amp;v1, DTYPE constant, Vector &amp;result):&#160;vector.cpp'],['../vector_8h.html#a886a4d164d03a0bec6e8a316b267cb09',1,'multiply(DTYPE constant, const Vector &amp;v1, Vector &amp;result):&#160;vector.cpp']]]
+  ['layer_0',['Layer',['../class_layer.html',1,'Layer'],['../class_layer.html#a05e44ab517881bd3dfe9319faebb4006',1,'Layer::Layer()']]],
+  ['layer_2ecpp_1',['layer.cpp',['../layer_8cpp.html',1,'']]],
+  ['layer_2eh_2',['layer.h',['../layer_8h.html',1,'']]],
+  ['linear_5factivation_2ecpp_3',['linear_activation.cpp',['../linear__activation_8cpp.html',1,'']]],
+  ['linear_5fon_5fdevice_5fevaluator_2ecu_4',['linear_on_device_evaluator.cu',['../linear__on__device__evaluator_8cu.html',1,'']]],
+  ['linear_5fon_5fhost_5fevaluator_2ecpp_5',['linear_on_host_evaluator.cpp',['../linear__on__host__evaluator_8cpp.html',1,'']]],
+  ['linearactivation_6',['LinearActivation',['../class_linear_activation.html',1,'LinearActivation'],['../class_linear_activation.html#ac8e61158213eda18ee732627a78b2340',1,'LinearActivation::LinearActivation()']]],
+  ['linearderivativekernel_7',['linearDerivativeKernel',['../linear__on__device__evaluator_8cu.html#a073b585f2975e1728d05f283c7a7feed',1,'linearDerivativeKernel(const DTYPE *vector, DTYPE *result, size_t n):&#160;linear_on_device_evaluator.cu'],['../linear__on__device__evaluator_8cu.html#a3b2484535033e94a9281cd8d41dbb850',1,'linearDerivativeKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m):&#160;linear_on_device_evaluator.cu']]],
+  ['linearkernel_8',['linearKernel',['../linear__on__device__evaluator_8cu.html#abeee4dce5ab2571afd9cc0088b58703e',1,'linearKernel(const DTYPE *vector, DTYPE *result, size_t n):&#160;linear_on_device_evaluator.cu'],['../linear__on__device__evaluator_8cu.html#aab3915031badd7750b2838cc723bf46e',1,'linearKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m):&#160;linear_on_device_evaluator.cu']]],
+  ['linearondeviceevaluator_9',['LinearOnDeviceEvaluator',['../class_linear_on_device_evaluator.html',1,'']]],
+  ['linearonhostevaluator_10',['LinearOnHostEvaluator',['../class_linear_on_host_evaluator.html',1,'']]],
+  ['location_11',['location',['../class_layer.html#a248df76aa48278b0f8ca07c4d4f0a738',1,'Layer::location()'],['../class_matrix.html#a8f4d5b36c275feda42751c66893f54b6',1,'Matrix::location()'],['../class_vector.html#af0a10c7b236ccdd65eb45886985177dd',1,'Vector::location()']]],
+  ['location_5fverifiers_2ecpp_12',['location_verifiers.cpp',['../location__verifiers_8cpp.html',1,'']]],
+  ['location_5fverifiers_2eh_13',['location_verifiers.h',['../location__verifiers_8h.html',1,'']]]
 ];

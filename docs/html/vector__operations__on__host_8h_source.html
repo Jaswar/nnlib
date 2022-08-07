@@ -23,6 +23,7 @@
   <td id="projectalign">
    <div id="projectname">nnlib
    </div>
+   <div id="projectbrief">GPU-accelerated, C/C++ neural network library.</div>
   </td>
  </tr>
  </tbody>
@@ -69,7 +70,7 @@ $(function() {
   <div class="headertitle"><div class="title">vector_operations_on_host.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//</span></div>
+<a href="vector__operations__on__host_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Created by Jan Warchocki on 29/05/2022.</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
@@ -78,14 +79,17 @@ $(function() {
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="vector_8h.html">vector.h</a>&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keywordtype">void</span> addVectorsOnHost(<span class="keyword">const</span> <a class="code hl_class" href="class_vector.html">Vector</a>&amp; v1, <span class="keyword">const</span> <a class="code hl_class" href="class_vector.html">Vector</a>&amp; v2, <a class="code hl_class" href="class_vector.html">Vector</a>&amp; result);</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keywordtype">void</span> subtractVectorsOnHost(<span class="keyword">const</span> <a class="code hl_class" href="class_vector.html">Vector</a>&amp; v1, <span class="keyword">const</span> <a class="code hl_class" href="class_vector.html">Vector</a>&amp; v2, <a class="code hl_class" href="class_vector.html">Vector</a>&amp; result);</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keywordtype">void</span> multiplyVectorOnHost(<span class="keyword">const</span> <a class="code hl_class" href="class_vector.html">Vector</a>&amp; v1, <a class="code hl_define" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> constant, <a class="code hl_class" href="class_vector.html">Vector</a>&amp; result);</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keywordtype">void</span> <a class="code hl_function" href="vector__operations__on__host_8h.html#a0e72c05bf806a40f930514ebb4a81b00">addVectorsOnHost</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_vector.html">Vector</a>&amp; v1, <span class="keyword">const</span> <a class="code hl_class" href="class_vector.html">Vector</a>&amp; v2, <a class="code hl_class" href="class_vector.html">Vector</a>&amp; result);</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keywordtype">void</span> <a class="code hl_function" href="vector__operations__on__host_8h.html#ae0ec4734058fe7b2fa5fc20aa6628128">subtractVectorsOnHost</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_vector.html">Vector</a>&amp; v1, <span class="keyword">const</span> <a class="code hl_class" href="class_vector.html">Vector</a>&amp; v2, <a class="code hl_class" href="class_vector.html">Vector</a>&amp; result);</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keywordtype">void</span> <a class="code hl_function" href="vector__operations__on__host_8h.html#abc3d13b13abc6be7ce5cf5d82d14f2cc">multiplyVectorOnHost</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_vector.html">Vector</a>&amp; v1, <a class="code hl_define" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> constant, <a class="code hl_class" href="class_vector.html">Vector</a>&amp; result);</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#endif </span><span class="comment">//NNLIB_VECTOR_OPERATIONS_ON_HOST_H</span></div>
 <div class="ttc" id="aallocation_8h_html_a3834ad0136a8b95a6589500e4009fe9a"><div class="ttname"><a href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a></div><div class="ttdeci">#define DTYPE</div><div class="ttdoc">Data type used throughout the library as the main storage and computation type.</div><div class="ttdef"><b>Definition:</b> allocation.h:20</div></div>
 <div class="ttc" id="aclass_vector_html"><div class="ttname"><a href="class_vector.html">Vector</a></div><div class="ttdoc">Represents a vector (1D array).</div><div class="ttdef"><b>Definition:</b> vector.h:34</div></div>
 <div class="ttc" id="avector_8h_html"><div class="ttname"><a href="vector_8h.html">vector.h</a></div><div class="ttdoc">Header file declaring the Vector class and operations on vectors.</div></div>
+<div class="ttc" id="avector__operations__on__host_8h_html_a0e72c05bf806a40f930514ebb4a81b00"><div class="ttname"><a href="vector__operations__on__host_8h.html#a0e72c05bf806a40f930514ebb4a81b00">addVectorsOnHost</a></div><div class="ttdeci">void addVectorsOnHost(const Vector &amp;v1, const Vector &amp;v2, Vector &amp;result)</div><div class="ttdef"><b>Definition:</b> vector_operations_on_host.cpp:10</div></div>
+<div class="ttc" id="avector__operations__on__host_8h_html_abc3d13b13abc6be7ce5cf5d82d14f2cc"><div class="ttname"><a href="vector__operations__on__host_8h.html#abc3d13b13abc6be7ce5cf5d82d14f2cc">multiplyVectorOnHost</a></div><div class="ttdeci">void multiplyVectorOnHost(const Vector &amp;v1, DTYPE constant, Vector &amp;result)</div><div class="ttdef"><b>Definition:</b> vector_operations_on_host.cpp:48</div></div>
+<div class="ttc" id="avector__operations__on__host_8h_html_ae0ec4734058fe7b2fa5fc20aa6628128"><div class="ttname"><a href="vector__operations__on__host_8h.html#ae0ec4734058fe7b2fa5fc20aa6628128">subtractVectorsOnHost</a></div><div class="ttdeci">void subtractVectorsOnHost(const Vector &amp;v1, const Vector &amp;v2, Vector &amp;result)</div><div class="ttdef"><b>Definition:</b> vector_operations_on_host.cpp:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

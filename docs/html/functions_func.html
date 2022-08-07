@@ -23,6 +23,7 @@
   <td id="projectalign">
    <div id="projectname">nnlib
    </div>
+   <div id="projectbrief">GPU-accelerated, C/C++ neural network library.</div>
   </td>
  </tr>
  </tbody>
@@ -65,15 +66,8 @@ $(function() {
 &#160;
 
 <h3><a id="index_a" name="index_a"></a>- a -</h3><ul>
+<li>Activation()&#160;:&#160;<a class="el" href="class_activation.html#a4b43c4a24cdf69655d42ce7088d66161">Activation</a></li>
 <li>add()&#160;:&#160;<a class="el" href="class_network.html#a8514cc002fd8cdf043214256be0ca994">Network</a></li>
-<li>allocate()&#160;:&#160;<a class="el" href="class_layer.html#ae5b1d7d2cc1c06458280174c743f3982">Layer</a></li>
-<li>allocateAMatrix()&#160;:&#160;<a class="el" href="class_layer.html#ad752715680f42fd083c3a2bb9cb2aee4">Layer</a></li>
-<li>allocateDataT()&#160;:&#160;<a class="el" href="class_layer.html#ab0ae9585a98dbb1e03e8018d467fc981">Layer</a></li>
-<li>allocateDerivatives()&#160;:&#160;<a class="el" href="class_layer.html#af50880aa53bc7e5257840dd9646ea1fe">Layer</a></li>
-<li>allocateNewDelta()&#160;:&#160;<a class="el" href="class_layer.html#a8e5405ec42f4c6aca9842fa975e47e2b">Layer</a></li>
-<li>allocateNewDeltaT()&#160;:&#160;<a class="el" href="class_layer.html#a4f0ddedb289f8ca8e85260c01fb9e07c">Layer</a></li>
-<li>allocateOnes()&#160;:&#160;<a class="el" href="class_layer.html#a22a8850c4dc221dd3499df96f65da79a">Layer</a></li>
-<li>allocateZMatrix()&#160;:&#160;<a class="el" href="class_layer.html#aaf090d094188ab74a66e406d1d4e36dc">Layer</a></li>
 <li>applyGradients()&#160;:&#160;<a class="el" href="class_layer.html#a99e07431accbdbb8910a2e1cbd6852b5">Layer</a></li>
 </ul>
 
@@ -84,17 +78,18 @@ $(function() {
 
 
 <h3><a id="index_c" name="index_c"></a>- c -</h3><ul>
-<li>calculateDerivatives()&#160;:&#160;<a class="el" href="class_layer.html#afc6550146278f5dfb3241189b7b236eb">Layer</a></li>
+<li>computeDerivatives()&#160;:&#160;<a class="el" href="class_activation.html#a5305beda79ea71a65457e123c67bb556">Activation</a>, <a class="el" href="class_activation_evaluator.html#aca14768484293876c5897afd29568820">ActivationEvaluator</a>, <a class="el" href="class_linear_on_device_evaluator.html#ac1086a3ecef4eb8a85cb992e82b29dd6">LinearOnDeviceEvaluator</a>, <a class="el" href="class_linear_on_host_evaluator.html#ab9b1e104a7ccf24f76805b30869bf499">LinearOnHostEvaluator</a>, <a class="el" href="class_re_l_u_on_device_evaluator.html#a1fb031fa209cc830e050db0ca6c897e9">ReLUOnDeviceEvaluator</a>, <a class="el" href="class_re_l_u_on_host_evaluator.html#af4979c5edb5ea300d6ae107f1ab138de">ReLUOnHostEvaluator</a>, <a class="el" href="class_sigmoid_on_device_evaluator.html#a33cb9fb6681661dc78341a49c96c3a32">SigmoidOnDeviceEvaluator</a>, <a class="el" href="class_sigmoid_on_host_evaluator.html#a11f96359336c5deae89ef53bf1afd089">SigmoidOnHostEvaluator</a></li>
 </ul>
 
 
 <h3><a id="index_f" name="index_f"></a>- f -</h3><ul>
-<li>forward()&#160;:&#160;<a class="el" href="class_layer.html#adc1b20ea056d1905a926452e7400d702">Layer</a>, <a class="el" href="class_network.html#ab96a04290ddb2396a43080e4bf7b277b">Network</a></li>
+<li>forward()&#160;:&#160;<a class="el" href="class_activation.html#a9f2716046d35c768fea56bb5f869275f">Activation</a>, <a class="el" href="class_activation_evaluator.html#a1216813fd63f83e5e19e14a9d046d352">ActivationEvaluator</a>, <a class="el" href="class_layer.html#adc1b20ea056d1905a926452e7400d702">Layer</a>, <a class="el" href="class_linear_on_device_evaluator.html#af5d0d7ec2e227ee6d3f147bc9a138462">LinearOnDeviceEvaluator</a>, <a class="el" href="class_linear_on_host_evaluator.html#a134cce9bbd8015693326b710ddc785a6">LinearOnHostEvaluator</a>, <a class="el" href="class_network.html#ab96a04290ddb2396a43080e4bf7b277b">Network</a>, <a class="el" href="class_re_l_u_on_device_evaluator.html#a7ab002ee8962b93797351351fca56ed4">ReLUOnDeviceEvaluator</a>, <a class="el" href="class_re_l_u_on_host_evaluator.html#afd9077085540053ebd4bb0a33af8faa6">ReLUOnHostEvaluator</a>, <a class="el" href="class_sigmoid_on_device_evaluator.html#a984b2294e8c93b98347b0447b62632a1">SigmoidOnDeviceEvaluator</a>, <a class="el" href="class_sigmoid_on_host_evaluator.html#abf76ee76e1b8a386a22cda1b5d164bfb">SigmoidOnHostEvaluator</a></li>
 </ul>
 
 
 <h3><a id="index_l" name="index_l"></a>- l -</h3><ul>
 <li>Layer()&#160;:&#160;<a class="el" href="class_layer.html#a05e44ab517881bd3dfe9319faebb4006">Layer</a></li>
+<li>LinearActivation()&#160;:&#160;<a class="el" href="class_linear_activation.html#ac8e61158213eda18ee732627a78b2340">LinearActivation</a></li>
 </ul>
 
 
@@ -117,8 +112,13 @@ $(function() {
 </ul>
 
 
-<h3><a id="index_p" name="index_p"></a>- p -</h3><ul>
-<li>processEpoch()&#160;:&#160;<a class="el" href="class_network.html#a27c86f9946b5cf76d5caf25af8af9db9">Network</a></li>
+<h3><a id="index_r" name="index_r"></a>- r -</h3><ul>
+<li>ReLUActivation()&#160;:&#160;<a class="el" href="class_re_l_u_activation.html#a8f7f3cda182012ca472e79f8b70d50bd">ReLUActivation</a></li>
+</ul>
+
+
+<h3><a id="index_s" name="index_s"></a>- s -</h3><ul>
+<li>SigmoidActivation()&#160;:&#160;<a class="el" href="class_sigmoid_activation.html#ad77739b7feb6a4578797eaa16236af50">SigmoidActivation</a></li>
 </ul>
 
 
@@ -133,8 +133,16 @@ $(function() {
 
 
 <h3><a id="index__7E" name="index__7E"></a>- ~ -</h3><ul>
+<li>~Activation()&#160;:&#160;<a class="el" href="class_activation.html#a10147e8450186c17b7ad0c4235148cd0">Activation</a></li>
+<li>~ActivationEvaluator()&#160;:&#160;<a class="el" href="class_activation_evaluator.html#a6bfa62956be385a9e8eb7bd9bebf06d4">ActivationEvaluator</a></li>
 <li>~Layer()&#160;:&#160;<a class="el" href="class_layer.html#a1b1ba4804451dfe6cc357194e42762ae">Layer</a></li>
+<li>~LinearOnDeviceEvaluator()&#160;:&#160;<a class="el" href="class_linear_on_device_evaluator.html#a1b6db7379b0e4e65b5561ef0fe9b89a9">LinearOnDeviceEvaluator</a></li>
+<li>~LinearOnHostEvaluator()&#160;:&#160;<a class="el" href="class_linear_on_host_evaluator.html#a3db2483a128c20db9ee3ea8491baa7a8">LinearOnHostEvaluator</a></li>
 <li>~Matrix()&#160;:&#160;<a class="el" href="class_matrix.html#a9b1c3627f573d78a2f08623fdfef990f">Matrix</a></li>
+<li>~ReLUOnDeviceEvaluator()&#160;:&#160;<a class="el" href="class_re_l_u_on_device_evaluator.html#af4cf8d8b1147f03695378294c67017e2">ReLUOnDeviceEvaluator</a></li>
+<li>~ReLUOnHostEvaluator()&#160;:&#160;<a class="el" href="class_re_l_u_on_host_evaluator.html#a8579f2d70b5378f9b3676f44f43a8b33">ReLUOnHostEvaluator</a></li>
+<li>~SigmoidOnDeviceEvaluator()&#160;:&#160;<a class="el" href="class_sigmoid_on_device_evaluator.html#a1dc7c3b883d4da44fd278da2e7ebd11e">SigmoidOnDeviceEvaluator</a></li>
+<li>~SigmoidOnHostEvaluator()&#160;:&#160;<a class="el" href="class_sigmoid_on_host_evaluator.html#a429c4f7afd4fd30965a64185bc2b377f">SigmoidOnHostEvaluator</a></li>
 <li>~Vector()&#160;:&#160;<a class="el" href="class_vector.html#a2eb3c49587a4f12cade7895ccb73f6a0">Vector</a></li>
 </ul>
 </div><!-- contents -->

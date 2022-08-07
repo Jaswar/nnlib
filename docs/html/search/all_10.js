@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['vector_0',['Vector',['../class_vector.html',1,'Vector'],['../class_vector.html#a58e4c2fadff553813c3ae8450f680673',1,'Vector::Vector(size_t n)'],['../class_vector.html#a3c748611ead8a36a26f234f45129b258',1,'Vector::Vector(size_t n, DataLocation location)'],['../class_vector.html#aa51ae52a4689b82e2ee8922001be398f',1,'Vector::Vector(DTYPE *data, size_t n)'],['../class_vector.html#ab317ad1bdca03c419208219dffdaf03f',1,'Vector::Vector(DTYPE *data, size_t n, DataLocation location)'],['../class_vector.html#ac8226b1b9267c0cfc494d51936ca2390',1,'Vector::Vector(const Vector &amp;vector)']]],
-  ['vector_2eh_1',['vector.h',['../vector_8h.html',1,'']]]
+  ['unexpected_5fcuda_5fcall_5fexception_2ecpp_0',['unexpected_cuda_call_exception.cpp',['../unexpected__cuda__call__exception_8cpp.html',1,'']]],
+  ['unexpected_5fcuda_5fcall_5fexception_2eh_1',['unexpected_cuda_call_exception.h',['../unexpected__cuda__call__exception_8h.html',1,'']]],
+  ['unexpectedcudacallexception_2',['UnexpectedCUDACallException',['../class_unexpected_c_u_d_a_call_exception.html',1,'']]]
 ];
