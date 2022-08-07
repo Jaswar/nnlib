@@ -1,3 +1,10 @@
+/**
+ * @file main.cpp
+ * @brief Source file containing an example usage of the library for digit recognition.
+ * @author Jan Warchocki
+ * @date 25 April 2022
+ */
+
 #include <iostream>
 #include <nnlib/matrix.h>
 #include <nnlib/network.h>
@@ -6,6 +13,20 @@
 #include <nnlib/onehot_encode.h>
 #include <chrono>
 
+/**
+ * @example MNIST
+ * Training a neural network to recognize hand-written digits from MNIST.
+ *
+ * Files taken from https://github.com/Jaswar/nnlib/tree/main/examples/mnist.
+ *
+ * The `main.cpp` file expects one argument which is the absolute path to the `MNIST_train.txt` file.
+ * The file can be downloaded from https://github.com/halimb/MNIST-txt.
+ * @include main.cpp
+ *
+ * The project can be built with the following CMake script. This script requires `CMAKE_PREFIX_PATH` to be set to
+ * the install directory of nnlib.
+ * @include CMakeLists.txt
+ */
 int main(int argc, char** argv) {
     if (argc < 2) {
         std::cout << "Dataset file path was not specified." << std::endl;

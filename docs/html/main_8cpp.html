@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>nnlib: src/gpu/verify.cu File Reference</title>
+<title>nnlib: examples/mnist/main.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,68 +63,62 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_cf895c1ed808af158264b2f3d8d7f8f0.html">gpu</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d28a4824dc47e487b107a5db32ef43c4.html">examples</a></li><li class="navelem"><a class="el" href="dir_f3499c6e4a6933b685fe3d6d523000e7.html">mnist</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">verify.cu File Reference</div></div>
+  <div class="headertitle"><div class="title">main.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="verify_8cuh.html">verify.cuh</a>&quot;</code><br />
-<code>#include &lt;iostream&gt;</code><br />
+
+<p>Source file containing an example usage of the library for digit recognition.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;nnlib/matrix.h&gt;</code><br />
+<code>#include &lt;nnlib/network.h&gt;</code><br />
+<code>#include &lt;nnlib/read.h&gt;</code><br />
+<code>#include &lt;nnlib/verify.cuh&gt;</code><br />
+<code>#include &lt;nnlib/onehot_encode.h&gt;</code><br />
+<code>#include &lt;chrono&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a76b394c7bb24167da4525b8b9265f36a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="verify_8cu.html#a76b394c7bb24167da4525b8b9265f36a">isCudaAvailable</a> ()</td></tr>
-<tr class="memdesc:a76b394c7bb24167da4525b8b9265f36a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if CUDA is available.  <a href="verify_8cu.html#a76b394c7bb24167da4525b8b9265f36a">More...</a><br /></td></tr>
-<tr class="separator:a76b394c7bb24167da4525b8b9265f36a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54490f6a967adf695aa15d97f055451d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="verify_8cu.html#a54490f6a967adf695aa15d97f055451d">showCudaInfo</a> ()</td></tr>
-<tr class="memdesc:a54490f6a967adf695aa15d97f055451d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show information about CUDA and the available GPU(s).  <a href="verify_8cu.html#a54490f6a967adf695aa15d97f055451d">More...</a><br /></td></tr>
-<tr class="separator:a54490f6a967adf695aa15d97f055451d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
+<tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a76b394c7bb24167da4525b8b9265f36a" name="a76b394c7bb24167da4525b8b9265f36a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76b394c7bb24167da4525b8b9265f36a">&#9670;&nbsp;</a></span>isCudaAvailable()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Source file containing an example usage of the library for digit recognition. </p>
+<dl class="section author"><dt>Author</dt><dd>Jan Warchocki </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>25 April 2022 </dd></dl>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a3c04138a5bfe5d72780bb7e82a18e627" name="a3c04138a5bfe5d72780bb7e82a18e627"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c04138a5bfe5d72780bb7e82a18e627">&#9670;&nbsp;</a></span>main()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool isCudaAvailable </td>
+          <td class="memname">int main </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>argc</em>, </td>
         </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Check if CUDA is available. </p>
-<p >The method is implemented twice depending on if <a class="el" href="verify_8cuh.html#a53392b66c47d881a3b78b9d966bc0776" title="Macro defined if CUDA is available.">HAS_CUDA</a> is defined. If it is, then the method returns true, otherwise it returns false.</p>
-<dl class="section return"><dt>Returns</dt><dd>True if CUDA is available, false otherwise. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_m_n_i_s_t-example.html#a9">MNIST</a>.</dd>
-</dl>
-
-</div>
-</div>
-<a id="a54490f6a967adf695aa15d97f055451d" name="a54490f6a967adf695aa15d97f055451d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54490f6a967adf695aa15d97f055451d">&#9670;&nbsp;</a></span>showCudaInfo()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">void showCudaInfo </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">char **&#160;</td>
+          <td class="paramname"><em>argv</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Show information about CUDA and the available GPU(s). </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_m_n_i_s_t-example.html#a1">MNIST</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_m_n_i_s_t-example.html#a0">MNIST</a>.</dd>
 </dl>
 
 </div>
