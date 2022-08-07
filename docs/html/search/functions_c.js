@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['_7elayer_0',['~Layer',['../class_layer.html#a1b1ba4804451dfe6cc357194e42762ae',1,'Layer']]],
-  ['_7ematrix_1',['~Matrix',['../class_matrix.html#a9b1c3627f573d78a2f08623fdfef990f',1,'Matrix']]]
+  ['train_0',['train',['../class_network.html#a303315a1bd86862bac0e5b06bf08f6fc',1,'Network']]],
+  ['transpose_1',['transpose',['../matrix_8h.html#ac3bb8aaca8fc2c3e37655fefe1164fa9',1,'matrix.cpp']]]
 ];

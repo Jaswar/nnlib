@@ -65,6 +65,7 @@ void threadCSVJob(const std::vector<std::string>& lines, const std::string& deli
             return;
         }
 
+        // Split the line by the delimiter
         const std::string& line = lines.at(index);
         size_t start = 0, end;
         int j = 0;
