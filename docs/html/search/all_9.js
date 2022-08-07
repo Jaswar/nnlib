@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['n_0',['n',['../class_matrix.html#ab0a9be8e0667f96ee806deeaa52a1c37',1,'Matrix']]],
+  ['n_0',['n',['../class_matrix.html#ab0a9be8e0667f96ee806deeaa52a1c37',1,'Matrix::n()'],['../class_vector.html#a8ab8d32a82cb3c50b50a6dc0d55baf6b',1,'Vector::n()']]],
   ['network_1',['Network',['../class_network.html',1,'Network'],['../class_network.html#abb189f45f3baad1a367d4206d67269f3',1,'Network::Network()']]],
   ['network_2eh_2',['network.h',['../network_8h.html',1,'']]],
   ['newdelta_3',['newDelta',['../class_layer.html#a4a6ffa21a68f2df1c1abdeef9e4c05ea',1,'Layer']]],

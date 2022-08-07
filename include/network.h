@@ -23,7 +23,7 @@ class Network {
     /**
      * @brief The location of the network.
      *
-     * Specifies the location of all the data used by the network. See DataLocation for more info.
+     * Specifies the location of all the data used by the network. See #DataLocation for more info.
      */
     DataLocation location;
 

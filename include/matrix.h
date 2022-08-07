@@ -44,7 +44,7 @@ public:
     /**
      * @brief The location of Matrix::data.
      *
-     * Can be either HOST or DEVICE. See DataLocation for more information.
+     * Can be either HOST or DEVICE. See #DataLocation for more information.
      */
     DataLocation location;
 

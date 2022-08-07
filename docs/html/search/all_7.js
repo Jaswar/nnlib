@@ -6,6 +6,6 @@ var searchData=
   ['linearactivation_3',['LinearActivation',['../class_linear_activation.html',1,'']]],
   ['linearondeviceevaluator_4',['LinearOnDeviceEvaluator',['../class_linear_on_device_evaluator.html',1,'']]],
   ['linearonhostevaluator_5',['LinearOnHostEvaluator',['../class_linear_on_host_evaluator.html',1,'']]],
-  ['location_6',['location',['../class_layer.html#a248df76aa48278b0f8ca07c4d4f0a738',1,'Layer::location()'],['../class_matrix.html#a8f4d5b36c275feda42751c66893f54b6',1,'Matrix::location()'],['../class_network.html#a0bf126265345f2e6aa85aeeffa2f9afd',1,'Network::location()']]],
+  ['location_6',['location',['../class_layer.html#a248df76aa48278b0f8ca07c4d4f0a738',1,'Layer::location()'],['../class_matrix.html#a8f4d5b36c275feda42751c66893f54b6',1,'Matrix::location()'],['../class_network.html#a0bf126265345f2e6aa85aeeffa2f9afd',1,'Network::location()'],['../class_vector.html#af0a10c7b236ccdd65eb45886985177dd',1,'Vector::location()']]],
   ['loss_7',['loss',['../class_network.html#af75849d87721bf356380855281c11852',1,'Network']]]
 ];

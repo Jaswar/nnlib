@@ -58,7 +58,7 @@ private:
     /**
      * @brief The location of the layer.
      *
-     * Specifies the location of all the data used by the layer. See DataLocation for more info.
+     * Specifies the location of all the data used by the layer. See #DataLocation for more info.
      */
 public:
     DataLocation location;
