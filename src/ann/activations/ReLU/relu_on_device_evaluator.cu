@@ -1,6 +1,13 @@
-//
-// Created by Jan Warchocki on 28/05/2022.
-//
+/**
+ * @file relu_on_device_evaluator.cu
+ * @brief Source file defining methods of the ReLUOnDeviceEvaluator class.
+ *
+ * This also includes the definitions of GPU kernel functions that are used for `forward` and `computeDerivatives`
+ * methods.
+ *
+ * @author Jan Warchocki
+ * @date 28 May 2022
+ */
 
 #include "../../../../include/activation.h"
 #include <exceptions/different_data_location_exception.h>
@@ -12,6 +19,7 @@
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
+/** @copydoc linear_on_device_evaluator.cu::linearKernel(const DTYPE *vector, DTYPE *result, size_t n) */
 __global__ void reluKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -26,6 +34,7 @@ __global__ void reluKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     }
 }
 
+/** @copydoc linear_on_device_evaluator.cu::linearKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m) */
 __global__ void reluKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
@@ -41,6 +50,7 @@ __global__ void reluKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t 
     }
 }
 
+/** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const DTYPE *vector, DTYPE *result, size_t n) */
 __global__ void reluDerivativeKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -55,6 +65,7 @@ __global__ void reluDerivativeKernel(const DTYPE* vector, DTYPE* result, size_t 
     }
 }
 
+/** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m) */
 __global__ void reluDerivativeKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;

@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 03/03/2022.
-//
+/**
+ * @file activation.cpp
+ * @brief Source file defining methods of the Activation class.
+ * @author Jan Warchocki
+ * @date 03 March 2022
+ */
 
 #include "../../../include/activation.h"
 #include <exceptions/different_data_location_exception.h>

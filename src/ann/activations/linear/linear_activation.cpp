@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 28/05/2022.
-//
+/**
+ * @file linear_activation.cpp
+ * @brief Source file defining the LinearActivation class.
+ * @author Jan Warchocki
+ * @date 28 May 2022
+ */
 
 #include "../../../../include/activation.h"
 #include <exceptions/different_data_location_exception.h>

@@ -1,6 +1,13 @@
-//
-// Created by Jan Warchocki on 29/05/2022.
-//
+/**
+ * @file sigmoid_on_device_evaluator.cu
+ * @brief Source file defining methods of the SigmoidOnDeviceEvaluator class.
+ *
+ * This also includes the definitions of GPU kernel functions that are used for `forward` and `computeDerivatives`
+ * methods.
+ *
+ * @author Jan Warchocki
+ * @date 28 May 2022
+ */
 
 #include "../../../../include/activation.h"
 #include <cmath>
@@ -11,12 +18,19 @@
 
 #ifdef HAS_CUDA
 
+/**
+ * @brief Kernel function to compute the output of the sigmoid function given the input.
+ *
+ * @param x The input to the sigmoid function.
+ * @return The output of the sigmoid function.
+ */
 __device__ DTYPE fSigmoidKernel(DTYPE x) {
     return 1 / (1 + expf(-x));
 }
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
+/** @copydoc linear_on_device_evaluator.cu::linearKernel(const DTYPE *vector, DTYPE *result, size_t n) */
 __global__ void sigmoidKernel(DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -27,6 +41,7 @@ __global__ void sigmoidKernel(DTYPE* vector, DTYPE* result, size_t n) {
     result[index] = fSigmoidKernel(vector[index]);
 }
 
+/** @copydoc linear_on_device_evaluator.cu::linearKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m) */
 __global__ void sigmoidKernel(DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
@@ -38,6 +53,7 @@ __global__ void sigmoidKernel(DTYPE* matrix, DTYPE* result, size_t n, size_t m) 
     result[row * m + column] = fSigmoidKernel(matrix[row * m + column]);
 }
 
+/** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const DTYPE *vector, DTYPE *result, size_t n) */
 __global__ void sigmoidDerivativeKernel(DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -48,6 +64,7 @@ __global__ void sigmoidDerivativeKernel(DTYPE* vector, DTYPE* result, size_t n) 
     result[index] = fSigmoidKernel(vector[index]) * (1 - fSigmoidKernel(vector[index]));
 }
 
+/** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m) */
 __global__ void sigmoidDerivativeKernel(DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;

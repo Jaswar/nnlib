@@ -1,6 +1,13 @@
-//
-// Created by Jan Warchocki on 28/05/2022.
-//
+/**
+ * @file linear_on_device_evaluator.cu
+ * @brief Source file defining methods of the LinearOnDeviceEvaluator class.
+ *
+ * This also includes the definitions of GPU kernel functions that are used for `forward` and `computeDerivatives`
+ * methods.
+ *
+ * @author Jan Warchocki
+ * @date 28 May 2022
+ */
 
 #include "../../../../include/activation.h"
 #include <exceptions/different_data_location_exception.h>
@@ -12,6 +19,13 @@
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
+/**
+ * @brief Kernel function for applying the activation function on a vector of data.
+ *
+ * @param vector The vector on which to apply the activation function.
+ * @param result The vector where the result should be stored.
+ * @param n The size of the vector.
+ */
 __global__ void linearKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -22,6 +36,16 @@ __global__ void linearKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     result[index] = vector[index];
 }
 
+/**
+ * @brief Kernel function for applying the activation function on a matrix of data.
+ *
+ * The function assumes the data samples are row aligned in the matrix.
+ *
+ * @param matrix The matrix on which to apply the activation function.
+ * @param result The matrix where the result should be stored.
+ * @param n The number of rows of the matrix.
+ * @param m The number of columns of the matrix.
+ */
 __global__ void linearKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
@@ -33,6 +57,13 @@ __global__ void linearKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_
     result[row * m + column] = matrix[row * m + column];
 }
 
+/**
+ * @brief Kernel function for computing derivatives of a vector of data.
+ *
+ * @param vector The vector whose derivatives to compute.
+ * @param result Where the derivatives should be stored.
+ * @param n The size of the vector.
+ */
 __global__ void linearDerivativeKernel(const DTYPE* vector, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -43,6 +74,16 @@ __global__ void linearDerivativeKernel(const DTYPE* vector, DTYPE* result, size_
     result[index] = 1;
 }
 
+/**
+ * @brief Kernel function for computing derivatives of a matrix of data.
+ *
+ * The function assumes the data samples are row aligned in the matrix.
+ *
+ * @param matrix The matrix whose derivatives to compute.
+ * @param result Where the derivatives should be stored.
+ * @param n The number of rows of the matrix.
+ * @param m The number of columns of the matrix.
+ */
 __global__ void linearDerivativeKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;

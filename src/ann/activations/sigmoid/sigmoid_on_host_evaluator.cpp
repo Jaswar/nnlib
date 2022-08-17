@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 29/05/2022.
-//
+/**
+ * @file sigmoid_on_host_evaluator.cpp
+ * @brief Source file defining methods of the SigmoidOnHostEvaluator class.
+ * @author Jan Warchocki
+ * @date 28 May 2022
+ */
 
 
 #include "../../../../include/activation.h"

@@ -72,6 +72,9 @@ $(function() {
   <div class="headertitle"><div class="title">relu_on_device_evaluator.cu File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Source file defining methods of the <a class="el" href="class_re_l_u_on_device_evaluator.html" title="On-device evaluator for the ReLU activation function.">ReLUOnDeviceEvaluator</a> class.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="activation_8h_source.html">../../../../include/activation.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="different__data__location__exception_8h_source.html">exceptions/different_data_location_exception.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="unexpected__cuda__call__exception_8h_source.html">exceptions/unexpected_cuda_call_exception.h</a>&gt;</code><br />
@@ -81,15 +84,24 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a6a02ee97dd56412e5ac6fe586aa3d3d1"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="relu__on__device__evaluator_8cu.html#a6a02ee97dd56412e5ac6fe586aa3d3d1">reluKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *vector, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n)</td></tr>
+<tr class="memdesc:a6a02ee97dd56412e5ac6fe586aa3d3d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel function for applying the activation function on a vector of data.  <a href="relu__on__device__evaluator_8cu.html#a6a02ee97dd56412e5ac6fe586aa3d3d1">More...</a><br /></td></tr>
 <tr class="separator:a6a02ee97dd56412e5ac6fe586aa3d3d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefdf6e354741058b67645b42623a0a38"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="relu__on__device__evaluator_8cu.html#aefdf6e354741058b67645b42623a0a38">reluKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *matrix, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n, size_t m)</td></tr>
+<tr class="memdesc:aefdf6e354741058b67645b42623a0a38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel function for applying the activation function on a matrix of data.  <a href="relu__on__device__evaluator_8cu.html#aefdf6e354741058b67645b42623a0a38">More...</a><br /></td></tr>
 <tr class="separator:aefdf6e354741058b67645b42623a0a38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b5ec856cf91bbebaedd7eaa626e4805"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="relu__on__device__evaluator_8cu.html#a6b5ec856cf91bbebaedd7eaa626e4805">reluDerivativeKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *vector, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n)</td></tr>
+<tr class="memdesc:a6b5ec856cf91bbebaedd7eaa626e4805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel function for computing derivatives of a vector of data.  <a href="relu__on__device__evaluator_8cu.html#a6b5ec856cf91bbebaedd7eaa626e4805">More...</a><br /></td></tr>
 <tr class="separator:a6b5ec856cf91bbebaedd7eaa626e4805"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70eeeb9fd22c8784c5db8fdd7fb38470"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="relu__on__device__evaluator_8cu.html#a70eeeb9fd22c8784c5db8fdd7fb38470">reluDerivativeKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *matrix, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n, size_t m)</td></tr>
+<tr class="memdesc:a70eeeb9fd22c8784c5db8fdd7fb38470"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel function for computing derivatives of a matrix of data.  <a href="relu__on__device__evaluator_8cu.html#a70eeeb9fd22c8784c5db8fdd7fb38470">More...</a><br /></td></tr>
 <tr class="separator:a70eeeb9fd22c8784c5db8fdd7fb38470"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Source file defining methods of the <a class="el" href="class_re_l_u_on_device_evaluator.html" title="On-device evaluator for the ReLU activation function.">ReLUOnDeviceEvaluator</a> class. </p>
+<p >This also includes the definitions of GPU kernel functions that are used for <code>forward</code> and <code>computeDerivatives</code> methods.</p>
+<dl class="section author"><dt>Author</dt><dd>Jan Warchocki </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>28 May 2022 </dd></dl>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a70eeeb9fd22c8784c5db8fdd7fb38470" name="a70eeeb9fd22c8784c5db8fdd7fb38470"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a70eeeb9fd22c8784c5db8fdd7fb38470">&#9670;&nbsp;</a></span>reluDerivativeKernel() <span class="overload">[1/2]</span></h2>
 
@@ -128,6 +140,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel function for computing derivatives of a matrix of data. </p>
+<p >The function assumes the data samples are row aligned in the matrix.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>The matrix whose derivatives to compute. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the derivatives should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of the matrix. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a6b5ec856cf91bbebaedd7eaa626e4805" name="a6b5ec856cf91bbebaedd7eaa626e4805"></a>
@@ -161,6 +185,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Kernel function for computing derivatives of a vector of data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>The vector whose derivatives to compute. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the derivatives should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The size of the vector. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -202,6 +236,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel function for applying the activation function on a matrix of data. </p>
+<p >The function assumes the data samples are row aligned in the matrix.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>The matrix on which to apply the activation function. </td></tr>
+    <tr><td class="paramname">result</td><td>The matrix where the result should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of the matrix. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a6a02ee97dd56412e5ac6fe586aa3d3d1" name="a6a02ee97dd56412e5ac6fe586aa3d3d1"></a>
@@ -235,6 +281,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Kernel function for applying the activation function on a vector of data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>The vector on which to apply the activation function. </td></tr>
+    <tr><td class="paramname">result</td><td>The vector where the result should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The size of the vector. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
