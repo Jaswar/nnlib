@@ -121,7 +121,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Header file declaring the <a class="el" href="class_matrix.html" title="Represents a matrix (2D array).">Matrix</a> class and operations on matrices. </p>
-<p >All the mathematical methods (such as add, subtract, multiply), have implementations for both CPU and GPU. The correct implementation is called depending on the locations of the operands. If not all operands are located in the same place, the methods throw <a class="el" href="class_different_data_location_exception.html">DifferentDataLocationException</a>.</p>
+<p >All the mathematical methods (such as add, subtract, multiply), have implementations for both CPU and GPU. The correct implementation is called depending on the locations of the operands. If not all operands are located in the same place, the methods throw <a class="el" href="class_different_data_location_exception.html" title="Exception to be thrown where operands are located in different places.">DifferentDataLocationException</a>.</p>
 <p >Furthermore, all mathematical methods require a pre-allocated <a class="el" href="class_matrix.html" title="Represents a matrix (2D array).">Matrix</a> or <a class="el" href="class_vector.html" title="Represents a vector (1D array).">Vector</a>, where the result should be written to. This is to minimize allocating memory and put more effort into pre-allocating space and reusing it.</p>
 <dl class="section author"><dt>Author</dt><dd>Jan Warchocki </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>03 March 2022 </dd></dl>
@@ -170,8 +170,8 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html">SizeMismatchException</a></td><td>If the number of columns in <code>m</code> is not the same as size of <code>v</code> or if <code>result</code> has a different shape than <code>m</code>. </td></tr>
-    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html" title="Exception to be thrown where operands are different shapes.">SizeMismatchException</a></td><td>If the number of columns in <code>m</code> is not the same as size of <code>v</code> or if <code>result</code> has a different shape than <code>m</code>. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html" title="Exception to be thrown where operands are located in different places.">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
   </table>
   </dd>
 </dl>
@@ -221,8 +221,8 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html">SizeMismatchException</a></td><td>If the parameter matrices are different shapes. </td></tr>
-    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html" title="Exception to be thrown where operands are different shapes.">SizeMismatchException</a></td><td>If the parameter matrices are different shapes. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html" title="Exception to be thrown where operands are located in different places.">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
   </table>
   </dd>
 </dl>
@@ -272,8 +272,8 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html">SizeMismatchException</a></td><td>If the parameter matrices are different shapes. </td></tr>
-    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html" title="Exception to be thrown where operands are different shapes.">SizeMismatchException</a></td><td>If the parameter matrices are different shapes. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html" title="Exception to be thrown where operands are located in different places.">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
   </table>
   </dd>
 </dl>
@@ -323,8 +323,8 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html">SizeMismatchException</a></td><td>If number of columns of <code>m</code> is different than size of <code>v</code> or if sizes of <code>v</code> and <code>result</code> are not the same. </td></tr>
-    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html" title="Exception to be thrown where operands are different shapes.">SizeMismatchException</a></td><td>If number of columns of <code>m</code> is different than size of <code>v</code> or if sizes of <code>v</code> and <code>result</code> are not the same. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html" title="Exception to be thrown where operands are located in different places.">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
   </table>
   </dd>
 </dl>
@@ -374,8 +374,8 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html">SizeMismatchException</a></td><td>If <code>m</code> and <code>result</code> are not the same shape. </td></tr>
-    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html">DifferentDataLocationException</a></td><td>If <code>m</code> and <code>result</code> are not located in the same place. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html" title="Exception to be thrown where operands are different shapes.">SizeMismatchException</a></td><td>If <code>m</code> and <code>result</code> are not the same shape. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html" title="Exception to be thrown where operands are located in different places.">DifferentDataLocationException</a></td><td>If <code>m</code> and <code>result</code> are not located in the same place. </td></tr>
   </table>
   </dd>
 </dl>
@@ -425,8 +425,8 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html">SizeMismatchException</a></td><td>If the parameter matrices are in shapes that make multiplication impossible. </td></tr>
-    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html" title="Exception to be thrown where operands are different shapes.">SizeMismatchException</a></td><td>If the parameter matrices are in shapes that make multiplication impossible. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html" title="Exception to be thrown where operands are located in different places.">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
   </table>
   </dd>
 </dl>
@@ -476,8 +476,8 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html">SizeMismatchException</a></td><td>If <code>m</code> and <code>result</code> are not the same shape. </td></tr>
-    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html">DifferentDataLocationException</a></td><td>If <code>m</code> and <code>result</code> are not located in the same place </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html" title="Exception to be thrown where operands are different shapes.">SizeMismatchException</a></td><td>If <code>m</code> and <code>result</code> are not the same shape. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html" title="Exception to be thrown where operands are located in different places.">DifferentDataLocationException</a></td><td>If <code>m</code> and <code>result</code> are not located in the same place </td></tr>
   </table>
   </dd>
 </dl>
@@ -565,8 +565,8 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html">SizeMismatchException</a></td><td>If the parameter matrices are different shapes. </td></tr>
-    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html" title="Exception to be thrown where operands are different shapes.">SizeMismatchException</a></td><td>If the parameter matrices are different shapes. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html" title="Exception to be thrown where operands are located in different places.">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
   </table>
   </dd>
 </dl>
@@ -609,8 +609,8 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html">SizeMismatchException</a></td><td>If shape of <code>result</code> is not the transpose of <code>m</code>. </td></tr>
-    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_size_mismatch_exception.html" title="Exception to be thrown where operands are different shapes.">SizeMismatchException</a></td><td>If shape of <code>result</code> is not the transpose of <code>m</code>. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_different_data_location_exception.html" title="Exception to be thrown where operands are located in different places.">DifferentDataLocationException</a></td><td>If not all parameters are located in the same place. </td></tr>
   </table>
   </dd>
 </dl>

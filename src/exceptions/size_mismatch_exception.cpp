@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 03/03/2022.
-//
+/**
+ * @file size_mismatch_exception.cpp
+ * @brief Source file defining the SizeMismatchException class.
+ * @author Jan Warchocki
+ * @date 03 March 2022
+ */
 
 #include "size_mismatch_exception.h"
 
