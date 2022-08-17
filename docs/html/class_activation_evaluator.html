@@ -70,6 +70,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Abstract class representing an evaluator of an activation function.  
+ <a href="class_activation_evaluator.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="activation_8h_source.html">activation.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for ActivationEvaluator:</div>
@@ -77,29 +80,38 @@ Inheritance diagram for ActivationEvaluator:</div>
  <div class="center">
   <img src="class_activation_evaluator.png" usemap="#ActivationEvaluator_map" alt=""/>
   <map id="ActivationEvaluator_map" name="ActivationEvaluator_map">
-<area href="class_linear_on_device_evaluator.html" alt="LinearOnDeviceEvaluator" shape="rect" coords="0,56,167,80"/>
-<area href="class_linear_on_host_evaluator.html" alt="LinearOnHostEvaluator" shape="rect" coords="177,56,344,80"/>
-<area href="class_re_l_u_on_device_evaluator.html" alt="ReLUOnDeviceEvaluator" shape="rect" coords="354,56,521,80"/>
-<area href="class_re_l_u_on_host_evaluator.html" alt="ReLUOnHostEvaluator" shape="rect" coords="531,56,698,80"/>
-<area href="class_sigmoid_on_device_evaluator.html" alt="SigmoidOnDeviceEvaluator" shape="rect" coords="708,56,875,80"/>
-<area href="class_sigmoid_on_host_evaluator.html" alt="SigmoidOnHostEvaluator" shape="rect" coords="885,56,1052,80"/>
+<area href="class_linear_on_device_evaluator.html" title="On-device evaluator for the linear activation function." alt="LinearOnDeviceEvaluator" shape="rect" coords="0,56,167,80"/>
+<area href="class_linear_on_host_evaluator.html" title="On-host evaluator for the linear activation function." alt="LinearOnHostEvaluator" shape="rect" coords="177,56,344,80"/>
+<area href="class_re_l_u_on_device_evaluator.html" title="On-device evaluator for the ReLU activation function." alt="ReLUOnDeviceEvaluator" shape="rect" coords="354,56,521,80"/>
+<area href="class_re_l_u_on_host_evaluator.html" title="On-host evaluator for the ReLU activation function." alt="ReLUOnHostEvaluator" shape="rect" coords="531,56,698,80"/>
+<area href="class_sigmoid_on_device_evaluator.html" title="On-device evaluator for the sigmoid activation function." alt="SigmoidOnDeviceEvaluator" shape="rect" coords="708,56,875,80"/>
+<area href="class_sigmoid_on_host_evaluator.html" title="On-host evaluator for the sigmoid activation function." alt="SigmoidOnHostEvaluator" shape="rect" coords="885,56,1052,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1216813fd63f83e5e19e14a9d046d352"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation_evaluator.html#a1216813fd63f83e5e19e14a9d046d352">forward</a> (const <a class="el" href="class_vector.html">Vector</a> &amp;input, <a class="el" href="class_vector.html">Vector</a> &amp;result) const =0</td></tr>
+<tr class="memdesc:a1216813fd63f83e5e19e14a9d046d352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to apply the activation function on the input.  <a href="class_activation_evaluator.html#a1216813fd63f83e5e19e14a9d046d352">More...</a><br /></td></tr>
 <tr class="separator:a1216813fd63f83e5e19e14a9d046d352"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f04dbe512c947ad9470308c2ef6344c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation_evaluator.html#a1f04dbe512c947ad9470308c2ef6344c">forward</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;input, <a class="el" href="class_matrix.html">Matrix</a> &amp;result) const =0</td></tr>
+<tr class="memdesc:a1f04dbe512c947ad9470308c2ef6344c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to apply the activation function on the input.  <a href="class_activation_evaluator.html#a1f04dbe512c947ad9470308c2ef6344c">More...</a><br /></td></tr>
 <tr class="separator:a1f04dbe512c947ad9470308c2ef6344c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca14768484293876c5897afd29568820"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation_evaluator.html#aca14768484293876c5897afd29568820">computeDerivatives</a> (const <a class="el" href="class_vector.html">Vector</a> &amp;output, <a class="el" href="class_vector.html">Vector</a> &amp;result) const =0</td></tr>
+<tr class="memdesc:aca14768484293876c5897afd29568820"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to compute the derivatives given the output.  <a href="class_activation_evaluator.html#aca14768484293876c5897afd29568820">More...</a><br /></td></tr>
 <tr class="separator:aca14768484293876c5897afd29568820"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8dd728000f349c05fee222bcad3e3076"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation_evaluator.html#a8dd728000f349c05fee222bcad3e3076">computeDerivatives</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;output, <a class="el" href="class_matrix.html">Matrix</a> &amp;result) const =0</td></tr>
+<tr class="memdesc:a8dd728000f349c05fee222bcad3e3076"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to compute the derivatives given the output.  <a href="class_activation_evaluator.html#a8dd728000f349c05fee222bcad3e3076">More...</a><br /></td></tr>
 <tr class="separator:a8dd728000f349c05fee222bcad3e3076"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bfa62956be385a9e8eb7bd9bebf06d4"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_activation_evaluator.html#a6bfa62956be385a9e8eb7bd9bebf06d4">~ActivationEvaluator</a> ()=default</td></tr>
+<tr class="memdesc:a6bfa62956be385a9e8eb7bd9bebf06d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The destructor.  <a href="class_activation_evaluator.html#a6bfa62956be385a9e8eb7bd9bebf06d4">More...</a><br /></td></tr>
 <tr class="separator:a6bfa62956be385a9e8eb7bd9bebf06d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Abstract class representing an evaluator of an activation function. </p>
+<p >Each activation function has two evaluators: one for on-host data and one for on-device data. The correct evaluator is then decided based on the location of data passed into the activation function.</p>
+<p >Abstract away the evaluators into classes, so that the base <a class="el" href="class_activation.html" title="Abstract class representing an activation function.">Activation</a> can choose the correct evaluator. In this way code duplication is avoided in subclasses of <a class="el" href="class_activation.html" title="Abstract class representing an activation function.">Activation</a>. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6bfa62956be385a9e8eb7bd9bebf06d4" name="a6bfa62956be385a9e8eb7bd9bebf06d4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6bfa62956be385a9e8eb7bd9bebf06d4">&#9670;&nbsp;</a></span>~ActivationEvaluator()</h2>
 
@@ -122,6 +134,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>The destructor. </p>
 
 </div>
 </div>
@@ -159,6 +173,15 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Method to compute the derivatives given the output. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">output</td><td>The output from a layer of the neural network. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the computed derivatives should be written to. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implemented in <a class="el" href="class_linear_on_host_evaluator.html#a9490a5757230559c9a3d620027440131">LinearOnHostEvaluator</a>, <a class="el" href="class_linear_on_device_evaluator.html#a92055638db056c177d852b04d56316b8">LinearOnDeviceEvaluator</a>, <a class="el" href="class_re_l_u_on_host_evaluator.html#a4250fffa094dc64bb88125a7cb419be1">ReLUOnHostEvaluator</a>, <a class="el" href="class_re_l_u_on_device_evaluator.html#a5685bf4585829b5998194b91f950f374">ReLUOnDeviceEvaluator</a>, <a class="el" href="class_sigmoid_on_host_evaluator.html#aa93008bc1db053d73617dac392629c7e">SigmoidOnHostEvaluator</a>, and <a class="el" href="class_sigmoid_on_device_evaluator.html#a335fe4cf63a998303c3b3c22b6d643a6">SigmoidOnDeviceEvaluator</a>.</p>
 
@@ -198,6 +221,15 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Method to compute the derivatives given the output. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">output</td><td>The output from a layer of the neural network. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the computed derivatives should be written to. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implemented in <a class="el" href="class_linear_on_host_evaluator.html#ab9b1e104a7ccf24f76805b30869bf499">LinearOnHostEvaluator</a>, <a class="el" href="class_linear_on_device_evaluator.html#ac1086a3ecef4eb8a85cb992e82b29dd6">LinearOnDeviceEvaluator</a>, <a class="el" href="class_re_l_u_on_host_evaluator.html#af4979c5edb5ea300d6ae107f1ab138de">ReLUOnHostEvaluator</a>, <a class="el" href="class_re_l_u_on_device_evaluator.html#a1fb031fa209cc830e050db0ca6c897e9">ReLUOnDeviceEvaluator</a>, <a class="el" href="class_sigmoid_on_host_evaluator.html#a11f96359336c5deae89ef53bf1afd089">SigmoidOnHostEvaluator</a>, and <a class="el" href="class_sigmoid_on_device_evaluator.html#a33cb9fb6681661dc78341a49c96c3a32">SigmoidOnDeviceEvaluator</a>.</p>
 
 </div>
@@ -236,6 +268,16 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Method to apply the activation function on the input. </p>
+<p >This should apply the activation function to every element of the input.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>The input. </td></tr>
+    <tr><td class="paramname">result</td><td>The input with the activation function applied to it. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implemented in <a class="el" href="class_linear_on_host_evaluator.html#a9bb16baafec0ba5115646deb59d3bf6e">LinearOnHostEvaluator</a>, <a class="el" href="class_linear_on_device_evaluator.html#a8c46f575c81eb3a1b21e064154e1e5b2">LinearOnDeviceEvaluator</a>, <a class="el" href="class_re_l_u_on_host_evaluator.html#a2aeca11c74f85e0f0b74df40c47d9cc6">ReLUOnHostEvaluator</a>, <a class="el" href="class_re_l_u_on_device_evaluator.html#ab500f7de50c031165ee4f9637be8d918">ReLUOnDeviceEvaluator</a>, <a class="el" href="class_sigmoid_on_host_evaluator.html#afed44c2f2bc408ae618661d7e6692058">SigmoidOnHostEvaluator</a>, and <a class="el" href="class_sigmoid_on_device_evaluator.html#a1c9f713f0a4cf069db0374c98ad7da2a">SigmoidOnDeviceEvaluator</a>.</p>
 
 </div>
@@ -273,6 +315,16 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Method to apply the activation function on the input. </p>
+<p >This should apply the activation function to every element of the input.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>The input. </td></tr>
+    <tr><td class="paramname">result</td><td>The input with the activation function applied to it. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implemented in <a class="el" href="class_linear_on_host_evaluator.html#a134cce9bbd8015693326b710ddc785a6">LinearOnHostEvaluator</a>, <a class="el" href="class_linear_on_device_evaluator.html#af5d0d7ec2e227ee6d3f147bc9a138462">LinearOnDeviceEvaluator</a>, <a class="el" href="class_re_l_u_on_host_evaluator.html#afd9077085540053ebd4bb0a33af8faa6">ReLUOnHostEvaluator</a>, <a class="el" href="class_re_l_u_on_device_evaluator.html#a7ab002ee8962b93797351351fca56ed4">ReLUOnDeviceEvaluator</a>, <a class="el" href="class_sigmoid_on_host_evaluator.html#abf76ee76e1b8a386a22cda1b5d164bfb">SigmoidOnHostEvaluator</a>, and <a class="el" href="class_sigmoid_on_device_evaluator.html#a984b2294e8c93b98347b0447b62632a1">SigmoidOnDeviceEvaluator</a>.</p>
 
