@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 03/03/2022.
-//
+/**
+ * @file network.cpp
+ * @brief Source file defining methods of the Network class.
+ * @author Jan Warchocki
+ * @date 03 March 2022
+ */
 
 #include "../../include/network.h"
 #include "../gpu/allocation_gpu.cuh"
@@ -12,6 +15,36 @@
 #include <iomanip>
 #include <utils/printing.h>
 
+/**
+ * @brief Split the input matrix into batches.
+ *
+ * It is assumed that the data samples are row-aligned. Therefore, to split into batches, the input matrix is
+ * divided along the row axis, so that the data samples are not split.
+ *
+ * For example, when splitting the following matrix using @p batchSize = 2:
+ * ```
+ * [[1, 1],
+ *  [2, 2],
+ *  [3, 3],
+ *  [4, 4]]
+ * ```
+ * We get as the result a vector of the following two matrices:
+ * ```
+ * [[1, 1],
+ *  [2, 2]]
+ * ```
+ * ```
+ * [[3, 3],
+ *  [4, 4]]
+ * ```
+ *
+ * If the size of @p matrix is not divisible by @p batchSize, the last batch will be smaller than the rest.
+ *
+ * @param matrix The matrix to split into batches.
+ * @param batchSize The size of the batch to split on.
+ * @param location The location where to save the batches (HOST or DEVICE).
+ * @return The vector of batches.
+ */
 std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, DataLocation location) {
     std::vector<Matrix> result;
 
@@ -99,7 +132,16 @@ void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE lear
     }
 }
 
-bool moveToHost(Matrix& expected, Matrix& predictions) {
+/**
+ * @brief Method to move predictions to host if necessary and return true if was moved.
+ *
+ * The method is used in the computeCorrect() method to move the predictions matrix between host and device
+ * if and only if that is absolutely necessary.
+ *
+ * @param predictions The predictions of the neural network.
+ * @return True if @p predictions was moved to host, false otherwise.
+ */
+bool moveToHost(Matrix& predictions) {
     if (predictions.location == DEVICE) {
         predictions.moveToHost();
         return true;
@@ -107,8 +149,24 @@ bool moveToHost(Matrix& expected, Matrix& predictions) {
     return false;
 }
 
+/**
+ * @brief Compute how many predictions of the neural network were correct.
+ *
+ * Assumes @p expected has a 1 on the expected class and 0 otherwise. As the prediction of the neural network,
+ * the method assumes the index of the highest value.
+ *
+ * @p expected should be the whole `y` matrix from the Network::train() method. It is also assumed that @p expected is
+ * located on host. Both of these measures are for performance reasons when training on GPU.
+ *
+ * @p predictions are only the predictions of the current batch of data.
+ *
+ * @param expected The targets for the neural network.
+ * @param predictions The predictions of the neural network.
+ * @param start The start of the current batch (the index).
+ * @return The number of correct predictions of the neural network.
+ */
 int computeCorrect(Matrix& expected, Matrix& predictions, size_t start) {
-    bool shouldRestoreToDevice = moveToHost(expected, predictions);
+    bool shouldRestoreToDevice = moveToHost(predictions);
 
     // Calculate the accuracy on the training set.
     int correct = 0;
@@ -131,6 +189,19 @@ int computeCorrect(Matrix& expected, Matrix& predictions, size_t start) {
     return correct;
 }
 
+/**
+ * @brief Util method to display the current progress of the epoch.
+ *
+ * Displays information in the format:
+ * ```
+ * [==========>---------] [50/100 (50%)] (0h 2m 5s 127ms): accuracy = 0.745
+ * ```
+ *
+ * @param processedRows
+ * @param totalRows
+ * @param milliseconds
+ * @param accuracy
+ */
 void displayEpochProgress(size_t processedRows, size_t totalRows, size_t milliseconds, double accuracy) {
     std::cout << "\r" << constructProgressBar(processedRows, totalRows) << " "
               << constructPercentage(processedRows, totalRows) << " " << constructTime(milliseconds)

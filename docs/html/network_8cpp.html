@@ -72,6 +72,9 @@ $(function() {
   <div class="headertitle"><div class="title">network.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Source file defining methods of the <a class="el" href="class_network.html" title="Represents a neural network.">Network</a> class.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="network_8h_source.html">../../include/network.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="allocation__gpu_8cuh.html">../gpu/allocation_gpu.cuh</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
@@ -85,15 +88,23 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ae4b089ad3dfe5d7c528e21cff3737cd3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_matrix.html">Matrix</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="network_8cpp.html#ae4b089ad3dfe5d7c528e21cff3737cd3">splitIntoBatches</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;matrix, size_t batchSize, <a class="el" href="vector_8h.html#a06ba0cdbafc0c9af69e3bd23b27e5ce3">DataLocation</a> location)</td></tr>
+<tr class="memdesc:ae4b089ad3dfe5d7c528e21cff3737cd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the input matrix into batches.  <a href="network_8cpp.html#ae4b089ad3dfe5d7c528e21cff3737cd3">More...</a><br /></td></tr>
 <tr class="separator:ae4b089ad3dfe5d7c528e21cff3737cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c80188e0c717373ed317e9d97288420"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="network_8cpp.html#a5c80188e0c717373ed317e9d97288420">moveToHost</a> (<a class="el" href="class_matrix.html">Matrix</a> &amp;expected, <a class="el" href="class_matrix.html">Matrix</a> &amp;predictions)</td></tr>
-<tr class="separator:a5c80188e0c717373ed317e9d97288420"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33bf65a2131070011ff3ddb1f5b399a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="network_8cpp.html#a33bf65a2131070011ff3ddb1f5b399a3">moveToHost</a> (<a class="el" href="class_matrix.html">Matrix</a> &amp;predictions)</td></tr>
+<tr class="memdesc:a33bf65a2131070011ff3ddb1f5b399a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to move predictions to host if necessary and return true if was moved.  <a href="network_8cpp.html#a33bf65a2131070011ff3ddb1f5b399a3">More...</a><br /></td></tr>
+<tr class="separator:a33bf65a2131070011ff3ddb1f5b399a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a222943c4711f47409678448abfa39521"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="network_8cpp.html#a222943c4711f47409678448abfa39521">computeCorrect</a> (<a class="el" href="class_matrix.html">Matrix</a> &amp;expected, <a class="el" href="class_matrix.html">Matrix</a> &amp;predictions, size_t start)</td></tr>
+<tr class="memdesc:a222943c4711f47409678448abfa39521"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute how many predictions of the neural network were correct.  <a href="network_8cpp.html#a222943c4711f47409678448abfa39521">More...</a><br /></td></tr>
 <tr class="separator:a222943c4711f47409678448abfa39521"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7d05881f6a6fa8164d0284dd3364a93"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="network_8cpp.html#ab7d05881f6a6fa8164d0284dd3364a93">displayEpochProgress</a> (size_t processedRows, size_t totalRows, size_t milliseconds, double accuracy)</td></tr>
+<tr class="memdesc:ab7d05881f6a6fa8164d0284dd3364a93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Util method to display the current progress of the epoch.  <a href="network_8cpp.html#ab7d05881f6a6fa8164d0284dd3364a93">More...</a><br /></td></tr>
 <tr class="separator:ab7d05881f6a6fa8164d0284dd3364a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Source file defining methods of the <a class="el" href="class_network.html" title="Represents a neural network.">Network</a> class. </p>
+<dl class="section author"><dt>Author</dt><dd>Jan Warchocki </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>03 March 2022 </dd></dl>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a222943c4711f47409678448abfa39521" name="a222943c4711f47409678448abfa39521"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a222943c4711f47409678448abfa39521">&#9670;&nbsp;</a></span>computeCorrect()</h2>
 
@@ -125,6 +136,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Compute how many predictions of the neural network were correct. </p>
+<p >Assumes <code>expected</code> has a 1 on the expected class and 0 otherwise. As the prediction of the neural network, the method assumes the index of the highest value.</p>
+<p ><code>expected</code> should be the whole <code>y</code> matrix from the <a class="el" href="class_network.html#a303315a1bd86862bac0e5b06bf08f6fc" title="Train the network.">Network::train()</a> method. It is also assumed that <code>expected</code> is located on host. Both of these measures are for performance reasons when training on GPU.</p>
+<p ><code>predictions</code> are only the predictions of the current batch of data.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">expected</td><td>The targets for the neural network. </td></tr>
+    <tr><td class="paramname">predictions</td><td>The predictions of the neural network. </td></tr>
+    <tr><td class="paramname">start</td><td>The start of the current batch (the index). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of correct predictions of the neural network. </dd></dl>
 
 </div>
 </div>
@@ -166,10 +191,22 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Util method to display the current progress of the epoch. </p>
+<p >Displays information in the format: </p><div class="fragment"><div class="line">[==========&gt;---------] [50/100 (50%)] (0h 2m 5s 127ms): accuracy = 0.745</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">processedRows</td><td></td></tr>
+    <tr><td class="paramname">totalRows</td><td></td></tr>
+    <tr><td class="paramname">milliseconds</td><td></td></tr>
+    <tr><td class="paramname">accuracy</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
-<a id="a5c80188e0c717373ed317e9d97288420" name="a5c80188e0c717373ed317e9d97288420"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c80188e0c717373ed317e9d97288420">&#9670;&nbsp;</a></span>moveToHost()</h2>
+<a id="a33bf65a2131070011ff3ddb1f5b399a3" name="a33bf65a2131070011ff3ddb1f5b399a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33bf65a2131070011ff3ddb1f5b399a3">&#9670;&nbsp;</a></span>moveToHost()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -178,21 +215,21 @@ Functions</h2></td></tr>
           <td class="memname">bool moveToHost </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
-          <td class="paramname"><em>expected</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>predictions</em></td><td>)</td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
-          <td class="paramname"><em>predictions</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Method to move predictions to host if necessary and return true if was moved. </p>
+<p >The method is used in the <a class="el" href="network_8cpp.html#a222943c4711f47409678448abfa39521" title="Compute how many predictions of the neural network were correct.">computeCorrect()</a> method to move the predictions matrix between host and device if and only if that is absolutely necessary.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">predictions</td><td>The predictions of the neural network. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if <code>predictions</code> was moved to host, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -227,6 +264,27 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Split the input matrix into batches. </p>
+<p >It is assumed that the data samples are row-aligned. Therefore, to split into batches, the input matrix is divided along the row axis, so that the data samples are not split.</p>
+<p >For example, when splitting the following matrix using <code>batchSize</code> = 2: </p><div class="fragment"><div class="line">[[1, 1],</div>
+<div class="line"> [2, 2],</div>
+<div class="line"> [3, 3],</div>
+<div class="line"> [4, 4]]</div>
+</div><!-- fragment --><p> We get as the result a vector of the following two matrices: </p><div class="fragment"><div class="line">[[1, 1],</div>
+<div class="line"> [2, 2]]</div>
+</div><!-- fragment --> <div class="fragment"><div class="line">[[3, 3],</div>
+<div class="line"> [4, 4]]</div>
+</div><!-- fragment --><p >If the size of <code>matrix</code> is not divisible by <code>batchSize</code>, the last batch will be smaller than the rest.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>The matrix to split into batches. </td></tr>
+    <tr><td class="paramname">batchSize</td><td>The size of the batch to split on. </td></tr>
+    <tr><td class="paramname">location</td><td>The location where to save the batches (HOST or DEVICE). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The vector of batches. </dd></dl>
 
 </div>
 </div>

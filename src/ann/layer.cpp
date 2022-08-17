@@ -1,12 +1,22 @@
-//
-// Created by Jan Warchocki on 03/03/2022.
-//
+/**
+ * @file layer.cpp
+ * @brief Source file defining methods of the Layer class.
+ * @author Jan Warchocki
+ * @date 03 March 2022
+ */
 
 #include "../../include/layer.h"
 #include "../gpu/allocation_gpu.cuh"
 #include "verify.cuh"
 #include <utility>
 
+/**
+ * @brief Generate a random #DTYPE value.
+ *
+ * Currently the method only returns uniformly distributed numbers in the range (-0.2, 0.2).
+ *
+ * @return A random value.
+ */
 DTYPE getRandomValue() {
     // TODO: For large networks, the values at neurons can grow very large rendering them useless
     // A fix can lower the initial weights and biases.
@@ -15,6 +25,14 @@ DTYPE getRandomValue() {
     return (((DTYPE) rand() / RAND_MAX) * 2 - 1) / 5;
 }
 
+/**
+ * @brief Initialize the biases of the layer.
+ *
+ * This creates a vector of random numbers using the getRandomValue() method.
+ *
+ * @param outSize The size of the vector to generate. It is also the output size of the layer.
+ * @return The random vector of biases.
+ */
 Vector initializeBiases(size_t outSize) {
     Vector biases = Vector(outSize);
 
@@ -25,6 +43,15 @@ Vector initializeBiases(size_t outSize) {
     return biases;
 }
 
+/**
+ * @brief Initialize the weights of the layer.
+ *
+ * This creates a matrix of random numbers using the getRandomValue() method.
+ *
+ * @param inSize The number of rows of the matrix. It is also the input size to the layer.
+ * @param outSize The number of columns of the matrix. It is also the output size of the layer.
+ * @return The random matrix of weights.
+ */
 Matrix initializeWeights(size_t inSize, size_t outSize) {
     Matrix weights = Matrix(inSize, outSize);
 
