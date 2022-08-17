@@ -80,6 +80,12 @@ $(function() {
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ad6f3d1590e03372781ebb7c2cfe719f3"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector__operations__on__device_8cu.html#ad6f3d1590e03372781ebb7c2cfe719f3">addVectorsKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *v1, const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *v2, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n)</td></tr>
+<tr class="separator:ad6f3d1590e03372781ebb7c2cfe719f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbf393cfb46a286b3f92e584449f4a6a"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector__operations__on__device_8cu.html#adbf393cfb46a286b3f92e584449f4a6a">subtractVectorsKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *v1, const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *v2, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n)</td></tr>
+<tr class="separator:adbf393cfb46a286b3f92e584449f4a6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b3544ffd8ce2b28cc99a77030076e6d"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector__operations__on__device_8cu.html#a8b3544ffd8ce2b28cc99a77030076e6d">multiplyVectorKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *v1, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> constant, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n)</td></tr>
+<tr class="separator:a8b3544ffd8ce2b28cc99a77030076e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a1c081aa318ca0463f0c4dd0961104d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector__operations__on__device_8cu.html#a4a1c081aa318ca0463f0c4dd0961104d">addVectorsOnDevice</a> (const <a class="el" href="class_vector.html">Vector</a> &amp;v1, const <a class="el" href="class_vector.html">Vector</a> &amp;v2, <a class="el" href="class_vector.html">Vector</a> &amp;result)</td></tr>
 <tr class="separator:a4a1c081aa318ca0463f0c4dd0961104d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ff63aa2ae3fc520d4599d6a6df4edc6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector__operations__on__device_8cu.html#a6ff63aa2ae3fc520d4599d6a6df4edc6">subtractVectorsOnDevice</a> (const <a class="el" href="class_vector.html">Vector</a> &amp;v1, const <a class="el" href="class_vector.html">Vector</a> &amp;v2, <a class="el" href="class_vector.html">Vector</a> &amp;result)</td></tr>
@@ -88,6 +94,46 @@ Functions</h2></td></tr>
 <tr class="separator:a72147921efcdb38db100962da118acb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ad6f3d1590e03372781ebb7c2cfe719f3" name="ad6f3d1590e03372781ebb7c2cfe719f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6f3d1590e03372781ebb7c2cfe719f3">&#9670;&nbsp;</a></span>addVectorsKernel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__global__ void addVectorsKernel </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td>
+          <td class="paramname"><em>v1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td>
+          <td class="paramname"><em>v2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4a1c081aa318ca0463f0c4dd0961104d" name="a4a1c081aa318ca0463f0c4dd0961104d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4a1c081aa318ca0463f0c4dd0961104d">&#9670;&nbsp;</a></span>addVectorsOnDevice()</h2>
 
@@ -122,6 +168,46 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a8b3544ffd8ce2b28cc99a77030076e6d" name="a8b3544ffd8ce2b28cc99a77030076e6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b3544ffd8ce2b28cc99a77030076e6d">&#9670;&nbsp;</a></span>multiplyVectorKernel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__global__ void multiplyVectorKernel </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td>
+          <td class="paramname"><em>v1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a>&#160;</td>
+          <td class="paramname"><em>constant</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a72147921efcdb38db100962da118acb1" name="a72147921efcdb38db100962da118acb1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a72147921efcdb38db100962da118acb1">&#9670;&nbsp;</a></span>multiplyVectorOnDevice()</h2>
 
@@ -145,6 +231,46 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="class_vector.html">Vector</a> &amp;&#160;</td>
           <td class="paramname"><em>result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adbf393cfb46a286b3f92e584449f4a6a" name="adbf393cfb46a286b3f92e584449f4a6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbf393cfb46a286b3f92e584449f4a6a">&#9670;&nbsp;</a></span>subtractVectorsKernel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__global__ void subtractVectorsKernel </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td>
+          <td class="paramname"><em>v1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td>
+          <td class="paramname"><em>v2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

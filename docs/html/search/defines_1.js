@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['has_5fcuda_0',['HAS_CUDA',['../verify_8cuh.html#a53392b66c47d881a3b78b9d966bc0776',1,'verify.cuh']]]
+  ['gpu_5fcheck_5ferror_0',['GPU_CHECK_ERROR',['../assert_8cuh.html#a1a30932a466375f03fd8552df7ce68ab',1,'assert.cuh']]]
 ];

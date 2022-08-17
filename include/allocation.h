@@ -1,6 +1,6 @@
 /**
  * @file allocation.h
- * @brief Header file to declare common functions regarding memory allocation.
+ * @brief Header file to declare common functions regarding memory allocation on host.
  *
  * All functions in the file only allocate/copy memory of type #DTYPE.
  *

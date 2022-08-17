@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 06/03/2022.
-//
+/**
+ * @file verify.cu
+ * @brief Source file defining methods used for verifying the existence of a CUDA runtime.
+ * @author Jan Warchocki
+ * @date 6 March 2022
+ */
 
 #include "verify.cuh"
 #include <iostream>

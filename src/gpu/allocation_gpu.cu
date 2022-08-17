@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 10/03/2022.
-//
+/**
+ * @file allocation_gpu.cu
+ * @brief Source file defining methods regarding memory allocation on device.
+ * @author Jan Warchocki
+ * @date 10 March 2022
+ */
 
 #include "allocation_gpu.cuh"
 #include "assert.cuh"

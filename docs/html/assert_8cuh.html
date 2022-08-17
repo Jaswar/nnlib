@@ -67,12 +67,117 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">assert.cuh File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Header file declaring the <a class="el" href="assert_8cuh.html#ab3e90881a2476fd461eb2bcfcaa7cf63" title="Method used to assert that the last CUDA call was successful.">gpuAssert()</a> method.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="verify_8cuh.html">verify.cuh</a>&quot;</code><br />
 <code>#include &lt;cstdio&gt;</code><br />
-</div></div><!-- contents -->
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a1a30932a466375f03fd8552df7ce68ab"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="assert_8cuh.html#a1a30932a466375f03fd8552df7ce68ab">GPU_CHECK_ERROR</a>(ans)&#160;&#160;&#160;<a class="el" href="assert_8cuh.html#ab3e90881a2476fd461eb2bcfcaa7cf63">gpuAssert</a>((ans), __FILE__, __LINE__)</td></tr>
+<tr class="memdesc:a1a30932a466375f03fd8552df7ce68ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro used to call the <a class="el" href="assert_8cuh.html#ab3e90881a2476fd461eb2bcfcaa7cf63" title="Method used to assert that the last CUDA call was successful.">gpuAssert()</a> method with file and line information.  <a href="assert_8cuh.html#a1a30932a466375f03fd8552df7ce68ab">More...</a><br /></td></tr>
+<tr class="separator:a1a30932a466375f03fd8552df7ce68ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab3e90881a2476fd461eb2bcfcaa7cf63"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="assert_8cuh.html#ab3e90881a2476fd461eb2bcfcaa7cf63">gpuAssert</a> (cudaError_t code, const char *file, int line, bool abort=true)</td></tr>
+<tr class="memdesc:ab3e90881a2476fd461eb2bcfcaa7cf63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method used to assert that the last CUDA call was successful.  <a href="assert_8cuh.html#ab3e90881a2476fd461eb2bcfcaa7cf63">More...</a><br /></td></tr>
+<tr class="separator:ab3e90881a2476fd461eb2bcfcaa7cf63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Header file declaring the <a class="el" href="assert_8cuh.html#ab3e90881a2476fd461eb2bcfcaa7cf63" title="Method used to assert that the last CUDA call was successful.">gpuAssert()</a> method. </p>
+<dl class="section author"><dt>Author</dt><dd>Jan Warchocki </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>10 March 2022 </dd></dl>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a1a30932a466375f03fd8552df7ce68ab" name="a1a30932a466375f03fd8552df7ce68ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a30932a466375f03fd8552df7ce68ab">&#9670;&nbsp;</a></span>GPU_CHECK_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GPU_CHECK_ERROR</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">ans</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="assert_8cuh.html#ab3e90881a2476fd461eb2bcfcaa7cf63">gpuAssert</a>((ans), __FILE__, __LINE__)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Macro used to call the <a class="el" href="assert_8cuh.html#ab3e90881a2476fd461eb2bcfcaa7cf63" title="Method used to assert that the last CUDA call was successful.">gpuAssert()</a> method with file and line information. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ab3e90881a2476fd461eb2bcfcaa7cf63" name="ab3e90881a2476fd461eb2bcfcaa7cf63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3e90881a2476fd461eb2bcfcaa7cf63">&#9670;&nbsp;</a></span>gpuAssert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gpuAssert </td>
+          <td>(</td>
+          <td class="paramtype">cudaError_t&#160;</td>
+          <td class="paramname"><em>code</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>line</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>abort</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Method used to assert that the last CUDA call was successful. </p>
+<p >If the call was not successful, the method will display the error message.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">code</td><td>The most recent code returned by CUDA. </td></tr>
+    <tr><td class="paramname">file</td><td>The file where the <a class="el" href="assert_8cuh.html#a1a30932a466375f03fd8552df7ce68ab" title="Macro used to call the gpuAssert() method with file and line information.">GPU_CHECK_ERROR</a> was called. </td></tr>
+    <tr><td class="paramname">line</td><td>The line where the <a class="el" href="assert_8cuh.html#a1a30932a466375f03fd8552df7ce68ab" title="Macro used to call the gpuAssert() method with file and line information.">GPU_CHECK_ERROR</a> was called. </td></tr>
+    <tr><td class="paramname">abort</td><td>If true, the program will stop upon encountering the exception. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
