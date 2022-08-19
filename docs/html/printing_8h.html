@@ -72,6 +72,9 @@ $(function() {
   <div class="headertitle"><div class="title">printing.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Header file declaring methods to construct useful string messages.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;string&gt;</code><br />
 </div>
 <p><a href="printing_8h_source.html">Go to the source code of this file.</a></p>
@@ -79,13 +82,20 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a36adb746f876c1cbdb219a2805b0db71"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="printing_8h.html#a36adb746f876c1cbdb219a2805b0db71">constructProgressBar</a> (size_t currentStep, size_t maxSteps)</td></tr>
+<tr class="memdesc:a36adb746f876c1cbdb219a2805b0db71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a string message representing a progress bar.  <a href="printing_8h.html#a36adb746f876c1cbdb219a2805b0db71">More...</a><br /></td></tr>
 <tr class="separator:a36adb746f876c1cbdb219a2805b0db71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2996d44145c7fc92c2da29a6a3f60bf"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="printing_8h.html#af2996d44145c7fc92c2da29a6a3f60bf">constructPercentage</a> (size_t currentStep, size_t maxSteps)</td></tr>
+<tr class="memdesc:af2996d44145c7fc92c2da29a6a3f60bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a string message about progress in percentage form.  <a href="printing_8h.html#af2996d44145c7fc92c2da29a6a3f60bf">More...</a><br /></td></tr>
 <tr class="separator:af2996d44145c7fc92c2da29a6a3f60bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5603a875f6d0ad2e89a072f1fa58dc1a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="printing_8h.html#a5603a875f6d0ad2e89a072f1fa58dc1a">constructTime</a> (size_t milliseconds)</td></tr>
+<tr class="memdesc:a5603a875f6d0ad2e89a072f1fa58dc1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a string message displaying current time spent.  <a href="printing_8h.html#a5603a875f6d0ad2e89a072f1fa58dc1a">More...</a><br /></td></tr>
 <tr class="separator:a5603a875f6d0ad2e89a072f1fa58dc1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Header file declaring methods to construct useful string messages. </p>
+<dl class="section author"><dt>Author</dt><dd>Jan Warchocki </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>05 April 2022 </dd></dl>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="af2996d44145c7fc92c2da29a6a3f60bf" name="af2996d44145c7fc92c2da29a6a3f60bf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af2996d44145c7fc92c2da29a6a3f60bf">&#9670;&nbsp;</a></span>constructPercentage()</h2>
 
@@ -111,6 +121,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Construct a string message about progress in percentage form. </p>
+<p >The info is displayed in the following format: </p><div class="fragment"><div class="line">[25/50 (50%)]</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">currentStep</td><td>The current progress to display. </td></tr>
+    <tr><td class="paramname">maxSteps</td><td>The maximum progress that can be achieved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string representing the percentage. </dd></dl>
 
 </div>
 </div>
@@ -140,6 +161,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Construct a string message representing a progress bar. </p>
+<p >The progress bar is displayed in the following format: </p><div class="fragment"><div class="line">[==============&gt;-----]</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">currentStep</td><td>The current progress to display. </td></tr>
+    <tr><td class="paramname">maxSteps</td><td>The maximum progress that can be achieved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string representing the progress bar. </dd></dl>
+
 </div>
 </div>
 <a id="a5603a875f6d0ad2e89a072f1fa58dc1a" name="a5603a875f6d0ad2e89a072f1fa58dc1a"></a>
@@ -157,6 +189,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Construct a string message displaying current time spent. </p>
+<p >The time is displayed in the following format: </p><div class="fragment"><div class="line">(0h 2m 5s 127ms)</div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">milliseconds</td><td>The amount of time to display in milliseconds. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string representing the time. </dd></dl>
 
 </div>
 </div>

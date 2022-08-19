@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 03/03/2022.
-//
+/**
+ * @file allocation.cpp
+ * @brief Source file defining methods regarding memory allocation on host.
+ * @author Jan Warchocki
+ * @date 03 March 2022
+ */
 
 #include "../../include/allocation.h"
 #include <cstdlib>

@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 06/03/2022.
-//
+/**
+ * @file read.cpp
+ * @brief Source file defining methods that can be used when reading from files.
+ * @author Jan Warchocki
+ * @date 06 March 2022
+ */
 
 #include "read.h"
 #include "printing.h"
@@ -9,6 +12,13 @@
 #include <thread>
 #include <utility>
 
+/**
+ * @brief Splits a string given the delimiter.
+ *
+ * @param str The string to split.
+ * @param delim The delimiter to split on.
+ * @return A vector of strings, corresponding to splitting @p str by @p delim.
+ */
 std::vector<std::string> split(const std::string& str, const std::string& delim) {
     size_t start = 0, end = 0;
 
@@ -50,6 +60,18 @@ std::vector<std::string> readFile(const std::string& filepath) {
     return lines;
 }
 
+/**
+ * @brief A method that is executed by every thread during readCSV().
+ *
+ * Each thread takes some part of the lines of the file, splits them by the delimiter, converts the values to #DTYPE
+ * and saves those values into a result matrix.
+ *
+ * @param lines The lines as read from the file.
+ * @param delim The delimiter to use when splitting lines.
+ * @param result A result matrix where the threads should store the results.
+ * @param id The id of the thread.
+ * @param numThreads The total number of threads launched.
+ */
 void threadCSVJob(const std::vector<std::string>& lines, const std::string& delim, Matrix& result, int id,
                   int numThreads) {
     int size = static_cast<int>(lines.size());

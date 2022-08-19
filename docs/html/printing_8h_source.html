@@ -70,26 +70,22 @@ $(function() {
   <div class="headertitle"><div class="title">printing.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="printing_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Created by Jan Warchocki on 05/04/2022.</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#ifndef NNLIB_PRINTING_H</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#define NNLIB_PRINTING_H</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// Construct progress bar of the form [==============&gt;-----]</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>std::string <a class="code hl_function" href="printing_8h.html#a36adb746f876c1cbdb219a2805b0db71">constructProgressBar</a>(<span class="keywordtype">size_t</span> currentStep, <span class="keywordtype">size_t</span> maxSteps);</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// Construct percentage in the form [25/100 (25%)]</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>std::string <a class="code hl_function" href="printing_8h.html#af2996d44145c7fc92c2da29a6a3f60bf">constructPercentage</a>(<span class="keywordtype">size_t</span> currentStep, <span class="keywordtype">size_t</span> maxSteps);</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">// Construct time spent info in the form (0h 2m 5s 127ms)</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>std::string <a class="code hl_function" href="printing_8h.html#a5603a875f6d0ad2e89a072f1fa58dc1a">constructTime</a>(<span class="keywordtype">size_t</span> milliseconds);</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif </span><span class="comment">//NNLIB_PRINTING_H</span></div>
-<div class="ttc" id="aprinting_8h_html_a36adb746f876c1cbdb219a2805b0db71"><div class="ttname"><a href="printing_8h.html#a36adb746f876c1cbdb219a2805b0db71">constructProgressBar</a></div><div class="ttdeci">std::string constructProgressBar(size_t currentStep, size_t maxSteps)</div><div class="ttdef"><b>Definition:</b> printing.cpp:18</div></div>
-<div class="ttc" id="aprinting_8h_html_a5603a875f6d0ad2e89a072f1fa58dc1a"><div class="ttname"><a href="printing_8h.html#a5603a875f6d0ad2e89a072f1fa58dc1a">constructTime</a></div><div class="ttdeci">std::string constructTime(size_t milliseconds)</div><div class="ttdef"><b>Definition:</b> printing.cpp:63</div></div>
-<div class="ttc" id="aprinting_8h_html_af2996d44145c7fc92c2da29a6a3f60bf"><div class="ttname"><a href="printing_8h.html#af2996d44145c7fc92c2da29a6a3f60bf">constructPercentage</a></div><div class="ttdeci">std::string constructPercentage(size_t currentStep, size_t maxSteps)</div><div class="ttdef"><b>Definition:</b> printing.cpp:49</div></div>
+<a href="printing_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#ifndef NNLIB_PRINTING_H</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#define NNLIB_PRINTING_H</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>std::string <a class="code hl_function" href="printing_8h.html#a36adb746f876c1cbdb219a2805b0db71">constructProgressBar</a>(<span class="keywordtype">size_t</span> currentStep, <span class="keywordtype">size_t</span> maxSteps);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>std::string <a class="code hl_function" href="printing_8h.html#af2996d44145c7fc92c2da29a6a3f60bf">constructPercentage</a>(<span class="keywordtype">size_t</span> currentStep, <span class="keywordtype">size_t</span> maxSteps);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>std::string <a class="code hl_function" href="printing_8h.html#a5603a875f6d0ad2e89a072f1fa58dc1a">constructTime</a>(<span class="keywordtype">size_t</span> milliseconds);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#endif </span><span class="comment">//NNLIB_PRINTING_H</span></div>
+<div class="ttc" id="aprinting_8h_html_a36adb746f876c1cbdb219a2805b0db71"><div class="ttname"><a href="printing_8h.html#a36adb746f876c1cbdb219a2805b0db71">constructProgressBar</a></div><div class="ttdeci">std::string constructProgressBar(size_t currentStep, size_t maxSteps)</div><div class="ttdoc">Construct a string message representing a progress bar.</div><div class="ttdef"><b>Definition:</b> printing.cpp:26</div></div>
+<div class="ttc" id="aprinting_8h_html_a5603a875f6d0ad2e89a072f1fa58dc1a"><div class="ttname"><a href="printing_8h.html#a5603a875f6d0ad2e89a072f1fa58dc1a">constructTime</a></div><div class="ttdeci">std::string constructTime(size_t milliseconds)</div><div class="ttdoc">Construct a string message displaying current time spent.</div><div class="ttdef"><b>Definition:</b> printing.cpp:71</div></div>
+<div class="ttc" id="aprinting_8h_html_af2996d44145c7fc92c2da29a6a3f60bf"><div class="ttname"><a href="printing_8h.html#af2996d44145c7fc92c2da29a6a3f60bf">constructPercentage</a></div><div class="ttdeci">std::string constructPercentage(size_t currentStep, size_t maxSteps)</div><div class="ttdoc">Construct a string message about progress in percentage form.</div><div class="ttdef"><b>Definition:</b> printing.cpp:57</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

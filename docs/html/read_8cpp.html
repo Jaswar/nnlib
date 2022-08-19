@@ -72,6 +72,9 @@ $(function() {
   <div class="headertitle"><div class="title">read.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Source file defining methods that can be used when reading from files.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="read_8h_source.html">read.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="printing_8h_source.html">printing.h</a>&quot;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
@@ -82,6 +85,7 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a59f7c70ef871db9e1f02c13c7b5d2942"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="read_8cpp.html#a59f7c70ef871db9e1f02c13c7b5d2942">split</a> (const std::string &amp;str, const std::string &amp;delim)</td></tr>
+<tr class="memdesc:a59f7c70ef871db9e1f02c13c7b5d2942"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits a string given the delimiter.  <a href="read_8cpp.html#a59f7c70ef871db9e1f02c13c7b5d2942">More...</a><br /></td></tr>
 <tr class="separator:a59f7c70ef871db9e1f02c13c7b5d2942"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a68bf1ee8736c7499c78ab0f5e64da8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="read_8cpp.html#a7a68bf1ee8736c7499c78ab0f5e64da8">fileExists</a> (const std::string &amp;filepath)</td></tr>
 <tr class="memdesc:a7a68bf1ee8736c7499c78ab0f5e64da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a file exists with the provided filepath.  <a href="read_8cpp.html#a7a68bf1ee8736c7499c78ab0f5e64da8">More...</a><br /></td></tr>
@@ -90,12 +94,17 @@ Functions</h2></td></tr>
 <tr class="memdesc:aad0383a8bc374f7acfe9518f67dde541"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read file from a filepath.  <a href="read_8cpp.html#aad0383a8bc374f7acfe9518f67dde541">More...</a><br /></td></tr>
 <tr class="separator:aad0383a8bc374f7acfe9518f67dde541"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4517b221cd1df344f2fc55955eb0ca8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="read_8cpp.html#af4517b221cd1df344f2fc55955eb0ca8">threadCSVJob</a> (const std::vector&lt; std::string &gt; &amp;lines, const std::string &amp;delim, <a class="el" href="class_matrix.html">Matrix</a> &amp;result, int id, int numThreads)</td></tr>
+<tr class="memdesc:af4517b221cd1df344f2fc55955eb0ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A method that is executed by every thread during <a class="el" href="read_8cpp.html#a9e4869a50fdb89633b951ea17b5c5832" title="Read a csv file from a path.">readCSV()</a>.  <a href="read_8cpp.html#af4517b221cd1df344f2fc55955eb0ca8">More...</a><br /></td></tr>
 <tr class="separator:af4517b221cd1df344f2fc55955eb0ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e4869a50fdb89633b951ea17b5c5832"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="read_8cpp.html#a9e4869a50fdb89633b951ea17b5c5832">readCSV</a> (const std::string &amp;filepath, const std::string &amp;delim, int numThreads)</td></tr>
 <tr class="memdesc:a9e4869a50fdb89633b951ea17b5c5832"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a csv file from a path.  <a href="read_8cpp.html#a9e4869a50fdb89633b951ea17b5c5832">More...</a><br /></td></tr>
 <tr class="separator:a9e4869a50fdb89633b951ea17b5c5832"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Source file defining methods that can be used when reading from files. </p>
+<dl class="section author"><dt>Author</dt><dd>Jan Warchocki </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>06 March 2022 </dd></dl>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a7a68bf1ee8736c7499c78ab0f5e64da8" name="a7a68bf1ee8736c7499c78ab0f5e64da8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a68bf1ee8736c7499c78ab0f5e64da8">&#9670;&nbsp;</a></span>fileExists()</h2>
 
@@ -226,6 +235,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Splits a string given the delimiter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">str</td><td>The string to split. </td></tr>
+    <tr><td class="paramname">delim</td><td>The delimiter to split on. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A vector of strings, corresponding to splitting <code>str</code> by <code>delim</code>. </dd></dl>
+
 </div>
 </div>
 <a id="af4517b221cd1df344f2fc55955eb0ca8" name="af4517b221cd1df344f2fc55955eb0ca8"></a>
@@ -271,6 +290,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>A method that is executed by every thread during <a class="el" href="read_8cpp.html#a9e4869a50fdb89633b951ea17b5c5832" title="Read a csv file from a path.">readCSV()</a>. </p>
+<p >Each thread takes some part of the lines of the file, splits them by the delimiter, converts the values to <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a" title="Data type used throughout the library as the main storage and computation type.">DTYPE</a> and saves those values into a result matrix.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lines</td><td>The lines as read from the file. </td></tr>
+    <tr><td class="paramname">delim</td><td>The delimiter to use when splitting lines. </td></tr>
+    <tr><td class="paramname">result</td><td>A result matrix where the threads should store the results. </td></tr>
+    <tr><td class="paramname">id</td><td>The id of the thread. </td></tr>
+    <tr><td class="paramname">numThreads</td><td>The total number of threads launched. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

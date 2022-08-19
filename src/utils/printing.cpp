@@ -1,11 +1,19 @@
-//
-// Created by Jan Warchocki on 05/04/2022.
-//
+/**
+ * @file printing.cpp
+ * @brief Source file defining methods to construct useful string messages.
+ * @author Jan Warchocki
+ * @date 05 April 2022
+ */
 
 #include "printing.h"
 #include <iostream>
 #include <utility>
 
+/**
+ * @brief Construct a finished progress bar.
+ *
+ * @return A string representing a finished progress bar.
+ */
 std::string constructFinishedProgressBar() {
     std::string result = "[";
     for (int step = 0; step < 20; step++) {

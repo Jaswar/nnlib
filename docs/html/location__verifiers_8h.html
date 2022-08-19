@@ -72,6 +72,9 @@ $(function() {
   <div class="headertitle"><div class="title">location_verifiers.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Header file declaring methods to verify multiple <a class="el" href="vector_8h.html#a06ba0cdbafc0c9af69e3bd23b27e5ce3" title="Enumerate to specify where data is located.">DataLocation</a> at once.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="vector_8h_source.html">vector.h</a>&gt;</code><br />
 </div>
 <p><a href="location__verifiers_8h_source.html">Go to the source code of this file.</a></p>
@@ -79,13 +82,20 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a781621a894c0582bf91aa6c1c1181863"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="location__verifiers_8h.html#a781621a894c0582bf91aa6c1c1181863">allLocationsAreSame</a> (std::initializer_list&lt; <a class="el" href="vector_8h.html#a06ba0cdbafc0c9af69e3bd23b27e5ce3">DataLocation</a> &gt; locations)</td></tr>
+<tr class="memdesc:a781621a894c0582bf91aa6c1c1181863"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if all given locations are the same.  <a href="location__verifiers_8h.html#a781621a894c0582bf91aa6c1c1181863">More...</a><br /></td></tr>
 <tr class="separator:a781621a894c0582bf91aa6c1c1181863"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81d301d1e191a0f731f3e4da47ce9101"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="location__verifiers_8h.html#a81d301d1e191a0f731f3e4da47ce9101">allLocationsAreHost</a> (std::initializer_list&lt; <a class="el" href="vector_8h.html#a06ba0cdbafc0c9af69e3bd23b27e5ce3">DataLocation</a> &gt; locations)</td></tr>
+<tr class="memdesc:a81d301d1e191a0f731f3e4da47ce9101"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if all given locations are HOST.  <a href="location__verifiers_8h.html#a81d301d1e191a0f731f3e4da47ce9101">More...</a><br /></td></tr>
 <tr class="separator:a81d301d1e191a0f731f3e4da47ce9101"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b7e42ef60325384035a268b85340ff5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="location__verifiers_8h.html#a1b7e42ef60325384035a268b85340ff5">allLocationsAreDevice</a> (std::initializer_list&lt; <a class="el" href="vector_8h.html#a06ba0cdbafc0c9af69e3bd23b27e5ce3">DataLocation</a> &gt; locations)</td></tr>
+<tr class="memdesc:a1b7e42ef60325384035a268b85340ff5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if all given locations are DEVICE.  <a href="location__verifiers_8h.html#a1b7e42ef60325384035a268b85340ff5">More...</a><br /></td></tr>
 <tr class="separator:a1b7e42ef60325384035a268b85340ff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Header file declaring methods to verify multiple <a class="el" href="vector_8h.html#a06ba0cdbafc0c9af69e3bd23b27e5ce3" title="Enumerate to specify where data is located.">DataLocation</a> at once. </p>
+<dl class="section author"><dt>Author</dt><dd>Jan Warchocki </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>28 May 2022 </dd></dl>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a1b7e42ef60325384035a268b85340ff5" name="a1b7e42ef60325384035a268b85340ff5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1b7e42ef60325384035a268b85340ff5">&#9670;&nbsp;</a></span>allLocationsAreDevice()</h2>
 
@@ -101,6 +111,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Return true if all given locations are DEVICE. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">locations</td><td>The list of locations to verify. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if all locations are DEVICE, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -120,6 +139,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Return true if all given locations are HOST. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">locations</td><td>The list of locations to verify. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if all locations are HOST, false otherwise. </dd></dl>
+
 </div>
 </div>
 <a id="a781621a894c0582bf91aa6c1c1181863" name="a781621a894c0582bf91aa6c1c1181863"></a>
@@ -137,6 +165,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Return true if all given locations are the same. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">locations</td><td>The list of locations to verify. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if all locations are the same, false otherwise. </dd></dl>
 
 </div>
 </div>

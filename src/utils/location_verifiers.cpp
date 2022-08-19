@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 28/05/2022.
-//
+/**
+ * @file location_verifiers.cpp
+ * @brief Header file defining methods to verify multiple #DataLocation at once.
+ * @author Jan Warchocki
+ * @date 28 May 2022
+ */
 
 #include "location_verifiers.h"
 #include <algorithm>
