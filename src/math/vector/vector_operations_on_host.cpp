@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 29/05/2022.
-//
+/**
+ * @file vector_operations_on_host.cpp
+ * @brief Source file defining vector operations that happen on host.
+ * @author Jan Warchocki
+ * @date 29 May 2022
+ */
 
 #include "vector_operations_on_host.h"
 #if defined __AVX2__ || defined __AVX__

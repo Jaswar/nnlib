@@ -72,6 +72,9 @@ $(function() {
   <div class="headertitle"><div class="title">vector_operations_on_device.cu File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Source file defining vector operations that happen on device.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="allocation__gpu_8cuh.html">gpu/allocation_gpu.cuh</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="assert_8cuh.html">gpu/assert.cuh</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vector__operations__on__device_8cuh.html">vector_operations_on_device.cuh</a>&quot;</code><br />
@@ -81,19 +84,29 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ad6f3d1590e03372781ebb7c2cfe719f3"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector__operations__on__device_8cu.html#ad6f3d1590e03372781ebb7c2cfe719f3">addVectorsKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *v1, const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *v2, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n)</td></tr>
+<tr class="memdesc:ad6f3d1590e03372781ebb7c2cfe719f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to add two vectors together.  <a href="vector__operations__on__device_8cu.html#ad6f3d1590e03372781ebb7c2cfe719f3">More...</a><br /></td></tr>
 <tr class="separator:ad6f3d1590e03372781ebb7c2cfe719f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbf393cfb46a286b3f92e584449f4a6a"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector__operations__on__device_8cu.html#adbf393cfb46a286b3f92e584449f4a6a">subtractVectorsKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *v1, const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *v2, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n)</td></tr>
+<tr class="memdesc:adbf393cfb46a286b3f92e584449f4a6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to subtract one vector from another.  <a href="vector__operations__on__device_8cu.html#adbf393cfb46a286b3f92e584449f4a6a">More...</a><br /></td></tr>
 <tr class="separator:adbf393cfb46a286b3f92e584449f4a6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b3544ffd8ce2b28cc99a77030076e6d"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector__operations__on__device_8cu.html#a8b3544ffd8ce2b28cc99a77030076e6d">multiplyVectorKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *v1, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> constant, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n)</td></tr>
+<tr class="memdesc:a8b3544ffd8ce2b28cc99a77030076e6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to multiply a vector with a constant.  <a href="vector__operations__on__device_8cu.html#a8b3544ffd8ce2b28cc99a77030076e6d">More...</a><br /></td></tr>
 <tr class="separator:a8b3544ffd8ce2b28cc99a77030076e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a1c081aa318ca0463f0c4dd0961104d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector__operations__on__device_8cu.html#a4a1c081aa318ca0463f0c4dd0961104d">addVectorsOnDevice</a> (const <a class="el" href="class_vector.html">Vector</a> &amp;v1, const <a class="el" href="class_vector.html">Vector</a> &amp;v2, <a class="el" href="class_vector.html">Vector</a> &amp;result)</td></tr>
+<tr class="memdesc:a4a1c081aa318ca0463f0c4dd0961104d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two vectors.  <a href="vector__operations__on__device_8cu.html#a4a1c081aa318ca0463f0c4dd0961104d">More...</a><br /></td></tr>
 <tr class="separator:a4a1c081aa318ca0463f0c4dd0961104d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ff63aa2ae3fc520d4599d6a6df4edc6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector__operations__on__device_8cu.html#a6ff63aa2ae3fc520d4599d6a6df4edc6">subtractVectorsOnDevice</a> (const <a class="el" href="class_vector.html">Vector</a> &amp;v1, const <a class="el" href="class_vector.html">Vector</a> &amp;v2, <a class="el" href="class_vector.html">Vector</a> &amp;result)</td></tr>
+<tr class="memdesc:a6ff63aa2ae3fc520d4599d6a6df4edc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract one vector from another.  <a href="vector__operations__on__device_8cu.html#a6ff63aa2ae3fc520d4599d6a6df4edc6">More...</a><br /></td></tr>
 <tr class="separator:a6ff63aa2ae3fc520d4599d6a6df4edc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72147921efcdb38db100962da118acb1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vector__operations__on__device_8cu.html#a72147921efcdb38db100962da118acb1">multiplyVectorOnDevice</a> (const <a class="el" href="class_vector.html">Vector</a> &amp;v1, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> constant, <a class="el" href="class_vector.html">Vector</a> &amp;result)</td></tr>
+<tr class="memdesc:a72147921efcdb38db100962da118acb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply a vector with a constant.  <a href="vector__operations__on__device_8cu.html#a72147921efcdb38db100962da118acb1">More...</a><br /></td></tr>
 <tr class="separator:a72147921efcdb38db100962da118acb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Source file defining vector operations that happen on device. </p>
+<dl class="section author"><dt>Author</dt><dd>Jan Warchocki </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>14 March 2022 </dd></dl>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="ad6f3d1590e03372781ebb7c2cfe719f3" name="ad6f3d1590e03372781ebb7c2cfe719f3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad6f3d1590e03372781ebb7c2cfe719f3">&#9670;&nbsp;</a></span>addVectorsKernel()</h2>
 
@@ -132,6 +145,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel method to add two vectors together. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v1</td><td>The data of the first vector. </td></tr>
+    <tr><td class="paramname">v2</td><td>The data of the second vector. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the addition should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The size of the vectors. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a4a1c081aa318ca0463f0c4dd0961104d" name="a4a1c081aa318ca0463f0c4dd0961104d"></a>
@@ -165,6 +189,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Add two vectors. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v1</td><td>The first vector. </td></tr>
+    <tr><td class="paramname">v2</td><td>The second vector. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the addition should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -206,6 +240,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel method to multiply a vector with a constant. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v1</td><td>The data of the vector to multiply. </td></tr>
+    <tr><td class="paramname">constant</td><td>The constant by which to multiply the vector. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the multiplication should be saved. </td></tr>
+    <tr><td class="paramname">n</td><td>The size of the vectors. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a72147921efcdb38db100962da118acb1" name="a72147921efcdb38db100962da118acb1"></a>
@@ -239,6 +284,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Multiply a vector with a constant. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v1</td><td>The vector to multiply. </td></tr>
+    <tr><td class="paramname">constant</td><td>The constant to multiply with. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the multiplication should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -280,6 +335,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel method to subtract one vector from another. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v1</td><td>The data of the vector to subtract from. </td></tr>
+    <tr><td class="paramname">v2</td><td>The data of the vector that should be subtracted. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the subtraction should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The size of the vectors. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a6ff63aa2ae3fc520d4599d6a6df4edc6" name="a6ff63aa2ae3fc520d4599d6a6df4edc6"></a>
@@ -313,6 +379,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Subtract one vector from another. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v1</td><td>The vector to subtract from. </td></tr>
+    <tr><td class="paramname">v2</td><td>The vector that should be subtracted. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the subtraction should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

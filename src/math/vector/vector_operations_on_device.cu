@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 14/03/2022.
-//
+/**
+ * @file vector_operations_on_device.cu
+ * @brief Source file defining vector operations that happen on device.
+ * @author Jan Warchocki
+ * @date 14 March 2022
+ */
 
 #include "gpu/allocation_gpu.cuh"
 #include "gpu/assert.cuh"
@@ -12,6 +15,14 @@
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
+/**
+ * @brief Kernel method to add two vectors together.
+ *
+ * @param v1 The data of the first vector.
+ * @param v2 The data of the second vector.
+ * @param result Where the result of the addition should be stored.
+ * @param n The size of the vectors.
+ */
 __global__ void addVectorsKernel(const DTYPE* v1, const DTYPE* v2, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -22,6 +33,14 @@ __global__ void addVectorsKernel(const DTYPE* v1, const DTYPE* v2, DTYPE* result
     result[index] = v1[index] + v2[index];
 }
 
+/**
+ * @brief Kernel method to subtract one vector from another.
+ *
+ * @param v1 The data of the vector to subtract from.
+ * @param v2 The data of the vector that should be subtracted.
+ * @param result Where the result of the subtraction should be stored.
+ * @param n The size of the vectors.
+ */
 __global__ void subtractVectorsKernel(const DTYPE* v1, const DTYPE* v2, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -32,6 +51,14 @@ __global__ void subtractVectorsKernel(const DTYPE* v1, const DTYPE* v2, DTYPE* r
     result[index] = v1[index] - v2[index];
 }
 
+/**
+ * @brief Kernel method to multiply a vector with a constant.
+ *
+ * @param v1 The data of the vector to multiply.
+ * @param constant The constant by which to multiply the vector.
+ * @param result Where the result of the multiplication should be saved.
+ * @param n The size of the vectors.
+ */
 __global__ void multiplyVectorKernel(const DTYPE* v1, DTYPE constant, DTYPE* result, size_t n) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 

@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 03/03/2022.
-//
+/**
+ * @file vector.cpp
+ * @brief Header file defining the Vector class and operations on vectors.
+ * @author Jan Warchocki
+ * @date 03 March 2022
+ */
 
 #include "vector.h"
 #include "exceptions/different_data_location_exception.h"
