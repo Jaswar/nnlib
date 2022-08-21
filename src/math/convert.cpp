@@ -1,6 +1,9 @@
-//
-// Created by Jan Warchocki on 07/03/2022.
-//
+/**
+ * @file convert.cpp
+ * @brief Source file consisting of function definitions to convert between matrices and vectors.
+ * @author Jan Warchocki
+ * @date 07 March 2022
+ */
 
 #include "convert.h"
 #include <exceptions/size_mismatch_exception.h>
