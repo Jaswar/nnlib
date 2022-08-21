@@ -58,7 +58,7 @@ however required to run the library in CPU-only mode. For that, a C++ compiler s
 
 1. Download and install Visual Studio 2017 or higher.
 2. Enable *Desktop development with C++* in the Visual Studio Installer.
-3. If you do not wish to use GPU-acceleration, go to step 4. Otherwise continue with the steps below:
+3. If you do not wish to use GPU-acceleration, go to step 4. Otherwise, continue with the steps below:
    1. Make sure that you have a [CUDA-Capable Nvidia GPU](https://en.wikipedia.org/wiki/CUDA). Only those GPUs are supported by the library.
    2. Install the NVIDIA CUDA Toolkit using the [installation guide](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html).
    3. Verify that CUDA was installed by running `nvcc -V` in the terminal.
