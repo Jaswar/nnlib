@@ -1,7 +1,9 @@
-//
-// Created by Jan Warchocki on 15/03/2022.
-//
-
+/**
+ * @file matrix_operations_on_device.cu
+ * @brief Source file defining matrix operations that happen on device.
+ * @author Jan Warchocki
+ * @date 15 March 2022
+ */
 
 #include "gpu/allocation_gpu.cuh"
 #include "gpu/assert.cuh"
@@ -12,10 +14,22 @@
 
 #ifdef HAS_CUDA
 
+/**
+ * @brief Size of a tile when performing tiled matrix multiplication.
+ */
 #define TILE_WIDTH 16
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
+/**
+ * @brief Kernel method to add two matrices together.
+ *
+ * @param m1 The data of the first matrix.
+ * @param m2 The data of the second matrix.
+ * @param result Where the result of the operation should be stored.
+ * @param n The number of rows in the operand matrices.
+ * @param m The number of columns in the operand matrices.
+ */
 __global__ void addMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -26,6 +40,15 @@ __global__ void addMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* resul
     result[index] = m1[index] + m2[index];
 }
 
+/**
+ * @brief Kernel method to perform broadcast-add operation.
+ *
+ * @param matrix The data of the matrix.
+ * @param vector The data of the vector to broadcast.
+ * @param result Where the result of the operation should be stored.
+ * @param n The number of rows of the matrix.
+ * @param m The number of columns of the matrix. Same as the size of the vector.
+ */
 __global__ void addBroadcastKernel(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
@@ -37,6 +60,15 @@ __global__ void addBroadcastKernel(const DTYPE* matrix, const DTYPE* vector, DTY
     result[row * m + column] = matrix[row * m + column] + vector[column];
 }
 
+/**
+ * @brief Kernel method to perform matrix subtraction.
+ *
+ * @param m1 The data of matrix to subtract from.
+ * @param m2 The data of the matrix to be subtracted.
+ * @param result Where the result of the operation should be stored.
+ * @param n The number of rows of the matrices.
+ * @param m The number of columns of the matrices.
+ */
 __global__ void subtractMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -47,6 +79,15 @@ __global__ void subtractMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* 
     result[index] = m1[index] - m2[index];
 }
 
+/**
+ * @brief Kernel method to perform matrix-vector multiplication.
+ *
+ * @param matrix The data of the matrix to multiply.
+ * @param vector The data of the vector to multiply.
+ * @param result Where the result of the operation should be stored.
+ * @param n The number of rows of the matrix.
+ * @param m The number of columns of the matrix. Same as the size of the vector.
+ */
 __global__ void mulMatrixVectorKernel(const DTYPE* matrix, const DTYPE* vector, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -61,6 +102,18 @@ __global__ void mulMatrixVectorKernel(const DTYPE* matrix, const DTYPE* vector, 
     result[index] = sum;
 }
 
+/**
+ * @brief Kernel method to multiply two matrices using a tiling method.
+ *
+ * This method currently is not used to perform matrix-matrix multiplication for performance reasons.
+ *
+ * @param m1 The data of the first matrix.
+ * @param m2 The data of the second matrix.
+ * @param result Where the result of the operation should be stored.
+ * @param n The number of rows of the first matrix.
+ * @param m The number of columns of the first matrix.
+ * @param k The number of columns of the second matrix.
+ */
 // NOLINTNEXTLINE(google-readability-function-size)
 __global__ void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m,
                                              size_t k) {
@@ -103,6 +156,16 @@ __global__ void multiplyMatricesTilingKernel(const DTYPE* m1, const DTYPE* m2, D
     }
 }
 
+/**
+ * @brief Kernel method to perform naive matrix-matrix multiplication.
+ *
+ * @param m1 The data of the first matrix.
+ * @param m2 The data of the second matrix.
+ * @param result Where the result of the operation should be stored.
+ * @param n The number of rows of the first matrix.
+ * @param m The number of columns of the first matrix.
+ * @param k The number of columns of the second matrix.
+ */
 __global__ void multiplyMatricesNoTilingKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m,
                                                size_t k) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -121,6 +184,15 @@ __global__ void multiplyMatricesNoTilingKernel(const DTYPE* m1, const DTYPE* m2,
     result[row * k + column] = sum;
 }
 
+/**
+ * @brief Kernel method to multiply a matrix with a constant.
+ *
+ * @param matrix The data of the matrix to multiply.
+ * @param constant The constant to multiply @p matrix with.
+ * @param result Where the result of the operation should be stored.
+ * @param n The number of rows of the matrix.
+ * @param m The number of columns of the matrix.
+ */
 __global__ void multiplyMatrixKernel(const DTYPE* matrix, DTYPE constant, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -131,6 +203,15 @@ __global__ void multiplyMatrixKernel(const DTYPE* matrix, DTYPE constant, DTYPE*
     result[index] = matrix[index] * constant;
 }
 
+/**
+ * @brief Kernel method to apply hadamard product to two matrices.
+ *
+ * @param m1 The data of the first matrix.
+ * @param m2 The data of the second matrix.
+ * @param result Where the result of the hadamard operation should be stored.
+ * @param n The number of rows of the matrices.
+ * @param m The number of columns of the matrices.
+ */
 __global__ void hadamardMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* result, size_t n, size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -141,6 +222,14 @@ __global__ void hadamardMatricesKernel(const DTYPE* m1, const DTYPE* m2, DTYPE* 
     result[index] = m1[index] * m2[index];
 }
 
+/**
+ * @brief Kernel method to transpose a matrix.
+ *
+ * @param matrix The data of the matrix to transpose.
+ * @param result Where the result of the transpose operation should be stored.
+ * @param n The number of rows of @p matrix.
+ * @param m The number of columns of @p matrix.
+ */
 __global__ void transposeMatrixKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
     auto row = blockIdx.x;
     auto column = threadIdx.x;
@@ -185,8 +274,8 @@ void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void multiplyMatrixOnDevice(const Matrix& m1, DTYPE constant, Matrix& result) {
-    multiplyMatrixKernel<<<m1.n, m1.m>>>(m1.data, constant, result.data, m1.n, m1.m);
+void multiplyMatrixOnDevice(const Matrix& m, DTYPE constant, Matrix& result) {
+    multiplyMatrixKernel<<<m.n, m.m>>>(m.data, constant, result.data, m.n, m.m);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
@@ -222,7 +311,7 @@ void multiplyMatricesOnDevice(const Matrix& m1, const Matrix& m2, Matrix& result
     throw UnexpectedCUDACallException();
 }
 
-void multiplyMatrixOnDevice(const Matrix& m1, DTYPE constant, Matrix& result) {
+void multiplyMatrixOnDevice(const Matrix& m, DTYPE constant, Matrix& result) {
     throw UnexpectedCUDACallException();
 }
 

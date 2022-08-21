@@ -73,6 +73,9 @@ $(function() {
   <div class="headertitle"><div class="title">matrix_operations_on_device.cu File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Source file defining matrix operations that happen on device.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="allocation__gpu_8cuh.html">gpu/allocation_gpu.cuh</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="assert_8cuh.html">gpu/assert.cuh</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="matrix__operations__on__device_8cuh.html">matrix_operations_on_device.cuh</a>&quot;</code><br />
@@ -83,46 +86,68 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a76108891dc4352082a676f2978ee446d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#a76108891dc4352082a676f2978ee446d">TILE_WIDTH</a>&#160;&#160;&#160;16</td></tr>
+<tr class="memdesc:a76108891dc4352082a676f2978ee446d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of a tile when performing tiled matrix multiplication.  <a href="matrix__operations__on__device_8cu.html#a76108891dc4352082a676f2978ee446d">More...</a><br /></td></tr>
 <tr class="separator:a76108891dc4352082a676f2978ee446d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:af4873163d903f0a2f009c09ede4c1e84"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#af4873163d903f0a2f009c09ede4c1e84">addMatricesKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *m1, const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *m2, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n, size_t m)</td></tr>
+<tr class="memdesc:af4873163d903f0a2f009c09ede4c1e84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to add two matrices together.  <a href="matrix__operations__on__device_8cu.html#af4873163d903f0a2f009c09ede4c1e84">More...</a><br /></td></tr>
 <tr class="separator:af4873163d903f0a2f009c09ede4c1e84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ad6749b1645a23e490306f68d0046e6"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#a4ad6749b1645a23e490306f68d0046e6">addBroadcastKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *matrix, const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *vector, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n, size_t m)</td></tr>
+<tr class="memdesc:a4ad6749b1645a23e490306f68d0046e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to perform broadcast-add operation.  <a href="matrix__operations__on__device_8cu.html#a4ad6749b1645a23e490306f68d0046e6">More...</a><br /></td></tr>
 <tr class="separator:a4ad6749b1645a23e490306f68d0046e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0118cfeaa14dd1f3b5f10bd59027a18b"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#a0118cfeaa14dd1f3b5f10bd59027a18b">subtractMatricesKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *m1, const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *m2, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n, size_t m)</td></tr>
+<tr class="memdesc:a0118cfeaa14dd1f3b5f10bd59027a18b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to perform matrix subtraction.  <a href="matrix__operations__on__device_8cu.html#a0118cfeaa14dd1f3b5f10bd59027a18b">More...</a><br /></td></tr>
 <tr class="separator:a0118cfeaa14dd1f3b5f10bd59027a18b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d57de06be2dd019d9d59c0249695a56"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#a0d57de06be2dd019d9d59c0249695a56">mulMatrixVectorKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *matrix, const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *vector, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n, size_t m)</td></tr>
+<tr class="memdesc:a0d57de06be2dd019d9d59c0249695a56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to perform matrix-vector multiplication.  <a href="matrix__operations__on__device_8cu.html#a0d57de06be2dd019d9d59c0249695a56">More...</a><br /></td></tr>
 <tr class="separator:a0d57de06be2dd019d9d59c0249695a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92f2b481d5509fbe4c58b4979cc78604"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#a92f2b481d5509fbe4c58b4979cc78604">multiplyMatricesTilingKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *m1, const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *m2, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n, size_t m, size_t k)</td></tr>
+<tr class="memdesc:a92f2b481d5509fbe4c58b4979cc78604"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to multiply two matrices using a tiling method.  <a href="matrix__operations__on__device_8cu.html#a92f2b481d5509fbe4c58b4979cc78604">More...</a><br /></td></tr>
 <tr class="separator:a92f2b481d5509fbe4c58b4979cc78604"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34d83306138c5d58f2d0470b60581076"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#a34d83306138c5d58f2d0470b60581076">multiplyMatricesNoTilingKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *m1, const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *m2, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n, size_t m, size_t k)</td></tr>
+<tr class="memdesc:a34d83306138c5d58f2d0470b60581076"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to perform naive matrix-matrix multiplication.  <a href="matrix__operations__on__device_8cu.html#a34d83306138c5d58f2d0470b60581076">More...</a><br /></td></tr>
 <tr class="separator:a34d83306138c5d58f2d0470b60581076"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87c8e61c940530e716d836ebd754ae6e"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#a87c8e61c940530e716d836ebd754ae6e">multiplyMatrixKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *matrix, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> constant, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n, size_t m)</td></tr>
+<tr class="memdesc:a87c8e61c940530e716d836ebd754ae6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to multiply a matrix with a constant.  <a href="matrix__operations__on__device_8cu.html#a87c8e61c940530e716d836ebd754ae6e">More...</a><br /></td></tr>
 <tr class="separator:a87c8e61c940530e716d836ebd754ae6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5360a7c72c40ba2cab554f900f31ae5"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#ab5360a7c72c40ba2cab554f900f31ae5">hadamardMatricesKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *m1, const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *m2, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n, size_t m)</td></tr>
+<tr class="memdesc:ab5360a7c72c40ba2cab554f900f31ae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to apply hadamard product to two matrices.  <a href="matrix__operations__on__device_8cu.html#ab5360a7c72c40ba2cab554f900f31ae5">More...</a><br /></td></tr>
 <tr class="separator:ab5360a7c72c40ba2cab554f900f31ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcdac95c86eda04c6a12e74ce3b170a0"><td class="memItemLeft" align="right" valign="top">__global__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#adcdac95c86eda04c6a12e74ce3b170a0">transposeMatrixKernel</a> (const <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *matrix, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *result, size_t n, size_t m)</td></tr>
+<tr class="memdesc:adcdac95c86eda04c6a12e74ce3b170a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel method to transpose a matrix.  <a href="matrix__operations__on__device_8cu.html#adcdac95c86eda04c6a12e74ce3b170a0">More...</a><br /></td></tr>
 <tr class="separator:adcdac95c86eda04c6a12e74ce3b170a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5886054f2c5a9192da1760a647a502ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#a5886054f2c5a9192da1760a647a502ed">addMatricesOnDevice</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m1, const <a class="el" href="class_matrix.html">Matrix</a> &amp;m2, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:a5886054f2c5a9192da1760a647a502ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two matrices.  <a href="matrix__operations__on__device_8cu.html#a5886054f2c5a9192da1760a647a502ed">More...</a><br /></td></tr>
 <tr class="separator:a5886054f2c5a9192da1760a647a502ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae323d9160d555b7ba7d88450496c8340"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#ae323d9160d555b7ba7d88450496c8340">addBroadcastOnDevice</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m, const <a class="el" href="class_vector.html">Vector</a> &amp;v, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:ae323d9160d555b7ba7d88450496c8340"><td class="mdescLeft">&#160;</td><td class="mdescRight">Broadcast a vector over the rows of the matrix and add it to the matrix.  <a href="matrix__operations__on__device_8cu.html#ae323d9160d555b7ba7d88450496c8340">More...</a><br /></td></tr>
 <tr class="separator:ae323d9160d555b7ba7d88450496c8340"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff1f14cdadc60052e1757f8f2a8e8e24"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#aff1f14cdadc60052e1757f8f2a8e8e24">subtractMatricesOnDevice</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m1, const <a class="el" href="class_matrix.html">Matrix</a> &amp;m2, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:aff1f14cdadc60052e1757f8f2a8e8e24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract one matrix from another.  <a href="matrix__operations__on__device_8cu.html#aff1f14cdadc60052e1757f8f2a8e8e24">More...</a><br /></td></tr>
 <tr class="separator:aff1f14cdadc60052e1757f8f2a8e8e24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb1a3ebf538063eb116d98b553b1ac13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#afb1a3ebf538063eb116d98b553b1ac13">multiplyMatrixVectorOnDevice</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;matrix, const <a class="el" href="class_vector.html">Vector</a> &amp;vector, <a class="el" href="class_vector.html">Vector</a> &amp;result)</td></tr>
+<tr class="memdesc:afb1a3ebf538063eb116d98b553b1ac13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply a matrix with a vector.  <a href="matrix__operations__on__device_8cu.html#afb1a3ebf538063eb116d98b553b1ac13">More...</a><br /></td></tr>
 <tr class="separator:afb1a3ebf538063eb116d98b553b1ac13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75c13e52c3c6151c804a1f84baefcdb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#a75c13e52c3c6151c804a1f84baefcdb8">multiplyMatricesOnDevice</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m1, const <a class="el" href="class_matrix.html">Matrix</a> &amp;m2, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:a75c13e52c3c6151c804a1f84baefcdb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply two matrices together.  <a href="matrix__operations__on__device_8cu.html#a75c13e52c3c6151c804a1f84baefcdb8">More...</a><br /></td></tr>
 <tr class="separator:a75c13e52c3c6151c804a1f84baefcdb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f11021b9660b53e0507fdfe4c35f5ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#a8f11021b9660b53e0507fdfe4c35f5ec">multiplyMatrixOnDevice</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m1, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> constant, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
-<tr class="separator:a8f11021b9660b53e0507fdfe4c35f5ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7a35000153604f8929b65e5ed96750e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#ae7a35000153604f8929b65e5ed96750e">multiplyMatrixOnDevice</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> constant, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:ae7a35000153604f8929b65e5ed96750e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply a matrix with a constant number.  <a href="matrix__operations__on__device_8cu.html#ae7a35000153604f8929b65e5ed96750e">More...</a><br /></td></tr>
+<tr class="separator:ae7a35000153604f8929b65e5ed96750e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d32499e9ec16fdc54c6a7280b3c6428"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#a2d32499e9ec16fdc54c6a7280b3c6428">hadamardMatricesOnDevice</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m1, const <a class="el" href="class_matrix.html">Matrix</a> &amp;m2, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:a2d32499e9ec16fdc54c6a7280b3c6428"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform hadamard product on matrices.  <a href="matrix__operations__on__device_8cu.html#a2d32499e9ec16fdc54c6a7280b3c6428">More...</a><br /></td></tr>
 <tr class="separator:a2d32499e9ec16fdc54c6a7280b3c6428"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8631f03d14ed1133c131c7f4f5cc638"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__device_8cu.html#af8631f03d14ed1133c131c7f4f5cc638">transposeMatrixOnDevice</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:af8631f03d14ed1133c131c7f4f5cc638"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transpose a matrix.  <a href="matrix__operations__on__device_8cu.html#af8631f03d14ed1133c131c7f4f5cc638">More...</a><br /></td></tr>
 <tr class="separator:af8631f03d14ed1133c131c7f4f5cc638"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Source file defining matrix operations that happen on device. </p>
+<dl class="section author"><dt>Author</dt><dd>Jan Warchocki </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>15 March 2022 </dd></dl>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a76108891dc4352082a676f2978ee446d" name="a76108891dc4352082a676f2978ee446d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a76108891dc4352082a676f2978ee446d">&#9670;&nbsp;</a></span>TILE_WIDTH</h2>
 
@@ -134,6 +159,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Size of a tile when performing tiled matrix multiplication. </p>
 
 </div>
 </div>
@@ -182,6 +209,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel method to perform broadcast-add operation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>The data of the matrix. </td></tr>
+    <tr><td class="paramname">vector</td><td>The data of the vector to broadcast. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the operation should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of the matrix. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the matrix. Same as the size of the vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="ae323d9160d555b7ba7d88450496c8340" name="ae323d9160d555b7ba7d88450496c8340"></a>
@@ -215,6 +254,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Broadcast a vector over the rows of the matrix and add it to the matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>The matrix. </td></tr>
+    <tr><td class="paramname">v</td><td>The vector to broadcast. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the broadcast operation should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -262,6 +311,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel method to add two matrices together. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The data of the first matrix. </td></tr>
+    <tr><td class="paramname">m2</td><td>The data of the second matrix. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the operation should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows in the operand matrices. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns in the operand matrices. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a5886054f2c5a9192da1760a647a502ed" name="a5886054f2c5a9192da1760a647a502ed"></a>
@@ -295,6 +356,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Add two matrices. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The first matrix. </td></tr>
+    <tr><td class="paramname">m2</td><td>The second matrix. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the addition should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -342,6 +413,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel method to apply hadamard product to two matrices. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The data of the first matrix. </td></tr>
+    <tr><td class="paramname">m2</td><td>The data of the second matrix. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the hadamard operation should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of the matrices. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the matrices. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a2d32499e9ec16fdc54c6a7280b3c6428" name="a2d32499e9ec16fdc54c6a7280b3c6428"></a>
@@ -375,6 +458,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Perform hadamard product on matrices. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The first matrix. </td></tr>
+    <tr><td class="paramname">m2</td><td>The second matrix. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the element-wise multiplication should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -421,6 +514,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Kernel method to perform matrix-vector multiplication. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>The data of the matrix to multiply. </td></tr>
+    <tr><td class="paramname">vector</td><td>The data of the vector to multiply. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the operation should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of the matrix. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the matrix. Same as the size of the vector. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -474,6 +579,19 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel method to perform naive matrix-matrix multiplication. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The data of the first matrix. </td></tr>
+    <tr><td class="paramname">m2</td><td>The data of the second matrix. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the operation should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of the first matrix. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the first matrix. </td></tr>
+    <tr><td class="paramname">k</td><td>The number of columns of the second matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a75c13e52c3c6151c804a1f84baefcdb8" name="a75c13e52c3c6151c804a1f84baefcdb8"></a>
@@ -507,6 +625,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Multiply two matrices together. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The first matrix. </td></tr>
+    <tr><td class="paramname">m2</td><td>The second matrix. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the multiplication should be written to. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -560,6 +688,20 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel method to multiply two matrices using a tiling method. </p>
+<p >This method currently is not used to perform matrix-matrix multiplication for performance reasons.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The data of the first matrix. </td></tr>
+    <tr><td class="paramname">m2</td><td>The data of the second matrix. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the operation should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of the first matrix. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the first matrix. </td></tr>
+    <tr><td class="paramname">k</td><td>The number of columns of the second matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a87c8e61c940530e716d836ebd754ae6e" name="a87c8e61c940530e716d836ebd754ae6e"></a>
@@ -606,10 +748,22 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel method to multiply a matrix with a constant. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>The data of the matrix to multiply. </td></tr>
+    <tr><td class="paramname">constant</td><td>The constant to multiply <code>matrix</code> with. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the operation should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of the matrix. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
-<a id="a8f11021b9660b53e0507fdfe4c35f5ec" name="a8f11021b9660b53e0507fdfe4c35f5ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f11021b9660b53e0507fdfe4c35f5ec">&#9670;&nbsp;</a></span>multiplyMatrixOnDevice()</h2>
+<a id="ae7a35000153604f8929b65e5ed96750e" name="ae7a35000153604f8929b65e5ed96750e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7a35000153604f8929b65e5ed96750e">&#9670;&nbsp;</a></span>multiplyMatrixOnDevice()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -618,7 +772,7 @@ Functions</h2></td></tr>
           <td class="memname">void multiplyMatrixOnDevice </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
-          <td class="paramname"><em>m1</em>, </td>
+          <td class="paramname"><em>m</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -639,6 +793,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Multiply a matrix with a constant number. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>The matrix to multiply. </td></tr>
+    <tr><td class="paramname">constant</td><td>The constant to multiply <code>m1</code> with. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the multiplication should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -673,6 +837,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Multiply a matrix with a vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>The matrix to multiply. </td></tr>
+    <tr><td class="paramname">vector</td><td>The vector to multiply. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the multiplication should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -720,6 +894,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel method to perform matrix subtraction. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The data of matrix to subtract from. </td></tr>
+    <tr><td class="paramname">m2</td><td>The data of the matrix to be subtracted. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the operation should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of the matrices. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of the matrices. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="aff1f14cdadc60052e1757f8f2a8e8e24" name="aff1f14cdadc60052e1757f8f2a8e8e24"></a>
@@ -753,6 +939,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Subtract one matrix from another. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The matrix to subtract from. </td></tr>
+    <tr><td class="paramname">m2</td><td>The matrix that should be subtracted. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the subtraction should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -794,6 +990,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Kernel method to transpose a matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>The data of the matrix to transpose. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the transpose operation should be stored. </td></tr>
+    <tr><td class="paramname">n</td><td>The number of rows of <code>matrix</code>. </td></tr>
+    <tr><td class="paramname">m</td><td>The number of columns of <code>matrix</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="af8631f03d14ed1133c131c7f4f5cc638" name="af8631f03d14ed1133c131c7f4f5cc638"></a>
@@ -821,6 +1028,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Transpose a matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>The matrix to transpose. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of transposing the matrix should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

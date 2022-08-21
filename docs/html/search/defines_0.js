@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['default_5fbatch_5fsize_0',['DEFAULT_BATCH_SIZE',['../layer_8h.html#a123fa013ecd2c91686ad58c0b8d985b3',1,'layer.h']]],
-  ['dtype_1',['DTYPE',['../allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a',1,'allocation.h']]]
+  ['compute_5fall_5frows_0',['COMPUTE_ALL_ROWS',['../matrix__operations__on__host_8cpp.html#a7cb4d81b72caf4892b4d6398d4ea7f32',1,'matrix_operations_on_host.cpp']]],
+  ['compute_5frow_1',['COMPUTE_ROW',['../matrix__operations__on__host_8cpp.html#a218e8f0d129c4fb97f6a8716bf46265b',1,'matrix_operations_on_host.cpp']]]
 ];

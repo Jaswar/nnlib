@@ -68,31 +68,223 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">matrix_operations_on_host.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Source file defining matrix operations that happen on host.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="matrix__operations__on__host_8h_source.html">matrix_operations_on_host.h</a>&quot;</code><br />
+<code>#include &lt;immintrin.h&gt;</code><br />
 </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a7e7a829e985f3a7792da82e7e61b31f6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a7e7a829e985f3a7792da82e7e61b31f6">SET_ROW_TO_ZERO</a>(index)&#160;&#160;&#160;__m256 v##index = _mm256_setzero_ps()</td></tr>
+<tr class="memdesc:a7e7a829e985f3a7792da82e7e61b31f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a row of an 8x8 tile to 0.  <a href="matrix__operations__on__host_8cpp.html#a7e7a829e985f3a7792da82e7e61b31f6">More...</a><br /></td></tr>
+<tr class="separator:a7e7a829e985f3a7792da82e7e61b31f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd6cbdc653293f4ecd9fe752df67ed58"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#abd6cbdc653293f4ecd9fe752df67ed58">SET_ALL_ROWS_TO_ZERO</a>()</td></tr>
+<tr class="memdesc:abd6cbdc653293f4ecd9fe752df67ed58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set all rows of an 8x8 tile to 0.  <a href="matrix__operations__on__host_8cpp.html#abd6cbdc653293f4ecd9fe752df67ed58">More...</a><br /></td></tr>
+<tr class="separator:abd6cbdc653293f4ecd9fe752df67ed58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a218e8f0d129c4fb97f6a8716bf46265b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a218e8f0d129c4fb97f6a8716bf46265b">COMPUTE_ROW</a>(index)</td></tr>
+<tr class="memdesc:a218e8f0d129c4fb97f6a8716bf46265b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute a single row of an 8x8 tile.  <a href="matrix__operations__on__host_8cpp.html#a218e8f0d129c4fb97f6a8716bf46265b">More...</a><br /></td></tr>
+<tr class="separator:a218e8f0d129c4fb97f6a8716bf46265b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cb4d81b72caf4892b4d6398d4ea7f32"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a7cb4d81b72caf4892b4d6398d4ea7f32">COMPUTE_ALL_ROWS</a>()</td></tr>
+<tr class="memdesc:a7cb4d81b72caf4892b4d6398d4ea7f32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute all rows of an 8x8 tile.  <a href="matrix__operations__on__host_8cpp.html#a7cb4d81b72caf4892b4d6398d4ea7f32">More...</a><br /></td></tr>
+<tr class="separator:a7cb4d81b72caf4892b4d6398d4ea7f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a443e041a0062677409d04d435cd24e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a1a443e041a0062677409d04d435cd24e">STORE_ROW</a>(index)&#160;&#160;&#160;_mm256_storeu_ps(result.data + (row * 8 + (index)) * result.m + column * 8, v##index)</td></tr>
+<tr class="memdesc:a1a443e041a0062677409d04d435cd24e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store a row of 8x8 tile to the result matrix.  <a href="matrix__operations__on__host_8cpp.html#a1a443e041a0062677409d04d435cd24e">More...</a><br /></td></tr>
+<tr class="separator:a1a443e041a0062677409d04d435cd24e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12de676c68a4ca292831dd526d6268b0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a12de676c68a4ca292831dd526d6268b0">STORE_ALL_ROWS</a>()</td></tr>
+<tr class="memdesc:a12de676c68a4ca292831dd526d6268b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store all rows of an 8x8 tile to the result matrix.  <a href="matrix__operations__on__host_8cpp.html#a12de676c68a4ca292831dd526d6268b0">More...</a><br /></td></tr>
+<tr class="separator:a12de676c68a4ca292831dd526d6268b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a0499e449099a83710839d15a09bd66e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a0499e449099a83710839d15a09bd66e2">addMatricesOnHost</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m1, const <a class="el" href="class_matrix.html">Matrix</a> &amp;m2, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:a0499e449099a83710839d15a09bd66e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two matrices.  <a href="matrix__operations__on__host_8cpp.html#a0499e449099a83710839d15a09bd66e2">More...</a><br /></td></tr>
 <tr class="separator:a0499e449099a83710839d15a09bd66e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a196110b20e131908854bcdcb3343c8a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a196110b20e131908854bcdcb3343c8a3">addBroadcastOnHost</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m, const <a class="el" href="class_vector.html">Vector</a> &amp;v, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:a196110b20e131908854bcdcb3343c8a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Broadcast a vector over the rows of the matrix and add it to the matrix.  <a href="matrix__operations__on__host_8cpp.html#a196110b20e131908854bcdcb3343c8a3">More...</a><br /></td></tr>
 <tr class="separator:a196110b20e131908854bcdcb3343c8a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d8efba6950e632efedf265eb8d24712"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a3d8efba6950e632efedf265eb8d24712">subtractMatricesOnHost</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m1, const <a class="el" href="class_matrix.html">Matrix</a> &amp;m2, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:a3d8efba6950e632efedf265eb8d24712"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract one matrix from another.  <a href="matrix__operations__on__host_8cpp.html#a3d8efba6950e632efedf265eb8d24712">More...</a><br /></td></tr>
 <tr class="separator:a3d8efba6950e632efedf265eb8d24712"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6152089f3032315e955496706ddaa8d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a6152089f3032315e955496706ddaa8d4">multiplyMatrixVectorOnHost</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m, const <a class="el" href="class_vector.html">Vector</a> &amp;v, <a class="el" href="class_vector.html">Vector</a> &amp;result)</td></tr>
-<tr class="separator:a6152089f3032315e955496706ddaa8d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb87af01a69b7a6b8d069d987630e2d1"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#aeb87af01a69b7a6b8d069d987630e2d1">horizontalAdd</a> (__m256 value)</td></tr>
+<tr class="memdesc:aeb87af01a69b7a6b8d069d987630e2d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a horizontal add of a <code>__m256</code> value.  <a href="matrix__operations__on__host_8cpp.html#aeb87af01a69b7a6b8d069d987630e2d1">More...</a><br /></td></tr>
+<tr class="separator:aeb87af01a69b7a6b8d069d987630e2d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac38f91d48b4b26771570b116c04884b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#aac38f91d48b4b26771570b116c04884b">multiplyMatrixVectorOnHost</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;matrix, const <a class="el" href="class_vector.html">Vector</a> &amp;vector, <a class="el" href="class_vector.html">Vector</a> &amp;result)</td></tr>
+<tr class="memdesc:aac38f91d48b4b26771570b116c04884b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply a matrix with a vector.  <a href="matrix__operations__on__host_8cpp.html#aac38f91d48b4b26771570b116c04884b">More...</a><br /></td></tr>
+<tr class="separator:aac38f91d48b4b26771570b116c04884b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e29a58a55f7a0648f3b21bd5303f7d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a3e29a58a55f7a0648f3b21bd5303f7d8">handleAVX2MatMulEdgeCases</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m1, const <a class="el" href="class_matrix.html">Matrix</a> &amp;m2, <a class="el" href="class_matrix.html">Matrix</a> &amp;result, size_t rowStart, size_t columnStart)</td></tr>
+<tr class="memdesc:a3e29a58a55f7a0648f3b21bd5303f7d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle edge cases when performing matrix-matrix multiplication with AVX2 instructions.  <a href="matrix__operations__on__host_8cpp.html#a3e29a58a55f7a0648f3b21bd5303f7d8">More...</a><br /></td></tr>
+<tr class="separator:a3e29a58a55f7a0648f3b21bd5303f7d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27d5879167392009f8e0852c23f1ed24"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a27d5879167392009f8e0852c23f1ed24">multiplyMatricesOnHost</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m1, const <a class="el" href="class_matrix.html">Matrix</a> &amp;m2, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:a27d5879167392009f8e0852c23f1ed24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply two matrices together.  <a href="matrix__operations__on__host_8cpp.html#a27d5879167392009f8e0852c23f1ed24">More...</a><br /></td></tr>
 <tr class="separator:a27d5879167392009f8e0852c23f1ed24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75873067a17a24489ca26eb177ac591b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a75873067a17a24489ca26eb177ac591b">multiplyMatrixOnHost</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m, <a class="el" href="allocation_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> constant, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:a75873067a17a24489ca26eb177ac591b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply a matrix with a constant number.  <a href="matrix__operations__on__host_8cpp.html#a75873067a17a24489ca26eb177ac591b">More...</a><br /></td></tr>
 <tr class="separator:a75873067a17a24489ca26eb177ac591b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc9759951d744b3e333fadabea68cb94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#abc9759951d744b3e333fadabea68cb94">hadamardMatricesOnHost</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m1, const <a class="el" href="class_matrix.html">Matrix</a> &amp;m2, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:abc9759951d744b3e333fadabea68cb94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform hadamard product on matrices.  <a href="matrix__operations__on__host_8cpp.html#abc9759951d744b3e333fadabea68cb94">More...</a><br /></td></tr>
 <tr class="separator:abc9759951d744b3e333fadabea68cb94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a120bed7cac332078911d4f7d57c6ff07"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__operations__on__host_8cpp.html#a120bed7cac332078911d4f7d57c6ff07">transposeMatrixOnHost</a> (const <a class="el" href="class_matrix.html">Matrix</a> &amp;m, <a class="el" href="class_matrix.html">Matrix</a> &amp;result)</td></tr>
+<tr class="memdesc:a120bed7cac332078911d4f7d57c6ff07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transpose a matrix.  <a href="matrix__operations__on__host_8cpp.html#a120bed7cac332078911d4f7d57c6ff07">More...</a><br /></td></tr>
 <tr class="separator:a120bed7cac332078911d4f7d57c6ff07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Source file defining matrix operations that happen on host. </p>
+<dl class="section author"><dt>Author</dt><dd>Jan Warchocki </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>29 May 2022 </dd></dl>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a7cb4d81b72caf4892b4d6398d4ea7f32" name="a7cb4d81b72caf4892b4d6398d4ea7f32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cb4d81b72caf4892b4d6398d4ea7f32">&#9670;&nbsp;</a></span>COMPUTE_ALL_ROWS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define COMPUTE_ALL_ROWS</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="matrix__operations__on__host_8cpp.html#a218e8f0d129c4fb97f6a8716bf46265b">COMPUTE_ROW</a>(0); \</div>
+<div class="line">    COMPUTE_ROW(1); \</div>
+<div class="line">    COMPUTE_ROW(2); \</div>
+<div class="line">    COMPUTE_ROW(3); \</div>
+<div class="line">    COMPUTE_ROW(4); \</div>
+<div class="line">    COMPUTE_ROW(5); \</div>
+<div class="line">    COMPUTE_ROW(6); \</div>
+<div class="line">    COMPUTE_ROW(7)</div>
+<div class="ttc" id="amatrix__operations__on__host_8cpp_html_a218e8f0d129c4fb97f6a8716bf46265b"><div class="ttname"><a href="matrix__operations__on__host_8cpp.html#a218e8f0d129c4fb97f6a8716bf46265b">COMPUTE_ROW</a></div><div class="ttdeci">#define COMPUTE_ROW(index)</div><div class="ttdoc">Compute a single row of an 8x8 tile.</div><div class="ttdef"><b>Definition:</b> matrix_operations_on_host.cpp:191</div></div>
+</div><!-- fragment -->
+<p>Compute all rows of an 8x8 tile. </p>
+
+</div>
+</div>
+<a id="a218e8f0d129c4fb97f6a8716bf46265b" name="a218e8f0d129c4fb97f6a8716bf46265b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a218e8f0d129c4fb97f6a8716bf46265b">&#9670;&nbsp;</a></span>COMPUTE_ROW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define COMPUTE_ROW</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">index</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    m1ColumnValue = _mm256_broadcast_ss(m1.data + (row * 8 + (index)) * m1.m + k); \</div>
+<div class="line">    mulResult = _mm256_mul_ps(m2Row, m1ColumnValue); \</div>
+<div class="line">    v##index = _mm256_add_ps(mulResult, v##index)</div>
+</div><!-- fragment -->
+<p>Compute a single row of an 8x8 tile. </p>
+
+</div>
+</div>
+<a id="abd6cbdc653293f4ecd9fe752df67ed58" name="abd6cbdc653293f4ecd9fe752df67ed58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd6cbdc653293f4ecd9fe752df67ed58">&#9670;&nbsp;</a></span>SET_ALL_ROWS_TO_ZERO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SET_ALL_ROWS_TO_ZERO</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="matrix__operations__on__host_8cpp.html#a7e7a829e985f3a7792da82e7e61b31f6">SET_ROW_TO_ZERO</a>(0); \</div>
+<div class="line">    SET_ROW_TO_ZERO(1); \</div>
+<div class="line">    SET_ROW_TO_ZERO(2); \</div>
+<div class="line">    SET_ROW_TO_ZERO(3); \</div>
+<div class="line">    SET_ROW_TO_ZERO(4); \</div>
+<div class="line">    SET_ROW_TO_ZERO(5); \</div>
+<div class="line">    SET_ROW_TO_ZERO(6); \</div>
+<div class="line">    SET_ROW_TO_ZERO(7)</div>
+<div class="ttc" id="amatrix__operations__on__host_8cpp_html_a7e7a829e985f3a7792da82e7e61b31f6"><div class="ttname"><a href="matrix__operations__on__host_8cpp.html#a7e7a829e985f3a7792da82e7e61b31f6">SET_ROW_TO_ZERO</a></div><div class="ttdeci">#define SET_ROW_TO_ZERO(index)</div><div class="ttdoc">Set a row of an 8x8 tile to 0.</div><div class="ttdef"><b>Definition:</b> matrix_operations_on_host.cpp:173</div></div>
+</div><!-- fragment -->
+<p>Set all rows of an 8x8 tile to 0. </p>
+
+</div>
+</div>
+<a id="a7e7a829e985f3a7792da82e7e61b31f6" name="a7e7a829e985f3a7792da82e7e61b31f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e7a829e985f3a7792da82e7e61b31f6">&#9670;&nbsp;</a></span>SET_ROW_TO_ZERO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SET_ROW_TO_ZERO</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">index</td><td>)</td>
+          <td>&#160;&#160;&#160;__m256 v##index = _mm256_setzero_ps()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set a row of an 8x8 tile to 0. </p>
+
+</div>
+</div>
+<a id="a12de676c68a4ca292831dd526d6268b0" name="a12de676c68a4ca292831dd526d6268b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12de676c68a4ca292831dd526d6268b0">&#9670;&nbsp;</a></span>STORE_ALL_ROWS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STORE_ALL_ROWS</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="matrix__operations__on__host_8cpp.html#a1a443e041a0062677409d04d435cd24e">STORE_ROW</a>(0); \</div>
+<div class="line">    STORE_ROW(1); \</div>
+<div class="line">    STORE_ROW(2); \</div>
+<div class="line">    STORE_ROW(3); \</div>
+<div class="line">    STORE_ROW(4); \</div>
+<div class="line">    STORE_ROW(5); \</div>
+<div class="line">    STORE_ROW(6); \</div>
+<div class="line">    STORE_ROW(7)</div>
+<div class="ttc" id="amatrix__operations__on__host_8cpp_html_a1a443e041a0062677409d04d435cd24e"><div class="ttname"><a href="matrix__operations__on__host_8cpp.html#a1a443e041a0062677409d04d435cd24e">STORE_ROW</a></div><div class="ttdeci">#define STORE_ROW(index)</div><div class="ttdoc">Store a row of 8x8 tile to the result matrix.</div><div class="ttdef"><b>Definition:</b> matrix_operations_on_host.cpp:212</div></div>
+</div><!-- fragment -->
+<p>Store all rows of an 8x8 tile to the result matrix. </p>
+
+</div>
+</div>
+<a id="a1a443e041a0062677409d04d435cd24e" name="a1a443e041a0062677409d04d435cd24e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a443e041a0062677409d04d435cd24e">&#9670;&nbsp;</a></span>STORE_ROW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STORE_ROW</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">index</td><td>)</td>
+          <td>&#160;&#160;&#160;_mm256_storeu_ps(result.data + (row * 8 + (index)) * result.m + column * 8, v##index)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Store a row of 8x8 tile to the result matrix. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a196110b20e131908854bcdcb3343c8a3" name="a196110b20e131908854bcdcb3343c8a3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a196110b20e131908854bcdcb3343c8a3">&#9670;&nbsp;</a></span>addBroadcastOnHost()</h2>
@@ -125,6 +317,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Broadcast a vector over the rows of the matrix and add it to the matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>The matrix. </td></tr>
+    <tr><td class="paramname">v</td><td>The vector to broadcast. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the broadcast operation should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -160,6 +362,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Add two matrices. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The first matrix. </td></tr>
+    <tr><td class="paramname">m2</td><td>The second matrix. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the addition should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="abc9759951d744b3e333fadabea68cb94" name="abc9759951d744b3e333fadabea68cb94"></a>
@@ -193,6 +405,104 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Perform hadamard product on matrices. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The first matrix. </td></tr>
+    <tr><td class="paramname">m2</td><td>The second matrix. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the element-wise multiplication should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3e29a58a55f7a0648f3b21bd5303f7d8" name="a3e29a58a55f7a0648f3b21bd5303f7d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e29a58a55f7a0648f3b21bd5303f7d8">&#9670;&nbsp;</a></span>handleAVX2MatMulEdgeCases()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void handleAVX2MatMulEdgeCases </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>m1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>m2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>rowStart</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>columnStart</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Handle edge cases when performing matrix-matrix multiplication with AVX2 instructions. </p>
+<p >The AVX2 matrix multiplication algorithm works by computing 8x8 tiles at a time. If the size of the result matrix is not divisible by 8, there are leftover elements that should be computed. These edge case elements are computed using this method.</p>
+<p >To make sure only the edge case elements are computed, <code>rowStart</code> and <code>columnStart</code> should be specified. These parameters specify the range where the edge case elements can be found. Computation will then only happen in the range: <code>[rowStart, result.n] x [columnStart, result.m]</code></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The first operand matrix of the multiplication. </td></tr>
+    <tr><td class="paramname">m2</td><td>The second operand matrix of the multiplication. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the multiplication should be stored. </td></tr>
+    <tr><td class="paramname">rowStart</td><td>Specify which rows should be computed. </td></tr>
+    <tr><td class="paramname">columnStart</td><td>Specify which columns should be computed. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aeb87af01a69b7a6b8d069d987630e2d1" name="aeb87af01a69b7a6b8d069d987630e2d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb87af01a69b7a6b8d069d987630e2d1">&#9670;&nbsp;</a></span>horizontalAdd()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float horizontalAdd </td>
+          <td>(</td>
+          <td class="paramtype">__m256&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Perform a horizontal add of a <code>__m256</code> value. </p>
+<p >This adds all 8 floats in such a value together.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>The <code>__m256</code> variable whose floats should be summed up. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A float value corresponding to the sum. </dd></dl>
 
 </div>
 </div>
@@ -228,6 +538,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Multiply two matrices together. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The first matrix. </td></tr>
+    <tr><td class="paramname">m2</td><td>The second matrix. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the multiplication should be written to. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a75873067a17a24489ca26eb177ac591b" name="a75873067a17a24489ca26eb177ac591b"></a>
@@ -262,10 +582,20 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Multiply a matrix with a constant number. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>The matrix to multiply. </td></tr>
+    <tr><td class="paramname">constant</td><td>The constant to multiply <code>m1</code> with. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the multiplication should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
-<a id="a6152089f3032315e955496706ddaa8d4" name="a6152089f3032315e955496706ddaa8d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6152089f3032315e955496706ddaa8d4">&#9670;&nbsp;</a></span>multiplyMatrixVectorOnHost()</h2>
+<a id="aac38f91d48b4b26771570b116c04884b" name="aac38f91d48b4b26771570b116c04884b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac38f91d48b4b26771570b116c04884b">&#9670;&nbsp;</a></span>multiplyMatrixVectorOnHost()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -274,13 +604,13 @@ Functions</h2></td></tr>
           <td class="memname">void multiplyMatrixVectorOnHost </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="class_matrix.html">Matrix</a> &amp;&#160;</td>
-          <td class="paramname"><em>m</em>, </td>
+          <td class="paramname"><em>matrix</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="class_vector.html">Vector</a> &amp;&#160;</td>
-          <td class="paramname"><em>v</em>, </td>
+          <td class="paramname"><em>vector</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -295,6 +625,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Multiply a matrix with a vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>The matrix to multiply. </td></tr>
+    <tr><td class="paramname">vector</td><td>The vector to multiply. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the multiplication should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -330,6 +670,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Subtract one matrix from another. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>The matrix to subtract from. </td></tr>
+    <tr><td class="paramname">m2</td><td>The matrix that should be subtracted. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of the subtraction should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a120bed7cac332078911d4f7d57c6ff07" name="a120bed7cac332078911d4f7d57c6ff07"></a>
@@ -357,6 +707,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Transpose a matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>The matrix to transpose. </td></tr>
+    <tr><td class="paramname">result</td><td>Where the result of transposing the matrix should be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

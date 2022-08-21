@@ -1,6 +1,10 @@
-//
-// Created by Jan Warchocki on 03/03/2022.
-//
+/**
+ * @file matrix.cpp
+ * @brief Source file defining the Matrix class and operations on matrices.
+ * @author Jan Warchocki
+ * @date 03 March 2022
+ */
+
 #include "matrix.h"
 #include "allocation.h"
 #include "exceptions/different_data_location_exception.h"
