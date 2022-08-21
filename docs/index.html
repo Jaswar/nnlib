@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>nnlib: Main Page</title>
+<title>nnlib: Overview</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,10 +62,101 @@ $(function() {
 </iframe>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">nnlib Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Overview </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p ><a class="anchor" id="md_README"></a> <em>nnlib</em> is a GPU-accelerated, static, C/C++ neural network library. It was designed to work in one of the following two modes:</p><ul>
+<li>CPU-only: All operations take place on CPU and all data is stored in the main memory. Single Instruction Multiple Data (SIMD) instruction sets, AVX and AVX2, are used to increase performance.</li>
+<li>GPU-accelerated: Most of the operations are performed on GPU and most of the data is stored on GPU' memory. The library then uses the GPU to increase performance in parallelizable tasks such as matrix multiplication. An Nvidia, CUDA-capable GPU is required to run the library in this mode.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md1"></a>
+Supported functionalities</h2>
+<ul>
+<li>Layers:<ul>
+<li>Fully connected</li>
+</ul>
+</li>
+<li><a class="el" href="class_activation.html" title="Abstract class representing an activation function.">Activation</a> functions:<ul>
+<li>Linear</li>
+<li>ReLU</li>
+<li>Sigmoid</li>
+</ul>
+</li>
+<li>Loss functions:<ul>
+<li>Mean Squared Error</li>
+</ul>
+</li>
+<li>Optimizers:<ul>
+<li>Stochastic Gradient Descent</li>
+</ul>
+</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Setup</h1>
+<p >The library is currently supported on both Linux and Windows.</p>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Linux</h2>
+<ol type="1">
+<li>Install a C++ compiler. Both <code>g++</code> and <code>clang++</code> have been tested. <div class="fragment"><div class="line"># For g++</div>
+<div class="line">sudo apt install g++</div>
+<div class="line"># For clang++</div>
+<div class="line">sudo apt install clang  </div>
+</div><!-- fragment --></li>
+<li>Install <a href="https://cmake.org/">CMake</a> version at least 3.16. Can be downloaded from the official site: <a href="https://cmake.org/download/">https://cmake.org/download/</a>.</li>
+<li>If you do not wish to use GPU acceleration, go to step 4. Otherwise, continue with the following:<ol type="a">
+<li>Make sure that you have a <a href="https://en.wikipedia.org/wiki/CUDA">CUDA-Capable Nvidia GPU</a>. Only those GPUs are supported by the library.</li>
+<li>Install the NVIDIA CUDA Toolkit using the <a href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html">installation guide</a>.</li>
+<li>Verify that CUDA was installed by running <code>nvcc -V</code> in the terminal.</li>
+</ol>
+</li>
+<li>Clone the repository using the following command: <div class="fragment"><div class="line">git clone https://github.com/Jaswar/nnlib.git</div>
+</div><!-- fragment --></li>
+<li>Build and install the library. Within the cloned git folder do the following: <div class="fragment"><div class="line">cd scripts</div>
+<div class="line">sudo chmod +x build.sh</div>
+<div class="line">./build.sh </div>
+</div><!-- fragment --> This will install the library in the <code>./install</code> directory in the main directory of the cloned repository (so <b>not</b> inside <code>scripts</code>).</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Windows</h2>
+<p >The following is the recommended way to set up the library on Windows. The Visual Studio setup is required for the installation of CUDA and running the library in GPU-accelerated mode. Visual Studio is not however required to run the library in CPU-only mode. For that, a C++ compiler such as Clang/GCC will be sufficient.</p>
+<ol type="1">
+<li>Download and install Visual Studio 2017 or higher.</li>
+<li>Enable <em>Desktop development with C++</em> in the Visual Studio Installer.</li>
+<li>If you do not wish to use GPU-acceleration, go to step 4. Otherwise continue with the steps below:<ol type="a">
+<li>Make sure that you have a <a href="https://en.wikipedia.org/wiki/CUDA">CUDA-Capable Nvidia GPU</a>. Only those GPUs are supported by the library.</li>
+<li>Install the NVIDIA CUDA Toolkit using the <a href="https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html">installation guide</a>.</li>
+<li>Verify that CUDA was installed by running <code>nvcc -V</code> in the terminal.</li>
+</ol>
+</li>
+<li>Clone the repository using the following command: <div class="fragment"><div class="line">git clone https://github.com/Jaswar/nnlib.git</div>
+</div><!-- fragment --></li>
+<li>It is recommended to build the library and the examples using the provided scripts in the <code>scripts</code> directory. <a href="https://gitforwindows.org/">Git Bash</a> can be used for that purpose. If you do not have Git Bash installed, an alternative could be a tool such as <a href="https://www.cygwin.com/">Cygwin</a> or <a href="https://www.mingw-w64.org/">MinGW</a>.</li>
+</ol>
+<p >The library can then be installed using the following commands (inside the cloned repository): </p><div class="fragment"><div class="line">cd scripts</div>
+<div class="line">./build.sh</div>
+</div><!-- fragment --><p> This will install the library in the <code>install</code> folder in the main directory.</p>
+<h1><a class="anchor" id="autotoc_md5"></a>
+Running an example</h1>
+<ol type="1">
+<li>Install the library as described in the Setup.</li>
+<li>Build an example. Here we will build the MNIST example (assuming we start in the main directory): <div class="fragment"><div class="line">cd scripts</div>
+<div class="line"> </div>
+<div class="line"># If you are on Linux give execute permissions to the file</div>
+<div class="line">sudo chmod +x build_example.sh</div>
+<div class="line"> </div>
+<div class="line">./build_example.sh -c Release -p &lt;path_to_nnlib_install&gt; mnist</div>
+</div><!-- fragment --> Here, <code>&lt;path_to_nnlib_install&gt;</code> should be replaced with the <b>full</b> path to the <code>install</code> folder that was created in the library installation step.</li>
+</ol>
+<p >Running these commands will build the mnist example in <code>./examples/mnist/build</code>.</p><ol type="1">
+<li>Run the example. It expects the <b>full</b> path to a <code>MNIST_train.txt</code> file, which can be downloaded from <a href="https://github.com/halimb/MNIST-txt">here</a>, as the first and only argument. Run the example with the following command: <div class="fragment"><div class="line">cd examples/mnist/build</div>
+<div class="line">./mnist_nnlib &lt;path_to_MNIST_train.txt&gt;</div>
+</div><!-- fragment --></li>
+</ol>
+<h1><a class="anchor" id="autotoc_md6"></a>
+Documentation</h1>
+<p >The whole project is documented on <a href="https://jaswar.github.io/nnlib">https://jaswar.github.io/nnlib</a>. </p>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
