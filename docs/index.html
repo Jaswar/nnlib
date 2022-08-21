@@ -146,10 +146,10 @@ Running an example</h1>
 <div class="line">sudo chmod +x build_example.sh</div>
 <div class="line"> </div>
 <div class="line">./build_example.sh -c Release -p &lt;path_to_nnlib_install&gt; mnist</div>
-</div><!-- fragment --> Here, <code>&lt;path_to_nnlib_install&gt;</code> should be replaced with the <b>full</b> path to the <code>install</code> folder that was created in the library installation step.</li>
+</div><!-- fragment --> Here, <code>&lt;path_to_nnlib_install&gt;</code> should be replaced with the <b>absolute</b> path to the <code>install</code> folder that was created in the library installation step.</li>
 </ol>
 <p >Running these commands will build the mnist example in <code>./examples/mnist/build</code>.</p><ol type="1">
-<li>Run the example. It expects the <b>full</b> path to a <code>MNIST_train.txt</code> file, which can be downloaded from <a href="https://github.com/halimb/MNIST-txt">here</a>, as the first and only argument. Run the example with the following command: <div class="fragment"><div class="line">cd examples/mnist/build</div>
+<li>Run the example. It expects the <b>absolute</b> path to a <code>MNIST_train.txt</code> file, which can be downloaded from <a href="https://github.com/halimb/MNIST-txt">here</a>, as the first and only argument. Run the example with the following command: <div class="fragment"><div class="line">cd examples/mnist/build</div>
 <div class="line">./mnist_nnlib &lt;path_to_MNIST_train.txt&gt;</div>
 </div><!-- fragment --></li>
 </ol>
