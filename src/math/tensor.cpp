@@ -5,6 +5,7 @@
  * @date 26 August 2022
  */
 
+#include <string>
 #include "tensor.h"
 #include "../gpu/allocation_gpu.cuh"
 
@@ -103,4 +104,23 @@ void Tensor::computeSize() {
     }
 }
 
+std::string tensorShapeToString(const Tensor& tensor) {
+    std::string shapeString = "[";
 
+    for (auto it = tensor.shape.begin(); it < tensor.shape.end(); it++) {
+        shapeString += std::to_string(*it);
+        if (it != tensor.shape.end() - 1) {
+            shapeString += ", ";
+        }
+    }
+
+    return shapeString + "]";
+}
+
+std::ostream& operator<<(std::ostream& stream, const Tensor& tensor) {
+    if (tensor.location == DEVICE) {
+        return stream << "Tensor located on device with shape: " + tensorShapeToString(tensor);
+    } else {
+        return stream << "Tensor located on host with shape: " + tensorShapeToString(tensor);
+    }
+}

@@ -30,7 +30,7 @@ public:
     template<typename... Args>
     explicit Tensor(Args... args) : shape({static_cast<size_t>(args)...}), location(HOST), size(0), device(nullptr) {
         computeSize();
-        host = allocate1DArray(size);
+        host = allocate1DArray(size, 0);
     }
 
     Tensor& operator=(const Tensor& other);
@@ -44,7 +44,7 @@ private:
     void computeSize();
 };
 
-
+std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
 
 
 #endif //NNLIB_TENSOR_H
