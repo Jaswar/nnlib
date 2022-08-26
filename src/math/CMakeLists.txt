@@ -1,5 +1,7 @@
 set(SOURCE_FILES convert.cpp
 
+        tensor.cpp
+
         matrix/matrix.cpp
         matrix/matrix_operations_on_host.cpp matrix/matrix_operations_on_host.h
         matrix/matrix_operations_on_device.cu matrix/matrix_operations_on_device.cuh
