@@ -8,11 +8,54 @@
 #include "tensor.h"
 #include "../gpu/allocation_gpu.cuh"
 
-void Tensor::computeSize() {
-    size = 1;
-    for (auto it = shape.begin(); it < shape.end(); it++) {
-        size *= *it;
+Tensor::Tensor() : shape(), size(0), location(HOST), device(nullptr) {
+    host = nullptr;
+}
+
+Tensor::Tensor(const Tensor& other) {
+    location = other.location;
+    // This copies the vector
+    shape = other.shape;
+    size = other.size;
+
+    if (size == 0) {
+        return;
     }
+
+    if (location == HOST) {
+        host = copy1DArray(size, other.host);
+    } else {
+        device = copy1DArrayDevice(size, other.device);
+    }
+}
+
+Tensor& Tensor::operator=(const Tensor& other) {
+    if (&other == this) {
+        return *this;
+    }
+
+    if (size > 0) {
+        if (location == HOST) {
+            free(host);
+        } else {
+            free1DArrayDevice(device);
+        }
+    }
+
+    location = other.location;
+    // This copies the vector
+    shape = other.shape;
+    size = other.size;
+
+    if (size > 0) {
+        if (location == HOST) {
+            host = copy1DArray(size, other.host);
+        } else {
+            device = copy1DArrayDevice(size, other.device);
+        }
+    }
+
+    return *this;
 }
 
 void Tensor::moveToDevice() {
@@ -20,7 +63,7 @@ void Tensor::moveToDevice() {
         return;
     }
 
-    float* deviceData = allocate1DArray(size);
+    float* deviceData = allocate1DArrayDevice(size);
     copy1DFromHostToDevice(host, deviceData, size);
 
     free(host);
@@ -40,4 +83,24 @@ void Tensor::moveToHost() {
     host = hostData;
     location = HOST;
 }
+
+Tensor::~Tensor() {
+    if (size == 0) {
+        return;
+    }
+
+    if (location == HOST) {
+        free(host);
+    } else {
+        free1DArrayDevice(device);
+    }
+}
+
+void Tensor::computeSize() {
+    size = 1;
+    for (auto it = shape.begin(); it < shape.end(); it++) {
+        size *= *it;
+    }
+}
+
 

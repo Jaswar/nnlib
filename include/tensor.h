@@ -23,18 +23,25 @@ public:
         float* device;
     };
 
+    Tensor();
+
+    Tensor(const Tensor& other);
+
     template<typename... Args>
     explicit Tensor(Args... args) : shape({static_cast<size_t>(args)...}), location(HOST), size(0), device(nullptr) {
         computeSize();
         host = allocate1DArray(size);
     }
 
+    Tensor& operator=(const Tensor& other);
+
     void moveToDevice();
     void moveToHost();
 
+    ~Tensor();
+
 private:
     void computeSize();
-
 };
 
 
