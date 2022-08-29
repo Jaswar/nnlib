@@ -46,5 +46,14 @@ private:
 
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
 
+void add(const Tensor& a, const Tensor& b, Tensor& destination);
+void subtract(const Tensor& a, const Tensor& b, Tensor& destination);
+void hadamard(const Tensor& a, const Tensor& b, Tensor& destination);
+
+void multiply(const Tensor& tensor, float constant, Tensor& destination);
+
+void multiply(const Tensor& a, const Tensor& b, Tensor& destination);
+
+void transpose(const Tensor& matrix, Tensor& destination);
 
 #endif //NNLIB_TENSOR_H

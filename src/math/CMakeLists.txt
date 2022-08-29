@@ -1,6 +1,8 @@
 set(SOURCE_FILES convert.cpp
 
         tensor.cpp
+        tensor_operations_on_host.h tensor_operations_on_host.cpp
+        tensor_operations_on_device.cuh tensor_operations_on_device.cu
 
         matrix/matrix.cpp
         matrix/matrix_operations_on_host.cpp matrix/matrix_operations_on_host.h

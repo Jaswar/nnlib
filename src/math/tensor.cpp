@@ -6,6 +6,8 @@
  */
 
 #include <string>
+#include <exceptions/size_mismatch_exception.h>
+#include <utils/location_verifiers.h>
 #include "tensor.h"
 #include "../gpu/allocation_gpu.cuh"
 
@@ -124,3 +126,19 @@ std::ostream& operator<<(std::ostream& stream, const Tensor& tensor) {
         return stream << "Tensor located on host with shape: " + tensorShapeToString(tensor);
     }
 }
+
+
+void add(const Tensor& a, const Tensor& b, Tensor& destination) {
+    if (a.shape != b.shape || a.shape != destination.shape || b.shape != destination.shape) {
+        throw SizeMismatchException();
+    }
+
+    std::initializer_list<DataLocation> locations = {a.location, b.location, destination.location};
+    if (allLocationsAreHost(locations)) {
+
+    } else {
+
+    }
+}
+
+
