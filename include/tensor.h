@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <vector>
 #include "vector.h"
+#include "../src/utils/session.h"
 
 class Tensor {
 public:
@@ -22,6 +23,8 @@ public:
         float* host;
         float* device;
     };
+
+    Session session;
 
     Tensor();
 
