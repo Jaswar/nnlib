@@ -68,8 +68,32 @@ void hadamardTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination
 #endif
 }
 
+void addBroadcastOnHost(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
+#if defined __AVX2__ || defined __AVX__
+    for (size_t row = 0; row < matrix.shape[0]; row++) {
+        for (size_t index = 0; index < matrix.shape[1] / 8; index++) {
+            __m256 vectorData = _mm256_loadu_ps(vector.host + index * 8);
+            __m256 matrixData = _mm256_loadu_ps(matrix.host + row * matrix.shape[1] + index * 8);
+            __m256 res = _mm256_add_ps(vectorData, matrixData);
+            _mm256_storeu_ps(destination.host + row * matrix.shape[1] + index * 8, res);
+        }
+
+        for (size_t index = (matrix.shape[1] / 8) * 8; index < matrix.shape[1]; index++) {
+            destination.host[row * destination.shape[1] + index] =
+                    matrix.host[row * matrix.shape[1] + index] + vector.host[index];
+        }
+    }
+#else
+    for (size_t i = 0; i < matrix.shape[0]; i++) {
+        for (size_t j = 0; j < matrix.shape[1]; j++) {
+            destination.host[i * destination.shape[1] + j] = matrix.host[i * matrix.shape[1] + j] + vector.host[j];
+        }
+    }
+#endif
+}
+
 void multiplyTensorOnHost(const Tensor& tensor, float constant, Tensor& destination) {
-#if defined __AVX2__f || defined __AVX__f
+#if defined __AVX2__ || defined __AVX__
     const __m256 constValue = _mm256_set1_ps(constant);
     for (size_t index = 0; index < tensor.size / 8; index++) {
         __m256 matrixValue = _mm256_loadu_ps(tensor.host + index * 8);
@@ -282,3 +306,4 @@ void transposeMatrixOnHost(const Tensor& matrix, Tensor& destination) {
         }
     }
 }
+

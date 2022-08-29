@@ -14,6 +14,8 @@ void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination);
 void subtractTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination);
 void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination);
 
+void addBroadcastOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination);
+
 void multiplyTensorOnDevice(const Tensor& tensor, float constant, Tensor& destination);
 
 void multiplyMatrixVectorOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination);

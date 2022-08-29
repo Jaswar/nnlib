@@ -14,6 +14,8 @@ void addTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
 void subtractTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
 void hadamardTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
 
+void addBroadcastOnHost(const Tensor& matrix, const Tensor& vector, Tensor& destination);
+
 void multiplyTensorOnHost(const Tensor& tensor, float constant, Tensor& destination);
 
 void multiplyMatrixVectorOnHost(const Tensor& matrix, const Tensor& vector, Tensor& destination);
