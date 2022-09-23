@@ -8,9 +8,8 @@
 #ifndef NNLIB_ACTIVATION_H
 #define NNLIB_ACTIVATION_H
 
-#include "matrix.h"
-#include "vector.h"
 #include "verify.cuh"
+#include "tensor.h"
 
 /**
  * @brief Abstract class representing an evaluator of an activation function.
@@ -32,10 +31,7 @@ class ActivationEvaluator {
      * @param result The input with the activation function applied to it.
      */
 public:
-    virtual void forward(const Vector& input, Vector& result) const = 0;
-
-    /** @copydoc forward */
-    virtual void forward(const Matrix& input, Matrix& result) const = 0;
+    virtual void forward(const Tensor& input, Tensor& result) const = 0;
 
     /**
      * @brief Method to compute the derivatives given the output.
@@ -43,10 +39,7 @@ public:
      * @param output The output from a layer of the neural network.
      * @param result Where the computed derivatives should be written to.
      */
-    virtual void computeDerivatives(const Vector& output, Vector& result) const = 0;
-
-    /** @copydoc computeDerivatives */
-    virtual void computeDerivatives(const Matrix& output, Matrix& result) const = 0;
+    virtual void computeDerivatives(const Tensor& output, Tensor& result) const = 0;
 
     /**
      * @brief The destructor.
@@ -95,10 +88,7 @@ public:
      * @throws SizeMismatchException If sizes of the parameters don't match.
      * @throws DifferentDataLocationException If not all parameters are located in the same place.
      */
-    void forward(const Vector& input, Vector& result) const;
-
-    /** @copydoc forward */
-    void forward(const Matrix& input, Matrix& result) const;
+    void forward(const Tensor& input, Tensor& result) const;
 
     /**
      * @brief Compute the derivatives given the output of a layer of a neural network.
@@ -109,10 +99,7 @@ public:
      * @param output The values which derivatives will be computed.
      * @param result Where the derivatives should be written to.
      */
-    void computeDerivatives(const Vector& output, Vector& result) const;
-
-    /** @copydoc computeDerivatives */
-    void computeDerivatives(const Matrix& output, Matrix& result) const;
+    void computeDerivatives(const Tensor& output, Tensor& result) const;
 
     /**
      * @brief Virtual destructor to make the class abstract.
@@ -140,16 +127,10 @@ class LinearOnHostEvaluator : public ActivationEvaluator {
 
     /** @copydoc ActivationEvaluator::forward */
 public:
-    void forward(const Vector& input, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::forward */
-    void forward(const Matrix& input, Matrix& result) const override;
+    void forward(const Tensor& input, Tensor& result) const override;
 
     /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Vector& output, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Matrix& output, Matrix& result) const override;
+    void computeDerivatives(const Tensor& output, Tensor& result) const override;
 
     /** @brief The destructor. It is set to the default destructor. */
     ~LinearOnHostEvaluator() override;
@@ -162,16 +143,10 @@ class LinearOnDeviceEvaluator : public ActivationEvaluator {
 
     /** @copydoc ActivationEvaluator::forward */
 public:
-    void forward(const Vector& input, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::forward */
-    void forward(const Matrix& input, Matrix& result) const override;
+    void forward(const Tensor& input, Tensor& result) const override;
 
     /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Vector& output, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Matrix& output, Matrix& result) const override;
+    void computeDerivatives(const Tensor& output, Tensor& result) const override;
 
     /** @brief The destructor. It is set to the default destructor. */
     ~LinearOnDeviceEvaluator() override;
@@ -198,16 +173,10 @@ class ReLUOnHostEvaluator : public ActivationEvaluator {
 
     /** @copydoc ActivationEvaluator::forward */
 public:
-    void forward(const Vector& input, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::forward */
-    void forward(const Matrix& input, Matrix& result) const override;
+    void forward(const Tensor& input, Tensor& result) const override;
 
     /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Vector& output, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Matrix& output, Matrix& result) const override;
+    void computeDerivatives(const Tensor& output, Tensor& result) const override;
 
     /** @brief The destructor. It is set to the default destructor. */
     ~ReLUOnHostEvaluator() override;
@@ -220,16 +189,10 @@ class ReLUOnDeviceEvaluator : public ActivationEvaluator {
 
     /** @copydoc ActivationEvaluator::forward */
 public:
-    void forward(const Vector& input, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::forward */
-    void forward(const Matrix& input, Matrix& result) const override;
+    void forward(const Tensor& input, Tensor& result) const override;
 
     /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Vector& output, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Matrix& output, Matrix& result) const override;
+    void computeDerivatives(const Tensor& output, Tensor& result) const override;
 
     /** @brief The destructor. It is set to the default destructor. */
     ~ReLUOnDeviceEvaluator() override;
@@ -256,16 +219,10 @@ class SigmoidOnHostEvaluator : public ActivationEvaluator {
 
     /** @copydoc ActivationEvaluator::forward */
 public:
-    void forward(const Vector& input, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::forward */
-    void forward(const Matrix& input, Matrix& result) const override;
+    void forward(const Tensor& input, Tensor& result) const override;
 
     /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Vector& output, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Matrix& output, Matrix& result) const override;
+    void computeDerivatives(const Tensor& output, Tensor& result) const override;
 
     /** @brief The destructor. It is set to the default destructor. */
     ~SigmoidOnHostEvaluator() override;
@@ -278,16 +235,10 @@ class SigmoidOnDeviceEvaluator : public ActivationEvaluator {
 
     /** @copydoc ActivationEvaluator::forward */
 public:
-    void forward(const Vector& input, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::forward */
-    void forward(const Matrix& input, Matrix& result) const override;
+    void forward(const Tensor& input, Tensor& result) const override;
 
     /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Vector& output, Vector& result) const override;
-
-    /** @copydoc ActivationEvaluator::computeDerivatives */
-    void computeDerivatives(const Matrix& output, Matrix& result) const override;
+    void computeDerivatives(const Tensor& output, Tensor& result) const override;
 
     /** @brief The destructor. It is set to the default destructor. */
     ~SigmoidOnDeviceEvaluator() override;
