@@ -20,23 +20,6 @@
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
 /**
- * @brief Kernel function for applying the activation function on a vector of data.
- *
- * @param vector The vector on which to apply the activation function.
- * @param result The vector where the result should be stored.
- * @param n The size of the vector.
- */
-__global__ void linearKernel(const DTYPE* vector, DTYPE* result, size_t n) {
-    auto index = blockIdx.x * blockDim.x + threadIdx.x;
-
-    if (index >= n) {
-        return;
-    }
-
-    result[index] = vector[index];
-}
-
-/**
  * @brief Kernel function for applying the activation function on a matrix of data.
  *
  * The function assumes the data samples are row aligned in the matrix.
@@ -46,32 +29,14 @@ __global__ void linearKernel(const DTYPE* vector, DTYPE* result, size_t n) {
  * @param n The number of rows of the matrix.
  * @param m The number of columns of the matrix.
  */
-__global__ void linearKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
-    auto row = blockIdx.x;
-    auto column = threadIdx.x;
-
-    if (row >= n || column >= m) {
-        return;
-    }
-
-    result[row * m + column] = matrix[row * m + column];
-}
-
-/**
- * @brief Kernel function for computing derivatives of a vector of data.
- *
- * @param vector The vector whose derivatives to compute.
- * @param result Where the derivatives should be stored.
- * @param n The size of the vector.
- */
-__global__ void linearDerivativeKernel(const DTYPE* vector, DTYPE* result, size_t n) {
+__global__ void linearKernel(const DTYPE* input, DTYPE* result, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
-    if (index >= n) {
+    if (index >= size) {
         return;
     }
 
-    result[index] = 1;
+    result[index] = input[index];
 }
 
 /**
@@ -84,52 +49,37 @@ __global__ void linearDerivativeKernel(const DTYPE* vector, DTYPE* result, size_
  * @param n The number of rows of the matrix.
  * @param m The number of columns of the matrix.
  */
-__global__ void linearDerivativeKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
-    auto row = blockIdx.x;
-    auto column = threadIdx.x;
+__global__ void linearDerivativeKernel(const DTYPE* output, DTYPE* result, size_t size) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
-    if (row >= n || column >= m) {
+    if (index >= size) {
         return;
     }
 
-    result[row * m + column] = 1;
+    result[index] = 1;
 }
 
 // NOLINTEND(readability-static-accessed-through-instance)
 
-void LinearOnDeviceEvaluator::forward(const Vector& input, Vector& result) const {
+void LinearOnDeviceEvaluator::forward(const Tensor& input, Tensor& result) const {
     if (!allLocationsAreDevice({input.location, result.location})) {
         throw DifferentDataLocationException();
     }
 
-    linearKernel<<<1, input.n>>>(input.data, result.data, input.n);
+    auto grid = input.size / input.session.threadsPerBlock + 1;
+    auto block = input.session.threadsPerBlock;
+    linearKernel<<<grid, block>>>(input.host, result.host, input.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void LinearOnDeviceEvaluator::forward(const Matrix& input, Matrix& result) const {
-    if (!allLocationsAreDevice({input.location, result.location})) {
-        throw DifferentDataLocationException();
-    }
-
-    linearKernel<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
-    GPU_CHECK_ERROR(cudaGetLastError());
-}
-
-void LinearOnDeviceEvaluator::computeDerivatives(const Vector& output, Vector& result) const {
+void LinearOnDeviceEvaluator::computeDerivatives(const Tensor& output, Tensor& result) const {
     if (!allLocationsAreDevice({output.location, result.location})) {
         throw DifferentDataLocationException();
     }
 
-    linearDerivativeKernel<<<1, output.n>>>(output.data, result.data, output.n);
-    GPU_CHECK_ERROR(cudaGetLastError());
-}
-
-void LinearOnDeviceEvaluator::computeDerivatives(const Matrix& output, Matrix& result) const {
-    if (!allLocationsAreDevice({output.location, result.location})) {
-        throw DifferentDataLocationException();
-    }
-
-    linearDerivativeKernel<<<output.n, output.m>>>(output.data, result.data, output.n, output.m);
+    auto grid = output.size / output.session.threadsPerBlock + 1;
+    auto block = output.session.threadsPerBlock;
+    linearDerivativeKernel<<<grid, block>>>(output.host, result.host, output.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
@@ -138,19 +88,11 @@ LinearOnDeviceEvaluator::~LinearOnDeviceEvaluator() = default;
 
 #else
 
-void LinearOnDeviceEvaluator::forward(const Vector& input, Vector& result) const {
+void LinearOnDeviceEvaluator::forward(const Tensor& input, Tensor& result) const {
     throw UnexpectedCUDACallException();
 }
 
-void LinearOnDeviceEvaluator::forward(const Matrix& input, Matrix& result) const {
-    throw UnexpectedCUDACallException();
-}
-
-void LinearOnDeviceEvaluator::computeDerivatives(const Vector& output, Vector& result) const {
-    throw UnexpectedCUDACallException();
-}
-
-void LinearOnDeviceEvaluator::computeDerivatives(const Matrix& output, Matrix& result) const {
+void LinearOnDeviceEvaluator::computeDerivatives(const Tensor& output, Tensor& result) const {
     throw UnexpectedCUDACallException();
 }
 
