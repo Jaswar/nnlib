@@ -15,47 +15,23 @@ DTYPE fSigmoid(DTYPE x) {
     return 1 / (1 + static_cast<DTYPE>(exp(-static_cast<double>(x))));
 }
 
-void SigmoidOnHostEvaluator::forward(const Vector& input, Vector& result) const {
+void SigmoidOnHostEvaluator::forward(const Tensor& input, Tensor& result) const {
     if (!allLocationsAreHost({input.location, result.location})) {
         throw DifferentDataLocationException();
     }
 
-    for (int i = 0; i < input.n; i++) {
-        result[i] = fSigmoid(input[i]);
+    for (size_t index = 0; index < input.size; index++) {
+        result.host[index] = fSigmoid(input.host[index]);
     }
 }
 
-void SigmoidOnHostEvaluator::forward(const Matrix& input, Matrix& result) const {
-    if (!allLocationsAreHost({input.location, result.location})) {
-        throw DifferentDataLocationException();
-    }
-
-    for (int row = 0; row < input.n; row++) {
-        for (int i = 0; i < input.m; i++) {
-            result(row, i) = fSigmoid(input(row, i));
-        }
-    }
-}
-
-void SigmoidOnHostEvaluator::computeDerivatives(const Vector& output, Vector& result) const {
+void SigmoidOnHostEvaluator::computeDerivatives(const Tensor& output, Tensor& result) const {
     if (!allLocationsAreHost({output.location, result.location})) {
         throw DifferentDataLocationException();
     }
 
-    for (int i = 0; i < output.n; i++) {
-        result[i] = fSigmoid(output[i]) * (1 - fSigmoid(output[i]));
-    }
-}
-
-void SigmoidOnHostEvaluator::computeDerivatives(const Matrix& output, Matrix& result) const {
-    if (!allLocationsAreHost({output.location, result.location})) {
-        throw DifferentDataLocationException();
-    }
-
-    for (int row = 0; row < output.n; row++) {
-        for (int i = 0; i < output.m; i++) {
-            result(row, i) = fSigmoid(output(row, i)) * (1 - fSigmoid(output(row, i)));
-        }
+    for (size_t index = 0; index < output.size; index++) {
+        result.host[index] = fSigmoid(output.host[index]) * (1 - fSigmoid(output.host[index]));
     }
 }
 
