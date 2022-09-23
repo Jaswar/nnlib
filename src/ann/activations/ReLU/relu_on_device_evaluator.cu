@@ -19,103 +19,57 @@
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
-/** @copydoc linear_on_device_evaluator.cu::linearKernel(const DTYPE *vector, DTYPE *result, size_t n) */
-__global__ void reluKernel(const DTYPE* vector, DTYPE* result, size_t n) {
-    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+/** @copydoc linear_on_device_evaluator.cu::linearKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m) */
+__global__ void reluKernel(const DTYPE* input, DTYPE* result, size_t size) {
+    auto index = blockDim.x * blockIdx.x + threadIdx.x;
 
-    if (index >= n) {
+    if (index >= size) {
         return;
     }
 
-    if (vector[index] <= 0) {
+    if (input[index] <= 0) {
         result[index] = 0;
     } else {
-        result[index] = vector[index];
+        result[index] = input[index];
     }
 }
 
-/** @copydoc linear_on_device_evaluator.cu::linearKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m) */
-__global__ void reluKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
-    auto row = blockIdx.x;
-    auto column = threadIdx.x;
-
-    if (row >= n || column >= m) {
-        return;
-    }
-
-    if (matrix[row * m + column] <= 0) {
-        result[row * m + column] = 0;
-    } else {
-        result[row * m + column] = matrix[row * m + column];
-    }
-}
-
-/** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const DTYPE *vector, DTYPE *result, size_t n) */
-__global__ void reluDerivativeKernel(const DTYPE* vector, DTYPE* result, size_t n) {
+/** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m) */
+__global__ void reluDerivativeKernel(const DTYPE* output, DTYPE* result, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
-    if (index >= n) {
+    if (index >= size) {
         return;
     }
 
-    if (vector[index] <= 0) {
+    if (output[index] <= 0) {
         result[index] = 0;
     } else {
         result[index] = 1;
     }
 }
 
-/** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m) */
-__global__ void reluDerivativeKernel(const DTYPE* matrix, DTYPE* result, size_t n, size_t m) {
-    auto row = blockIdx.x;
-    auto column = threadIdx.x;
-
-    if (row >= n || column >= m) {
-        return;
-    }
-
-    if (matrix[row * m + column] <= 0) {
-        result[row * m + column] = 0;
-    } else {
-        result[row * m + column] = 1;
-    }
-}
-
 // NOLINTEND(readability-static-accessed-through-instance)
 
-void ReLUOnDeviceEvaluator::forward(const Vector& input, Vector& result) const {
+void ReLUOnDeviceEvaluator::forward(const Tensor& input, Tensor& result) const {
     if (!allLocationsAreDevice({input.location, result.location})) {
         throw DifferentDataLocationException();
     }
 
-    reluKernel<<<1, input.n>>>(input.data, result.data, input.n);
+    auto grid = input.size / input.session.threadsPerBlock + 1;
+    auto block = input.session.threadsPerBlock;
+    reluKernel<<<grid, block>>>(input.device, result.device, input.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void ReLUOnDeviceEvaluator::forward(const Matrix& input, Matrix& result) const {
-    if (!allLocationsAreDevice({input.location, result.location})) {
-        throw DifferentDataLocationException();
-    }
-
-    reluKernel<<<input.n, input.m>>>(input.data, result.data, input.n, input.m);
-    GPU_CHECK_ERROR(cudaGetLastError());
-}
-
-void ReLUOnDeviceEvaluator::computeDerivatives(const Vector& output, Vector& result) const {
+void ReLUOnDeviceEvaluator::computeDerivatives(const Tensor& output, Tensor& result) const {
     if (!allLocationsAreDevice({output.location, result.location})) {
         throw DifferentDataLocationException();
     }
 
-    reluDerivativeKernel<<<1, output.n>>>(output.data, result.data, output.n);
-    GPU_CHECK_ERROR(cudaGetLastError());
-}
-
-void ReLUOnDeviceEvaluator::computeDerivatives(const Matrix& output, Matrix& result) const {
-    if (!allLocationsAreDevice({output.location, result.location})) {
-        throw DifferentDataLocationException();
-    }
-
-    reluDerivativeKernel<<<output.n, output.m>>>(output.data, result.data, output.n, output.m);
+    auto grid = output.size / output.session.threadsPerBlock + 1;
+    auto block = output.session.threadsPerBlock;
+    reluDerivativeKernel<<<grid, block>>>(output.device, result.device, output.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
@@ -123,19 +77,11 @@ ReLUOnDeviceEvaluator::~ReLUOnDeviceEvaluator() = default;
 
 #else
 
-void ReLUOnDeviceEvaluator::forward(const Vector& input, Vector& result) const {
+void ReLUOnDeviceEvaluator::forward(const Tensor& input, Tensor& result) const {
     throw UnexpectedCUDACallException();
 }
 
-void ReLUOnDeviceEvaluator::forward(const Matrix& input, Matrix& result) const {
-    throw UnexpectedCUDACallException();
-}
-
-void ReLUOnDeviceEvaluator::computeDerivatives(const Vector& output, Vector& result) const {
-    throw UnexpectedCUDACallException();
-}
-
-void ReLUOnDeviceEvaluator::computeDerivatives(const Matrix& output, Matrix& result) const {
+void ReLUOnDeviceEvaluator::computeDerivatives(const Tensor& output, Tensor& result) const {
     throw UnexpectedCUDACallException();
 }
 
