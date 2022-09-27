@@ -190,13 +190,16 @@ void multiplyMatrixVectorOnHost(const Tensor& matrix, const Tensor& vector, Tens
  * @param columnStart Specify which columns should be computed.
  */
 void naiveMatMul(const Tensor& m1, const Tensor& m2, Tensor& destination, size_t rowStart = 0, size_t columnStart = 0) {
-    for (size_t row = rowStart; row < m1.shape[0]; row++) {
-        for (size_t column = columnStart; column < m2.shape[1]; column++) {
+    size_t n = m1.shape[0];
+    size_t k = m1.shape[1];
+    size_t m = m2.shape[1];
+    for (size_t row = rowStart; row < n; row++) {
+        for (size_t column = columnStart; column < m; column++) {
             float acc = 0;
-            for (size_t k = 0; k < m2.shape[0]; k++) {
-                acc += m1.host[row * m1.shape[1] + k] * m2.host[k * m2.shape[1] + column];
+            for (size_t i = 0; i < k; i++) {
+                acc += m1.host[row * k + i] * m2.host[i * m + column];
             }
-            destination.host[row * destination.shape[1] + column] = acc;
+            destination.host[row * m + column] = acc;
         }
     }
 }
