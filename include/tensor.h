@@ -11,7 +11,7 @@
 #include <cstdlib>
 #include <vector>
 #include "vector.h"
-#include "../src/utils/session.h"
+#include "session.h"
 
 class Tensor {
 public:
