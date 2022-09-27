@@ -120,7 +120,7 @@ void Network::backward(const Tensor& predicted, const Tensor& target, DTYPE lear
     subtract(predicted, target, loss);
 
     Layer& last = layers.back();
-    last.backward(loss, Tensor(), predicted.shape[0], true);
+    last.backward(loss, Tensor(0, 0), predicted.shape[0], true);
 
     for (auto i = layers.rbegin() + 1; i != layers.rend(); ++i) {
         size_t index = i - layers.rbegin();

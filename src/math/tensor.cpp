@@ -81,6 +81,7 @@ void Tensor::move(DataLocation target) {
         free1DArrayDevice(device);
         host = newData;
     }
+    location = target;
 }
 
 Tensor::~Tensor() {
@@ -224,7 +225,7 @@ void multiplyMatrixVector(const Tensor& matrix, const Tensor& vector, Tensor& de
     if (allLocationsAreHost(locations)) {
         multiplyMatrixVectorOnHost(matrix, vector, destination);
     } else if (allLocationsAreDevice(locations)) {
-        multiplyMatrixMatrixOnDevice(matrix, vector, destination);
+        multiplyMatrixVectorOnDevice(matrix, vector, destination);
     } else {
         throw DifferentDataLocationException();
     }
