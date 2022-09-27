@@ -78,7 +78,7 @@ Layer::Layer(size_t inSize, size_t outSize, Activation* activation, DataLocation
       newDelta(DEFAULT_BATCH_SIZE, outSize),
       newDeltaT(outSize, DEFAULT_BATCH_SIZE),
       derivatives(DEFAULT_BATCH_SIZE, outSize),
-      previousWeightsT(0, 0),
+      previousWeightsT(),
       weightsGradients(inSize, outSize),
       biasesGradients(outSize),
       ones(DEFAULT_BATCH_SIZE) {

@@ -59,6 +59,8 @@ DTYPE** allocate2DArray(size_t n, size_t m);
  */
 DTYPE** allocate2DArray(size_t n, size_t m, DTYPE defaultValue);
 
+void copy1DFromHostToHost(float* oldLoc, float* newLoc, size_t n);
+
 /**
  * @brief Copy 1D array to a new location.
  *

@@ -34,7 +34,7 @@ class Network {
      * the reshaping will still only happen once. The data is pre-allocated to avoid unnecessary allocation
      * during runtime.
      */
-    Matrix loss;
+    Tensor loss;
 
     /**
      * @brief List of network layers.
@@ -88,7 +88,7 @@ public:
      * @param batch The batch to propagate.
      * @return The pointer to the output of the network. This returns Layer::aMatrix of the last layer.
      */
-    Matrix* forward(const Matrix& batch);
+    Tensor* forward(const Tensor& batch);
 
     /**
      * @brief Backward-propagate a batch through the network.
@@ -101,7 +101,7 @@ public:
      * @param target The targets for that batch of data.
      * @param learningRate The learning rate of the model.
      */
-    void backward(const Matrix& predicted, const Matrix& target, DTYPE learningRate = 0.01);
+    void backward(const Tensor& predicted, const Tensor& target, DTYPE learningRate = 0.01);
 
     /**
      * @brief Train the network.
@@ -119,7 +119,7 @@ public:
      * @param learningRate The learning rate of the algorithm.
      */
     //NOLINTNEXTLINE(readability-identifier-naming)
-    void train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE,
+    void train(Tensor& X, Tensor& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE,
                DTYPE learningRate = 0.01);
 
 private:
@@ -135,7 +135,7 @@ private:
      * @param yHost Matrix that stores the whole y array on host.
      * @param learningRate The learning rate used during training.
      */
-    void processEpoch(std::vector<Matrix>& batches, std::vector<Matrix>& targets, Matrix& yHost, DTYPE learningRate);
+    void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost, DTYPE learningRate);
 };
 
 

@@ -45,20 +45,20 @@
  * @param location The location where to save the batches (HOST or DEVICE).
  * @return The vector of batches.
  */
-std::vector<Matrix> splitIntoBatches(const Matrix& matrix, size_t batchSize, DataLocation location) {
-    std::vector<Matrix> result;
+std::vector<Tensor> splitIntoBatches(const Tensor& data, size_t batchSize) {
+    std::vector<Tensor> result;
 
-    int numBatches = std::ceil(static_cast<double>(matrix.n) / static_cast<double>(batchSize));
+    int numBatches = std::ceil(static_cast<double>(data.shape[0]) / static_cast<double>(batchSize));
     for (int i = 0; i < numBatches; i++) {
-        auto rowsInBatch = std::min(batchSize, matrix.n - batchSize * i);
+        auto rowsInBatch = std::min(batchSize, data.shape[0] - batchSize * i);
 
-        DTYPE* allocated;
-        if (location == DEVICE) {
-            allocated = copy1DArrayDevice(matrix.m * rowsInBatch, &matrix.data[i * matrix.m * batchSize]);
+        Tensor batch = Tensor(rowsInBatch, data.shape[1]);
+        if (data.location == DEVICE) {
+            copy1DFromDeviceToHost(data.device + i * data.shape[1] * batchSize, batch.host, data.shape[1] * rowsInBatch);
         } else {
-            allocated = copy1DArray(matrix.m * rowsInBatch, &matrix.data[i * matrix.m * batchSize]);
+            copy1DFromHostToHost(data.host + i * data.shape[1] * batchSize, batch.host, data.shape[1] * rowsInBatch);
         }
-        Matrix batch = Matrix(allocated, rowsInBatch, matrix.m, location);
+        batch.move(data.location);
 
         result.push_back(batch);
     }
@@ -75,7 +75,7 @@ Network::Network(size_t inputSize, bool useGPU, long long seed)
 
     if (useGPU && isCudaAvailable()) {
         location = DEVICE;
-        loss.moveToDevice();
+        loss.move(DEVICE);
     }
 }
 
@@ -94,10 +94,11 @@ void Network::add(size_t numNeurons, const std::string& activation) {
     layers.push_back(newLayer);
 
     previousSize = numNeurons;
-    loss = Matrix(DEFAULT_BATCH_SIZE, numNeurons, location);
+    loss = Tensor(DEFAULT_BATCH_SIZE, numNeurons);
+    loss.move(location);
 }
 
-Matrix* Network::forward(const Matrix& batch) {
+Tensor* Network::forward(const Tensor& batch) {
     Layer& first = layers.front();
     first.forward(batch);
 
@@ -109,26 +110,27 @@ Matrix* Network::forward(const Matrix& batch) {
     return &layers.back().aMatrix;
 }
 
-void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE learningRate) {
-    if (loss.n != predicted.n) {
-        loss = Matrix(predicted.n, loss.m, loss.location);
+void Network::backward(const Tensor& predicted, const Tensor& target, DTYPE learningRate) {
+    if (loss.shape != predicted.shape) {
+        loss = Tensor(predicted.shape[0], loss.shape[1]);
+        loss.move(location);
     }
 
     // Squared error loss used here
     subtract(predicted, target, loss);
 
     Layer& last = layers.back();
-    last.backward(loss, Matrix(0, 0, location), predicted.n, true);
+    last.backward(loss, Tensor(), predicted.shape[0], true);
 
     for (auto i = layers.rbegin() + 1; i != layers.rend(); ++i) {
         size_t index = i - layers.rbegin();
         Layer& prev = layers.at(layers.size() - index);
 
-        i->backward(prev.newDelta, prev.weights, predicted.n, false);
+        i->backward(prev.newDelta, prev.weights, predicted.shape[0], false);
     }
 
     for (auto& layer : layers) {
-        layer.applyGradients(predicted.n, learningRate);
+        layer.applyGradients(predicted.shape[0], learningRate);
     }
 }
 
@@ -141,9 +143,9 @@ void Network::backward(const Matrix& predicted, const Matrix& target, DTYPE lear
  * @param predictions The predictions of the neural network.
  * @return True if @p predictions was moved to host, false otherwise.
  */
-bool moveToHost(Matrix& predictions) {
+bool moveToHost(Tensor& predictions) {
     if (predictions.location == DEVICE) {
-        predictions.moveToHost();
+        predictions.move(HOST);
         return true;
     }
     return false;
@@ -165,25 +167,25 @@ bool moveToHost(Matrix& predictions) {
  * @param start The start of the current batch (the index).
  * @return The number of correct predictions of the neural network.
  */
-int computeCorrect(Matrix& expected, Matrix& predictions, size_t start) {
+int computeCorrect(Tensor& expected, Tensor& predictions, size_t start) {
     bool shouldRestoreToDevice = moveToHost(predictions);
 
     // Calculate the accuracy on the training set.
     int correct = 0;
-    for (int row = 0; row < predictions.n; row++) {
+    for (int row = 0; row < predictions.shape[0]; row++) {
         int maxInx = 0;
-        for (int i = 0; i < predictions.m; i++) {
-            if (predictions(row, i) > predictions(row, maxInx)) {
+        for (int i = 0; i < predictions.shape[1]; i++) {
+            if (predictions.host[row * predictions.shape[1] + i] > predictions.host[row * predictions.shape[1] + maxInx]) {
                 maxInx = i;
             }
         }
 
-        if (expected(start + row, maxInx) == 1) {
+        if (expected.host[(start + row) * expected.shape[1] + maxInx] == 1) {
             correct++;
         }
     }
     if (shouldRestoreToDevice) {
-        predictions.moveToDevice();
+        predictions.move(DEVICE);
     }
 
     return correct;
@@ -209,16 +211,19 @@ void displayEpochProgress(size_t processedRows, size_t totalRows, size_t millise
 }
 
 //NOLINTNEXTLINE(readability-identifier-naming)
-void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSize, DTYPE learningRate) {
-    if (X.n != y.n) {
+void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, DTYPE learningRate) {
+    if (X.shape[0] != y.shape[0]) {
         throw SizeMismatchException();
     }
 
-    std::vector<Matrix> batches = splitIntoBatches(X, batchSize, location);
-    std::vector<Matrix> targets = splitIntoBatches(y, batchSize, location);
+    X.move(location);
+    y.move(location);
 
-    Matrix yHost = y;
-    yHost.moveToHost();
+    std::vector<Tensor> batches = splitIntoBatches(X, batchSize);
+    std::vector<Tensor> targets = splitIntoBatches(y, batchSize);
+
+    Tensor yHost = y;
+    yHost.move(HOST);
 
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << "/" << epochs << std::endl;
@@ -229,31 +234,31 @@ void Network::train(const Matrix& X, const Matrix& y, int epochs, size_t batchSi
     }
 }
 
-void Network::processEpoch(std::vector<Matrix>& batches, std::vector<Matrix>& targets, Matrix& yHost,
+void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost,
                            DTYPE learningRate) {
     int correct = 0;
     int total = 0;
     auto epochStart = std::chrono::steady_clock::now();
 
     for (int row = 0; row < batches.size(); row++) {
-        const Matrix& batch = batches.at(row);
-        const Matrix& target = targets.at(row);
+        const Tensor& batch = batches.at(row);
+        const Tensor& target = targets.at(row);
 
-        Matrix* output = forward(batch);
+        Tensor* output = forward(batch);
 
-        correct += computeCorrect(yHost, *output, row * batch.n);
-        total += static_cast<int>(batch.n);
+        correct += computeCorrect(yHost, *output, row * batch.shape[0]);
+        total += static_cast<int>(batch.shape[0]);
 
         backward(*output, target, learningRate);
 
         auto batchEnd = std::chrono::steady_clock::now();
         size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(batchEnd - epochStart).count();
 
-        displayEpochProgress((row + 1) * batch.n, yHost.n, milliseconds, static_cast<double>(correct) / total);
+        displayEpochProgress((row + 1) * batch.shape[0], yHost.shape[0], milliseconds, static_cast<double>(correct) / total);
     }
 
     auto epochEnd = std::chrono::steady_clock::now();
     size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(epochEnd - epochStart).count();
 
-    displayEpochProgress(yHost.n, yHost.n, milliseconds, static_cast<double>(correct) / total);
+    displayEpochProgress(yHost.shape[0], yHost.shape[0], milliseconds, static_cast<double>(correct) / total);
 }
