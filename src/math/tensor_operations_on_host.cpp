@@ -172,7 +172,6 @@ void multiplyMatrixVectorOnHost(const Tensor& matrix, const Tensor& vector, Tens
 #endif
 }
 
-#if defined __AVX2__ || defined __AVX__
 /**
  * @brief Handle edge cases when performing matrix-matrix multiplication with AVX2 instructions.
  *
@@ -190,8 +189,7 @@ void multiplyMatrixVectorOnHost(const Tensor& matrix, const Tensor& vector, Tens
  * @param rowStart Specify which rows should be computed.
  * @param columnStart Specify which columns should be computed.
  */
-void handleAVX2MatMulEdgeCases(const Tensor& m1, const Tensor& m2, Tensor& destination, size_t rowStart,
-                               size_t columnStart) {
+void naiveMatMul(const Tensor& m1, const Tensor& m2, Tensor& destination, size_t rowStart = 0, size_t columnStart = 0) {
     for (size_t row = rowStart; row < m1.shape[0]; row++) {
         for (size_t column = columnStart; column < m2.shape[1]; column++) {
             float acc = 0;
@@ -203,6 +201,7 @@ void handleAVX2MatMulEdgeCases(const Tensor& m1, const Tensor& m2, Tensor& desti
     }
 }
 
+#if defined __AVX2__ || defined __AVX__
 /**
  * @brief Set a row of an 8x8 tile to 0.
  */
@@ -285,18 +284,10 @@ void multiplyMatrixMatrixOnHost(const Tensor& m1, const Tensor& m2, Tensor& dest
         }
     }
 
-    handleAVX2MatMulEdgeCases(m1, m2, destination, 0, (m / 8) * 8);
-    handleAVX2MatMulEdgeCases(m1, m2, destination, (n / 8) * 8, 0);
+    naiveMatMul(m1, m2, destination, 0, (m / 8) * 8);
+    naiveMatMul(m1, m2, destination, (n / 8) * 8, 0);
 #else
-    for (size_t row = 0; row < m1.shape[0]; row++) {
-        for (size_t column = 0; column < m2.shape[1]; column++) {
-            float accumulator = 0;
-            for (int i = 0; i < m1.shape[1]; i++) {
-                accumulator += m1.host[row * m1.shape[1] + i] * m2.host[i * m2.shape[1] + column];
-            }
-            destination.host[row * destination.shape[1] + column] = accumulator;
-        }
-    }
+    naiveMatMul(m1, m2, destination);
 #endif
 }
 
