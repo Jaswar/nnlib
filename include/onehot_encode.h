@@ -10,6 +10,7 @@
 
 #include "matrix.h"
 #include "vector.h"
+#include "tensor.h"
 
 /**
  * @brief One hot encode a vector of data.
@@ -17,6 +18,6 @@
  * @param vector The vector to encode.
  * @return %Matrix corresponding to the one hot encoded vector.
  */
-Matrix oneHotEncode(const Vector& vector);
+Tensor oneHotEncode(const Tensor& vector);
 
 #endif //NNLIB_ONEHOT_ENCODE_H

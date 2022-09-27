@@ -9,6 +9,7 @@
 #define NNLIB_READ_H
 
 #include "matrix.h"
+#include "tensor.h"
 #include <string>
 #include <vector>
 
@@ -43,7 +44,7 @@ std::vector<std::string> readFile(const std::string& filepath);
  * @param numThreads The number of threads to use when splitting data.
  * @return %Matrix of data that was read from the csv file.
  */
-Matrix readCSV(const std::string& filepath, const std::string& delim = ",", int numThreads = 1);
+Tensor readCSV(const std::string& filepath, const std::string& delim = ",", int numThreads = 1);
 
 
 #endif //NNLIB_READ_H

@@ -72,7 +72,7 @@ std::vector<std::string> readFile(const std::string& filepath) {
  * @param id The id of the thread.
  * @param numThreads The total number of threads launched.
  */
-void threadCSVJob(const std::vector<std::string>& lines, const std::string& delim, Matrix& result, int id,
+void threadCSVJob(const std::vector<std::string>& lines, const std::string& delim, Tensor& result, int id,
                   int numThreads) {
     int size = static_cast<int>(lines.size());
     int numIterations = std::ceil(size / static_cast<double>(numThreads));
@@ -92,10 +92,10 @@ void threadCSVJob(const std::vector<std::string>& lines, const std::string& deli
         size_t start = 0, end;
         int j = 0;
         while ((end = line.find(delim, start)) != std::string::npos) {
-            result(index, j++) = static_cast<DTYPE>(std::stod(line.substr(start, end - start)));
+            result.host[index * result.shape[1] + j++] = static_cast<DTYPE>(std::stod(line.substr(start, end - start)));
             start = end + delim.length();
         }
-        result(index, j) = static_cast<DTYPE>(std::stod(line.substr(start)));
+        result.host[index * result.shape[1] + j] = static_cast<DTYPE>(std::stod(line.substr(start)));
     }
 
     if (id == 0) {
@@ -103,14 +103,14 @@ void threadCSVJob(const std::vector<std::string>& lines, const std::string& deli
     }
 }
 
-Matrix readCSV(const std::string& filepath, const std::string& delim, int numThreads) {
+Tensor readCSV(const std::string& filepath, const std::string& delim, int numThreads) {
     std::cout << "Reading CSV file " << filepath << std::endl;
 
     auto lines = readFile(filepath);
 
     auto n = lines.size();
     auto m = n > 0 ? split(lines.front(), delim).size() : 1;
-    Matrix result = Matrix(n, m);
+    Tensor result = Tensor(n, m);
 
     std::vector<std::thread> threads;
     for (int id = 0; id < numThreads; id++) {

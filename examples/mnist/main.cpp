@@ -35,29 +35,24 @@ int main(int argc, char** argv) {
 
     showCudaInfo();
 
-    Matrix dataset = readCSV(argv[1], ",", 4);
-    Matrix X = Matrix(dataset.n, dataset.m - 1, HOST);
-    Vector yv = Vector(dataset.n, HOST);
+    Tensor dataset = readCSV(argv[1], ",", 4);
+    Tensor X = Tensor(dataset.shape[0], dataset.shape[1] - 1);
+    Tensor yv = Tensor(dataset.shape[0]);
 
-    for (int i = 0; i < dataset.n; i++) {
-        yv[i] = dataset(i, 0);
-        for (int j = 1; j < dataset.m; j++) {
-            X(i, j - 1) = dataset(i, j) / 255;
+    for (int i = 0; i < dataset.shape[0]; i++) {
+        yv.host[i] = dataset.host[i * dataset.shape[1] + 0];
+        for (int j = 1; j < dataset.shape[1]; j++) {
+            X.host[i * X.shape[1] + j - 1] = dataset.host[i * dataset.shape[1] + j] / 255;
         }
     }
 
-    Matrix y = oneHotEncode(yv);
+    Tensor y = oneHotEncode(yv);
 
     std::cout << y << std::endl;
 
-    if (isCudaAvailable()) {
-        X.moveToDevice();
-        y.moveToDevice();
-    }
-
-    Network network = Network(X.m);
+    Network network = Network(X.shape[1]);
     network.add(64);
-    network.add(y.m, "sigmoid");
+    network.add(y.shape[1], "sigmoid");
 
     network.train(X, y, 25, 10, 0.01);
 

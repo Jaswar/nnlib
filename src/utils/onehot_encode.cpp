@@ -8,6 +8,7 @@
 
 #include "onehot_encode.h"
 #include <set>
+#include <exceptions/unsupported_operation_exception.h>
 
 /**
  * @brief Return the index of a value in a set.
@@ -27,22 +28,26 @@ int indexOf(DTYPE value, const std::set<DTYPE>& set) {
     return -1;
 }
 
-Matrix oneHotEncode(const Vector& vector) {
-    std::set<DTYPE> unique;
-    for (int i = 0; i < vector.n; i++) {
-        unique.insert(vector[i]);
+Tensor oneHotEncode(const Tensor& vector) {
+    if (vector.shape.size() != 1) {
+        throw UnsupportedOperationException();
     }
 
-    auto n = vector.n;
+    std::set<DTYPE> unique;
+    for (int i = 0; i < vector.shape[0]; i++) {
+        unique.insert(vector.host[i]);
+    }
+
+    auto n = vector.shape[0];
     auto m = unique.size();
 
-    DTYPE* resultSpace = allocate1DArray(n * m, 0);
-    Matrix result = Matrix(resultSpace, n, m);
+    Tensor result = Tensor(n, m);
+    result.fill(0);
 
-    for (int i = 0; i < vector.n; i++) {
-        DTYPE value = vector[i];
+    for (int i = 0; i < vector.shape[0]; i++) {
+        DTYPE value = vector.host[i];
         int index = indexOf(value, unique);
-        result(i, index) = 1;
+        result.host[i * result.shape[1] + index] = 1;
     }
 
     return result;
