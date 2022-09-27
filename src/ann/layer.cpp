@@ -17,12 +17,12 @@
  *
  * @return A random value.
  */
-DTYPE getRandomValue() {
+float getRandomValue() {
     // TODO: For large networks, the values at neurons can grow very large rendering them useless
     // A fix can lower the initial weights and biases.
     // For now don't lint it and use rand()
     // NOLINTNEXTLINE
-    return (((DTYPE) rand() / RAND_MAX) * 2 - 1) / 5;
+    return (((float) rand() / RAND_MAX) * 2 - 1) / 5;
 }
 
 /**
@@ -33,11 +33,11 @@ DTYPE getRandomValue() {
  * @param outSize The size of the vector to generate. It is also the output size of the layer.
  * @return The random vector of biases.
  */
-Vector initializeBiases(size_t outSize) {
-    Vector biases = Vector(outSize);
+Tensor initializeBiases(size_t outSize) {
+    Tensor biases = Tensor(outSize);
 
     for (int i = 0; i < outSize; i++) {
-        biases[i] = getRandomValue();
+        biases.host[i] = getRandomValue();
     }
 
     return biases;
@@ -52,12 +52,12 @@ Vector initializeBiases(size_t outSize) {
  * @param outSize The number of columns of the matrix. It is also the output size of the layer.
  * @return The random matrix of weights.
  */
-Matrix initializeWeights(size_t inSize, size_t outSize) {
-    Matrix weights = Matrix(inSize, outSize);
+Tensor initializeWeights(size_t inSize, size_t outSize) {
+    Tensor weights = Tensor(inSize, outSize);
 
     for (int i = 0; i < inSize; i++) {
         for (int j = 0; j < outSize; j++) {
-            weights(i, j) = getRandomValue();
+            weights.host[i * outSize + j] = getRandomValue();
         }
     }
 
@@ -79,35 +79,37 @@ Layer::Layer(size_t inSize, size_t outSize, Activation* activation, DataLocation
       newDeltaT(outSize, DEFAULT_BATCH_SIZE),
       derivatives(DEFAULT_BATCH_SIZE, outSize),
       previousWeightsT(0, 0),
-      weightsGradients(allocate1DArray(inSize * outSize, 0), inSize, outSize),
-      biasesGradients(allocate1DArray(outSize, 0), outSize),
-      ones(allocate1DArray(DEFAULT_BATCH_SIZE, 1), DEFAULT_BATCH_SIZE) {
+      weightsGradients(inSize, outSize),
+      biasesGradients(outSize),
+      ones(DEFAULT_BATCH_SIZE) {
+
+    ones.fill(1);
 
     if (location == DEVICE) {
-        dataT.moveToDevice();
+        dataT.move(DEVICE);
 
-        biases.moveToDevice();
-        weights.moveToDevice();
+        biases.move(DEVICE);
+        weights.move(DEVICE);
 
-        aMatrix.moveToDevice();
-        zMatrix.moveToDevice();
+        aMatrix.move(DEVICE);
+        zMatrix.move(DEVICE);
 
-        newDelta.moveToDevice();
-        newDeltaT.moveToDevice();
-        derivatives.moveToDevice();
+        newDelta.move(DEVICE);
+        newDeltaT.move(DEVICE);
+        derivatives.move(DEVICE);
 
-        previousWeightsT.moveToDevice();
+        previousWeightsT.move(DEVICE);
 
-        weightsGradients.moveToDevice();
-        biasesGradients.moveToDevice();
-        ones.moveToDevice();
+        weightsGradients.move(DEVICE);
+        biasesGradients.move(DEVICE);
+        ones.move(DEVICE);
     }
 }
 
 Layer::~Layer() = default;
 
-void Layer::forward(const Matrix& batch) {
-    allocate(batch.n);
+void Layer::forward(const Tensor& batch) {
+    allocate(batch.shape[0]);
 
     multiply(batch, weights, zMatrix);
     add(zMatrix, biases, zMatrix);
@@ -118,9 +120,11 @@ void Layer::forward(const Matrix& batch) {
     activation->forward(zMatrix, aMatrix);
 }
 
-void Layer::backward(const Matrix& delta, const Matrix& previousWeights, size_t batchSize, bool isLastLayer) {
-    if (previousWeightsT.n != previousWeights.m || previousWeightsT.m != previousWeights.n) {
-        previousWeightsT = Matrix(previousWeights.m, previousWeights.n, previousWeights.location);
+void Layer::backward(const Tensor& delta, const Tensor& previousWeights, size_t batchSize, bool isLastLayer) {
+    if (previousWeightsT.shape[0] != previousWeights.shape[1]
+            || previousWeightsT.shape[1] != previousWeights.shape[0]) {
+        previousWeightsT = Tensor(previousWeights.shape[1], previousWeights.shape[0]);
+        previousWeightsT.move(location);
     }
     calculateDerivatives();
 
@@ -166,49 +170,51 @@ void Layer::allocate(size_t batchSize) {
 }
 
 void Layer::allocateOnes(size_t batchSize) {
-    if (ones.n != batchSize) {
-        Vector temp = Vector(allocate1DArray(batchSize, 1), batchSize);
-
-        if (location == DEVICE) {
-            temp.moveToDevice();
-        }
-
-        ones = temp;
+    if (ones.shape[0] != batchSize) {
+        ones = Tensor(batchSize);
+        ones.fill(1);
+        ones.move(location);
     }
 }
 
 void Layer::allocateDataT(size_t batchSize) {
-    if (dataT.m != batchSize) {
-        dataT = Matrix(dataT.n, batchSize, dataT.location);
+    if (dataT.shape[1] != batchSize) {
+        dataT = Tensor(dataT.shape[0], batchSize);
+        dataT.move(location);
     }
 }
 
 void Layer::allocateAMatrix(size_t batchSize) {
-    if (aMatrix.n != batchSize) {
-        aMatrix = Matrix(batchSize, aMatrix.m, aMatrix.location);
+    if (aMatrix.shape[0] != batchSize) {
+        aMatrix = Tensor(batchSize, aMatrix.shape[1]);
+        aMatrix.move(location);
     }
 }
 
 void Layer::allocateZMatrix(size_t batchSize) {
-    if (zMatrix.n != batchSize) {
-        zMatrix = Matrix(batchSize, zMatrix.m, zMatrix.location);
+    if (zMatrix.shape[0] != batchSize) {
+        zMatrix = Tensor(batchSize, zMatrix.shape[1]);
+        zMatrix.move(location);
     }
 }
 
 void Layer::allocateNewDelta(size_t batchSize) {
-    if (newDelta.n != batchSize) {
-        newDelta = Matrix(batchSize, newDelta.m, newDelta.location);
+    if (newDelta.shape[0] != batchSize) {
+        newDelta = Tensor(batchSize, newDelta.shape[1]);
+        newDelta.move(location);
     }
 }
 
 void Layer::allocateNewDeltaT(size_t batchSize) {
-    if (newDeltaT.m != batchSize) {
-        newDeltaT = Matrix(newDeltaT.n, batchSize, newDeltaT.location);
+    if (newDeltaT.shape[1] != batchSize) {
+        newDeltaT = Tensor(newDeltaT.shape[0], batchSize);
+        newDeltaT.move(location);
     }
 }
 
 void Layer::allocateDerivatives(size_t batchSize) {
-    if (derivatives.n != batchSize) {
-        derivatives = Matrix(batchSize, derivatives.m, derivatives.location);
+    if (derivatives.shape[0] != batchSize) {
+        derivatives = Tensor(batchSize, derivatives.shape[1]);
+        derivatives.move(location);
     }
 }

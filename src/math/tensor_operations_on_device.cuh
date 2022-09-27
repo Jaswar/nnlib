@@ -10,6 +10,8 @@
 
 #include <tensor.h>
 
+void fillTensorOnDevice(Tensor& tensor, float value);
+
 void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination);
 void subtractTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination);
 void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination);

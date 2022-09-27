@@ -307,3 +307,19 @@ void transposeMatrixOnHost(const Tensor& matrix, Tensor& destination) {
     }
 }
 
+void fillTensorOnHost(Tensor& tensor, float value) {
+#if defined __AVX2__ || defined __AVX__
+    __m256 valueVector = _mm256_set1_ps(value);
+    for (size_t i = 0; i < tensor.size / 8; i++) {
+        _mm256_storeu_ps(tensor.host + i * 8, valueVector);
+    }
+    for (size_t i = tensor.size / 8; i < (tensor.size / 8) * 8; i++) {
+        tensor.host[i] = value;
+    }
+#else
+    for (size_t i = 0; i < tensor.size; i++) {
+        tensor.host[i] = value;
+    }
+#endif
+}
+

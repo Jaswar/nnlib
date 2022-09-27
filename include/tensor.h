@@ -38,8 +38,9 @@ public:
 
     Tensor& operator=(const Tensor& other);
 
-    void moveToDevice();
-    void moveToHost();
+    void fill(float value);
+
+    void move(DataLocation target);
 
     ~Tensor();
 

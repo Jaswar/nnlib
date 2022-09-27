@@ -232,6 +232,16 @@ __global__ void transposeMatrixKernel(const float* matrix, float* destination, s
     destination[column * n + row] = matrix[row * m + column];
 }
 
+__global__ void fillTensorKernel(float* tensor, float value, size_t size) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    tensor[index] = value;
+}
+
 // NOLINTEND(readability-static-accessed-through-instance)
 
 void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
@@ -279,5 +289,12 @@ void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& de
 void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
     transposeMatrixKernel<<<matrix.shape[0], matrix.shape[1]>>>(matrix.device, destination.device,
                                                                 matrix.shape[0], matrix.shape[1]);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
+void fillTensorOnDevice(Tensor& tensor, float value) {
+    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
+    auto block = tensor.session.threadsPerBlock;
+    fillTensorKernel<<<grid, block>>>(tensor.device, value, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }

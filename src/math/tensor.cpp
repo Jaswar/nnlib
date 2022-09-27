@@ -65,30 +65,22 @@ Tensor& Tensor::operator=(const Tensor& other) {
     return *this;
 }
 
-void Tensor::moveToDevice() {
-    if (location == DEVICE) {
+void Tensor::move(DataLocation target) {
+    if (location == target) {
         return;
     }
 
-    float* deviceData = allocate1DArrayDevice(size);
-    copy1DFromHostToDevice(host, deviceData, size);
-
-    free(host);
-    device = deviceData;
-    location = DEVICE;
-}
-
-void Tensor::moveToHost() {
     if (location == HOST) {
-        return;
+        float* newData = allocate1DArrayDevice(size);
+        copy1DFromHostToDevice(host, newData, size);
+        free(host);
+        device = newData;
+    } else {
+        float* newData = allocate1DArray(size);
+        copy1DFromDeviceToHost(device, newData, size);
+        free1DArrayDevice(device);
+        host = newData;
     }
-
-    float* hostData = allocate1DArray(size);
-    copy1DFromDeviceToHost(device, hostData, size);
-
-    free(device);
-    host = hostData;
-    location = HOST;
 }
 
 Tensor::~Tensor() {
@@ -107,6 +99,14 @@ void Tensor::computeSize() {
     size = 1;
     for (auto it = shape.begin(); it < shape.end(); it++) {
         size *= *it;
+    }
+}
+
+void Tensor::fill(float value) {
+    if (location == HOST) {
+        fillTensorOnHost(*this, value);
+    } else {
+        fillTensorOnDevice(*this, value);
     }
 }
 

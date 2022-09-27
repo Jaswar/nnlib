@@ -31,14 +31,14 @@ class Layer {
      * Helper variable used during backpropagation.
      */
 private:
-    Matrix previousWeightsT;
+    Tensor previousWeightsT;
 
     /**
      * @brief %Matrix storing the transpose of the data passed in the forward propagation step.
      *
      * Helper variable used during backpropagation.
      */
-    Matrix dataT;
+    Tensor dataT;
 
     /**
      * @brief Store a vector of ones.
@@ -46,14 +46,14 @@ private:
      * Required for the backpropagation algorithm. It is used to sum Layer::newDeltaT along first axis into
      * bias gradients.
      */
-    Vector ones;
+    Tensor ones;
 
     /**
      * @brief Transpose of Layer::newDelta.
      *
      * Helper variable used during backpropagation.
      */
-    Matrix newDeltaT;
+    Tensor newDeltaT;
 
     /**
      * @brief The location of the layer.
@@ -87,51 +87,51 @@ public:
     /**
      * @brief The weights of the layer.
      */
-    Matrix weights;
+    Tensor weights;
 
     /**
      * @brief The biases of the layer.
      */
-    Vector biases;
+    Tensor biases;
 
     /**
      * @brief %Matrix storing data passed to the layer.
      *
      * Stores a pointer reference to the batch that was most recently forward-propagated through the layer.
      */
-    const Matrix* data;
+    const Tensor* data;
 
     /**
      * @brief The output of the layer before applying the activation function.
      */
-    Matrix aMatrix;
+    Tensor aMatrix;
 
     /**
      * @brief The output of the layer.
      */
-    Matrix zMatrix;
+    Tensor zMatrix;
 
     /**
      * @brief Delta that should be passed to the previous layer in the backpropagation step.
      */
-    Matrix newDelta;
+    Tensor newDelta;
 
     /**
      * @brief The derivatives of the output.
      *
      * The derivatives are computed by the activation function and stored in this variable.
      */
-    Matrix derivatives;
+    Tensor derivatives;
 
     /**
      * @brief The weights gradients computed by the backpropagation algorithm.
      */
-    Matrix weightsGradients;
+    Tensor weightsGradients;
 
     /**
      * @brief The biases gradients computed by the backpropagation algorithm.
      */
-    Vector biasesGradients;
+    Tensor biasesGradients;
 
     /**
      * @brief Construct a new layer.
@@ -160,7 +160,7 @@ public:
      *
      * @param batch The batch that should be propagated.
      */
-    void forward(const Matrix& batch);
+    void forward(const Tensor& batch);
 
     /**
      * @brief Backward-propagate one batch of data through the network.
@@ -179,7 +179,7 @@ public:
      * @param batchSize The size of the batch.
      * @param isLastLayer Boolean to specify if this layer is the last one (the output layer).
      */
-    void backward(const Matrix& delta, const Matrix& previousWeights, size_t batchSize = DEFAULT_BATCH_SIZE,
+    void backward(const Tensor& delta, const Tensor& previousWeights, size_t batchSize = DEFAULT_BATCH_SIZE,
                   bool isLastLayer = false);
 
     /**
