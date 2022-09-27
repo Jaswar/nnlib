@@ -85,31 +85,31 @@ void subtractMatricesOnHost(const Matrix& m1, const Matrix& m2, Matrix& result) 
  * @param value The `__m256` variable whose floats should be summed up.
  * @return A float value corresponding to the sum.
  */
-// value = [f7, f6, f5, f4, f3, f2, f1, f0]
-float horizontalAdd(__m256 value) {
-    // [f3, f2, f1, f0]
-    auto low128 = _mm256_extractf128_ps(value, 0);
-
-    // [f7, f6, f5, f4]
-    auto high128 = _mm256_extractf128_ps(value, 1);
-
-    // [f3 + f7, f2 + f6, f1 + f5, f0 + f4]
-    __m128 sum128 = _mm_add_ps(low128, high128);
-
-    // [f3 + f7, f2 + f6, f3 + f7, f2 + f6]
-    __m128 sum128Moved = _mm_movehl_ps(sum128, sum128);
-
-    // [dc, dc, f1 + f5 + f3 + f7, f0 + f4 + f2 + f6]
-    __m128 sum128PlusMoved = _mm_add_ps(sum128, sum128Moved);
-
-    // [dc, dc, f0 + f4 + f2 + f6, f1 + f5 + f3 + f7]
-    auto shuffled = _mm_shuffle_ps(sum128PlusMoved, sum128PlusMoved, _MM_SHUFFLE(3, 2, 0, 1));
-
-    // [dc, dc, dc, f1 + f5 + f3 + f7 + f0 + f4 + f2 + f6]
-    __m128 final128Sum = _mm_add_ps(sum128PlusMoved, shuffled);
-
-    return _mm_cvtss_f32(final128Sum);
-}
+//// value = [f7, f6, f5, f4, f3, f2, f1, f0]
+//float horizontalAdd(__m256 value) {
+//    // [f3, f2, f1, f0]
+//    auto low128 = _mm256_extractf128_ps(value, 0);
+//
+//    // [f7, f6, f5, f4]
+//    auto high128 = _mm256_extractf128_ps(value, 1);
+//
+//    // [f3 + f7, f2 + f6, f1 + f5, f0 + f4]
+//    __m128 sum128 = _mm_add_ps(low128, high128);
+//
+//    // [f3 + f7, f2 + f6, f3 + f7, f2 + f6]
+//    __m128 sum128Moved = _mm_movehl_ps(sum128, sum128);
+//
+//    // [dc, dc, f1 + f5 + f3 + f7, f0 + f4 + f2 + f6]
+//    __m128 sum128PlusMoved = _mm_add_ps(sum128, sum128Moved);
+//
+//    // [dc, dc, f0 + f4 + f2 + f6, f1 + f5 + f3 + f7]
+//    auto shuffled = _mm_shuffle_ps(sum128PlusMoved, sum128PlusMoved, _MM_SHUFFLE(3, 2, 0, 1));
+//
+//    // [dc, dc, dc, f1 + f5 + f3 + f7 + f0 + f4 + f2 + f6]
+//    __m128 final128Sum = _mm_add_ps(sum128PlusMoved, shuffled);
+//
+//    return _mm_cvtss_f32(final128Sum);
+//}
 #endif
 
 void multiplyMatrixVectorOnHost(const Matrix& matrix, const Vector& vector, Vector& result) {
@@ -119,7 +119,7 @@ void multiplyMatrixVectorOnHost(const Matrix& matrix, const Vector& vector, Vect
         for (size_t index = 0; index < vector.n / 8; index++) {
             __m256 matrixData = _mm256_loadu_ps(matrix.data + i * matrix.m + index * 8);
             __m256 vectorData = _mm256_loadu_ps(vector.data + index * 8);
-            accumulator += horizontalAdd(_mm256_mul_ps(matrixData, vectorData));
+//            accumulator += horizontalAdd(_mm256_mul_ps(matrixData, vectorData));
         }
         for (size_t index = (vector.n / 8) * 8; index < vector.n; index++) {
             accumulator += matrix.data[i * matrix.m + index] * vector.data[index];

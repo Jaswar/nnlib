@@ -65,5 +65,5 @@ DTYPE** copy2DArray(size_t n, size_t m, DTYPE** original) {
 }
 
 void copy1DFromHostToHost(float* oldLoc, float* newLoc, size_t n) {
-    memcpy(newLoc, oldLoc, n);
+    memcpy(newLoc, oldLoc, n * sizeof(DTYPE));
 }
