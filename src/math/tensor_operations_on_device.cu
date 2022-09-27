@@ -7,7 +7,9 @@
 
 #include <gpu/assert.cuh>
 #include "tensor_operations_on_device.cuh"
+#include <exceptions/unexpected_cuda_call_exception.h>
 
+#ifdef HAS_CUDA
 
 /**
  * @brief Size of a tile when performing tiled matrix multiplication.
@@ -306,3 +308,43 @@ void fillTensorOnDevice(Tensor& tensor, float value) {
     fillTensorKernel<<<grid, block>>>(tensor.device, value, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
+
+#else
+
+void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void subtractTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void addBroadcastOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void multiplyTensorOnDevice(const Tensor& tensor, float constant, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void multiplyMatrixVectorOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void fillTensorOnDevice(Tensor& tensor, float value) {
+    throw UnexpectedCUDACallException();
+}
+
+#endif
