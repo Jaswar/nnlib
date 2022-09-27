@@ -225,9 +225,9 @@ void handleAVX2MatMulEdgeCases(const Tensor& m1, const Tensor& m2, Tensor& desti
  * @brief Compute a single row of an 8x8 tile.
  */
 #define COMPUTE_ROW(index) \
-    m1ColumnValue = _mm256_broadcast_ss(m1.host + (row * 8 + (index)) * m1.shape[1] + k); \
-    mulResult = _mm256_mul_ps(m2Row, m1ColumnValue); \
-    v##index = _mm256_add_ps(mulResult, v##index)
+    const __m256 m1ColumnValue##index = _mm256_broadcast_ss(m1.host + (row * 8 + (index)) * k + i); \
+    const __m256 mulResult##index = _mm256_mul_ps(m2Row, m1ColumnValue##index); \
+    v##index = _mm256_add_ps(mulResult##index, v##index)
 
 /**
  * @brief Compute all rows of an 8x8 tile.
@@ -246,7 +246,7 @@ void handleAVX2MatMulEdgeCases(const Tensor& m1, const Tensor& m2, Tensor& desti
  * @brief Store a row of 8x8 tile to the result matrix.
  */
 #define STORE_ROW(index) \
-    _mm256_storeu_ps(destination.host + (row * 8 + (index)) * destination.shape[1] + column * 8, v##index)
+    _mm256_storeu_ps(destination.host + (row * 8 + (index)) * m + column * 8, v##index)
 
 /**
  * @brief Store all rows of an 8x8 tile to the result matrix.
@@ -268,15 +268,16 @@ void handleAVX2MatMulEdgeCases(const Tensor& m1, const Tensor& m2, Tensor& desti
 // NOLINTNEXTLINE(google-readability-function-size)
 void multiplyMatrixMatrixOnHost(const Tensor& m1, const Tensor& m2, Tensor& destination) {
 #if defined __AVX2__ || defined __AVX__
-    for (size_t row = 0; row < m1.shape[0] / 8; row++) {
-        for (size_t column = 0; column < m2.shape[1] / 8; column++) {
+    size_t n = m1.shape[0];
+    size_t k = m1.shape[1];
+    size_t m = m2.shape[1];
+    for (size_t row = 0; row < n / 8; row++) {
+        for (size_t column = 0; column < m / 8; column++) {
             SET_ALL_ROWS_TO_ZERO();
 
-            __m256 m1ColumnValue;
-            __m256 mulResult;
-            for (size_t k = 0; k < m2.shape[0]; k++) {
+            for (size_t i = 0; i < k; i++) {
                 // Load 8 floats from a row from m2
-                const __m256 m2Row = _mm256_loadu_ps(m2.host + k * m2.shape[1] + column * 8);
+                const __m256 m2Row = _mm256_loadu_ps(m2.host + i * m + column * 8);
 
                 COMPUTE_ALL_ROWS();
             }
@@ -284,8 +285,8 @@ void multiplyMatrixMatrixOnHost(const Tensor& m1, const Tensor& m2, Tensor& dest
         }
     }
 
-    handleAVX2MatMulEdgeCases(m1, m2, destination, 0, (m2.shape[1] / 8) * 8);
-    handleAVX2MatMulEdgeCases(m1, m2, destination, (m1.shape[0] / 8) * 8, 0);
+    handleAVX2MatMulEdgeCases(m1, m2, destination, 0, (m / 8) * 8);
+    handleAVX2MatMulEdgeCases(m1, m2, destination, (n / 8) * 8, 0);
 #else
     for (size_t row = 0; row < m1.shape[0]; row++) {
         for (size_t column = 0; column < m2.shape[1]; column++) {
