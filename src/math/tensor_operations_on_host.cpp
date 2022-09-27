@@ -21,7 +21,7 @@ void addTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
     }
 
     for (size_t index = (a.size / 8) * 8; index < a.size; index++) {
-        destination.host[index] = a.host[index] + a.host[index];
+        destination.host[index] = a.host[index] + b.host[index];
     }
 #else
     for (size_t i = 0; i < a.size; i++) {
@@ -40,7 +40,7 @@ void subtractTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination
     }
 
     for (size_t index = (a.size / 8) * 8; index < a.size; index++) {
-        destination.host[index] = a.host[index] - a.host[index];
+        destination.host[index] = a.host[index] - b.host[index];
     }
 #else
     for (size_t i = 0; i < a.size; i++) {
@@ -59,7 +59,7 @@ void hadamardTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination
     }
 
     for (size_t index = (a.size / 8) * 8; index < a.size; index++) {
-        destination.host[index] = a.host[index] * a.host[index];
+        destination.host[index] = a.host[index] * b.host[index];
     }
 #else
     for (size_t i = 0; i < a.size; i++) {
@@ -313,7 +313,7 @@ void fillTensorOnHost(Tensor& tensor, float value) {
     for (size_t i = 0; i < tensor.size / 8; i++) {
         _mm256_storeu_ps(tensor.host + i * 8, valueVector);
     }
-    for (size_t i = tensor.size / 8; i < (tensor.size / 8) * 8; i++) {
+    for (size_t i = (tensor.size / 8) * 8; i < tensor.size; i++) {
         tensor.host[i] = value;
     }
 #else

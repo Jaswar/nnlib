@@ -263,6 +263,15 @@ void transpose(const Tensor& matrix, Tensor& destination) {
     if (matrix.shape[0] != destination.shape[1] || matrix.shape[1] != destination.shape[0]) {
         throw SizeMismatchException();
     }
+
+    std::initializer_list<DataLocation> locations = {matrix.location, destination.location};
+    if (allLocationsAreHost(locations)) {
+        transposeMatrixOnHost(matrix, destination);
+    } else if (allLocationsAreDevice(locations)) {
+        transposeMatrixOnDevice(matrix, destination);
+    } else {
+        throw DifferentDataLocationException();
+    }
 }
 
 
