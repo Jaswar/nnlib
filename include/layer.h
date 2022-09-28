@@ -9,7 +9,6 @@
 #define NNLIB_LAYER_H
 
 #include "activation.h"
-#include "matrix.h"
 #include <string>
 
 /**

@@ -8,7 +8,7 @@
 #ifndef NNLIB_LOCATION_VERIFIERS_H
 #define NNLIB_LOCATION_VERIFIERS_H
 
-#include <vector.h>
+#include <tensor.h>
 
 /**
  * @brief Return true if all given locations are the same.

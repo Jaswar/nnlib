@@ -8,8 +8,6 @@
 #ifndef NNLIB_ONEHOT_ENCODE_H
 #define NNLIB_ONEHOT_ENCODE_H
 
-#include "matrix.h"
-#include "vector.h"
 #include "tensor.h"
 
 /**

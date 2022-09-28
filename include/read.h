@@ -8,7 +8,6 @@
 #ifndef NNLIB_READ_H
 #define NNLIB_READ_H
 
-#include "matrix.h"
 #include "tensor.h"
 #include <string>
 #include <vector>

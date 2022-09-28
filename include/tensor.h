@@ -10,8 +10,12 @@
 
 #include <cstdlib>
 #include <vector>
-#include "vector.h"
 #include "session.h"
+#include "allocation.h"
+
+enum DataLocation {
+    HOST, DEVICE
+};
 
 class Tensor {
 public:

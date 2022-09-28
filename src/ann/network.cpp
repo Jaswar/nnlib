@@ -14,6 +14,7 @@
 #include <exceptions/size_mismatch_exception.h>
 #include <iomanip>
 #include <utils/printing.h>
+#include <iostream>
 
 /**
  * @brief Split the input matrix into batches.

@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include <nnlib/matrix.h>
 #include <nnlib/network.h>
 #include <nnlib/read.h>
 #include <nnlib/verify.cuh>

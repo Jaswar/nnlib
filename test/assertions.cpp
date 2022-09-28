@@ -4,14 +4,14 @@
 
 #include "assertions.h"
 
-::testing::AssertionResult assertEqual(const Matrix& result,
+::testing::AssertionResult assertEqual(const Tensor& result,
                                        std::initializer_list<std::initializer_list<DTYPE>> expected) {
     size_t expectedNumRows = expected.size();
     size_t expectedNumColumns = expected.begin()->size();
 
-    if (result.n != expectedNumRows || result.m != expectedNumColumns) {
+    if (result.shape[0] != expectedNumRows || result.shape[1] != expectedNumColumns) {
         return ::testing::AssertionFailure() << "Wrong shape of result matrix. Expected " << expectedNumRows << "x"
-                                             << expectedNumColumns << " got " << result.n << "x" << result.m;
+                                             << expectedNumColumns << " got " << result.shape[0] << "x" << result.shape[1];
     }
 
     int i = 0;
@@ -22,7 +22,7 @@
         }
 
         for (auto value : row) {
-            DTYPE actual = result(i, j++);
+            DTYPE actual = result.host[i * result.shape[1] + j++];
             if (value != actual) {
                 return ::testing::AssertionFailure() << "Different matrices at index [" << i << ", " << j - 1
                                                      << "]. Expected " << value << " instead got " << actual;
@@ -35,15 +35,15 @@
     return ::testing::AssertionSuccess();
 }
 
-::testing::AssertionResult assertEqual(const Vector& result, std::initializer_list<DTYPE> expected) {
-    if (result.n != expected.size()) {
+::testing::AssertionResult assertEqual(const Tensor& result, std::initializer_list<DTYPE> expected) {
+    if (result.shape[0] != expected.size()) {
         return testing::AssertionFailure() << "Shape of vector invalid. Expected " << expected.size()
-                                           << " entries, instead got " << result.n << " entries";
+                                           << " entries, instead got " << result.shape[0] << " entries";
     }
 
     int i = 0;
     for (auto value : expected) {
-        DTYPE actual = result[i++];
+        DTYPE actual = result.host[i++];
         if (actual != value) {
             return ::testing::AssertionFailure()
                    << "Different vectors at index " << i - 1 << ". Expected " << value << " instead got " << actual;
@@ -53,15 +53,15 @@
     return ::testing::AssertionSuccess();
 }
 
-::testing::AssertionResult assertClose(const Vector& result, std::initializer_list<float> expected, float delta) {
-    if (result.n != expected.size()) {
+::testing::AssertionResult assertClose(const Tensor& result, std::initializer_list<float> expected, float delta) {
+    if (result.shape[0] != expected.size()) {
         return testing::AssertionFailure() << "Shape of vector invalid. Expected " << expected.size()
-                                           << " entries, instead got " << result.n << " entries";
+                                           << " entries, instead got " << result.shape[0] << " entries";
     }
 
     int i = 0;
     for (auto value : expected) {
-        DTYPE actual = result[i++];
+        DTYPE actual = result.host[i++];
         if (std::abs(actual - value) > delta) {
             return ::testing::AssertionFailure()
                    << "Different vectors at index " << i - 1 << ". Expected " << value << " instead got " << actual;
@@ -71,14 +71,14 @@
     return ::testing::AssertionSuccess();
 }
 
-::testing::AssertionResult assertClose(const Matrix& result,
+::testing::AssertionResult assertClose(const Tensor& result,
                                        std::initializer_list<std::initializer_list<float>> expected, float delta) {
     size_t expectedNumRows = expected.size();
     size_t expectedNumColumns = expected.begin()->size();
 
-    if (result.n != expectedNumRows || result.m != expectedNumColumns) {
+    if (result.shape[0] != expectedNumRows || result.shape[1] != expectedNumColumns) {
         return ::testing::AssertionFailure() << "Wrong shape of result matrix. Expected " << expectedNumRows << "x"
-                                             << expectedNumColumns << " got " << result.n << "x" << result.m;
+                                             << expectedNumColumns << " got " << result.shape[0] << "x" << result.shape[1];
     }
 
     int i = 0;
@@ -89,7 +89,7 @@
         }
 
         for (auto value : row) {
-            DTYPE actual = result(i, j++);
+            DTYPE actual = result.host[i * result.shape[1] + j++];
             if (std::abs(value - actual) > delta) {
                 return ::testing::AssertionFailure() << "Different matrices at index [" << i << ", " << j - 1
                                                      << "]. Expected " << value << " instead got " << actual;
