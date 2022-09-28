@@ -3,9 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <vector.h>
 #include <verify.cuh>
-#include "../utils.h"
 #include "../assertions.h"
 #include <tensor.h>
 
