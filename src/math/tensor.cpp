@@ -141,6 +141,14 @@ Tensor Tensor::construct2d(std::vector<std::vector<float>> data) {
     return result;
 }
 
+size_t Tensor::findEffectiveAddress(std::vector<size_t> index, size_t depth) const {
+    if (depth == 0) {
+        return index.front();
+    }
+
+    return shape.at(depth) * findEffectiveAddress(index, depth - 1) + index.at(depth);
+}
+
 std::string tensorShapeToString(const Tensor& tensor) {
     std::string shapeString = "[";
 

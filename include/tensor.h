@@ -12,6 +12,7 @@
 #include <vector>
 #include "session.h"
 #include "allocation.h"
+#include "../src/exceptions/size_mismatch_exception.h"
 #include <iostream>
 
 enum DataLocation {
@@ -41,17 +42,35 @@ public:
         host = allocate1DArray(size, 0);
     }
 
-    static Tensor construct1d(std::vector<float> data);
-    static Tensor construct2d(std::vector<std::vector<float>> data);
-
     Tensor& operator=(const Tensor& other);
 
     void move(DataLocation target);
+
+    static Tensor construct1d(std::vector<float> data);
+    static Tensor construct2d(std::vector<std::vector<float>> data);
+
+    template<typename... Args>
+    float& operator()(Args... args) {
+        std::vector<size_t> index = std::vector<size_t>({static_cast<size_t>(args)...});
+        // Make sure the indexes are within acceptable range
+        if (index.size() != shape.size()) {
+            throw SizeMismatchException();
+        }
+        for (size_t i = 0; i < index.size(); i++) {
+            if (index[i] >= shape[i]) {
+                throw SizeMismatchException();
+            }
+        }
+        // Recursively figure out the index in the flattened array (the effective index)
+        size_t effectiveIndex = findEffectiveAddress(index, shape.size() - 1);
+        return host[effectiveIndex];
+    }
 
     ~Tensor();
 
 private:
     void computeSize();
+    size_t findEffectiveAddress(std::vector<size_t> index, size_t depth) const;
 };
 
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);

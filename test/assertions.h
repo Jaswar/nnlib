@@ -8,17 +8,17 @@
 #include <gtest/gtest.h>
 #include <tensor.h>
 
-#define ASSERT_VECTOR_EQ(result, ...) ASSERT_TRUE(assertEqual(result, __VA_ARGS__))
+#define ASSERT_EQ_1D(result, ...) ASSERT_TRUE(assertEqual(result, __VA_ARGS__))
 ::testing::AssertionResult assertEqual(const Tensor& result, std::initializer_list<DTYPE> expected);
 
-#define ASSERT_MATRIX_EQ(result, ...) ASSERT_TRUE(assertEqual(result, __VA_ARGS__))
+#define ASSERT_EQ_2D(result, ...) ASSERT_TRUE(assertEqual(result, __VA_ARGS__))
 ::testing::AssertionResult assertEqual(const Tensor& result,
                                        std::initializer_list<std::initializer_list<DTYPE>> expected);
 
-#define ASSERT_VECTOR_CLOSE(result, ...) ASSERT_TRUE(assertClose(result, __VA_ARGS__))
+#define ASSERT_CLOSE_1D(result, ...) ASSERT_TRUE(assertClose(result, __VA_ARGS__))
 ::testing::AssertionResult assertClose(const Tensor& result, std::initializer_list<DTYPE> expected, float delta = 5e-5);
 
-#define ASSERT_MATRIX_CLOSE(result, ...) ASSERT_TRUE(assertClose(result, __VA_ARGS__))
+#define ASSERT_CLOSE_2D(result, ...) ASSERT_TRUE(assertClose(result, __VA_ARGS__))
 ::testing::AssertionResult
 assertClose(const Tensor& result, std::initializer_list<std::initializer_list<DTYPE>> expected, float delta = 5e-5);
 
