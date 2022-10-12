@@ -103,12 +103,42 @@ void Tensor::computeSize() {
     }
 }
 
-void Tensor::fill(float value) {
-    if (location == HOST) {
-        fillTensorOnHost(*this, value);
+void fill(float value, Tensor& destination) {
+    if (destination.location == HOST) {
+        fillTensorOnHost(destination, value);
     } else {
-        fillTensorOnDevice(*this, value);
+        fillTensorOnDevice(destination, value);
     }
+}
+
+Tensor Tensor::construct1d(std::vector<float> data) {
+    if (data.empty()) {
+        throw SizeMismatchException();
+    }
+    Tensor result = Tensor(data.size());
+    for (size_t i = 0; i < data.size(); i++) {
+        result.host[i] = data[i];
+    }
+    return result;
+}
+
+Tensor Tensor::construct2d(std::vector<std::vector<float>> data) {
+    if (data.empty() || data[0].empty()) {
+        throw SizeMismatchException();
+    }
+
+    Tensor result = Tensor(data.size(), data[0].size());
+    for (size_t i = 0; i < data.size(); i++) {
+        // Make sure the array has the same number of columns in each row
+        if (data[i].size() != result.shape[1]) {
+            throw SizeMismatchException();
+        }
+
+        for (size_t j = 0; j < data[0].size(); j++) {
+            result.host[i * result.shape[1] + j] = data[i][j];
+        }
+    }
+    return result;
 }
 
 std::string tensorShapeToString(const Tensor& tensor) {

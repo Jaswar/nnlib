@@ -83,7 +83,7 @@ Layer::Layer(size_t inSize, size_t outSize, Activation* activation, DataLocation
       biasesGradients(outSize),
       ones(DEFAULT_BATCH_SIZE) {
 
-    ones.fill(1);
+    fill(1, ones);
 
     if (location == DEVICE) {
         dataT.move(DEVICE);
@@ -172,7 +172,7 @@ void Layer::allocate(size_t batchSize) {
 void Layer::allocateOnes(size_t batchSize) {
     if (ones.shape[0] != batchSize) {
         ones = Tensor(batchSize);
-        ones.fill(1);
+        fill(1, ones);
         ones.move(location);
     }
 }

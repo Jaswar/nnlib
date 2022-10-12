@@ -7,10 +7,6 @@
 #include "../assertions.h"
 #include <tensor.h>
 
-TEST(tensor, test) {
-    Tensor t1 = Tensor(4, 3, 3, 3);
-    t1.host[9] = 5;
-
-    std::cout << t1.size << std::endl;
-
+TEST(tensor, add) {
+    Tensor t = Tensor::construct1d({2});
 }

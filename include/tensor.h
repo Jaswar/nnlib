@@ -12,6 +12,7 @@
 #include <vector>
 #include "session.h"
 #include "allocation.h"
+#include <iostream>
 
 enum DataLocation {
     HOST, DEVICE
@@ -40,9 +41,10 @@ public:
         host = allocate1DArray(size, 0);
     }
 
-    Tensor& operator=(const Tensor& other);
+    static Tensor construct1d(std::vector<float> data);
+    static Tensor construct2d(std::vector<std::vector<float>> data);
 
-    void fill(float value);
+    Tensor& operator=(const Tensor& other);
 
     void move(DataLocation target);
 
@@ -53,6 +55,8 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
+
+void fill(float value, Tensor& destination);
 
 void add(const Tensor& a, const Tensor& b, Tensor& destination);
 void subtract(const Tensor& a, const Tensor& b, Tensor& destination);

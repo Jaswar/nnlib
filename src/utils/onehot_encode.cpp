@@ -42,7 +42,7 @@ Tensor oneHotEncode(const Tensor& vector) {
     auto m = unique.size();
 
     Tensor result = Tensor(n, m);
-    result.fill(0);
+    fill(0, result);
 
     for (int i = 0; i < vector.shape[0]; i++) {
         DTYPE value = vector.host[i];
