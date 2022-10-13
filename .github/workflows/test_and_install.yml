@@ -9,7 +9,17 @@ jobs:
       - name: Run tests
         run: |
           chmod +x ./scripts/test.sh
-          ./scripts/test.sh
+          ./scripts/test.sh -a None
+
+  Test-No-CUDA-AVX:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run tests
+        run: |
+          chmod +x ./scripts/test.sh
+          ./scripts/test.sh -a AVX2
 
 #  Test-CUDA:
 #    runs-on: ubuntu-latest
@@ -32,7 +42,7 @@ jobs:
 #          cat /home/runner/work/nnlib/nnlib/build/test/Testing/Temporary/LastTest.log
 
   Install-Linux-No-CUDA-GXX:
-    needs: Test-No-CUDA
+    needs: [Test-No-CUDA, Test-No-CUDA-AVX]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -49,7 +59,7 @@ jobs:
           ./scripts/build.sh
 
   Install-Linux-No-CUDA-Clang:
-    needs: Test-No-CUDA
+    needs: [Test-No-CUDA, Test-No-CUDA-AVX]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -118,7 +128,7 @@ jobs:
           ./scripts/build.sh
 
   Install-Windows-MSVC-No-CUDA:
-    needs: Test-No-CUDA
+    needs: [Test-No-CUDA, Test-No-CUDA-AVX]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3

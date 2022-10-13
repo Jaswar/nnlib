@@ -1,3 +1,21 @@
+architecture=""
+# See if the path to clang-tidy executable was passed
+while getopts ":a:" opt; do
+  case $opt in
+    a)
+      architecture=$OPTARG
+      ;;
+    \?)
+      echo ">>> Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo ">>> Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+
 # Navigate to correct directory if script was not moved from "scripts"
 parent_dir=$(pwd | xargs basename)
 if [[ $parent_dir = "scripts" ]]; then
@@ -16,7 +34,7 @@ mkdir build && cd build
 
 # Build the library with testing enabled
 echo ">>> Building the library for testing"
-cmake -DCMAKE_TEST_NNLIB=ON ..
+cmake -DCMAKE_TEST_NNLIB=ON -DCMAKE_FORCE_ARCHITECTURE=$architecture ..
 cmake --build .
 
 # Execute the tests using ctest
