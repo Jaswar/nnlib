@@ -1,7 +1,8 @@
 set(NNLIB_TEST_EXEC test_nnlib)
 
 add_executable(${NNLIB_TEST_EXEC}
-        assertions.h assertions.cpp)
+        assertions.h assertions.cpp
+        test_utils.h test_utils.cpp)
 
 add_subdirectory(math)
 

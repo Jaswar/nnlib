@@ -4,100 +4,54 @@
 
 #include "assertions.h"
 
-::testing::AssertionResult assertEqual(const Tensor& result,
-                                       std::initializer_list<std::initializer_list<DTYPE>> expected) {
-    size_t expectedNumRows = expected.size();
-    size_t expectedNumColumns = expected.begin()->size();
+#include <utility>
 
-    if (result.shape[0] != expectedNumRows || result.shape[1] != expectedNumColumns) {
-        return ::testing::AssertionFailure() << "Wrong shape of result matrix. Expected " << expectedNumRows << "x"
-                                             << expectedNumColumns << " got " << result.shape[0] << "x" << result.shape[1];
+::testing::AssertionResult assertEqual(const Tensor& result, const Tensor& expected) {
+    if (result.shape != expected.shape) {
+        return ::testing::AssertionFailure() << "The shapes of the tensors are different.";
     }
 
-    int i = 0;
-    int j = 0;
-    for (auto& row : expected) {
-        if (row.size() != expectedNumColumns) {
-            return ::testing::AssertionFailure() << "Not a valid matrix was passed as the expected result.";
+    for (size_t i = 0; i < result.size; i++) {
+        if (result.host[i] != expected.host[i]) {
+            return ::testing::AssertionFailure() << "The tensors are different at index " << i
+                    << " (expected: " << expected.host[i] << " was " << result.host[i] << ")";
         }
-
-        for (auto value : row) {
-            DTYPE actual = result.host[i * result.shape[1] + j++];
-            if (value != actual) {
-                return ::testing::AssertionFailure() << "Different matrices at index [" << i << ", " << j - 1
-                                                     << "]. Expected " << value << " instead got " << actual;
-            }
-        }
-        i++;
-        j = 0;
     }
-
     return ::testing::AssertionSuccess();
 }
 
-::testing::AssertionResult assertEqual(const Tensor& result, std::initializer_list<DTYPE> expected) {
-    if (result.shape[0] != expected.size()) {
-        return testing::AssertionFailure() << "Shape of vector invalid. Expected " << expected.size()
-                                           << " entries, instead got " << result.shape[0] << " entries";
+::testing::AssertionResult assertEqual1d(const Tensor& result, std::vector<float> expected) {
+    Tensor exp = Tensor::construct1d(std::move(expected));
+    return assertEqual(result, exp);
+}
+
+::testing::AssertionResult assertEqual2d(const Tensor& result,
+                                       std::vector<std::vector<float>> expected) {
+    Tensor exp = Tensor::construct2d(std::move(expected));
+    return assertEqual(result, exp);
+}
+
+::testing::AssertionResult assertClose(const Tensor& result, const Tensor& expected, float delta) {
+    if (result.shape != expected.shape) {
+        return ::testing::AssertionFailure() << "The shapes of the tensors are different.";
     }
 
-    int i = 0;
-    for (auto value : expected) {
-        DTYPE actual = result.host[i++];
-        if (actual != value) {
-            return ::testing::AssertionFailure()
-                   << "Different vectors at index " << i - 1 << ". Expected " << value << " instead got " << actual;
+    for (size_t i = 0; i < result.size; i++) {
+        if (std::abs(result.host[i] - expected.host[i]) > delta) {
+            return ::testing::AssertionFailure() << "The tensors are different at index " << i
+                    << " (expected: " << expected.host[i] << " was " << result.host[i] << ")";
         }
     }
-
     return ::testing::AssertionSuccess();
 }
 
-::testing::AssertionResult assertClose(const Tensor& result, std::initializer_list<float> expected, float delta) {
-    if (result.shape[0] != expected.size()) {
-        return testing::AssertionFailure() << "Shape of vector invalid. Expected " << expected.size()
-                                           << " entries, instead got " << result.shape[0] << " entries";
-    }
-
-    int i = 0;
-    for (auto value : expected) {
-        DTYPE actual = result.host[i++];
-        if (std::abs(actual - value) > delta) {
-            return ::testing::AssertionFailure()
-                   << "Different vectors at index " << i - 1 << ". Expected " << value << " instead got " << actual;
-        }
-    }
-
-    return ::testing::AssertionSuccess();
+::testing::AssertionResult assertClose1d(const Tensor& result, std::vector<float> expected, float delta) {
+    Tensor exp = Tensor::construct1d(std::move(expected));
+    return assertClose(result, exp, delta);
 }
 
-::testing::AssertionResult assertClose(const Tensor& result,
-                                       std::initializer_list<std::initializer_list<float>> expected, float delta) {
-    size_t expectedNumRows = expected.size();
-    size_t expectedNumColumns = expected.begin()->size();
-
-    if (result.shape[0] != expectedNumRows || result.shape[1] != expectedNumColumns) {
-        return ::testing::AssertionFailure() << "Wrong shape of result matrix. Expected " << expectedNumRows << "x"
-                                             << expectedNumColumns << " got " << result.shape[0] << "x" << result.shape[1];
-    }
-
-    int i = 0;
-    int j = 0;
-    for (auto& row : expected) {
-        if (row.size() != expectedNumColumns) {
-            return ::testing::AssertionFailure() << "Not a valid matrix was passed as the expected result.";
-        }
-
-        for (auto value : row) {
-            DTYPE actual = result.host[i * result.shape[1] + j++];
-            if (std::abs(value - actual) > delta) {
-                return ::testing::AssertionFailure() << "Different matrices at index [" << i << ", " << j - 1
-                                                     << "]. Expected " << value << " instead got " << actual;
-            }
-        }
-        i++;
-        j = 0;
-    }
-
-    return ::testing::AssertionSuccess();
+::testing::AssertionResult assertClose2d(const Tensor& result,
+                                       std::vector<std::vector<float>> expected, float delta) {
+    Tensor exp = Tensor::construct2d(std::move(expected));
+    return assertClose(result, exp, delta);
 }
