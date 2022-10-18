@@ -111,7 +111,7 @@ void fill(float value, Tensor& destination) {
     }
 }
 
-Tensor Tensor::construct1d(std::vector<float> data) {
+Tensor Tensor::construct1d(const std::vector<float>& data) {
     if (data.empty()) {
         throw SizeMismatchException();
     }
@@ -122,7 +122,7 @@ Tensor Tensor::construct1d(std::vector<float> data) {
     return result;
 }
 
-Tensor Tensor::construct2d(std::vector<std::vector<float>> data) {
+Tensor Tensor::construct2d(const std::vector<std::vector<float>>& data) {
     if (data.empty() || data[0].empty()) {
         throw SizeMismatchException();
     }

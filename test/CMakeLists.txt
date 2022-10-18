@@ -5,6 +5,7 @@ add_executable(${NNLIB_TEST_EXEC}
         test_utils.h test_utils.cpp)
 
 add_subdirectory(math)
+add_subdirectory(ann)
 
 include(FetchContent)
 FetchContent_Declare(

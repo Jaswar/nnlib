@@ -46,8 +46,8 @@ public:
 
     void move(DataLocation target);
 
-    static Tensor construct1d(std::vector<float> data);
-    static Tensor construct2d(std::vector<std::vector<float>> data);
+    static Tensor construct1d(const std::vector<float>& data);
+    static Tensor construct2d(const std::vector<std::vector<float>>& data);
 
     template<typename... Args>
     float& operator()(Args... args) {
