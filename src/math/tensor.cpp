@@ -141,12 +141,23 @@ Tensor Tensor::construct2d(const std::vector<std::vector<float>>& data) {
     return result;
 }
 
-size_t Tensor::findEffectiveAddress(std::vector<size_t> index, size_t depth) const {
+size_t Tensor::findEffectiveAddress(const std::vector<size_t>& index, size_t depth) const {
     if (depth == 0) {
         return index.front();
     }
 
     return shape.at(depth) * findEffectiveAddress(index, depth - 1) + index.at(depth);
+}
+
+void Tensor::verifyIndex(const std::vector<size_t>& index) const {
+    if (index.size() != shape.size()) {
+        throw SizeMismatchException();
+    }
+    for (size_t i = 0; i < index.size(); i++) {
+        if (index[i] >= shape[i]) {
+            throw SizeMismatchException();
+        }
+    }
 }
 
 std::string tensorShapeToString(const Tensor& tensor) {

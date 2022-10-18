@@ -12,7 +12,6 @@
 #include <vector>
 #include "session.h"
 #include "allocation.h"
-#include "../src/exceptions/size_mismatch_exception.h"
 #include <iostream>
 
 enum DataLocation {
@@ -52,15 +51,8 @@ public:
     template<typename... Args>
     float& operator()(Args... args) {
         std::vector<size_t> index = std::vector<size_t>({static_cast<size_t>(args)...});
-        // Make sure the indexes are within acceptable range
-        if (index.size() != shape.size()) {
-            throw SizeMismatchException();
-        }
-        for (size_t i = 0; i < index.size(); i++) {
-            if (index[i] >= shape[i]) {
-                throw SizeMismatchException();
-            }
-        }
+        // Make sure the indexes are within acceptable range and throw SizeMismatchException if not.
+        verifyIndex(index);
         // Recursively figure out the index in the flattened array (the effective index)
         size_t effectiveIndex = findEffectiveAddress(index, shape.size() - 1);
         return host[effectiveIndex];
@@ -70,7 +62,8 @@ public:
 
 private:
     void computeSize();
-    size_t findEffectiveAddress(std::vector<size_t> index, size_t depth) const;
+    size_t findEffectiveAddress(const std::vector<size_t>& index, size_t depth) const;
+    void verifyIndex(const std::vector<size_t>& index) const;
 };
 
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
