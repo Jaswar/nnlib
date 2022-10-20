@@ -15,7 +15,8 @@
 #include <string>
 #include <utils/location_verifiers.h>
 
-Tensor::Tensor() : shape(), size(0), location(HOST), data() {}
+Tensor::Tensor() : shape(), size(0), location(HOST), data() {
+}
 
 Tensor::Tensor(const Tensor& other) {
     location = other.location;

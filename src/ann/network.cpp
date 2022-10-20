@@ -55,8 +55,7 @@ std::vector<Tensor> splitIntoBatches(const Tensor& data, size_t batchSize) {
 
         Tensor batch = Tensor(rowsInBatch, data.shape[1]);
         if (data.location == DEVICE) {
-            copy1DFromDeviceToHost(data.data + i * data.shape[1] * batchSize, batch.data,
-                                   data.shape[1] * rowsInBatch);
+            copy1DFromDeviceToHost(data.data + i * data.shape[1] * batchSize, batch.data, data.shape[1] * rowsInBatch);
         } else {
             copy1DFromHostToHost(data.data + i * data.shape[1] * batchSize, batch.data, data.shape[1] * rowsInBatch);
         }

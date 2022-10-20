@@ -272,8 +272,7 @@ void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destinati
 void addBroadcastOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
     auto grid = matrix.size / matrix.session.threadsPerBlock + 1;
     auto block = matrix.session.threadsPerBlock;
-    addBroadcastKernel<<<grid, block>>>(matrix.data, vector.data, destination.data, matrix.shape[0],
-                                        matrix.shape[1]);
+    addBroadcastKernel<<<grid, block>>>(matrix.data, vector.data, destination.data, matrix.shape[0], matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
