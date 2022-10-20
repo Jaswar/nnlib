@@ -35,7 +35,7 @@ Tensor oneHotEncode(const Tensor& vector) {
 
     std::set<float> unique;
     for (int i = 0; i < vector.shape[0]; i++) {
-        unique.insert(vector.host[i]);
+        unique.insert(vector.data[i]);
     }
 
     auto n = vector.shape[0];
@@ -45,9 +45,9 @@ Tensor oneHotEncode(const Tensor& vector) {
     fill(0, result);
 
     for (int i = 0; i < vector.shape[0]; i++) {
-        float value = vector.host[i];
+        float value = vector.data[i];
         int index = indexOf(value, unique);
-        result.host[i * result.shape[1] + index] = 1;
+        result.data[i * result.shape[1] + index] = 1;
     }
 
     return result;

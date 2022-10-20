@@ -22,10 +22,7 @@ public:
     size_t size;
 
     DataLocation location;
-    union {
-        float* host;
-        float* device;
-    };
+    float* data;
 
     Session session;
 
@@ -34,9 +31,9 @@ public:
     Tensor(const Tensor& other);
 
     template<typename... Args>
-    explicit Tensor(Args... args) : shape({static_cast<size_t>(args)...}), location(HOST), size(0), device(nullptr) {
+    explicit Tensor(Args... args) : shape({static_cast<size_t>(args)...}), location(HOST), size(0), data() {
         computeSize();
-        host = allocate1DArray(size, 0);
+        data = allocate1DArray(size, 0);
     }
 
     Tensor& operator=(const Tensor& other);
@@ -53,7 +50,7 @@ public:
         verifyIndex(index);
         // Recursively figure out the index in the flattened array (the effective index)
         size_t effectiveIndex = findEffectiveAddress(index, shape.size() - 1);
-        return host[effectiveIndex];
+        return data[effectiveIndex];
     }
 
     ~Tensor();

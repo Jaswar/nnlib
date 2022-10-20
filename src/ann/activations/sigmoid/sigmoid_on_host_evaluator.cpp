@@ -21,7 +21,7 @@ void SigmoidOnHostEvaluator::forward(const Tensor& input, Tensor& result) const 
     }
 
     for (size_t index = 0; index < input.size; index++) {
-        result.host[index] = fSigmoid(input.host[index]);
+        result.data[index] = fSigmoid(input.data[index]);
     }
 }
 
@@ -31,7 +31,7 @@ void SigmoidOnHostEvaluator::computeDerivatives(const Tensor& output, Tensor& re
     }
 
     for (size_t index = 0; index < output.size; index++) {
-        result.host[index] = fSigmoid(output.host[index]) * (1 - fSigmoid(output.host[index]));
+        result.data[index] = fSigmoid(output.data[index]) * (1 - fSigmoid(output.data[index]));
     }
 }
 

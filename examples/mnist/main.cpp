@@ -39,9 +39,9 @@ int main(int argc, char** argv) {
     Tensor yv = Tensor(dataset.shape[0]);
 
     for (int i = 0; i < dataset.shape[0]; i++) {
-        yv.host[i] = dataset.host[i * dataset.shape[1] + 0];
+        yv.data[i] = dataset.data[i * dataset.shape[1] + 0];
         for (int j = 1; j < dataset.shape[1]; j++) {
-            X.host[i * X.shape[1] + j - 1] = dataset.host[i * dataset.shape[1] + j] / 255;
+            X.data[i * X.shape[1] + j - 1] = dataset.data[i * dataset.shape[1] + j] / 255;
         }
     }
 

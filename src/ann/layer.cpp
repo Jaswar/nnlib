@@ -37,7 +37,7 @@ Tensor initializeBiases(size_t outSize) {
     Tensor biases = Tensor(outSize);
 
     for (int i = 0; i < outSize; i++) {
-        biases.host[i] = getRandomValue();
+        biases.data[i] = getRandomValue();
     }
 
     return biases;
@@ -57,7 +57,7 @@ Tensor initializeWeights(size_t inSize, size_t outSize) {
 
     for (int i = 0; i < inSize; i++) {
         for (int j = 0; j < outSize; j++) {
-            weights.host[i * outSize + j] = getRandomValue();
+            weights.data[i * outSize + j] = getRandomValue();
         }
     }
 

@@ -14,18 +14,18 @@
 void addTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < a.size / 8; index++) {
-        __m256 am256 = _mm256_loadu_ps(a.host + index * 8);
-        __m256 bm256 = _mm256_loadu_ps(b.host + index * 8);
+        __m256 am256 = _mm256_loadu_ps(a.data + index * 8);
+        __m256 bm256 = _mm256_loadu_ps(b.data + index * 8);
         __m256 result = _mm256_add_ps(am256, bm256);
-        _mm256_storeu_ps(destination.host + index * 8, result);
+        _mm256_storeu_ps(destination.data + index * 8, result);
     }
 
     for (size_t index = (a.size / 8) * 8; index < a.size; index++) {
-        destination.host[index] = a.host[index] + b.host[index];
+        destination.data[index] = a.data[index] + b.data[index];
     }
 #else
     for (size_t i = 0; i < a.size; i++) {
-        destination.host[i] = a.host[i] + b.host[i];
+        destination.data[i] = a.data[i] + b.data[i];
     }
 #endif
 }
@@ -33,18 +33,18 @@ void addTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
 void subtractTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < a.size / 8; index++) {
-        __m256 am256 = _mm256_loadu_ps(a.host + index * 8);
-        __m256 bm256 = _mm256_loadu_ps(b.host + index * 8);
+        __m256 am256 = _mm256_loadu_ps(a.data + index * 8);
+        __m256 bm256 = _mm256_loadu_ps(b.data + index * 8);
         __m256 result = _mm256_sub_ps(am256, bm256);
-        _mm256_storeu_ps(destination.host + index * 8, result);
+        _mm256_storeu_ps(destination.data + index * 8, result);
     }
 
     for (size_t index = (a.size / 8) * 8; index < a.size; index++) {
-        destination.host[index] = a.host[index] - b.host[index];
+        destination.data[index] = a.data[index] - b.data[index];
     }
 #else
     for (size_t i = 0; i < a.size; i++) {
-        destination.host[i] = a.host[i] - b.host[i];
+        destination.data[i] = a.data[i] - b.data[i];
     }
 #endif
 }
@@ -52,18 +52,18 @@ void subtractTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination
 void hadamardTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < a.size / 8; index++) {
-        __m256 am256 = _mm256_loadu_ps(a.host + index * 8);
-        __m256 bm256 = _mm256_loadu_ps(b.host + index * 8);
+        __m256 am256 = _mm256_loadu_ps(a.data + index * 8);
+        __m256 bm256 = _mm256_loadu_ps(b.data + index * 8);
         __m256 result = _mm256_mul_ps(am256, bm256);
-        _mm256_storeu_ps(destination.host + index * 8, result);
+        _mm256_storeu_ps(destination.data + index * 8, result);
     }
 
     for (size_t index = (a.size / 8) * 8; index < a.size; index++) {
-        destination.host[index] = a.host[index] * b.host[index];
+        destination.data[index] = a.data[index] * b.data[index];
     }
 #else
     for (size_t i = 0; i < a.size; i++) {
-        destination.host[i] = a.host[i] * b.host[i];
+        destination.data[i] = a.data[i] * b.data[i];
     }
 #endif
 }
@@ -72,21 +72,21 @@ void addBroadcastOnHost(const Tensor& matrix, const Tensor& vector, Tensor& dest
 #if defined __AVX2__ || defined __AVX__
     for (size_t row = 0; row < matrix.shape[0]; row++) {
         for (size_t index = 0; index < matrix.shape[1] / 8; index++) {
-            __m256 vectorData = _mm256_loadu_ps(vector.host + index * 8);
-            __m256 matrixData = _mm256_loadu_ps(matrix.host + row * matrix.shape[1] + index * 8);
+            __m256 vectorData = _mm256_loadu_ps(vector.data + index * 8);
+            __m256 matrixData = _mm256_loadu_ps(matrix.data + row * matrix.shape[1] + index * 8);
             __m256 res = _mm256_add_ps(vectorData, matrixData);
-            _mm256_storeu_ps(destination.host + row * matrix.shape[1] + index * 8, res);
+            _mm256_storeu_ps(destination.data + row * matrix.shape[1] + index * 8, res);
         }
 
         for (size_t index = (matrix.shape[1] / 8) * 8; index < matrix.shape[1]; index++) {
-            destination.host[row * destination.shape[1] + index] =
-                    matrix.host[row * matrix.shape[1] + index] + vector.host[index];
+            destination.data[row * destination.shape[1] + index] =
+                    matrix.data[row * matrix.shape[1] + index] + vector.data[index];
         }
     }
 #else
     for (size_t i = 0; i < matrix.shape[0]; i++) {
         for (size_t j = 0; j < matrix.shape[1]; j++) {
-            destination.host[i * destination.shape[1] + j] = matrix.host[i * matrix.shape[1] + j] + vector.host[j];
+            destination.data[i * destination.shape[1] + j] = matrix.data[i * matrix.shape[1] + j] + vector.data[j];
         }
     }
 #endif
@@ -96,17 +96,17 @@ void multiplyTensorOnHost(const Tensor& tensor, float constant, Tensor& destinat
 #if defined __AVX2__ || defined __AVX__
     const __m256 constValue = _mm256_set1_ps(constant);
     for (size_t index = 0; index < tensor.size / 8; index++) {
-        __m256 matrixValue = _mm256_loadu_ps(tensor.host + index * 8);
+        __m256 matrixValue = _mm256_loadu_ps(tensor.data + index * 8);
         __m256 result = _mm256_mul_ps(matrixValue, constValue);
-        _mm256_storeu_ps(destination.host + index * 8, result);
+        _mm256_storeu_ps(destination.data + index * 8, result);
     }
 
     for (size_t index = (tensor.size / 8) * 8; index < tensor.size; index++) {
-        destination.host[index] = tensor.host[index] * constant;
+        destination.data[index] = tensor.data[index] * constant;
     }
 #else
     for (size_t i = 0; i < tensor.size; i++) {
-        destination.host[i] = tensor.host[i] * constant;
+        destination.data[i] = tensor.data[i] * constant;
     }
 #endif
 }
@@ -152,22 +152,22 @@ void multiplyMatrixVectorOnHost(const Tensor& matrix, const Tensor& vector, Tens
     for (size_t i = 0; i < matrix.shape[0]; i++) {
         float accumulator = 0;
         for (size_t index = 0; index < vector.shape[0] / 8; index++) {
-            __m256 matrixData = _mm256_loadu_ps(matrix.host + i * matrix.shape[1] + index * 8);
-            __m256 vectorData = _mm256_loadu_ps(vector.host + index * 8);
+            __m256 matrixData = _mm256_loadu_ps(matrix.data + i * matrix.shape[1] + index * 8);
+            __m256 vectorData = _mm256_loadu_ps(vector.data + index * 8);
             accumulator += horizontalAdd(_mm256_mul_ps(matrixData, vectorData));
         }
         for (size_t index = (vector.shape[0] / 8) * 8; index < vector.shape[0]; index++) {
-            accumulator += matrix.host[i * matrix.shape[1] + index] * vector.host[index];
+            accumulator += matrix.data[i * matrix.shape[1] + index] * vector.data[index];
         }
-        destination.host[i] = accumulator;
+        destination.data[i] = accumulator;
     }
 #else
     for (size_t i = 0; i < matrix.shape[0]; i++) {
         float accumulator = 0;
         for (size_t j = 0; j < vector.shape[0]; j++) {
-            accumulator += matrix.host[i * matrix.shape[1] + j] * vector.host[j];
+            accumulator += matrix.data[i * matrix.shape[1] + j] * vector.data[j];
         }
-        destination.host[i] = accumulator;
+        destination.data[i] = accumulator;
     }
 #endif
 }
@@ -197,9 +197,9 @@ void naiveMatMul(const Tensor& m1, const Tensor& m2, Tensor& destination, size_t
         for (size_t column = columnStart; column < m; column++) {
             float acc = 0;
             for (size_t i = 0; i < k; i++) {
-                acc += m1.host[row * k + i] * m2.host[i * m + column];
+                acc += m1.data[row * k + i] * m2.data[i * m + column];
             }
-            destination.host[row * m + column] = acc;
+            destination.data[row * m + column] = acc;
         }
     }
 }
@@ -227,7 +227,7 @@ void naiveMatMul(const Tensor& m1, const Tensor& m2, Tensor& destination, size_t
  * @brief Compute a single row of an 8x8 tile.
  */
 #define COMPUTE_ROW(index) \
-    const __m256 m1ColumnValue##index = _mm256_broadcast_ss(m1.host + (row * 8 + (index)) * k + i); \
+    const __m256 m1ColumnValue##index = _mm256_broadcast_ss(m1.data + (row * 8 + (index)) * k + i); \
     const __m256 mulResult##index = _mm256_mul_ps(m2Row, m1ColumnValue##index); \
     v##index = _mm256_add_ps(mulResult##index, v##index)
 
@@ -247,7 +247,7 @@ void naiveMatMul(const Tensor& m1, const Tensor& m2, Tensor& destination, size_t
 /**
  * @brief Store a row of 8x8 tile to the result matrix.
  */
-#define STORE_ROW(index) _mm256_storeu_ps(destination.host + (row * 8 + (index)) * m + column * 8, v##index)
+#define STORE_ROW(index) _mm256_storeu_ps(destination.data + (row * 8 + (index)) * m + column * 8, v##index)
 
 /**
  * @brief Store all rows of an 8x8 tile to the result matrix.
@@ -278,7 +278,7 @@ void multiplyMatrixMatrixOnHost(const Tensor& m1, const Tensor& m2, Tensor& dest
 
             for (size_t i = 0; i < k; i++) {
                 // Load 8 floats from a row from m2
-                const __m256 m2Row = _mm256_loadu_ps(m2.host + i * m + column * 8);
+                const __m256 m2Row = _mm256_loadu_ps(m2.data + i * m + column * 8);
 
                 COMPUTE_ALL_ROWS();
             }
@@ -296,7 +296,7 @@ void multiplyMatrixMatrixOnHost(const Tensor& m1, const Tensor& m2, Tensor& dest
 void transposeMatrixOnHost(const Tensor& matrix, Tensor& destination) {
     for (size_t i = 0; i < matrix.shape[0]; i++) {
         for (size_t j = 0; j < matrix.shape[1]; j++) {
-            destination.host[j * destination.shape[1] + i] = matrix.host[i * matrix.shape[1] + j];
+            destination.data[j * destination.shape[1] + i] = matrix.data[i * matrix.shape[1] + j];
         }
     }
 }
@@ -305,14 +305,14 @@ void fillTensorOnHost(Tensor& tensor, float value) {
 #if defined __AVX2__ || defined __AVX__
     __m256 valueVector = _mm256_set1_ps(value);
     for (size_t i = 0; i < tensor.size / 8; i++) {
-        _mm256_storeu_ps(tensor.host + i * 8, valueVector);
+        _mm256_storeu_ps(tensor.data + i * 8, valueVector);
     }
     for (size_t i = (tensor.size / 8) * 8; i < tensor.size; i++) {
-        tensor.host[i] = value;
+        tensor.data[i] = value;
     }
 #else
     for (size_t i = 0; i < tensor.size; i++) {
-        tensor.host[i] = value;
+        tensor.data[i] = value;
     }
 #endif
 }

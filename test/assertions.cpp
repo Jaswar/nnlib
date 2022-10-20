@@ -12,10 +12,10 @@
     }
 
     for (size_t i = 0; i < result.size; i++) {
-        if (result.host[i] != expected.host[i]) {
+        if (result.data[i] != expected.data[i]) {
             return ::testing::AssertionFailure()
-                   << "The tensors are different at index " << i << " (expected: " << expected.host[i] << " was "
-                   << result.host[i] << ")";
+                   << "The tensors are different at index " << i << " (expected: " << expected.data[i] << " was "
+                   << result.data[i] << ")";
         }
     }
     return ::testing::AssertionSuccess();
@@ -37,10 +37,10 @@
     }
 
     for (size_t i = 0; i < result.size; i++) {
-        if (std::abs(result.host[i] - expected.host[i]) > delta) {
+        if (std::abs(result.data[i] - expected.data[i]) > delta) {
             return ::testing::AssertionFailure()
-                   << "The tensors are different at index " << i << " (expected: " << expected.host[i] << " was "
-                   << result.host[i] << ")";
+                   << "The tensors are different at index " << i << " (expected: " << expected.data[i] << " was "
+                   << result.data[i] << ")";
         }
     }
     return ::testing::AssertionSuccess();

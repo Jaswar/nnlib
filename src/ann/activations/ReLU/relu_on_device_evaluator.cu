@@ -58,7 +58,7 @@ void ReLUOnDeviceEvaluator::forward(const Tensor& input, Tensor& result) const {
 
     auto grid = input.size / input.session.threadsPerBlock + 1;
     auto block = input.session.threadsPerBlock;
-    reluKernel<<<grid, block>>>(input.device, result.device, input.size);
+    reluKernel<<<grid, block>>>(input.data, result.data, input.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
@@ -69,7 +69,7 @@ void ReLUOnDeviceEvaluator::computeDerivatives(const Tensor& output, Tensor& res
 
     auto grid = output.size / output.session.threadsPerBlock + 1;
     auto block = output.session.threadsPerBlock;
-    reluDerivativeKernel<<<grid, block>>>(output.device, result.device, output.size);
+    reluDerivativeKernel<<<grid, block>>>(output.data, result.data, output.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 

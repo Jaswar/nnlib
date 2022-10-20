@@ -55,10 +55,10 @@ std::vector<Tensor> splitIntoBatches(const Tensor& data, size_t batchSize) {
 
         Tensor batch = Tensor(rowsInBatch, data.shape[1]);
         if (data.location == DEVICE) {
-            copy1DFromDeviceToHost(data.device + i * data.shape[1] * batchSize, batch.host,
+            copy1DFromDeviceToHost(data.data + i * data.shape[1] * batchSize, batch.data,
                                    data.shape[1] * rowsInBatch);
         } else {
-            copy1DFromHostToHost(data.host + i * data.shape[1] * batchSize, batch.host, data.shape[1] * rowsInBatch);
+            copy1DFromHostToHost(data.data + i * data.shape[1] * batchSize, batch.data, data.shape[1] * rowsInBatch);
         }
         batch.move(data.location);
 
@@ -177,13 +177,13 @@ int computeCorrect(Tensor& expected, Tensor& predictions, size_t start) {
     for (int row = 0; row < predictions.shape[0]; row++) {
         int maxInx = 0;
         for (int i = 0; i < predictions.shape[1]; i++) {
-            if (predictions.host[row * predictions.shape[1] + i] >
-                predictions.host[row * predictions.shape[1] + maxInx]) {
+            if (predictions.data[row * predictions.shape[1] + i] >
+                predictions.data[row * predictions.shape[1] + maxInx]) {
                 maxInx = i;
             }
         }
 
-        if (expected.host[(start + row) * expected.shape[1] + maxInx] == 1) {
+        if (expected.data[(start + row) * expected.shape[1] + maxInx] == 1) {
             correct++;
         }
     }

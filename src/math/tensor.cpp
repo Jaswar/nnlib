@@ -15,9 +15,7 @@
 #include <string>
 #include <utils/location_verifiers.h>
 
-Tensor::Tensor() : shape(), size(0), location(HOST), device(nullptr) {
-    host = nullptr;
-}
+Tensor::Tensor() : shape(), size(0), location(HOST), data() {}
 
 Tensor::Tensor(const Tensor& other) {
     location = other.location;
@@ -30,9 +28,9 @@ Tensor::Tensor(const Tensor& other) {
     }
 
     if (location == HOST) {
-        host = copy1DArray(size, other.host);
+        data = copy1DArray(size, other.data);
     } else {
-        device = copy1DArrayDevice(size, other.device);
+        data = copy1DArrayDevice(size, other.data);
     }
 }
 
@@ -43,9 +41,9 @@ Tensor& Tensor::operator=(const Tensor& other) {
 
     if (size > 0) {
         if (location == HOST) {
-            free(host);
+            free(data);
         } else {
-            free1DArrayDevice(device);
+            free1DArrayDevice(data);
         }
     }
 
@@ -56,9 +54,9 @@ Tensor& Tensor::operator=(const Tensor& other) {
 
     if (size > 0) {
         if (location == HOST) {
-            host = copy1DArray(size, other.host);
+            data = copy1DArray(size, other.data);
         } else {
-            device = copy1DArrayDevice(size, other.device);
+            data = copy1DArrayDevice(size, other.data);
         }
     }
 
@@ -72,14 +70,14 @@ void Tensor::move(DataLocation target) {
 
     if (location == HOST) {
         float* newData = allocate1DArrayDevice(size);
-        copy1DFromHostToDevice(host, newData, size);
-        free(host);
-        device = newData;
+        copy1DFromHostToDevice(data, newData, size);
+        free(data);
+        data = newData;
     } else {
         float* newData = allocate1DArray(size);
-        copy1DFromDeviceToHost(device, newData, size);
-        free1DArrayDevice(device);
-        host = newData;
+        copy1DFromDeviceToHost(data, newData, size);
+        free1DArrayDevice(data);
+        data = newData;
     }
     location = target;
 }
@@ -90,9 +88,9 @@ Tensor::~Tensor() {
     }
 
     if (location == HOST) {
-        free(host);
+        free(data);
     } else {
-        free1DArrayDevice(device);
+        free1DArrayDevice(data);
     }
 }
 
@@ -117,7 +115,7 @@ Tensor Tensor::construct1d(const std::vector<float>& data) {
     }
     Tensor result = Tensor(data.size());
     for (size_t i = 0; i < data.size(); i++) {
-        result.host[i] = data[i];
+        result.data[i] = data[i];
     }
     return result;
 }
@@ -135,7 +133,7 @@ Tensor Tensor::construct2d(const std::vector<std::vector<float>>& data) {
         }
 
         for (size_t j = 0; j < data[0].size(); j++) {
-            result.host[i * result.shape[1] + j] = data[i][j];
+            result.data[i * result.shape[1] + j] = data[i][j];
         }
     }
     return result;

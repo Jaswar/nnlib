@@ -17,7 +17,7 @@ Tensor initializeRandom(Args... args) {
     Tensor tensor = Tensor(args...);
 
     for (size_t i = 0; i < tensor.size; i++) {
-        tensor.host[i] = getRandomValue();
+        tensor.data[i] = getRandomValue();
     }
 
     return tensor;

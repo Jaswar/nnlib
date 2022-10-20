@@ -251,28 +251,28 @@ __global__ void fillTensorKernel(float* tensor, float value, size_t size) {
 void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
     auto grid = a.size / a.session.threadsPerBlock + 1;
     auto block = a.session.threadsPerBlock;
-    addTensorsKernel<<<grid, block>>>(a.device, b.device, destination.device, a.size);
+    addTensorsKernel<<<grid, block>>>(a.data, b.data, destination.data, a.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
 void subtractTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
     auto grid = a.size / a.session.threadsPerBlock + 1;
     auto block = a.session.threadsPerBlock;
-    subtractTensorsKernel<<<grid, block>>>(a.device, b.device, destination.device, a.size);
+    subtractTensorsKernel<<<grid, block>>>(a.data, b.data, destination.data, a.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
 void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
     auto grid = a.size / a.session.threadsPerBlock + 1;
     auto block = a.session.threadsPerBlock;
-    hadamardTensorsKernel<<<grid, block>>>(a.device, b.device, destination.device, a.size);
+    hadamardTensorsKernel<<<grid, block>>>(a.data, b.data, destination.data, a.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
 void addBroadcastOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
     auto grid = matrix.size / matrix.session.threadsPerBlock + 1;
     auto block = matrix.session.threadsPerBlock;
-    addBroadcastKernel<<<grid, block>>>(matrix.device, vector.device, destination.device, matrix.shape[0],
+    addBroadcastKernel<<<grid, block>>>(matrix.data, vector.data, destination.data, matrix.shape[0],
                                         matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
@@ -280,12 +280,12 @@ void addBroadcastOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& de
 void multiplyTensorOnDevice(const Tensor& tensor, float constant, Tensor& destination) {
     auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
     auto block = tensor.session.threadsPerBlock;
-    multiplyTensorKernel<<<grid, block>>>(tensor.device, constant, destination.device, tensor.size);
+    multiplyTensorKernel<<<grid, block>>>(tensor.data, constant, destination.data, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
 void multiplyMatrixVectorOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
-    mulMatrixVectorKernel<<<1, matrix.shape[0]>>>(matrix.device, vector.device, destination.device, matrix.shape[0],
+    mulMatrixVectorKernel<<<1, matrix.shape[0]>>>(matrix.data, vector.data, destination.data, matrix.shape[0],
                                                   matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
@@ -293,13 +293,13 @@ void multiplyMatrixVectorOnDevice(const Tensor& matrix, const Tensor& vector, Te
 void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& destination) {
     auto grid = m1.size / m1.session.threadsPerBlock + 1;
     auto block = m1.session.threadsPerBlock;
-    multiplyMatricesNoTilingKernel<<<grid, block>>>(m1.device, m2.device, destination.device, m1.shape[0], m1.shape[1],
+    multiplyMatricesNoTilingKernel<<<grid, block>>>(m1.data, m2.data, destination.data, m1.shape[0], m1.shape[1],
                                                     m2.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
 void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
-    transposeMatrixKernel<<<matrix.shape[0], matrix.shape[1]>>>(matrix.device, destination.device, matrix.shape[0],
+    transposeMatrixKernel<<<matrix.shape[0], matrix.shape[1]>>>(matrix.data, destination.data, matrix.shape[0],
                                                                 matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
@@ -307,7 +307,7 @@ void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
 void fillTensorOnDevice(Tensor& tensor, float value) {
     auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
     auto block = tensor.session.threadsPerBlock;
-    fillTensorKernel<<<grid, block>>>(tensor.device, value, tensor.size);
+    fillTensorKernel<<<grid, block>>>(tensor.data, value, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 

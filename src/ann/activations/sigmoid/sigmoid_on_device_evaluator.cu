@@ -61,7 +61,7 @@ void SigmoidOnDeviceEvaluator::forward(const Tensor& input, Tensor& result) cons
 
     auto grid = input.size / input.session.threadsPerBlock + 1;
     auto block = input.session.threadsPerBlock;
-    sigmoidKernel<<<grid, block>>>(input.device, result.device, input.size);
+    sigmoidKernel<<<grid, block>>>(input.data, result.data, input.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
@@ -72,7 +72,7 @@ void SigmoidOnDeviceEvaluator::computeDerivatives(const Tensor& output, Tensor& 
 
     auto grid = output.size / output.session.threadsPerBlock + 1;
     auto block = output.session.threadsPerBlock;
-    sigmoidDerivativeKernel<<<grid, block>>>(output.device, result.device, output.size);
+    sigmoidDerivativeKernel<<<grid, block>>>(output.data, result.data, output.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 

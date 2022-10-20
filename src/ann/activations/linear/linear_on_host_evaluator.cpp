@@ -15,7 +15,7 @@ void LinearOnHostEvaluator::forward(const Tensor& input, Tensor& result) const {
     }
 
     for (size_t index = 0; index < input.size; index++) {
-        result.host[index] = input.host[index];
+        result.data[index] = input.data[index];
     }
 }
 
@@ -25,7 +25,7 @@ void LinearOnHostEvaluator::computeDerivatives(const Tensor& output, Tensor& res
     }
 
     for (size_t index = 0; index < output.size; index++) {
-        result.host[index] = 1;
+        result.data[index] = 1;
     }
 }
 

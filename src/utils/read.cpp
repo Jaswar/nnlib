@@ -93,10 +93,10 @@ void threadCSVJob(const std::vector<std::string>& lines, const std::string& deli
         size_t start = 0, end;
         int j = 0;
         while ((end = line.find(delim, start)) != std::string::npos) {
-            result.host[index * result.shape[1] + j++] = static_cast<float>(std::stod(line.substr(start, end - start)));
+            result.data[index * result.shape[1] + j++] = static_cast<float>(std::stod(line.substr(start, end - start)));
             start = end + delim.length();
         }
-        result.host[index * result.shape[1] + j] = static_cast<float>(std::stod(line.substr(start)));
+        result.data[index * result.shape[1] + j] = static_cast<float>(std::stod(line.substr(start)));
     }
 
     if (id == 0) {

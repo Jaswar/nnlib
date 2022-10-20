@@ -15,10 +15,10 @@ void ReLUOnHostEvaluator::forward(const Tensor& input, Tensor& result) const {
     }
 
     for (size_t index = 0; index < input.size; index++) {
-        if (input.host[index] <= 0) {
-            result.host[index] = 0;
+        if (input.data[index] <= 0) {
+            result.data[index] = 0;
         } else {
-            result.host[index] = input.host[index];
+            result.data[index] = input.data[index];
         }
     }
 }
@@ -29,10 +29,10 @@ void ReLUOnHostEvaluator::computeDerivatives(const Tensor& output, Tensor& resul
     }
 
     for (size_t index = 0; index < output.size; index++) {
-        if (output.host[index] <= 0) {
-            result.host[index] = 0;
+        if (output.data[index] <= 0) {
+            result.data[index] = 0;
         } else {
-            result.host[index] = 1;
+            result.data[index] = 1;
         }
     }
 }
