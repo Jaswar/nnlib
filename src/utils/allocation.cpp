@@ -9,18 +9,18 @@
 #include <cstdlib>
 #include <cstring>
 
-DTYPE** allocate2DArray(size_t n, size_t m) {
-    auto data = static_cast<DTYPE**>(malloc(sizeof(DTYPE*) * n));
+float** allocate2DArray(size_t n, size_t m) {
+    auto data = static_cast<float**>(malloc(sizeof(float*) * n));
 
     for (int i = 0; i < n; i++) {
-        data[i] = static_cast<DTYPE*>(malloc(sizeof(DTYPE) * m));
+        data[i] = static_cast<float*>(malloc(sizeof(float) * m));
     }
 
     return data;
 }
 
-DTYPE** allocate2DArray(size_t n, size_t m, DTYPE defaultValue) {
-    DTYPE** allocated = allocate2DArray(n, m);
+float** allocate2DArray(size_t n, size_t m, float defaultValue) {
+    float** allocated = allocate2DArray(n, m);
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
@@ -31,12 +31,12 @@ DTYPE** allocate2DArray(size_t n, size_t m, DTYPE defaultValue) {
     return allocated;
 }
 
-DTYPE* allocate1DArray(size_t n) {
-    return static_cast<DTYPE*>(malloc(sizeof(DTYPE) * n));
+float* allocate1DArray(size_t n) {
+    return static_cast<float*>(malloc(sizeof(float) * n));
 }
 
-DTYPE* allocate1DArray(size_t n, DTYPE defaultValue) {
-    DTYPE* allocated = allocate1DArray(n);
+float* allocate1DArray(size_t n, float defaultValue) {
+    float* allocated = allocate1DArray(n);
 
     for (int i = 0; i < n; i++) {
         allocated[i] = defaultValue;
@@ -45,25 +45,25 @@ DTYPE* allocate1DArray(size_t n, DTYPE defaultValue) {
     return allocated;
 }
 
-DTYPE* copy1DArray(size_t n, DTYPE* original) {
-    DTYPE* copy = allocate1DArray(n);
+float* copy1DArray(size_t n, float* original) {
+    float* copy = allocate1DArray(n);
 
-    memcpy(copy, original, n * sizeof(DTYPE));
+    memcpy(copy, original, n * sizeof(float));
 
     return copy;
 }
 
-DTYPE** copy2DArray(size_t n, size_t m, DTYPE** original) {
-    DTYPE** copy = allocate2DArray(n, m);
+float** copy2DArray(size_t n, size_t m, float** original) {
+    float** copy = allocate2DArray(n, m);
 
     // Only the second pointer contains data, so copy only it. The first is an array of pointers.
     for (int i = 0; i < n; i++) {
-        memcpy(copy[i], original[i], m * sizeof(DTYPE));
+        memcpy(copy[i], original[i], m * sizeof(float));
     }
 
     return copy;
 }
 
 void copy1DFromHostToHost(float* oldLoc, float* newLoc, size_t n) {
-    memcpy(newLoc, oldLoc, n * sizeof(DTYPE));
+    memcpy(newLoc, oldLoc, n * sizeof(float));
 }

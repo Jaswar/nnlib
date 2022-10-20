@@ -29,7 +29,7 @@
  * @param n The number of rows of the matrix.
  * @param m The number of columns of the matrix.
  */
-__global__ void linearKernel(const DTYPE* input, DTYPE* result, size_t size) {
+__global__ void linearKernel(const float* input, float* result, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= size) {
@@ -49,7 +49,7 @@ __global__ void linearKernel(const DTYPE* input, DTYPE* result, size_t size) {
  * @param n The number of rows of the matrix.
  * @param m The number of columns of the matrix.
  */
-__global__ void linearDerivativeKernel(const DTYPE* output, DTYPE* result, size_t size) {
+__global__ void linearDerivativeKernel(const float* output, float* result, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= size) {

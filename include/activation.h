@@ -82,7 +82,7 @@ public:
      *
      * Calls ActivationEvaluator::forward() on the correct evaluator depending on if data is located on host or device.
      *
-     * @param input The vector to apply activation function on.
+     * @param input The tensor to apply activation function on.
      * @param result Where the applied activation function should be written to.
      *
      * @throws SizeMismatchException If sizes of the parameters don't match.

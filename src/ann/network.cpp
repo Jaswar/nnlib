@@ -112,7 +112,7 @@ Tensor* Network::forward(const Tensor& batch) {
     return &layers.back().aMatrix;
 }
 
-void Network::backward(const Tensor& predicted, const Tensor& target, DTYPE learningRate) {
+void Network::backward(const Tensor& predicted, const Tensor& target, float learningRate) {
     if (loss.shape != predicted.shape) {
         loss = Tensor(predicted.shape[0], loss.shape[1]);
         loss.move(location);
@@ -214,7 +214,7 @@ void displayEpochProgress(size_t processedRows, size_t totalRows, size_t millise
 }
 
 //NOLINTNEXTLINE(readability-identifier-naming)
-void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, DTYPE learningRate) {
+void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate) {
     if (X.shape[0] != y.shape[0]) {
         throw SizeMismatchException();
     }
@@ -238,7 +238,7 @@ void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, DTYPE le
 }
 
 void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost,
-                           DTYPE learningRate) {
+                           float learningRate) {
     int correct = 0;
     int total = 0;
     auto epochStart = std::chrono::steady_clock::now();

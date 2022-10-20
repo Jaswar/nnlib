@@ -11,8 +11,8 @@
 #include <exceptions/different_data_location_exception.h>
 #include <utils/location_verifiers.h>
 
-DTYPE fSigmoid(DTYPE x) {
-    return 1 / (1 + static_cast<DTYPE>(exp(-static_cast<double>(x))));
+float fSigmoid(float x) {
+    return 1 / (1 + static_cast<float>(exp(-static_cast<double>(x))));
 }
 
 void SigmoidOnHostEvaluator::forward(const Tensor& input, Tensor& result) const {

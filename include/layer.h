@@ -189,7 +189,7 @@ public:
      * @param batchSize The size of the batch.
      * @param learningRate The learning rate of the model.
      */
-    void applyGradients(size_t batchSize, DTYPE learningRate = 0.01);
+    void applyGradients(size_t batchSize, float learningRate = 0.01);
 
     /**
      * @brief Calculate the derivatives of the output.

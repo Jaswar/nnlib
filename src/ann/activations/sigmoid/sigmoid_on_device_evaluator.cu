@@ -24,14 +24,14 @@
  * @param x The input to the sigmoid function.
  * @return The output of the sigmoid function.
  */
-__device__ DTYPE fSigmoidKernel(DTYPE x) {
+__device__ float fSigmoidKernel(float x) {
     return 1 / (1 + expf(-x));
 }
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
-/** @copydoc linear_on_device_evaluator.cu::linearKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m) */
-__global__ void sigmoidKernel(DTYPE* input, DTYPE* result, size_t size) {
+/** @copydoc linear_on_device_evaluator.cu::linearKernel(const float *matrix, float *result, size_t n, size_t m) */
+__global__ void sigmoidKernel(float* input, float* result, size_t size) {
     auto index = blockDim.x * blockIdx.x + threadIdx.x;
 
     if (index >= size) {
@@ -41,8 +41,8 @@ __global__ void sigmoidKernel(DTYPE* input, DTYPE* result, size_t size) {
     result[index] = fSigmoidKernel(input[index]);
 }
 
-/** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const DTYPE *matrix, DTYPE *result, size_t n, size_t m) */
-__global__ void sigmoidDerivativeKernel(DTYPE* output, DTYPE* result, size_t size) {
+/** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const float *matrix, float *result, size_t n, size_t m) */
+__global__ void sigmoidDerivativeKernel(float* output, float* result, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= size) {

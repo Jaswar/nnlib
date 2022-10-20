@@ -11,7 +11,7 @@
 #include <utility>
 
 /**
- * @brief Generate a random #DTYPE value.
+ * @brief Generate a random float value.
  *
  * Currently the method only returns uniformly distributed numbers in the range (-0.2, 0.2).
  *
@@ -147,11 +147,11 @@ void Layer::backward(const Tensor& delta, const Tensor& previousWeights, size_t 
     }
 }
 
-void Layer::applyGradients(size_t batchSize, DTYPE learningRate) {
-    multiply(biasesGradients, learningRate / static_cast<DTYPE>(batchSize), biasesGradients);
+void Layer::applyGradients(size_t batchSize, float learningRate) {
+    multiply(biasesGradients, learningRate / static_cast<float>(batchSize), biasesGradients);
     subtract(biases, biasesGradients, biases);
 
-    multiply(weightsGradients, learningRate / static_cast<DTYPE>(batchSize), weightsGradients);
+    multiply(weightsGradients, learningRate / static_cast<float>(batchSize), weightsGradients);
     subtract(weights, weightsGradients, weights);
 }
 

@@ -17,7 +17,7 @@
  * @param set The set to look for @p value in.
  * @return The index of @p value in @p set or -1 if the value is not found.
  */
-int indexOf(DTYPE value, const std::set<DTYPE>& set) {
+int indexOf(float value, const std::set<float>& set) {
     int index = 0;
     for (auto& v : set) {
         if (v == value) {
@@ -33,7 +33,7 @@ Tensor oneHotEncode(const Tensor& vector) {
         throw UnsupportedOperationException();
     }
 
-    std::set<DTYPE> unique;
+    std::set<float> unique;
     for (int i = 0; i < vector.shape[0]; i++) {
         unique.insert(vector.host[i]);
     }
@@ -45,7 +45,7 @@ Tensor oneHotEncode(const Tensor& vector) {
     fill(0, result);
 
     for (int i = 0; i < vector.shape[0]; i++) {
-        DTYPE value = vector.host[i];
+        float value = vector.host[i];
         int index = indexOf(value, unique);
         result.host[i * result.shape[1] + index] = 1;
     }

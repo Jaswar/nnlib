@@ -64,7 +64,7 @@ std::vector<std::string> readFile(const std::string& filepath) {
 /**
  * @brief A method that is executed by every thread during readCSV().
  *
- * Each thread takes some part of the lines of the file, splits them by the delimiter, converts the values to #DTYPE
+ * Each thread takes some part of the lines of the file, splits them by the delimiter, converts the values to float
  * and saves those values into a result matrix.
  *
  * @param lines The lines as read from the file.
@@ -93,10 +93,10 @@ void threadCSVJob(const std::vector<std::string>& lines, const std::string& deli
         size_t start = 0, end;
         int j = 0;
         while ((end = line.find(delim, start)) != std::string::npos) {
-            result.host[index * result.shape[1] + j++] = static_cast<DTYPE>(std::stod(line.substr(start, end - start)));
+            result.host[index * result.shape[1] + j++] = static_cast<float>(std::stod(line.substr(start, end - start)));
             start = end + delim.length();
         }
-        result.host[index * result.shape[1] + j] = static_cast<DTYPE>(std::stod(line.substr(start)));
+        result.host[index * result.shape[1] + j] = static_cast<float>(std::stod(line.substr(start)));
     }
 
     if (id == 0) {

@@ -101,7 +101,7 @@ public:
      * @param target The targets for that batch of data.
      * @param learningRate The learning rate of the model.
      */
-    void backward(const Tensor& predicted, const Tensor& target, DTYPE learningRate = 0.01);
+    void backward(const Tensor& predicted, const Tensor& target, float learningRate = 0.01);
 
     /**
      * @brief Train the network.
@@ -119,7 +119,7 @@ public:
      * @param learningRate The learning rate of the algorithm.
      */
     //NOLINTNEXTLINE(readability-identifier-naming)
-    void train(Tensor& X, Tensor& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE, DTYPE learningRate = 0.01);
+    void train(Tensor& X, Tensor& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE, float learningRate = 0.01);
 
 private:
     /**
@@ -134,7 +134,7 @@ private:
      * @param yHost Matrix that stores the whole y array on host.
      * @param learningRate The learning rate used during training.
      */
-    void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost, DTYPE learningRate);
+    void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost, float learningRate);
 };
 
 

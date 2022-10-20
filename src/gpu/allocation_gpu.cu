@@ -12,46 +12,46 @@
 
 #ifdef HAS_CUDA
 
-DTYPE* allocate1DArrayDevice(size_t n) {
-    DTYPE* allocated;
-    GPU_CHECK_ERROR(cudaMalloc(&allocated, n * sizeof(DTYPE)));
+float* allocate1DArrayDevice(size_t n) {
+    float* allocated;
+    GPU_CHECK_ERROR(cudaMalloc(&allocated, n * sizeof(float)));
     return allocated;
 }
 
-void copy1DFromDeviceToDevice(DTYPE* oldLoc, DTYPE* newLoc, size_t n) {
-    GPU_CHECK_ERROR(cudaMemcpy(newLoc, oldLoc, n * sizeof(DTYPE), cudaMemcpyDeviceToDevice));
+void copy1DFromDeviceToDevice(float* oldLoc, float* newLoc, size_t n) {
+    GPU_CHECK_ERROR(cudaMemcpy(newLoc, oldLoc, n * sizeof(float), cudaMemcpyDeviceToDevice));
 }
 
-void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, size_t n) {
-    GPU_CHECK_ERROR(cudaMemcpy(device, host, n * sizeof(DTYPE), cudaMemcpyHostToDevice));
+void copy1DFromHostToDevice(float* host, float* device, size_t n) {
+    GPU_CHECK_ERROR(cudaMemcpy(device, host, n * sizeof(float), cudaMemcpyHostToDevice));
 }
 
-void copy2DFromHostToDevice(DTYPE** host, DTYPE* device, size_t n, size_t m) {
-    DTYPE* temp = allocate1DArray(n * m);
+void copy2DFromHostToDevice(float** host, float* device, size_t n, size_t m) {
+    float* temp = allocate1DArray(n * m);
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             temp[i * m + j] = host[i][j];
         }
     }
-    GPU_CHECK_ERROR(cudaMemcpy(device, temp, n * m * sizeof(DTYPE), cudaMemcpyHostToDevice));
+    GPU_CHECK_ERROR(cudaMemcpy(device, temp, n * m * sizeof(float), cudaMemcpyHostToDevice));
     free(temp);
 }
 
-void free1DArrayDevice(DTYPE* device) {
+void free1DArrayDevice(float* device) {
     GPU_CHECK_ERROR(cudaFree(device));
 }
 
-void copy1DFromDeviceToHost(DTYPE* device, DTYPE* host, size_t n) {
-    GPU_CHECK_ERROR(cudaMemcpy(host, device, n * sizeof(DTYPE), cudaMemcpyDeviceToHost));
+void copy1DFromDeviceToHost(float* device, float* host, size_t n) {
+    GPU_CHECK_ERROR(cudaMemcpy(host, device, n * sizeof(float), cudaMemcpyDeviceToHost));
 }
 
-void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, size_t n, size_t m) {
-    DTYPE* temp = allocate1DArray(n * m);
-    GPU_CHECK_ERROR(cudaMemcpy(temp, device, n * m * sizeof(DTYPE), cudaMemcpyDeviceToHost));
+void copy2DFromDeviceToHost(float* device, float** host, size_t n, size_t m) {
+    float* temp = allocate1DArray(n * m);
+    GPU_CHECK_ERROR(cudaMemcpy(temp, device, n * m * sizeof(float), cudaMemcpyDeviceToHost));
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            DTYPE val = temp[i * m + j];
+            float val = temp[i * m + j];
             host[i][j] = val;
         }
     }
@@ -59,43 +59,43 @@ void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, size_t n, size_t m) {
     free(temp);
 }
 
-DTYPE* copy1DArrayDevice(size_t n, DTYPE* old) {
-    DTYPE* allocated = allocate1DArrayDevice(n);
-    GPU_CHECK_ERROR(cudaMemcpy(allocated, old, n * sizeof(DTYPE), cudaMemcpyDeviceToDevice));
+float* copy1DArrayDevice(size_t n, float* old) {
+    float* allocated = allocate1DArrayDevice(n);
+    GPU_CHECK_ERROR(cudaMemcpy(allocated, old, n * sizeof(float), cudaMemcpyDeviceToDevice));
     return allocated;
 }
 
 #else
 
-DTYPE* allocate1DArrayDevice(size_t n) {
+float* allocate1DArrayDevice(size_t n) {
     throw UnexpectedCUDACallException();
 }
 
-void copy1DFromDeviceToDevice(DTYPE* oldLoc, DTYPE* newLoc, size_t n) {
+void copy1DFromDeviceToDevice(float* oldLoc, float* newLoc, size_t n) {
     throw UnexpectedCUDACallException();
 }
 
-void copy1DFromHostToDevice(DTYPE* host, DTYPE* device, size_t n) {
+void copy1DFromHostToDevice(float* host, float* device, size_t n) {
     throw UnexpectedCUDACallException();
 }
 
-void copy2DFromHostToDevice(DTYPE** host, DTYPE* device, size_t n, size_t m) {
+void copy2DFromHostToDevice(float** host, float* device, size_t n, size_t m) {
     throw UnexpectedCUDACallException();
 }
 
-void free1DArrayDevice(DTYPE* device) {
+void free1DArrayDevice(float* device) {
     throw UnexpectedCUDACallException();
 }
 
-void copy1DFromDeviceToHost(DTYPE* device, DTYPE* host, size_t n) {
+void copy1DFromDeviceToHost(float* device, float* host, size_t n) {
     throw UnexpectedCUDACallException();
 }
 
-void copy2DFromDeviceToHost(DTYPE* device, DTYPE** host, size_t n, size_t m) {
+void copy2DFromDeviceToHost(float* device, float** host, size_t n, size_t m) {
     throw UnexpectedCUDACallException();
 }
 
-DTYPE* copy1DArrayDevice(size_t n, DTYPE* old) {
+float* copy1DArrayDevice(size_t n, float* old) {
     throw UnexpectedCUDACallException();
 }
 

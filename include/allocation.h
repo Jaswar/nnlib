@@ -2,7 +2,7 @@
  * @file allocation.h
  * @brief Header file to declare common functions regarding memory allocation on host.
  *
- * All functions in the file only allocate/copy memory of type #DTYPE.
+ * All functions in the file only allocate/copy float memory.
  *
  * @author Jan Warchocki
  * @date 03 March 2022
@@ -15,26 +15,21 @@
 #include <cstddef>
 
 /**
- * @brief Data type used throughout the library as the main storage and computation type.
- */
-#define DTYPE float
-
-/**
  * @brief Allocate 1D array.
  *
  * @param n The size of the array to allocate.
- * @return Allocated #DTYPE array of size @p n.
+ * @return Allocated array of size @p n.
  */
-DTYPE* allocate1DArray(size_t n);
+float* allocate1DArray(size_t n);
 
 /**
  * @brief Allocate 1D array with a default value.
  *
  * @param n The size of the array to allocate.
  * @param defaultValue The default value to fill the array with.
- * @return Allocated #DTYPE array of size @p n.
+ * @return Allocated array of size @p n.
  */
-DTYPE* allocate1DArray(size_t n, DTYPE defaultValue);
+float* allocate1DArray(size_t n, float defaultValue);
 
 /**
  * @brief Allocate 2D array.
@@ -43,9 +38,9 @@ DTYPE* allocate1DArray(size_t n, DTYPE defaultValue);
  *
  * @param n The number of rows of the array.
  * @param m The number of columns of the array.
- * @return Allocated #DTYPE array of size @p n x @p m.
+ * @return Allocated array of size @p n x @p m.
  */
-DTYPE** allocate2DArray(size_t n, size_t m);
+float** allocate2DArray(size_t n, size_t m);
 
 /**
  * @brief Allocate 2D array with a default value.
@@ -55,9 +50,9 @@ DTYPE** allocate2DArray(size_t n, size_t m);
  * @param n The number of rows of the array.
  * @param m The number of columns of the array.
  * @param defaultValue The default value to fill the array with.
- * @return Allocated #DTYPE array of size @p n x @p m.
+ * @return Allocated array of size @p n x @p m.
  */
-DTYPE** allocate2DArray(size_t n, size_t m, DTYPE defaultValue);
+float** allocate2DArray(size_t n, size_t m, float defaultValue);
 
 void copy1DFromHostToHost(float* oldLoc, float* newLoc, size_t n);
 
@@ -68,7 +63,7 @@ void copy1DFromHostToHost(float* oldLoc, float* newLoc, size_t n);
  * @param original The array to be copied.
  * @return Copied array.
  */
-DTYPE* copy1DArray(size_t n, DTYPE* original);
+float* copy1DArray(size_t n, float* original);
 
 /**
  * @brief Copy 2D array to a new location.
@@ -78,6 +73,6 @@ DTYPE* copy1DArray(size_t n, DTYPE* original);
  * @param original The array to be copied.
  * @return Copied array.
  */
-DTYPE** copy2DArray(size_t n, size_t m, DTYPE** original);
+float** copy2DArray(size_t n, size_t m, float** original);
 
 #endif //NNLIB_ALLOCATION_H
