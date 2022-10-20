@@ -1,5 +1,5 @@
 WarningsAsErrors: '*'
-HeaderFilterRegex: '(\./(src|include)/.*\.(cpp|cu|h|cuh))|(\./test/(assertions|utils)\.(cpp|h))'
+HeaderFilterRegex: '(\./(src|include)/.*\.(cpp|cu|h|cuh))|(\./test/(assertions|test_utils)\.(cpp|h))'
 CheckOptions:
   - key: google-readability-function-size.LineThreshold
     value: 30
@@ -61,7 +61,6 @@ Checks:   '-*,
           misc-definitions-in-headers,
           misc-misplaced-const,
           misc-new-delete-overloads,
-          misc-no-recursion,
           misc-non-copyable-objects,
           misc-throw-by-value-catch-by-reference,
           misc-unconventional-assign-operator,

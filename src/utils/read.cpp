@@ -9,9 +9,9 @@
 #include "printing.h"
 #include <cmath>
 #include <fstream>
+#include <iostream>
 #include <thread>
 #include <utility>
-#include <iostream>
 
 /**
  * @brief Splits a string given the delimiter.

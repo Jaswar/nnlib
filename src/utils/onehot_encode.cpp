@@ -7,8 +7,8 @@
 
 
 #include "onehot_encode.h"
-#include <set>
 #include <exceptions/unsupported_operation_exception.h>
+#include <set>
 
 /**
  * @brief Return the index of a value in a set.

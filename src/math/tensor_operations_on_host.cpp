@@ -247,8 +247,7 @@ void naiveMatMul(const Tensor& m1, const Tensor& m2, Tensor& destination, size_t
 /**
  * @brief Store a row of 8x8 tile to the result matrix.
  */
-#define STORE_ROW(index) \
-    _mm256_storeu_ps(destination.host + (row * 8 + (index)) * m + column * 8, v##index)
+#define STORE_ROW(index) _mm256_storeu_ps(destination.host + (row * 8 + (index)) * m + column * 8, v##index)
 
 /**
  * @brief Store all rows of an 8x8 tile to the result matrix.
@@ -317,4 +316,3 @@ void fillTensorOnHost(Tensor& tensor, float value) {
     }
 #endif
 }
-

@@ -121,8 +121,8 @@ void Layer::forward(const Tensor& batch) {
 }
 
 void Layer::backward(const Tensor& delta, const Tensor& previousWeights, size_t batchSize, bool isLastLayer) {
-    if (previousWeightsT.shape[0] != previousWeights.shape[1]
-            || previousWeightsT.shape[1] != previousWeights.shape[0]) {
+    if (previousWeightsT.shape[0] != previousWeights.shape[1] ||
+        previousWeightsT.shape[1] != previousWeights.shape[0]) {
         previousWeightsT = Tensor(previousWeights.shape[1], previousWeights.shape[0]);
         previousWeightsT.move(location);
     }

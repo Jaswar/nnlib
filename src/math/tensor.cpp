@@ -5,15 +5,15 @@
  * @date 26 August 2022
  */
 
-#include <string>
-#include <exceptions/size_mismatch_exception.h>
-#include <utils/location_verifiers.h>
-#include <exceptions/different_data_location_exception.h>
-#include <exceptions/unsupported_operation_exception.h>
 #include "tensor.h"
 #include "../gpu/allocation_gpu.cuh"
-#include "tensor_operations_on_host.h"
 #include "tensor_operations_on_device.cuh"
+#include "tensor_operations_on_host.h"
+#include <exceptions/different_data_location_exception.h>
+#include <exceptions/size_mismatch_exception.h>
+#include <exceptions/unsupported_operation_exception.h>
+#include <string>
+#include <utils/location_verifiers.h>
 
 Tensor::Tensor() : shape(), size(0), location(HOST), device(nullptr) {
     host = nullptr;
@@ -322,5 +322,3 @@ void transpose(const Tensor& matrix, Tensor& destination) {
         throw DifferentDataLocationException();
     }
 }
-
-

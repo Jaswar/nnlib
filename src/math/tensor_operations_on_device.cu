@@ -5,9 +5,9 @@
  * @date 29 August 2022
  */
 
-#include <gpu/assert.cuh>
 #include "tensor_operations_on_device.cuh"
 #include <exceptions/unexpected_cuda_call_exception.h>
+#include <gpu/assert.cuh>
 
 #ifdef HAS_CUDA
 
@@ -84,7 +84,8 @@ __global__ void subtractTensorsKernel(const float* a, const float* b, float* des
  * @param n The number of rows of the matrix.
  * @param m The number of columns of the matrix. Same as the size of the vector.
  */
-__global__ void mulMatrixVectorKernel(const float* matrix, const float* vector, float* destination, size_t n, size_t m) {
+__global__ void mulMatrixVectorKernel(const float* matrix, const float* vector, float* destination, size_t n,
+                                      size_t m) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= n) {
@@ -271,7 +272,8 @@ void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destinati
 void addBroadcastOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
     auto grid = matrix.size / matrix.session.threadsPerBlock + 1;
     auto block = matrix.session.threadsPerBlock;
-    addBroadcastKernel<<<grid, block>>>(matrix.device, vector.device, destination.device, matrix.shape[0], matrix.shape[1]);
+    addBroadcastKernel<<<grid, block>>>(matrix.device, vector.device, destination.device, matrix.shape[0],
+                                        matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
@@ -283,22 +285,22 @@ void multiplyTensorOnDevice(const Tensor& tensor, float constant, Tensor& destin
 }
 
 void multiplyMatrixVectorOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
-    mulMatrixVectorKernel<<<1, matrix.shape[0]>>>(matrix.device, vector.device,
-                                                  destination.device, matrix.shape[0], matrix.shape[1]);
+    mulMatrixVectorKernel<<<1, matrix.shape[0]>>>(matrix.device, vector.device, destination.device, matrix.shape[0],
+                                                  matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
 void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& destination) {
     auto grid = m1.size / m1.session.threadsPerBlock + 1;
     auto block = m1.session.threadsPerBlock;
-    multiplyMatricesNoTilingKernel<<<grid, block>>>(m1.device, m2.device, destination.device,
-                                                    m1.shape[0], m1.shape[1], m2.shape[1]);
+    multiplyMatricesNoTilingKernel<<<grid, block>>>(m1.device, m2.device, destination.device, m1.shape[0], m1.shape[1],
+                                                    m2.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
 void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
-    transposeMatrixKernel<<<matrix.shape[0], matrix.shape[1]>>>(matrix.device, destination.device,
-                                                                matrix.shape[0], matrix.shape[1]);
+    transposeMatrixKernel<<<matrix.shape[0], matrix.shape[1]>>>(matrix.device, destination.device, matrix.shape[0],
+                                                                matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 

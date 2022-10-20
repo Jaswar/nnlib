@@ -8,15 +8,13 @@
 #ifndef NNLIB_TENSOR_H
 #define NNLIB_TENSOR_H
 
-#include <cstdlib>
-#include <vector>
-#include "session.h"
 #include "allocation.h"
+#include "session.h"
+#include <cstdlib>
 #include <iostream>
+#include <vector>
 
-enum DataLocation {
-    HOST, DEVICE
-};
+enum DataLocation { HOST, DEVICE };
 
 class Tensor {
 public:

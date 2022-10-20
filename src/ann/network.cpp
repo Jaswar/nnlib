@@ -13,8 +13,8 @@
 #include <ctime>
 #include <exceptions/size_mismatch_exception.h>
 #include <iomanip>
-#include <utils/printing.h>
 #include <iostream>
+#include <utils/printing.h>
 
 /**
  * @brief Split the input matrix into batches.
@@ -55,7 +55,8 @@ std::vector<Tensor> splitIntoBatches(const Tensor& data, size_t batchSize) {
 
         Tensor batch = Tensor(rowsInBatch, data.shape[1]);
         if (data.location == DEVICE) {
-            copy1DFromDeviceToHost(data.device + i * data.shape[1] * batchSize, batch.host, data.shape[1] * rowsInBatch);
+            copy1DFromDeviceToHost(data.device + i * data.shape[1] * batchSize, batch.host,
+                                   data.shape[1] * rowsInBatch);
         } else {
             copy1DFromHostToHost(data.host + i * data.shape[1] * batchSize, batch.host, data.shape[1] * rowsInBatch);
         }
@@ -176,7 +177,8 @@ int computeCorrect(Tensor& expected, Tensor& predictions, size_t start) {
     for (int row = 0; row < predictions.shape[0]; row++) {
         int maxInx = 0;
         for (int i = 0; i < predictions.shape[1]; i++) {
-            if (predictions.host[row * predictions.shape[1] + i] > predictions.host[row * predictions.shape[1] + maxInx]) {
+            if (predictions.host[row * predictions.shape[1] + i] >
+                predictions.host[row * predictions.shape[1] + maxInx]) {
                 maxInx = i;
             }
         }
@@ -255,7 +257,8 @@ void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& ta
         auto batchEnd = std::chrono::steady_clock::now();
         size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(batchEnd - epochStart).count();
 
-        displayEpochProgress((row + 1) * batch.shape[0], yHost.shape[0], milliseconds, static_cast<double>(correct) / total);
+        displayEpochProgress((row + 1) * batch.shape[0], yHost.shape[0], milliseconds,
+                             static_cast<double>(correct) / total);
     }
 
     auto epochEnd = std::chrono::steady_clock::now();

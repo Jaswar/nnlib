@@ -119,8 +119,7 @@ public:
      * @param learningRate The learning rate of the algorithm.
      */
     //NOLINTNEXTLINE(readability-identifier-naming)
-    void train(Tensor& X, Tensor& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE,
-               DTYPE learningRate = 0.01);
+    void train(Tensor& X, Tensor& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE, DTYPE learningRate = 0.01);
 
 private:
     /**

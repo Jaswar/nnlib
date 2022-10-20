@@ -8,8 +8,8 @@
 #ifndef NNLIB_ACTIVATION_H
 #define NNLIB_ACTIVATION_H
 
-#include "verify.cuh"
 #include "tensor.h"
+#include "verify.cuh"
 
 /**
  * @brief Abstract class representing an evaluator of an activation function.
