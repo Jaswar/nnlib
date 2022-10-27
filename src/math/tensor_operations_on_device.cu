@@ -1,6 +1,6 @@
 /**
  * @file tensor_operations_on_device.cu
- * @brief
+ * @brief Source file defining tensor operations that happen on device.
  * @author Jan Warchocki
  * @date 29 August 2022
  */

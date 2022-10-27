@@ -228,7 +228,8 @@ void multiply(const Tensor& tensor, float constant, Tensor& destination);
 /**
  * @brief Multiply one tensor with another.
  *
- * The only currently supported multiplications are matrix-matrix and matrix-vector.
+ * The only currently supported multiplications are matrix-matrix and matrix-vector. If tensors with different
+ * shapes will be passed, UnsupportedOperationException will be thrown.
  *
  * @param a The first tensor.
  * @param b The second tensor.

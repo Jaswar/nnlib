@@ -1,6 +1,6 @@
 /**
  * @file tensor.cpp
- * @brief 
+ * @brief Source file defining methods related to the Tensor class.
  * @author Jan Warchocki
  * @date 26 August 2022
  */
@@ -159,6 +159,14 @@ void Tensor::verifyIndex(const std::vector<size_t>& index) const {
     }
 }
 
+/**
+ * @brief Convert the shape of the tensor to a string.
+ *
+ * The shape is displayed in the format: `[2, 2, 3]`.
+ *
+ * @param tensor The tensor whose shape to show as a string.
+ * @return The string representation of the shape of the tensor.
+ */
 std::string tensorShapeToString(const Tensor& tensor) {
     std::string shapeString = "[";
 
@@ -180,6 +188,13 @@ std::ostream& operator<<(std::ostream& stream, const Tensor& tensor) {
     }
 }
 
+/**
+ * @brief Method to perform element-wise addition on tensors.
+ *
+ * @param a The first tensor.
+ * @param b The second tensor.
+ * @param destination Where the result of the addition should be stored.
+ */
 void addTensors(const Tensor& a, const Tensor& b, Tensor& destination) {
     if (a.shape != b.shape || a.shape != destination.shape || b.shape != destination.shape) {
         throw SizeMismatchException();
@@ -195,6 +210,15 @@ void addTensors(const Tensor& a, const Tensor& b, Tensor& destination) {
     }
 }
 
+/**
+ * @brief Method to perform broadcast-add operation on tensors.
+ *
+ * This operation adds @p vector to every row of @p matrix.
+ *
+ * @param matrix The first tensor, must be a matrix.
+ * @param vector The second tensor, must be a vector.
+ * @param destination Where the result of the addition should be stored.
+ */
 void addBroadcast(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
     if (matrix.shape[1] != vector.shape[0] || matrix.shape != destination.shape) {
         throw SizeMismatchException();
@@ -264,6 +288,13 @@ void multiply(const Tensor& tensor, float constant, Tensor& destination) {
     }
 }
 
+/**
+ * @brief Method to perform matrix-vector multiplication on tensors.
+ *
+ * @param matrix The matrix tensor.
+ * @param vector The vector tensor.
+ * @param destination Where the result of the multiplication should be stored.
+ */
 void multiplyMatrixVector(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
     if (matrix.shape[1] != vector.shape[0] || matrix.shape[0] != destination.shape[0]) {
         throw SizeMismatchException();
@@ -279,6 +310,13 @@ void multiplyMatrixVector(const Tensor& matrix, const Tensor& vector, Tensor& de
     }
 }
 
+/**
+ * @brief Method to perform matrix-matrix multiplication on tensors.
+ *
+ * @param m1 The first matrix tensor.
+ * @param m2 The second matrix tensor.
+ * @param destination Where the result of the multiplication should be stored.
+ */
 void multiplyMatrixMatrix(const Tensor& m1, const Tensor& m2, Tensor& destination) {
     if (m1.shape[1] != m2.shape[0] || m1.shape[0] != destination.shape[0] || m2.shape[1] != destination.shape[1]) {
         throw SizeMismatchException();

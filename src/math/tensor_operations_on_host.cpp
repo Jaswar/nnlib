@@ -1,6 +1,6 @@
 /**
  * @file tensor_operations_on_host.cpp
- * @brief 
+ * @brief Source file defining tensor operations that happen on host.
  * @author Jan Warchocki
  * @date 29 August 2022
  */
@@ -173,15 +173,11 @@ void multiplyMatrixVectorOnHost(const Tensor& matrix, const Tensor& vector, Tens
 }
 
 /**
- * @brief Handle edge cases when performing matrix-matrix multiplication with AVX2 instructions.
+ * @brief Naive matrix-matrix multiplication.
  *
- * The AVX2 matrix multiplication algorithm works by computing 8x8 tiles at a time. If the size of the result
- * matrix is not divisible by 8, there are leftover elements that should be computed. These edge case elements
- * are computed using this method.
- *
- * To make sure only the edge case elements are computed, @p rowStart and @p columnStart should be specified.
- * These parameters specify the range where the edge case elements can be found. Computation will then only happen in
- * the range: `[rowStart, result.n] x [columnStart, result.m]`
+ * The method takes additional @p rowStart and @p columnStart arguments. These are used for edge cases in SIMD
+ * implementation of matrix-matrix multiplication. They correspondingly signify which row and which column to start the
+ * computation at.
  *
  * @param m1 The first operand matrix of the multiplication.
  * @param m2 The second operand matrix of the multiplication.
