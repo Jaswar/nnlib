@@ -30,7 +30,7 @@ __device__ float fSigmoidKernel(float x) {
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
-/** @copydoc linear_on_device_evaluator.cu::linearKernel(const float *matrix, float *result, size_t n, size_t m) */
+/** @copydoc linear_on_device_evaluator.cu::linearKernel(const float *input, float *result, size_t size) */
 __global__ void sigmoidKernel(float* input, float* result, size_t size) {
     auto index = blockDim.x * blockIdx.x + threadIdx.x;
 
@@ -41,7 +41,7 @@ __global__ void sigmoidKernel(float* input, float* result, size_t size) {
     result[index] = fSigmoidKernel(input[index]);
 }
 
-/** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const float *matrix, float *result, size_t n, size_t m) */
+/** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const float *input, float *result, size_t size) */
 __global__ void sigmoidDerivativeKernel(float* output, float* result, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 

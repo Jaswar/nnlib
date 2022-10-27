@@ -20,14 +20,11 @@
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
 /**
- * @brief Kernel function for applying the activation function on a matrix of data.
+ * @brief Kernel function for applying the activation function on a tensor of data.
  *
- * The function assumes the data samples are row aligned in the matrix.
- *
- * @param matrix The matrix on which to apply the activation function.
+ * @param input The tensor on which to apply the activation function.
  * @param result The matrix where the result should be stored.
- * @param n The number of rows of the matrix.
- * @param m The number of columns of the matrix.
+ * @param size The size of the tensor.
  */
 __global__ void linearKernel(const float* input, float* result, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -40,14 +37,11 @@ __global__ void linearKernel(const float* input, float* result, size_t size) {
 }
 
 /**
- * @brief Kernel function for computing derivatives of a matrix of data.
+ * @brief Kernel function for computing derivatives of a tensor of data.
  *
- * The function assumes the data samples are row aligned in the matrix.
- *
- * @param matrix The matrix whose derivatives to compute.
+ * @param output The tensor whose derivatives to compute.
  * @param result Where the derivatives should be stored.
- * @param n The number of rows of the matrix.
- * @param m The number of columns of the matrix.
+ * @param size The size of the tensor.
  */
 __global__ void linearDerivativeKernel(const float* output, float* result, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -84,7 +78,6 @@ void LinearOnDeviceEvaluator::computeDerivatives(const Tensor& output, Tensor& r
 }
 
 LinearOnDeviceEvaluator::~LinearOnDeviceEvaluator() = default;
-
 
 #else
 

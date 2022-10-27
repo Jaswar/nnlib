@@ -39,11 +39,10 @@
  *  [4, 4]]
  * ```
  *
- * If the size of @p matrix is not divisible by @p batchSize, the last batch will be smaller than the rest.
+ * If the size of @p data is not divisible by @p batchSize, the last batch will be smaller than the rest.
  *
- * @param matrix The matrix to split into batches.
+ * @param data The matrix to split into batches.
  * @param batchSize The size of the batch to split on.
- * @param location The location where to save the batches (HOST or DEVICE).
  * @return The vector of batches.
  */
 std::vector<Tensor> splitIntoBatches(const Tensor& data, size_t batchSize) {
@@ -139,10 +138,10 @@ void Network::backward(const Tensor& predicted, const Tensor& target, float lear
  * @brief Method to move predictions to host if necessary and return true if was moved.
  *
  * The method is used in the computeCorrect() method to move the predictions matrix between host and device
- * if and only if that is absolutely necessary.
+ * if and only if that is necessary.
  *
  * @param predictions The predictions of the neural network.
- * @return True if @p predictions was moved to host, false otherwise.
+ * @return true if @p predictions was moved to host, false otherwise.
  */
 bool moveToHost(Tensor& predictions) {
     if (predictions.location == DEVICE) {
@@ -155,7 +154,7 @@ bool moveToHost(Tensor& predictions) {
 /**
  * @brief Compute how many predictions of the neural network were correct.
  *
- * Assumes @p expected has a 1 on the expected class and 0 otherwise. As the prediction of the neural network,
+ * Assumes @p expected has a 1 on the expected class and 0 otherwise. As for the prediction of the neural network,
  * the method assumes the index of the highest value.
  *
  * @p expected should be the whole `y` matrix from the Network::train() method. It is also assumed that @p expected is
@@ -201,10 +200,10 @@ int computeCorrect(Tensor& expected, Tensor& predictions, size_t start) {
  * [==========>---------] [50/100 (50%)] (0h 2m 5s 127ms): accuracy = 0.745
  * ```
  *
- * @param processedRows
- * @param totalRows
- * @param milliseconds
- * @param accuracy
+ * @param processedRows The number of samples currently processed by the network.
+ * @param totalRows The total number of samples (size of the dataset).
+ * @param milliseconds The time in milliseconds that passed from the start of training.
+ * @param accuracy The accuracy achieved so far.
  */
 void displayEpochProgress(size_t processedRows, size_t totalRows, size_t milliseconds, double accuracy) {
     std::cout << "\r" << constructProgressBar(processedRows, totalRows) << " "
