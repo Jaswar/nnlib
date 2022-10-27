@@ -165,23 +165,85 @@ private:
      * @brief Verify that an index of an element is within the shape of the tensor.
      *
      * @param index The index of the element that is being accessed.
-     * @throws SizeMismatchException If the index is not within the shape of the tensor.
      */
     void verifyIndex(const std::vector<size_t>& index) const;
 };
 
+/**
+ * @brief Enables the tensor to be printed using std::cout.
+ *
+ * @param stream The stream to print the tensor to.
+ * @param tensor The tensor to print.
+ * @return The stream with the string representation of the tensor added to it.
+ */
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
 
+/**
+ * @brief Fill a tensor with a specific value.
+ *
+ * @param value The value to fill the tensor with.
+ * @param destination The tensor to fill.
+ */
 void fill(float value, Tensor& destination);
 
+/**
+ * @brief Add two tensors together.
+ *
+ * If the first tensor is a matrix and the second a vector, the operation performed is broadcast-add.
+ * See addBroadcast() for more details.
+ *
+ * @param a The first tensor.
+ * @param b The second tensor.
+ * @param destination Where to store the result of addition.
+ */
 void add(const Tensor& a, const Tensor& b, Tensor& destination);
+
+/**
+ * @brief Subtract one tensor from another.
+ *
+ * @param a The tensor to subtract from.
+ * @param b The tensor to be subtracted.
+ * @param destination Where to store the result of the subtraction.
+ */
 void subtract(const Tensor& a, const Tensor& b, Tensor& destination);
+
+/**
+ * @brief Perform hadamard product (element-wise multiplication) on two tensors.
+ *
+ * @param a The first tensor.
+ * @param b The second tensor.
+ * @param destination Where to store the result of the operation.
+ */
 void hadamard(const Tensor& a, const Tensor& b, Tensor& destination);
 
+/**
+ * @brief Multiply a tensor with a constant.
+ *
+ * @param tensor The tensor to multiply.
+ * @param constant The constant to multiply the tensor with.
+ * @param destination Where to store the result of the multiplication.
+ */
 void multiply(const Tensor& tensor, float constant, Tensor& destination);
 
+/**
+ * @brief Multiply one tensor with another.
+ *
+ * The only currently supported multiplications are matrix-matrix and matrix-vector.
+ *
+ * @param a The first tensor.
+ * @param b The second tensor.
+ * @param destination Where the result of multiplication should be stored.
+ */
 void multiply(const Tensor& a, const Tensor& b, Tensor& destination);
 
+/**
+ * @brief Transpose a matrix.
+ *
+ * The tensor must be a 2D tensor, otherwise UnsupportedOperationException is thrown.
+ *
+ * @param matrix The matrix to transpose.
+ * @param destination Where the result of the transpose operation should be stored.
+ */
 void transpose(const Tensor& matrix, Tensor& destination);
 
 #endif //NNLIB_TENSOR_H
