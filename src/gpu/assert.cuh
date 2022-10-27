@@ -20,6 +20,7 @@
  */
 #define GPU_CHECK_ERROR(ans) gpuAssert((ans), __FILE__, __LINE__)
 // clang-format on
+
 /**
  * @brief Method used to assert that the last CUDA call was successful.
  *
