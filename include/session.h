@@ -20,7 +20,7 @@ class Session {
     /**
      * @brief The number of threads per block of the GPU.
      *
-     * If there is no GPU or no CUDA, this value is initialized to -1.
+     * If there is no GPU or no CUDA, this value is initialized to 0.
      */
 public:
     unsigned int threadsPerBlock;
