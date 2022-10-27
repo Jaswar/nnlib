@@ -41,7 +41,7 @@ std::vector<std::string> readFile(const std::string& filepath);
  * @param filepath The path to the csv file.
  * @param delim The delimiter to use when splitting data.
  * @param numThreads The number of threads to use when splitting data.
- * @return %Matrix of data that was read from the csv file.
+ * @return Matrix of data that was read from the csv file.
  */
 Tensor readCSV(const std::string& filepath, const std::string& delim = ",", int numThreads = 1);
 

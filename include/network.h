@@ -131,7 +131,7 @@ private:
      *
      * @param batches The list of batches to process. These have been split in Network::train() method.
      * @param targets The list of targets to process. These have been split in Network::train() method.
-     * @param yHost Matrix that stores the whole y array on host.
+     * @param yHost Tensor that stores the whole y array on host.
      * @param learningRate The learning rate used during training.
      */
     void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost, float learningRate);

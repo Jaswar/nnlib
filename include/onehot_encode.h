@@ -14,7 +14,7 @@
  * @brief One hot encode a vector of data.
  *
  * @param vector The vector to encode.
- * @return %Matrix corresponding to the one hot encoded vector.
+ * @return Matrix corresponding to the one hot encoded vector.
  */
 Tensor oneHotEncode(const Tensor& vector);
 

@@ -15,7 +15,7 @@
  * @brief The default batch size if no batch size is specified.
  *
  * This macro is also used to pre-allocate space when a layer is first created. In this way all required
- * matrices/vectors are initialized and may only need reshaping later when starting training.
+ * tensors are initialized and may only need reshaping later when starting training.
  */
 #define DEFAULT_BATCH_SIZE 32
 
@@ -25,7 +25,7 @@
 class Layer {
 
     /**
-     * @brief %Matrix storing the transpose of the weights of the previous layer.
+     * @brief Matrix storing the transpose of the weights of the previous layer.
      *
      * Helper variable used during backpropagation.
      */
@@ -33,7 +33,7 @@ private:
     Tensor previousWeightsT;
 
     /**
-     * @brief %Matrix storing the transpose of the data passed in the forward propagation step.
+     * @brief Matrix storing the transpose of the data passed in the forward propagation step.
      *
      * Helper variable used during backpropagation.
      */
@@ -84,19 +84,20 @@ public:
     Activation* activation;
 
     /**
-     * @brief The weights of the layer.
+     * @brief The weights of the layer. Stored as a matrix.
      */
     Tensor weights;
 
     /**
-     * @brief The biases of the layer.
+     * @brief The biases of the layer. Stored as a vector.
      */
     Tensor biases;
 
     /**
-     * @brief %Matrix storing data passed to the layer.
+     * @brief Matrix storing data passed to the layer.
      *
      * Stores a pointer reference to the batch that was most recently forward-propagated through the layer.
+     * This data is then used in the backpropagation step.
      */
     const Tensor* data;
 
@@ -112,23 +113,30 @@ public:
 
     /**
      * @brief Delta that should be passed to the previous layer in the backpropagation step.
+     *
+     * Stored as a matrix.
      */
     Tensor newDelta;
 
     /**
      * @brief The derivatives of the output.
      *
-     * The derivatives are computed by the activation function and stored in this variable.
+     * The derivatives are computed by the activation function and stored in this variable. The data is stored as
+     * a matrix.
      */
     Tensor derivatives;
 
     /**
      * @brief The weights gradients computed by the backpropagation algorithm.
+     *
+     * Stored as a matrix.
      */
     Tensor weightsGradients;
 
     /**
      * @brief The biases gradients computed by the backpropagation algorithm.
+     *
+     * Stored as a vector.
      */
     Tensor biasesGradients;
 
@@ -202,7 +210,7 @@ private:
     /**
      * @brief Allocate data required for computation.
      *
-     * Step called during forward propagation. If some matrices are in incorrect shape, this method will reallocate
+     * Step called during forward propagation. If some matrices are in an incorrect shape, this method will reallocate
      * their memory to match the correct shape. This method calls all <em>allocate*</em> methods.
      *
      * @param batchSize The size of the batch.
