@@ -1,6 +1,6 @@
 /**
  * @file unsupported_operation_exception.cpp
- * @brief 
+ * @brief Source file defining the UnsupportedOperationException class.
  * @author Jan Warchocki
  * @date 29 August 2022
  */
