@@ -1,6 +1,6 @@
 /**
  * @file session.cpp
- * @brief 
+ * @brief Source file defining the Session class.
  * @author Jan Warchocki
  * @date 29 August 2022
  */
