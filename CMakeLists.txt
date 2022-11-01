@@ -40,7 +40,7 @@ else()
     endif()
 endif()
 
-include(CheckAVXSupport.cmake)
+include(cmake/CheckAVXSupport.cmake)
 
 if (DEFINED CMAKE_FORCE_ARCHITECTURE)
     message(STATUS "Forcing architecture ${CMAKE_FORCE_ARCHITECTURE}")
