@@ -108,7 +108,7 @@ endif()
 
 set(PUBLIC_HEADERS include/network.h include/layer.h include/allocation.h
         include/onehot_encode.h include/read.h include/verify.cuh include/activation.h
-        include/tensor.h include/session.h)
+        include/tensor.h include/session.cuh)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 

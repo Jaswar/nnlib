@@ -5,8 +5,8 @@
  * @date 29 August 2022
  */
 
-#ifndef NNLIB_SESSION_H
-#define NNLIB_SESSION_H
+#ifndef NNLIB_SESSION_CUH
+#define NNLIB_SESSION_CUH
 
 #include <thread>
 
@@ -36,4 +36,4 @@ public:
     Session();
 };
 
-#endif //NNLIB_SESSION_H
+#endif //NNLIB_SESSION_CUH

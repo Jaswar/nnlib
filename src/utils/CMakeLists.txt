@@ -3,6 +3,6 @@ set(SOURCE_FILES allocation.cpp
         read.cpp
         printing.cpp printing.h
         location_verifiers.cpp location_verifiers.h
-        session.cpp)
+        session.cu)
 
 target_sources(nnlib PRIVATE ${SOURCE_FILES})

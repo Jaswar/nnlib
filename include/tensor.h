@@ -9,7 +9,7 @@
 #define NNLIB_TENSOR_H
 
 #include "allocation.h"
-#include "session.h"
+#include "session.cuh"
 #include <cstdlib>
 #include <iostream>
 #include <vector>

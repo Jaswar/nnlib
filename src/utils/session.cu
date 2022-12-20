@@ -5,7 +5,7 @@
  * @date 29 August 2022
  */
 
-#include "session.h"
+#include "session.cuh"
 #include "verify.cuh"
 
 Session::Session() {
