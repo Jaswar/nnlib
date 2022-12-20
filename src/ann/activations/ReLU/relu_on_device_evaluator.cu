@@ -15,7 +15,7 @@
 #include <gpu/assert.cuh>
 #include <utils/location_verifiers.h>
 
-#ifdef HAS_CUDA
+#ifdef __CUDA__
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 

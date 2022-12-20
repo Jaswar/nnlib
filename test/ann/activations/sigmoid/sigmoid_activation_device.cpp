@@ -11,7 +11,7 @@
 #include "../../../assertions.h"
 #include <verify.cuh>
 
-#ifdef HAS_CUDA
+#ifdef __CUDA__
 
 TEST(sigmoid_activation_device, forward) {
     Tensor tensor = Tensor::construct2d({{0, -1, 1}, {2, 3, -5}});

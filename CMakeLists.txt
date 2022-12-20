@@ -28,6 +28,8 @@ if (CMAKE_CUDA_COMPILER)
         set_target_properties(nnlib PROPERTIES CUDA_ARCHITECTURES "50")
     endif()
 
+    add_definitions(-D__CUDA__)
+
     set_target_properties(nnlib PROPERTIES
             CUDA_SEPARABLE_COMPILATION ON
             CUDA_RESOLVE_DEVICE_SYMBOLS ON)

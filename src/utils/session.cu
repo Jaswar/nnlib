@@ -10,7 +10,7 @@
 
 Session::Session() {
     numCores = std::thread::hardware_concurrency();
-#ifdef HAS_CUDA
+#ifdef __CUDA__
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
     cudaDeviceProp props;
     cudaGetDeviceProperties(&props, 0);

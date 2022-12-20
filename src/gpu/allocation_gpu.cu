@@ -10,7 +10,7 @@
 #include "verify.cuh"
 #include <exceptions/unexpected_cuda_call_exception.h>
 
-#ifdef HAS_CUDA
+#ifdef __CUDA__
 
 float* allocate1DArrayDevice(size_t n) {
     float* allocated;

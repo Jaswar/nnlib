@@ -11,7 +11,7 @@
 #include "verify.cuh"
 #include <cstdio>
 
-#ifdef HAS_CUDA
+#ifdef __CUDA__
 
 // Taken from https://stackoverflow.com/questions/14038589
 // clang-format off

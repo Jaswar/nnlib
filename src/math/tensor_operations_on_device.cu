@@ -9,7 +9,7 @@
 #include <exceptions/unexpected_cuda_call_exception.h>
 #include <gpu/assert.cuh>
 
-#ifdef HAS_CUDA
+#ifdef __CUDA__
 
 /**
  * @brief Size of a tile when performing tiled matrix multiplication.

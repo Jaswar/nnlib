@@ -11,7 +11,7 @@
 #include "../../../assertions.h"
 #include <verify.cuh>
 
-#ifdef HAS_CUDA
+#ifdef __CUDA__
 
 TEST(relu_activation_device, forward) {
     Tensor tensor = Tensor::construct2d({{1, -2, 3}, {3, -5, 0}});

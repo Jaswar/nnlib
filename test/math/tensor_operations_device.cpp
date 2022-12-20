@@ -11,7 +11,7 @@
 #include "../assertions.h"
 #include "../test_utils.h"
 
-#ifdef HAS_CUDA
+#ifdef __CUDA__
 
 TEST(tensor_operations_device, fill) {
     Tensor t1 = Tensor::construct1d({2, 3, 4, 5, 6, 7, 8, 9, 0});

@@ -16,7 +16,7 @@
 #include <gpu/assert.cuh>
 #include <utils/location_verifiers.h>
 
-#ifdef HAS_CUDA
+#ifdef __CUDA__
 
 /**
  * @brief Kernel function to compute the output of the sigmoid function given the input.

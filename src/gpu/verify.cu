@@ -8,7 +8,7 @@
 #include "verify.cuh"
 #include <iostream>
 
-#ifdef HAS_CUDA
+#ifdef __CUDA__
 
 bool isCudaAvailable() {
     return true;
