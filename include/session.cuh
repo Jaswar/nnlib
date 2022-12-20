@@ -1,5 +1,5 @@
 /**
- * @file session.h
+ * @file session.cuh
  * @brief Header file declaring the Session class.
  * @author Jan Warchocki
  * @date 29 August 2022

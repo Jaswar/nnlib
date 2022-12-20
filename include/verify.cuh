@@ -8,7 +8,7 @@
 #ifndef NNLIB_VERIFY_CUH
 #define NNLIB_VERIFY_CUH
 
-#if __CUDA__
+#ifdef __CUDA__
 
 #include <cuda.h>
 #include <cuda_runtime.h>
@@ -19,7 +19,7 @@
 /**
  * @brief Check if CUDA is available.
  *
- * The method is implemented twice depending on if #__CUDA__ is defined. If it is, then the method returns true,
+ * The method is implemented twice depending on if __CUDA__ is defined. If it is, then the method returns true,
  * otherwise it returns false.
  *
  * @return True if CUDA is available, false otherwise.
