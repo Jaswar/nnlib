@@ -75,12 +75,12 @@ jobs:
       - name: Install lower version of GNU
         run: |
           sudo apt update
-          sudo apt install gcc-9.4=9.4.0-1ubuntu1~22.04 g++-9.4=9.4.0-1ubuntu1~22.04
+          sudo apt install gcc-9=9.4.0-1ubuntu1~22.04 g++-9=9.4.0-1ubuntu1~22.04
 
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
           ./scripts/lint.sh -p clang-tidy-15
         env:
-          CC: gcc-9.4
-          CXX: g++-9.4
+          CC: gcc-9
+          CXX: g++-9
