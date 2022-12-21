@@ -75,7 +75,7 @@ jobs:
       - name: Install lower version of GNU
         run: |
           sudo apt update
-          sudo apt install gcc-9.4 g++-9.4
+          sudo apt install gcc-9.4=9.4.0-1ubuntu1~22.04 g++-9.4=9.4.0-1ubuntu1~22.04
 
       - name: Run clang-tidy
         run: |
