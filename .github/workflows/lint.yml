@@ -72,15 +72,7 @@ jobs:
           echo ">>> Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
           nvcc -V
 
-      - name: Install lower version of GNU
-        run: |
-          sudo apt update
-          sudo apt install gcc-9 g++-9
-
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
           ./scripts/lint.sh -p clang-tidy-15
-        env:
-          CC: gcc-9
-          CXX: g++-9
