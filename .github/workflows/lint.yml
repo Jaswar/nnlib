@@ -60,8 +60,7 @@ jobs:
       - name: Download clang-tidy
         uses: KyleMayes/install-llvm-action@v1.6.1
         with:
-          version: "15.0.4"
-          force-version: true
+          version: "15.0.5"
 
       - name: Verify clang-tidy
         run: clang-tidy-15 --version
