@@ -64,14 +64,15 @@ jobs:
           clang-tidy-15 --version
 
       - name: Setup CUDA
-        uses: Jimver/cuda-toolkit@v0.2.7
-        id: cuda-toolkit
-        with:
-          cuda: '10.1.243'
+        run: sudo apt install nvidia-cuda-toolkit
+#        uses: Jimver/cuda-toolkit@v0.2.8
+#        id: cuda-toolkit
+#        with:
+#          cuda: '10.1.243'
 
       - name: Verify CUDA installation
         run: |
-          echo ">>> Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
+          echo ">>> Cuda install location: "
           nvcc -V
 
       - name: Run clang-tidy
