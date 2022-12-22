@@ -66,6 +66,8 @@ jobs:
       - name: Setup CUDA
         uses: Jimver/cuda-toolkit@v0.2.7
         id: cuda-toolkit
+        with:
+          cuda: '10.1.243'
 
       - name: Verify CUDA installation
         run: |
