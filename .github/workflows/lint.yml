@@ -57,6 +57,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install older version of GNU
+        run: |
+          sudo apt remove gcc
+          sudo apt remove g++
+          sudo apt install gcc=4:9.3.0-1ubuntu2
+          sudo apt install g++=4:9.3.0-1ubuntu2
+
       - name: Download clang-tidy
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
@@ -71,11 +78,6 @@ jobs:
         run: |
           echo ">>> Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
           nvcc -V
-
-      - name: Install lower version of GNU
-        run: |
-          sudo apt update
-          sudo apt install gcc-9=9.4.0-1ubuntu1~22.04 g++-9=9.4.0-1ubuntu1~22.04
 
       - name: Run clang-tidy
         run: |
