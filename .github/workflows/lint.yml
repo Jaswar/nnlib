@@ -79,7 +79,7 @@ jobs:
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh -p clang-tidy-15
+          ./scripts/lint.sh -p clang-tidy
         env:
           CC: gcc-9
           CXX: g++-9
