@@ -72,9 +72,6 @@ jobs:
           echo ">>> Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
           nvcc -V
 
-      - name: Display compile_commands
-        run: cat build/compile_commands.json
-
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
