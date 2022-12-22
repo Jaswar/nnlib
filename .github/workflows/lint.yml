@@ -63,9 +63,7 @@ jobs:
           version: "15.0.5"
 
       - name: Verify clang-tidy
-        run: |
-          sudo apt install clang-tidy-15
-          clang-tidy-15 --version
+        run: clang-tidy --version
 
       - name: Setup CUDA
         uses: Jimver/cuda-toolkit@v0.2.8
