@@ -33,6 +33,8 @@ if (CMAKE_CUDA_COMPILER)
     set_target_properties(nnlib PROPERTIES
             CUDA_SEPARABLE_COMPILATION ON
             CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+
+    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -I${PROJECT_SOURCE_DIR}/src -I${PROJECT_SOURCE_DIR}/include")
 else()
     # If no CUDA, assume only C++
     get_target_property(SOURCE_FILES nnlib SOURCES)
