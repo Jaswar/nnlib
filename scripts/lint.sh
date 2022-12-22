@@ -50,7 +50,7 @@ cat compile_commands.json
 # Try to remove CUDA compile flags (otherwise clang-tidy throws errors)
 sed -i 's/-forward-unknown-to-host-compiler/ /g' compile_commands.json
 sed -i 's/-rdc=true/ /g' compile_commands.json
-sed -i 's/--options-file [^\s]*/ /g' compile_commands.json
+sed -i 's/--options-file [^ ]*/ /g' compile_commands.json
 sed -i 's/--generate-code=arch=compute_[[:digit:]]*,code=\[compute_[[:digit:]]*,sm_[[:digit:]]*\]/ /g' compile_commands.json
 
 cat compile_commands.json
