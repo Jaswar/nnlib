@@ -53,16 +53,9 @@ jobs:
 
   Lint-CUDA:
     needs: Style-Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-
-      - name: Install older version of GNU
-        run: |
-          sudo apt remove gcc
-          sudo apt remove g++
-          sudo apt install gcc=4:9.3.0-1ubuntu2
-          sudo apt install g++=4:9.3.0-1ubuntu2
 
       - name: Download clang-tidy
         run: |
