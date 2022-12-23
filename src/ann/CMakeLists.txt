@@ -12,6 +12,11 @@ set(SOURCE_FILES activations/activation.cpp
         activations/sigmoid/sigmoid_on_host_evaluator.cpp
         activations/sigmoid/sigmoid_on_device_evaluator.cu
 
+        losses/loss.cpp
+        losses/loss.h
+        losses/mse/mean_squared_error.cpp
+        losses/mse/mean_squared_error.h
+
         layer.cpp
         network.cpp)
 
