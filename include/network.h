@@ -9,6 +9,7 @@
 #define NNLIB_NETWORK_H
 
 #include "layer.h"
+#include "loss.h"
 #include <vector>
 
 /**
@@ -34,7 +35,7 @@ class Network {
      * the reshaping will still only happen once. The data is pre-allocated to avoid unnecessary allocation
      * during runtime.
      */
-    Tensor loss;
+    Tensor lossData;
 
     /**
      * @brief List of network layers.
@@ -101,7 +102,7 @@ public:
      * @param target The targets for that batch of data.
      * @param learningRate The learning rate of the model.
      */
-    void backward(const Tensor& predicted, const Tensor& target, float learningRate = 0.01);
+    void backward(const Tensor& predicted, const Tensor& target, float learningRate, const Loss* loss);
 
     /**
      * @brief Train the network.
@@ -119,7 +120,8 @@ public:
      * @param learningRate The learning rate of the algorithm.
      */
     //NOLINTNEXTLINE(readability-identifier-naming)
-    void train(Tensor& X, Tensor& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE, float learningRate = 0.01);
+    void train(Tensor& X, Tensor& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE, float learningRate = 0.01,
+               const Loss* loss = new MeanSquaredError());
 
 private:
     /**
@@ -134,7 +136,8 @@ private:
      * @param yHost Tensor that stores the whole y array on host.
      * @param learningRate The learning rate used during training.
      */
-    void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost, float learningRate);
+    void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost, float learningRate,
+                      const Loss* loss);
 };
 
 

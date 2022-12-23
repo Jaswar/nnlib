@@ -67,7 +67,7 @@ std::vector<Tensor> splitIntoBatches(const Tensor& data, size_t batchSize) {
 }
 
 Network::Network(size_t inputSize, bool useGPU, long long seed)
-    : seed(seed), layers(), location(HOST), previousSize(inputSize), loss(DEFAULT_BATCH_SIZE, inputSize) {
+    : seed(seed), layers(), location(HOST), previousSize(inputSize), lossData(DEFAULT_BATCH_SIZE, inputSize) {
     if (this->seed == NO_SEED) {
         this->seed = time(nullptr);
     }
@@ -75,7 +75,7 @@ Network::Network(size_t inputSize, bool useGPU, long long seed)
 
     if (useGPU && isCudaAvailable()) {
         location = DEVICE;
-        loss.move(DEVICE);
+        lossData.move(DEVICE);
     }
 }
 
@@ -94,8 +94,8 @@ void Network::add(size_t numNeurons, const std::string& activation) {
     layers.push_back(newLayer);
 
     previousSize = numNeurons;
-    loss = Tensor(DEFAULT_BATCH_SIZE, numNeurons);
-    loss.move(location);
+    lossData = Tensor(DEFAULT_BATCH_SIZE, numNeurons);
+    lossData.move(location);
 }
 
 Tensor* Network::forward(const Tensor& batch) {
@@ -110,17 +110,16 @@ Tensor* Network::forward(const Tensor& batch) {
     return &layers.back().aMatrix;
 }
 
-void Network::backward(const Tensor& predicted, const Tensor& target, float learningRate) {
-    if (loss.shape != predicted.shape) {
-        loss = Tensor(predicted.shape[0], loss.shape[1]);
-        loss.move(location);
+void Network::backward(const Tensor& predicted, const Tensor& target, float learningRate, const Loss* loss) {
+    if (lossData.shape != predicted.shape) {
+        lossData = Tensor(predicted.shape[0], lossData.shape[1]);
+        lossData.move(location);
     }
 
-    // Squared error loss used here
-    subtract(predicted, target, loss);
+    loss->calculateDerivatives(target, predicted, lossData);
 
     Layer& last = layers.back();
-    last.backward(loss, Tensor(0, 0), predicted.shape[0], true);
+    last.backward(lossData, Tensor(0, 0), predicted.shape[0], true);
 
     for (auto i = layers.rbegin() + 1; i != layers.rend(); ++i) {
         size_t index = i - layers.rbegin();
@@ -212,7 +211,7 @@ void displayEpochProgress(size_t processedRows, size_t totalRows, size_t millise
 }
 
 //NOLINTNEXTLINE(readability-identifier-naming)
-void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate) {
+void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate, const Loss* loss) {
     if (X.shape[0] != y.shape[0]) {
         throw SizeMismatchException();
     }
@@ -229,14 +228,14 @@ void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float le
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << "/" << epochs << std::endl;
 
-        processEpoch(batches, targets, yHost, learningRate);
+        processEpoch(batches, targets, yHost, learningRate, loss);
 
         std::cout << std::endl;
     }
 }
 
 void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost,
-                           float learningRate) {
+                           float learningRate, const Loss* loss) {
     int correct = 0;
     int total = 0;
     auto epochStart = std::chrono::steady_clock::now();
@@ -250,7 +249,7 @@ void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& ta
         correct += computeCorrect(yHost, *output, row * batch.shape[0]);
         total += static_cast<int>(batch.shape[0]);
 
-        backward(*output, target, learningRate);
+        backward(*output, target, learningRate, loss);
 
         auto batchEnd = std::chrono::steady_clock::now();
         size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(batchEnd - epochStart).count();
