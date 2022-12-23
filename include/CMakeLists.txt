@@ -1,4 +1,4 @@
-set(SOURCE_FILES
+set(INCLUDE_FILES
         activation.h
         allocation.h
         layer.h
@@ -8,6 +8,8 @@ set(SOURCE_FILES
         verify.cuh
         tensor.h
         session.cuh
-        loss.h)
+        loss.h
 
-target_sources(nnlib PRIVATE ${SOURCE_FILES})
+        PARENT_SCOPE)
+
+target_sources(nnlib PRIVATE ${INCLUDE_FILES})

@@ -8,7 +8,7 @@
 #ifndef NNLIB_LOSS_H
 #define NNLIB_LOSS_H
 
-#include <tensor.h>
+#include "tensor.h"
 
 class Loss {
 public:

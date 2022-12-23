@@ -10,7 +10,7 @@
 void MeanSquaredError::calculateDerivatives(const Tensor& targets, const Tensor& predictions,
                                             Tensor& destination) const {
     subtract(predictions, targets, destination);
-    multiply(destination, 1.0f / static_cast<float>(predictions.shape[predictions.shape.size() - 1]), destination);
+    multiply(destination, 2.0f / static_cast<float>(predictions.shape[predictions.shape.size() - 1]), destination);
 }
 
 // TODO: implement
