@@ -5,7 +5,7 @@
  * @date 23 December 2022
  */
 
-#include "mean_squared_error.h"
+#include <loss.h>
 
 void MeanSquaredError::calculateDerivatives(const Tensor& targets, const Tensor& predictions,
                                             Tensor& destination) const {

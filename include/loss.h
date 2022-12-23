@@ -17,5 +17,12 @@ public:
     virtual void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) const = 0;
 };
 
+class MeanSquaredError : public Loss {
+public:
+    float calculateLoss(const Tensor& targets, const Tensor& predictions) const override;
+
+    void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) const override;
+};
+
 
 #endif //NNLIB_LOSS_H
