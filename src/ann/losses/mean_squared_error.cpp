@@ -13,10 +13,26 @@ void MeanSquaredError::calculateDerivatives(const Tensor& targets, const Tensor&
     multiply(destination, 2.0f / static_cast<float>(predictions.shape[predictions.shape.size() - 1]), destination);
 }
 
-// TODO: implement
-float MeanSquaredError::calculateLoss(const Tensor& targets, const Tensor& predictions) const {
-    DataLocation locationTargets = targets.location;
-    DataLocation predictionsTargets = predictions.location;
+float MeanSquaredError::calculateLoss(const Tensor& targets, const Tensor& predictions) {
+    if (workingSpace.shape != targets.shape) {
+        workingSpace = Tensor(targets.shape);
+    }
 
-    return 0;
+    size_t numSamples = targets.shape[targets.shape.size() - 1];
+    workingSpace.move(targets.location);
+
+    subtract(targets, predictions, workingSpace);
+    hadamard(workingSpace, workingSpace, workingSpace);
+    multiply(workingSpace, 1.0f / static_cast<float>(numSamples), workingSpace);
+
+    workingSpace.move(HOST);
+
+    float sum = 0;
+    for (size_t i = 0; i < workingSpace.size; i++) {
+        sum += workingSpace.data[i];
+    }
+
+    return sum;
 }
+
+

@@ -12,16 +12,19 @@
 
 class Loss {
 public:
-    virtual float calculateLoss(const Tensor& targets, const Tensor& predictions) const = 0;
+    virtual float calculateLoss(const Tensor& targets, const Tensor& predictions) = 0;
 
     virtual void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) const = 0;
 };
 
 class MeanSquaredError : public Loss {
+private:
+    Tensor workingSpace;
 public:
-    float calculateLoss(const Tensor& targets, const Tensor& predictions) const override;
+    float calculateLoss(const Tensor& targets, const Tensor& predictions) override;
 
     void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) const override;
+
 };
 
 

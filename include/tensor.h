@@ -12,6 +12,7 @@
 #include "session.cuh"
 #include <cstdlib>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 /**
@@ -70,6 +71,11 @@ public:
      * @param other The tensor based on which this one should be initialized.
      */
     Tensor(const Tensor& other);
+
+    explicit Tensor(std::vector<size_t> shape) : shape(std::move(shape)), location(HOST), size(0), data() {
+        computeSize();
+        data = allocate1DArray(size, 0);
+    }
 
     /**
      * @brief Construct a tensor based on the passed shape.

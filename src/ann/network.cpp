@@ -110,7 +110,7 @@ Tensor* Network::forward(const Tensor& batch) {
     return &layers.back().aMatrix;
 }
 
-void Network::backward(const Tensor& predicted, const Tensor& target, float learningRate, const Loss* loss) {
+void Network::backward(const Tensor& predicted, const Tensor& target, float learningRate, Loss* loss) {
     if (lossData.shape != predicted.shape) {
         lossData = Tensor(predicted.shape[0], lossData.shape[1]);
         lossData.move(location);
@@ -204,14 +204,14 @@ int computeCorrect(Tensor& expected, Tensor& predictions, size_t start) {
  * @param milliseconds The time in milliseconds that passed from the start of training.
  * @param accuracy The accuracy achieved so far.
  */
-void displayEpochProgress(size_t processedRows, size_t totalRows, size_t milliseconds, double accuracy) {
+void displayEpochProgress(size_t processedRows, size_t totalRows, size_t milliseconds, float loss, double accuracy) {
     std::cout << "\r" << constructProgressBar(processedRows, totalRows) << " "
               << constructPercentage(processedRows, totalRows) << " " << constructTime(milliseconds)
-              << ": accuracy = " << std::setprecision(3) << accuracy << std::flush;
+              << ": loss = " << std::setprecision(3) << loss << "; accuracy = " <<  accuracy << std::flush;
 }
 
 //NOLINTNEXTLINE(readability-identifier-naming)
-void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate, const Loss* loss) {
+void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss) {
     if (X.shape[0] != y.shape[0]) {
         throw SizeMismatchException();
     }
@@ -235,9 +235,10 @@ void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float le
 }
 
 void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost,
-                           float learningRate, const Loss* loss) {
+                           float learningRate, Loss* loss) {
     int correct = 0;
     int total = 0;
+    float obtainedLoss = 0;
     auto epochStart = std::chrono::steady_clock::now();
 
     for (int row = 0; row < batches.size(); row++) {
@@ -254,12 +255,14 @@ void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& ta
         auto batchEnd = std::chrono::steady_clock::now();
         size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(batchEnd - epochStart).count();
 
-        displayEpochProgress((row + 1) * batch.shape[0], yHost.shape[0], milliseconds,
-                             static_cast<double>(correct) / total);
-    }
+        obtainedLoss = loss->calculateLoss(target, *output);
 
+        displayEpochProgress((row + 1) * batch.shape[0], yHost.shape[0], milliseconds,
+                             obtainedLoss, static_cast<double>(correct) / total);
+    }
     auto epochEnd = std::chrono::steady_clock::now();
     size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(epochEnd - epochStart).count();
 
-    displayEpochProgress(yHost.shape[0], yHost.shape[0], milliseconds, static_cast<double>(correct) / total);
+    displayEpochProgress(yHost.shape[0], yHost.shape[0], milliseconds, obtainedLoss,
+                         static_cast<double>(correct) / total);
 }
