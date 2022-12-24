@@ -14,7 +14,7 @@ class Loss {
 public:
     virtual float calculateLoss(const Tensor& targets, const Tensor& predictions) = 0;
 
-    virtual void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) const = 0;
+    virtual void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) = 0;
 };
 
 class MeanSquaredError : public Loss {
@@ -24,14 +24,17 @@ private:
 public:
     float calculateLoss(const Tensor& targets, const Tensor& predictions) override;
 
-    void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) const override;
+    void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) override;
 };
 
 class BinaryCrossEntropy : public Loss {
+private:
+    Tensor ones;
+    Tensor workingSpace;
 public:
     float calculateLoss(const Tensor& targets, const Tensor& predictions) override;
 
-    void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) const override;
+    void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) override;
 };
 
 
