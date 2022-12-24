@@ -29,12 +29,12 @@ fi
 # Format all files
 regex="\(\./\(src\|include\)/.*\.\(cpp\|cu\|h\|cuh\)\)\|\(\./test/\(assertions\|utils\)\.\(cpp\|h\)\)"
 num_files=$(find . -regex $regex | wc -l)
-echo ">>> Detected $num_files files to format"
+echo ">>> Detected $num_files files to run auto-fix on"
 
 should_fail=false
 files=$(find . -regex $regex)
 for file in $files; do
-    echo ">>> Checking the format of $file"
+    echo ">>> Running auto-fix on $file"
     if [[ $path_to_executable = "" ]]; then
       clang-format -i -style=file $file
     else
