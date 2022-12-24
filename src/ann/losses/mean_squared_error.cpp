@@ -29,5 +29,3 @@ float MeanSquaredError::calculateLoss(const Tensor& targets, const Tensor& predi
 
     return sum(workingSpace);
 }
-
-

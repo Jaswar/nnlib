@@ -207,7 +207,7 @@ int computeCorrect(Tensor& expected, Tensor& predictions, size_t start) {
 void displayEpochProgress(size_t processedRows, size_t totalRows, size_t milliseconds, float loss, double accuracy) {
     std::cout << "\r" << constructProgressBar(processedRows, totalRows) << " "
               << constructPercentage(processedRows, totalRows) << " " << constructTime(milliseconds)
-              << ": loss = " << std::setprecision(3) << loss << "; accuracy = " <<  accuracy << std::flush;
+              << ": loss = " << std::setprecision(3) << loss << "; accuracy = " << accuracy << std::flush;
 }
 
 //NOLINTNEXTLINE(readability-identifier-naming)
@@ -257,8 +257,8 @@ void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& ta
 
         obtainedLoss = loss->calculateLoss(target, *output);
 
-        displayEpochProgress((row + 1) * batch.shape[0], yHost.shape[0], milliseconds,
-                             obtainedLoss, static_cast<double>(correct) / total);
+        displayEpochProgress((row + 1) * batch.shape[0], yHost.shape[0], milliseconds, obtainedLoss,
+                             static_cast<double>(correct) / total);
     }
     auto epochEnd = std::chrono::steady_clock::now();
     size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(epochEnd - epochStart).count();

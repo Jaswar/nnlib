@@ -20,11 +20,11 @@ public:
 class MeanSquaredError : public Loss {
 private:
     Tensor workingSpace;
+
 public:
     float calculateLoss(const Tensor& targets, const Tensor& predictions) override;
 
     void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) const override;
-
 };
 
 
