@@ -281,6 +281,21 @@ void hadamard(const Tensor& a, const Tensor& b, Tensor& destination) {
     }
 }
 
+void divide(const Tensor& a, const Tensor& b, Tensor& destination) {
+    if (a.shape != b.shape || a.shape != destination.shape || b.shape != destination.shape) {
+        throw SizeMismatchException();
+    }
+
+    std::initializer_list<DataLocation> locations = {a.location, b.location, destination.location};
+    if (allLocationsAreHost(locations)) {
+        divideTensorsOnHost(a, b, destination);
+    } else if (allLocationsAreDevice(locations)) {
+        divideTensorsOnDevice(a, b, destination);
+    } else {
+        throw DifferentDataLocationException();
+    }
+}
+
 void multiply(const Tensor& tensor, float constant, Tensor& destination) {
     if (tensor.shape != destination.shape) {
         throw SizeMismatchException();

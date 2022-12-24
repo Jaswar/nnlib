@@ -143,6 +143,26 @@ void hadamardTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination
 #endif
 }
 
+
+void divideTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
+#if defined __AVX2__ || defined __AVX__
+    for (size_t index = 0; index < a.size / 8; index++) {
+        __m256 am256 = _mm256_loadu_ps(a.data + index * 8);
+        __m256 bm256 = _mm256_loadu_ps(b.data + index * 8);
+        __m256 result = _mm256_div_ps(am256, bm256);
+        _mm256_storeu_ps(destination.data + index * 8, result);
+    }
+
+    for (size_t index = (a.size / 8) * 8; index < a.size; index++) {
+        destination.data[index] = a.data[index] / b.data[index];
+    }
+#else
+    for (size_t i = 0; i < a.size; i++) {
+        destination.data[i] = a.data[i] / b.data[i];
+    }
+#endif
+}
+
 void addBroadcastOnHost(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t row = 0; row < matrix.shape[0]; row++) {

@@ -224,6 +224,8 @@ void subtract(const Tensor& a, const Tensor& b, Tensor& destination);
  */
 void hadamard(const Tensor& a, const Tensor& b, Tensor& destination);
 
+void divide(const Tensor& a, const Tensor& b, Tensor& destination);
+
 /**
  * @brief Multiply a tensor with a constant.
  *

@@ -52,6 +52,8 @@ void subtractTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination
  */
 void hadamardTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
 
+void divideTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
+
 /**
  * @brief Perform the broadcast-add operation.
  *

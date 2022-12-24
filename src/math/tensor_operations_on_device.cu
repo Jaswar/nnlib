@@ -217,6 +217,16 @@ __global__ void hadamardTensorsKernel(const float* a, const float* b, float* des
     destination[index] = a[index] * b[index];
 }
 
+__global__ void divideTensorsKernel(const float* a, const float* b, float* destination, size_t size) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    destination[index] = a[index] / b[index];
+}
+
 /**
  * @brief Kernel method to transpose a matrix.
  *
@@ -266,6 +276,13 @@ void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destinati
     auto grid = a.size / a.session.threadsPerBlock + 1;
     auto block = a.session.threadsPerBlock;
     hadamardTensorsKernel<<<grid, block>>>(a.data, b.data, destination.data, a.size);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
+void divideTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+    auto grid = a.size / a.session.threadsPerBlock + 1;
+    auto block = a.session.threadsPerBlock;
+    divideTensorsKernel<<<grid, block>>>(a.data, b.data, destination.data, a.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
