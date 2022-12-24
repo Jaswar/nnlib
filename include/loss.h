@@ -27,5 +27,12 @@ public:
     void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) const override;
 };
 
+class BinaryCrossEntropy : public Loss {
+public:
+    float calculateLoss(const Tensor& targets, const Tensor& predictions) override;
+
+    void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) const override;
+};
+
 
 #endif //NNLIB_LOSS_H
