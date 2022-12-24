@@ -184,6 +184,8 @@ private:
  */
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
 
+float sum(Tensor& tensor);
+
 /**
  * @brief Fill a tensor with a specific value.
  *

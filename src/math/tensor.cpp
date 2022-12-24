@@ -102,14 +102,6 @@ void Tensor::computeSize() {
     }
 }
 
-void fill(float value, Tensor& destination) {
-    if (destination.location == HOST) {
-        fillTensorOnHost(destination, value);
-    } else {
-        fillTensorOnDevice(destination, value);
-    }
-}
-
 Tensor Tensor::construct1d(const std::vector<float>& data) {
     if (data.empty()) {
         throw SizeMismatchException();
@@ -185,6 +177,22 @@ std::ostream& operator<<(std::ostream& stream, const Tensor& tensor) {
         return stream << "Tensor located on device with shape: " + tensorShapeToString(tensor);
     } else {
         return stream << "Tensor located on host with shape: " + tensorShapeToString(tensor);
+    }
+}
+
+float sum(Tensor& tensor) {
+    const DataLocation& oldLocation = tensor.location;
+    tensor.move(HOST);
+    float sum = sumTensor(tensor);
+    tensor.move(oldLocation);
+    return sum;
+}
+
+void fill(float value, Tensor& destination) {
+    if (destination.location == HOST) {
+        fillTensorOnHost(destination, value);
+    } else {
+        fillTensorOnDevice(destination, value);
     }
 }
 

@@ -15,6 +15,8 @@
 
 #include <tensor.h>
 
+float sumTensor(const Tensor& tensor);
+
 /**
  * @brief Fill a tensor with a constant value.
  *

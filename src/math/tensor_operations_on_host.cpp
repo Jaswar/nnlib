@@ -11,6 +11,81 @@
 #include <immintrin.h>
 #endif
 
+#if defined __AVX2__ || defined __AVX__
+/**
+ * @brief Perform a horizontal add of a `__m256` value.
+ *
+ * This adds all 8 floats in such a value together.
+ *
+ * @param value The `__m256` variable whose floats should be summed up.
+ * @return A float value corresponding to the sum.
+ */
+// value = [f7, f6, f5, f4, f3, f2, f1, f0]
+float horizontalAdd(__m256 value) {
+    // [f3, f2, f1, f0]
+    auto low128 = _mm256_extractf128_ps(value, 0);
+
+    // [f7, f6, f5, f4]
+    auto high128 = _mm256_extractf128_ps(value, 1);
+
+    // [f3 + f7, f2 + f6, f1 + f5, f0 + f4]
+    __m128 sum128 = _mm_add_ps(low128, high128);
+
+    // [f3 + f7, f2 + f6, f3 + f7, f2 + f6]
+    __m128 sum128Moved = _mm_movehl_ps(sum128, sum128);
+
+    // [dc, dc, f1 + f5 + f3 + f7, f0 + f4 + f2 + f6]
+    __m128 sum128PlusMoved = _mm_add_ps(sum128, sum128Moved);
+
+    // [dc, dc, f0 + f4 + f2 + f6, f1 + f5 + f3 + f7]
+    auto shuffled = _mm_shuffle_ps(sum128PlusMoved, sum128PlusMoved, _MM_SHUFFLE(3, 2, 0, 1));
+
+    // [dc, dc, dc, f1 + f5 + f3 + f7 + f0 + f4 + f2 + f6]
+    __m128 final128Sum = _mm_add_ps(sum128PlusMoved, shuffled);
+
+    return _mm_cvtss_f32(final128Sum);
+}
+#endif
+
+float sumTensor(const Tensor& tensor) {
+#if defined __AVX2__ || defined __AVX__
+    __m256 accumulator = _mm256_setzero_ps();
+    for (size_t index = 0; index < tensor.size / 8; index++) {
+        const __m256 tensorValue = _mm256_loadu_ps(tensor.data + index * 8);
+        accumulator = _mm256_add_ps(tensorValue, accumulator);
+    }
+    float accumulated = horizontalAdd(accumulator);
+
+    for (size_t index = (tensor.size / 8) * 8; index < tensor.size; index++) {
+        accumulated += tensor.data[index];
+    }
+    return accumulated;
+#else
+    float sum = 0;
+    for (size_t i = 0; i < tensor.size; i++) {
+        sum += tensor.data[i];
+    }
+
+    return sum;
+#endif
+}
+
+void fillTensorOnHost(Tensor& tensor, float value) {
+#if defined __AVX2__ || defined __AVX__
+    __m256 valueVector = _mm256_set1_ps(value);
+    for (size_t i = 0; i < tensor.size / 8; i++) {
+        _mm256_storeu_ps(tensor.data + i * 8, valueVector);
+    }
+    for (size_t i = (tensor.size / 8) * 8; i < tensor.size; i++) {
+        tensor.data[i] = value;
+    }
+#else
+    for (size_t i = 0; i < tensor.size; i++) {
+        tensor.data[i] = value;
+    }
+#endif
+}
+
 void addTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < a.size / 8; index++) {
@@ -110,42 +185,6 @@ void multiplyTensorOnHost(const Tensor& tensor, float constant, Tensor& destinat
     }
 #endif
 }
-
-#if defined __AVX2__ || defined __AVX__
-/**
- * @brief Perform a horizontal add of a `__m256` value.
- *
- * This adds all 8 floats in such a value together.
- *
- * @param value The `__m256` variable whose floats should be summed up.
- * @return A float value corresponding to the sum.
- */
-// value = [f7, f6, f5, f4, f3, f2, f1, f0]
-float horizontalAdd(__m256 value) {
-    // [f3, f2, f1, f0]
-    auto low128 = _mm256_extractf128_ps(value, 0);
-
-    // [f7, f6, f5, f4]
-    auto high128 = _mm256_extractf128_ps(value, 1);
-
-    // [f3 + f7, f2 + f6, f1 + f5, f0 + f4]
-    __m128 sum128 = _mm_add_ps(low128, high128);
-
-    // [f3 + f7, f2 + f6, f3 + f7, f2 + f6]
-    __m128 sum128Moved = _mm_movehl_ps(sum128, sum128);
-
-    // [dc, dc, f1 + f5 + f3 + f7, f0 + f4 + f2 + f6]
-    __m128 sum128PlusMoved = _mm_add_ps(sum128, sum128Moved);
-
-    // [dc, dc, f0 + f4 + f2 + f6, f1 + f5 + f3 + f7]
-    auto shuffled = _mm_shuffle_ps(sum128PlusMoved, sum128PlusMoved, _MM_SHUFFLE(3, 2, 0, 1));
-
-    // [dc, dc, dc, f1 + f5 + f3 + f7 + f0 + f4 + f2 + f6]
-    __m128 final128Sum = _mm_add_ps(sum128PlusMoved, shuffled);
-
-    return _mm_cvtss_f32(final128Sum);
-}
-#endif
 
 void multiplyMatrixVectorOnHost(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
 #if defined __AVX2__ || defined __AVX__
@@ -295,20 +334,4 @@ void transposeMatrixOnHost(const Tensor& matrix, Tensor& destination) {
             destination.data[j * destination.shape[1] + i] = matrix.data[i * matrix.shape[1] + j];
         }
     }
-}
-
-void fillTensorOnHost(Tensor& tensor, float value) {
-#if defined __AVX2__ || defined __AVX__
-    __m256 valueVector = _mm256_set1_ps(value);
-    for (size_t i = 0; i < tensor.size / 8; i++) {
-        _mm256_storeu_ps(tensor.data + i * 8, valueVector);
-    }
-    for (size_t i = (tensor.size / 8) * 8; i < tensor.size; i++) {
-        tensor.data[i] = value;
-    }
-#else
-    for (size_t i = 0; i < tensor.size; i++) {
-        tensor.data[i] = value;
-    }
-#endif
 }
