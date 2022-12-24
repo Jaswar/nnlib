@@ -49,11 +49,11 @@ int main(int argc, char** argv) {
 
     std::cout << y << std::endl;
 
-    Network network = Network(X.shape[1], true);
+    Network network = Network(X.shape[1]);
     network.add(64);
     network.add(y.shape[1], "sigmoid");
 
-    network.train(X, y, 25, 10, 0.01);
+    network.train(X, y, 25, 10, 0.05);
 
     return 0;
 }
