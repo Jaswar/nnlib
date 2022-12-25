@@ -20,25 +20,27 @@ void checkValidShape(const Tensor& targets, const Tensor& predictions) {
 float BinaryCrossEntropy::calculateLoss(const Tensor& targets, const Tensor& predictions) {
     checkValidShape(targets, predictions);
 
-    return 0;
+    allocateOnes(targets, predictions);
+    allocateWorkingSpaces(targets, predictions);
+
+    subtract(ones, targets, workingSpace);
+    subtract(ones, predictions, workingSpace2);
+    log(workingSpace2, workingSpace2);
+    hadamard(workingSpace, workingSpace2, workingSpace2);
+
+    log(predictions, workingSpace);
+    hadamard(targets, workingSpace, workingSpace);
+
+    add(workingSpace, workingSpace2, workingSpace);
+
+    return sum(workingSpace) * (-1.0f / static_cast<float>(targets.shape[0]));
 }
 
 void BinaryCrossEntropy::calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) {
     checkValidShape(targets, predictions);
 
-    if (ones.shape != targets.shape) {
-        ones = Tensor(targets.shape);
-        fill(1, ones);
-    }
-    if (workingSpace.shape != targets.shape) {
-        workingSpace = Tensor(targets.shape);
-    }
-    if (ones.location != targets.location) {
-        ones.move(targets.location);
-    }
-    if (workingSpace.location != targets.location) {
-        workingSpace.move(targets.location);
-    }
+    allocateOnes(targets, predictions);
+    allocateWorkingSpaces(targets, predictions);
 
     // Calculate the nominator
     subtract(predictions, targets, destination);
@@ -49,4 +51,29 @@ void BinaryCrossEntropy::calculateDerivatives(const Tensor& targets, const Tenso
 
     // Calculate the fraction
     divide(destination, workingSpace, destination);
+}
+
+void BinaryCrossEntropy::allocateOnes(const Tensor& targets, const Tensor& predictions) {
+    if (ones.shape != targets.shape) {
+        ones = Tensor(targets.shape);
+        fill(1, ones);
+    }
+    if (ones.location != targets.location) {
+        ones.move(targets.location);
+    }
+}
+
+void BinaryCrossEntropy::allocateWorkingSpaces(const Tensor& targets, const Tensor& predictions) {
+    if (workingSpace.shape != targets.shape) {
+        workingSpace = Tensor(targets.shape);
+    }
+    if (workingSpace2.shape != targets.shape) {
+        workingSpace2 = Tensor(targets.shape);
+    }
+    if (workingSpace.location != targets.location) {
+        workingSpace.move(targets.location);
+    }
+    if (workingSpace2.location != targets.location) {
+        workingSpace2.move(targets.location);
+    }
 }
