@@ -163,6 +163,12 @@ void divideTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) 
 #endif
 }
 
+void logTensorOnHost(const Tensor& a, Tensor& destination) {
+    for (size_t i = 0; i < a.size; i++) {
+        destination.data[i] = log(a.data[i]);
+    }
+}
+
 void addBroadcastOnHost(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t row = 0; row < matrix.shape[0]; row++) {

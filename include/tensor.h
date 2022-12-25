@@ -226,6 +226,8 @@ void hadamard(const Tensor& a, const Tensor& b, Tensor& destination);
 
 void divide(const Tensor& a, const Tensor& b, Tensor& destination);
 
+void log(const Tensor& a, Tensor& destination);
+
 /**
  * @brief Multiply a tensor with a constant.
  *

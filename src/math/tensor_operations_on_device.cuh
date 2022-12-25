@@ -29,6 +29,8 @@ void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destinati
 
 void divideTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination);
 
+void logTensorOnDevice(const Tensor& a, Tensor& destination);
+
 /** @copydoc tensor_operations_on_host.h::addBroadcastOnHost() */
 void addBroadcastOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination);
 

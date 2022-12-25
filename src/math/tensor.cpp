@@ -296,6 +296,21 @@ void divide(const Tensor& a, const Tensor& b, Tensor& destination) {
     }
 }
 
+void log(const Tensor& a, Tensor& destination) {
+    if (a.shape != destination.shape) {
+        throw SizeMismatchException();
+    }
+
+    std::initializer_list<DataLocation> locations = {a.location, destination.location};
+    if (allLocationsAreHost(locations)) {
+        logTensorOnHost(a, destination);
+    } else if (allLocationsAreDevice(locations)) {
+        logTensorOnDevice(a, destination);
+    } else {
+        throw DifferentDataLocationException();
+    }
+}
+
 void multiply(const Tensor& tensor, float constant, Tensor& destination) {
     if (tensor.shape != destination.shape) {
         throw SizeMismatchException();

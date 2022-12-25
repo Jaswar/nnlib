@@ -227,6 +227,16 @@ __global__ void divideTensorsKernel(const float* a, const float* b, float* desti
     destination[index] = a[index] / b[index];
 }
 
+__global__ void logTensorKernel(const float* a, float* destination, size_t size) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    destination[index] = log(a[index]);
+}
+
 /**
  * @brief Kernel method to transpose a matrix.
  *
@@ -286,6 +296,13 @@ void divideTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
+void logTensorOnDevice(const Tensor& a, Tensor& destination) {
+    auto grid = a.size / a.session.threadsPerBlock + 1;
+    auto block = a.session.threadsPerBlock;
+    logTensorKernel<<<grid, block>>>(a.data, destination.data, a.size);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
 void addBroadcastOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
     auto grid = matrix.size / matrix.session.threadsPerBlock + 1;
     auto block = matrix.session.threadsPerBlock;
@@ -338,6 +355,14 @@ void subtractTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destinati
 }
 
 void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void divideTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void logTensorOnDevice(const Tensor& a, Tensor& destination) {
     throw UnexpectedCUDACallException();
 }
 
