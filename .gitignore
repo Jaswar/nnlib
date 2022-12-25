@@ -8,6 +8,8 @@
 /examples/*/.idea
 /examples/*/cmake-build-debug
 /examples/*/cmake-build-release
+/examples/titanic/out
+/examples/titanic/venv
 
 # Custom script to launch build.sh with "Visual Studio 15 2017 Win64" as the generator
 vs2017_build.sh
