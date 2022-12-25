@@ -36,8 +36,8 @@ def main(argv):
 
     dfX = pd.DataFrame(X)
     dfy = pd.DataFrame(y)
-    dfX.to_csv('./out/X.csv', header=None, index=False)
-    dfy.to_csv('./out/y.csv', header=None, index=False)
+    dfX['5'] = dfy  # Add the targets as the last column
+    dfX.to_csv('./out/dataset.csv', header=None, index=False)
 
 
 if __name__ == '__main__':
