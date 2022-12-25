@@ -20,11 +20,13 @@ float MeanSquaredError::calculateLoss(const Tensor& targets, const Tensor& predi
         workingSpace.move(targets.location);
     }
 
-    size_t numSamples = targets.shape[targets.shape.size() - 1];
+    size_t numOutputs = targets.shape[targets.shape.size() - 1];
 
     subtract(targets, predictions, workingSpace);
     hadamard(workingSpace, workingSpace, workingSpace);
-    multiply(workingSpace, 1.0f / static_cast<float>(numSamples), workingSpace);
 
-    return sum(workingSpace);
+    numSamples += targets.shape[0] * numOutputs;
+    currentTotalLoss += sum(workingSpace);
+
+    return currentTotalLoss / static_cast<float>(numSamples);
 }

@@ -33,7 +33,10 @@ float BinaryCrossEntropy::calculateLoss(const Tensor& targets, const Tensor& pre
 
     add(workingSpace, workingSpace2, workingSpace);
 
-    return sum(workingSpace) * (-1.0f / static_cast<float>(targets.shape[0]));
+    numSamples += targets.shape[0];
+    currentTotalLoss += sum(workingSpace) * -1;
+
+    return currentTotalLoss / static_cast<float>(numSamples);
 }
 
 void BinaryCrossEntropy::calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) {

@@ -11,7 +11,15 @@
 #include "tensor.h"
 
 class Loss {
+protected:
+    uint64_t numSamples;
+    float currentTotalLoss;
+
 public:
+    Loss();
+
+    void reset();
+
     virtual float calculateLoss(const Tensor& targets, const Tensor& predictions) = 0;
 
     virtual void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) = 0;
@@ -32,6 +40,7 @@ private:
     Tensor ones;
     Tensor workingSpace;
     Tensor workingSpace2;
+
 public:
     float calculateLoss(const Tensor& targets, const Tensor& predictions) override;
 

@@ -12,6 +12,7 @@ set(SOURCE_FILES activations/activation.cpp
         activations/sigmoid/sigmoid_on_host_evaluator.cpp
         activations/sigmoid/sigmoid_on_device_evaluator.cu
 
+        losses/loss.cpp
         losses/mean_squared_error.cpp
         losses/binary_cross_entropy.cpp
 
