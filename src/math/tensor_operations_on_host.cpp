@@ -6,6 +6,7 @@
  */
 
 #include "tensor_operations_on_host.h"
+#include <cmath>
 
 #if defined __AVX2__ || defined __AVX__
 #include <immintrin.h>
