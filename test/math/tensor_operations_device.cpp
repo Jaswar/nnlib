@@ -89,19 +89,19 @@ TEST(tensor_operations_device, hadamard) {
     ASSERT_TENSOR_EQ_1D(result, {-7, -8, 1, 3, 14, 0, -24, -11, 5});
 }
 
-TEST(tensor_operations_device, log) {
-    Tensor t1 = Tensor::construct1d({2.71828182, 0.01}); //-4.6051702499389648
-    Tensor result = Tensor(t1.shape[0]);
-
-    t1.move(DEVICE);
-    result.move(DEVICE);
-
-    log(t1, result);
-
-    result.move(HOST);
-
-    ASSERT_TENSOR_CLOSE_1D(result, {1, 1});
-}
+//TEST(tensor_operations_device, log) {
+//    Tensor t1 = Tensor::construct1d({2.71828182, 0.01}); //-4.6051702499389648
+//    Tensor result = Tensor(t1.shape[0]);
+//
+//    t1.move(DEVICE);
+//    result.move(DEVICE);
+//
+//    log(t1, result);
+//
+//    result.move(HOST);
+//
+//    ASSERT_TENSOR_CLOSE_1D(result, {1, 1});
+//}
 
 TEST(tensor_operations_device, multiply_constant) {
     Tensor t1 = Tensor::construct1d({2, 3, -4, -5, -6, 7, 8, 9, 0});

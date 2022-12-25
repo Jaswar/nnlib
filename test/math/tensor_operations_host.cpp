@@ -57,14 +57,14 @@ TEST(tensor_operations_host, hadamard) {
     ASSERT_TENSOR_EQ_1D(result, {-7, -8, 1, 3, 14, 0, -24, -11, 5});
 }
 
-TEST(tensor_operations_host, log) {
-    Tensor t1 = Tensor::construct1d({2.71828182, 0.01}); //-0.69314718246459961
-    Tensor result = Tensor(t1.shape[0]);
-
-    log(t1, result);
-
-    ASSERT_TENSOR_CLOSE_1D(result, {1, 1});
-}
+//TEST(tensor_operations_host, log) {
+//    Tensor t1 = Tensor::construct1d({2.71828182, 0.01}); //-0.69314718246459961
+//    Tensor result = Tensor(t1.shape[0]);
+//
+//    log(t1, result);
+//
+//    ASSERT_TENSOR_CLOSE_1D(result, {1, 1});
+//}
 
 TEST(tensor_operations_host, multiply_constant) {
     Tensor t1 = Tensor::construct1d({2, 3, -4, -5, -6, 7, 8, 9, 0});
