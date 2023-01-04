@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
     network.add(64);
     network.add(y.shape[1], "sigmoid");
 
-    network.train(X, y, 25, 10, 0.05);
+    network.train(X, y, 25, 10, 0.01, new CategoricalCrossEntropy());
 
     return 0;
 }

@@ -15,6 +15,7 @@ set(SOURCE_FILES activations/activation.cpp
         losses/loss.cpp
         losses/mean_squared_error.cpp
         losses/binary_cross_entropy.cpp
+        losses/categorical_cross_entropy.cpp
 
         layer.cpp
         network.cpp)
