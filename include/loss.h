@@ -53,6 +53,8 @@ private:
 
 class CategoricalCrossEntropy : public Loss {
 private:
+    Tensor workingSpace;
+
     Tensor ones;
     Tensor accumulatedSums;
 
@@ -62,6 +64,8 @@ public:
     void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) override;
 
 private:
+    void allocateWorkingSpace(const Tensor& targets, const Tensor& predictions);
+
     void allocateOnes(const Tensor& targets, const Tensor& predictions);
     void allocateAccumulatedSums(const Tensor& targets, const Tensor& predictions);
 };
