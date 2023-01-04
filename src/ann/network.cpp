@@ -225,10 +225,10 @@ void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float le
     Tensor yHost = y;
     yHost.move(HOST);
 
-    loss->reset();
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << "/" << epochs << std::endl;
 
+        loss->reset();
         processEpoch(batches, targets, yHost, learningRate, loss);
 
         std::cout << std::endl;
