@@ -10,19 +10,27 @@
 #include <tensor.h>
 #include "../assertions.h"
 #include "../test_utils.h"
+#include <rapidcheck.h>
+#include <rapidcheck/gtest.h>
 
 #ifdef __CUDA__
 
-TEST(tensor_operations_device, fill) {
-    Tensor t1 = Tensor::construct1d({2, 3, 4, 5, 6, 7, 8, 9, 0});
+RC_GTEST_PROP(tensor_operations_device, fill, (float value)) {
+    const auto size = *rc::gen::inRange<size_t>(1, 1e6);
+    Tensor result = Tensor(size);
+    Tensor expected = Tensor(size);
 
-    t1.move(DEVICE);
+    for (size_t i = 0; i < size; i++) {
+        expected.data[i] = value;
+    }
 
-    fill(2, t1);
+    result.move(DEVICE);
 
-    t1.move(HOST);
+    fill(value, result);
 
-    ASSERT_TENSOR_EQ_1D(t1, {2, 2, 2, 2, 2, 2, 2, 2, 2});
+    result.move(HOST);
+
+    RC_ASSERT_TENSOR_EQ(result, expected);
 }
 
 TEST(tensor_operations_device, add) {

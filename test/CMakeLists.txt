@@ -16,9 +16,16 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+set(RC_ENABLE_GTEST ON CACHE BOOL "Rapidcheck GTest Support" FORCE)
+FetchContent_Declare(
+        rapidcheck
+        URL https://github.com/emil-e/rapidcheck/archive/ce2b602bbe89e9264fb8725cc3f04049951f29cb.zip
+)
+FetchContent_MakeAvailable(rapidcheck)
+
 enable_testing()
 
-target_link_libraries(${NNLIB_TEST_EXEC} ${PROJECT_NAME} gtest_main)
+target_link_libraries(${NNLIB_TEST_EXEC} PUBLIC ${PROJECT_NAME} gtest_main rapidcheck rapidcheck_gtest)
 
-include(GoogleTest)
+include(GoogleTest rapidcheck)
 gtest_discover_tests(${NNLIB_TEST_EXEC})
