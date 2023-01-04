@@ -15,8 +15,11 @@
 
 #ifdef __CUDA__
 
+#define NO_SHRINK(...) rc::gen::noShrink(__VA_ARGS__)
+
 RC_GTEST_PROP(tensor_operations_device, fill, (float value)) {
-    const auto size = *rc::gen::inRange<size_t>(1, 1e6);
+    const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e6));
+
     Tensor result = Tensor(size);
     Tensor expected = Tensor(size);
 
@@ -33,10 +36,19 @@ RC_GTEST_PROP(tensor_operations_device, fill, (float value)) {
     RC_ASSERT_TENSOR_EQ(result, expected);
 }
 
-TEST(tensor_operations_device, add) {
-    Tensor t1 = Tensor::construct1d({2, 3, 4, 5, 6, 7, 8, 9, 0});
-    Tensor t2 = Tensor::construct1d({5, 3, 5, 9, 9, 10, 22, 11, 2});
-    Tensor result = Tensor(t1.shape[0]);
+RC_GTEST_PROP(tensor_operations_device, add, ()) {
+    const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1e6 - 1, 1e6));
+    const auto data1 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
+    const auto data2 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
+
+    Tensor t1 = Tensor::construct1d(data1);
+    Tensor t2 = Tensor::construct1d(data2);
+    Tensor result = Tensor(size);
+    Tensor expected = Tensor(size);
+
+    for (size_t i = 0; i < size; i++) {
+        expected.data[i] = t1.data[i] + t2.data[i];
+    }
 
     t1.move(DEVICE);
     t2.move(DEVICE);
@@ -46,7 +58,7 @@ TEST(tensor_operations_device, add) {
 
     result.move(HOST);
 
-    ASSERT_TENSOR_EQ_1D(result, {7, 6, 9, 14, 15, 17, 30, 20, 2});
+    RC_ASSERT_TENSOR_EQ(result, expected);
 }
 
 TEST(tensor_operations_device, add_broadcast) {

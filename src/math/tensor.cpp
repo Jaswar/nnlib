@@ -107,9 +107,7 @@ Tensor Tensor::construct1d(const std::vector<float>& data) {
         throw SizeMismatchException();
     }
     Tensor result = Tensor(data.size());
-    for (size_t i = 0; i < data.size(); i++) {
-        result.data[i] = data[i];
-    }
+    std::copy(data.begin(), data.end(), result.data);
     return result;
 }
 
