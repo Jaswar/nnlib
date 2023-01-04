@@ -37,7 +37,7 @@ RC_GTEST_PROP(tensor_operations_device, fill, (float value)) {
 }
 
 RC_GTEST_PROP(tensor_operations_device, add, ()) {
-    const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1e6 - 1, 1e6));
+    const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
     const auto data1 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
     const auto data2 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
 
@@ -77,10 +77,19 @@ TEST(tensor_operations_device, add_broadcast) {
     ASSERT_TENSOR_EQ_2D(result, {{7, 6, -1}, {10, 9, 2}, {13, 12, -5}});
 }
 
-TEST(tensor_operations_device, subtract) {
-    Tensor t1 = Tensor::construct1d({2, 3, 4, 5, 6, 7, 8, 9, 0});
-    Tensor t2 = Tensor::construct1d({5, 3, 5, 1, 2, 10, -4, 11, 2});
-    Tensor result = Tensor(t1.shape[0]);
+RC_GTEST_PROP(tensor_operations_device, subtract, ()) {
+    const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
+    const auto data1 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
+    const auto data2 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
+
+    Tensor t1 = Tensor::construct1d(data1);
+    Tensor t2 = Tensor::construct1d(data2);
+    Tensor result = Tensor(size);
+    Tensor expected = Tensor(size);
+
+    for (size_t i = 0; i < size; i++) {
+        expected.data[i] = t1.data[i] - t2.data[i];
+    }
 
     t1.move(DEVICE);
     t2.move(DEVICE);
@@ -90,13 +99,22 @@ TEST(tensor_operations_device, subtract) {
 
     result.move(HOST);
 
-    ASSERT_TENSOR_EQ_1D(result, {-3, 0, -1, 4, 4, -3, 12, -2, -2});
+    RC_ASSERT_TENSOR_EQ(result, expected);
 }
 
-TEST(tensor_operations_device, hadamard) {
-    Tensor t1 = Tensor::construct1d({-1, 4, 0.5, 1, 2, 0, 12, 11, -2.5});
-    Tensor t2 = Tensor::construct1d({7, -2, 2, 3, 7, 10, -2, -1, -2});
-    Tensor result = Tensor(t1.shape[0]);
+RC_GTEST_PROP(tensor_operations_device, hadamard, ()) {
+    const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
+    const auto data1 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
+    const auto data2 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
+
+    Tensor t1 = Tensor::construct1d(data1);
+    Tensor t2 = Tensor::construct1d(data2);
+    Tensor result = Tensor(size);
+    Tensor expected = Tensor(size);
+
+    for (size_t i = 0; i < size; i++) {
+        expected.data[i] = t1.data[i] * t2.data[i];
+    }
 
     t1.move(DEVICE);
     t2.move(DEVICE);
@@ -106,7 +124,32 @@ TEST(tensor_operations_device, hadamard) {
 
     result.move(HOST);
 
-    ASSERT_TENSOR_EQ_1D(result, {-7, -8, 1, 3, 14, 0, -24, -11, 5});
+    RC_ASSERT_TENSOR_EQ(result, expected);
+}
+
+RC_GTEST_PROP(tensor_operations_device, divide, ()) {
+    const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
+    const auto data1 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
+    const auto data2 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::nonZero<float>()));
+
+    Tensor t1 = Tensor::construct1d(data1);
+    Tensor t2 = Tensor::construct1d(data2);
+    Tensor result = Tensor(size);
+    Tensor expected = Tensor(size);
+
+    for (size_t i = 0; i < size; i++) {
+        expected.data[i] = t1.data[i] / t2.data[i];
+    }
+
+    t1.move(DEVICE);
+    t2.move(DEVICE);
+    result.move(DEVICE);
+
+    divide(t1, t2, result);
+
+    result.move(HOST);
+
+    RC_ASSERT_TENSOR_EQ(result, expected);
 }
 
 //TEST(tensor_operations_device, log) {
