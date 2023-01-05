@@ -16,8 +16,6 @@
 
 #ifdef __CUDA__
 
-#define NO_SHRINK(...) rc::gen::noShrink(__VA_ARGS__)
-
 RC_GTEST_PROP(tensor_operations_device, fill, (float value)) {
     const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e6));
 

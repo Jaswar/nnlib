@@ -10,6 +10,8 @@
 
 #include <tensor.h>
 
+#define NO_SHRINK(...) rc::gen::noShrink(__VA_ARGS__)
+
 float getRandomValue();
 
 template<typename... Args>
