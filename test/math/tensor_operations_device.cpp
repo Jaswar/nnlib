@@ -12,6 +12,7 @@
 #include "../test_utils.h"
 #include <rapidcheck.h>
 #include <rapidcheck/gtest.h>
+#include <limits>
 
 #ifdef __CUDA__
 
@@ -152,19 +153,27 @@ RC_GTEST_PROP(tensor_operations_device, divide, ()) {
     RC_ASSERT_TENSOR_EQ(result, expected);
 }
 
-//TEST(tensor_operations_device, log) {
-//    Tensor t1 = Tensor::construct1d({2.71828182, 0.01}); //-4.6051702499389648
-//    Tensor result = Tensor(t1.shape[0]);
-//
-//    t1.move(DEVICE);
-//    result.move(DEVICE);
-//
-//    log(t1, result);
-//
-//    result.move(HOST);
-//
-//    ASSERT_TENSOR_CLOSE_1D(result, {1, 1});
-//}
+RC_GTEST_PROP(tensor_operations_device, log, ()) {
+    const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
+    const auto data = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::positive<float>()));
+
+    Tensor t = Tensor::construct1d(data);
+    Tensor result = Tensor(size);
+    Tensor expected = Tensor(size);
+
+    for (size_t i = 0; i < size; i++) {
+        expected.data[i] = log(t.data[i]);
+    }
+
+    t.move(DEVICE);
+    result.move(DEVICE);
+
+    log(t, result);
+
+    result.move(HOST);
+
+    RC_ASSERT_TENSOR_CLOSE(result, expected);
+}
 
 TEST(tensor_operations_device, multiply_constant) {
     Tensor t1 = Tensor::construct1d({2, 3, -4, -5, -6, 7, 8, 9, 0});
