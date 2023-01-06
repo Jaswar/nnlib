@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 
     std::cout << y << std::endl;
 
-    Network network = Network(X.shape[1], false);
+    Network network = Network(X.shape[1]);
     network.add(64);
     network.add(y.shape[1], "sigmoid");
 

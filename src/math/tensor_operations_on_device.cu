@@ -328,8 +328,8 @@ void multiplyMatrixVectorOnDevice(const Tensor& matrix, const Tensor& vector, Te
 }
 
 void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& destination) {
-    auto grid = m1.size / m1.session.threadsPerBlock + 1;
-    auto block = m1.session.threadsPerBlock;
+    auto grid = destination.size / destination.session.threadsPerBlock + 1;
+    auto block = destination.session.threadsPerBlock;
     multiplyMatricesNoTilingKernel<<<grid, block>>>(m1.data, m2.data, destination.data, m1.shape[0], m1.shape[1],
                                                     m2.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());

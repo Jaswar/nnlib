@@ -55,8 +55,6 @@ bool withinBounds(const float v1, const float v2, const float delta, bool relati
 
     for (size_t i = 0; i < result.size; i++) {
         if (!withinBounds(result.data[i], expected.data[i], delta, relative)) {
-            auto a = result.data[i];
-            auto b = expected.data[i];
             return ::testing::AssertionFailure()
                    << "The tensors are different at index " << i << " (expected: " << expected.data[i] << " was "
                    << result.data[i] << ")";

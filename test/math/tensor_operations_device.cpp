@@ -255,18 +255,41 @@ RC_GTEST_PROP(tensor_operations_device, multiply_matrix_vector, ()) {
     RC_ASSERT_TENSOR_CLOSE(result, expected, 5e-4);
 }
 
-TEST(tensor_operations_device, multiply_matrix_matrix) {
-    Tensor m1 = initializeRandom(10, 12);
-    Tensor m2 = initializeRandom(12, 15);
-    Tensor result = Tensor(10, 15);
-    Tensor expected = Tensor(10, 15);
+RC_GTEST_PROP(tensor_operations_device, multiply_matrix_matrix, ()) {
+    const auto n = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1500));
+    const auto m = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1500));
+    const auto k = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1500));
 
-    for (size_t i = 0; i < expected.shape[0]; i++) {
-        for (size_t j = 0; j < expected.shape[1]; j++) {
-            expected(i, j) = 0;
-            for (size_t k = 0; k < m1.shape[1]; k++) {
-                expected(i, j) += m1(i, k) * m2(k, j);
+    const auto dataM1Int = *NO_SHRINK(rc::gen::container<std::vector<int>>(n * m, rc::gen::inRange<int>(-1e6, 1e6)));
+    const auto dataM2Int = *NO_SHRINK(rc::gen::container<std::vector<int>>(m * k, rc::gen::inRange<int>(-1e6, 1e6)));
+    std::vector<float> dataM1 = std::vector<float>(n * m);
+    std::vector<float> dataM2 = std::vector<float>(m * k);
+    std::transform(dataM1Int.begin(), dataM1Int.end(), dataM1.begin(), [](int x) {
+        return static_cast<float>(x);
+    });
+    std::transform(dataM2Int.begin(), dataM2Int.end(), dataM2.begin(), [](int x) {
+        return static_cast<float>(x);
+    });
+
+
+    Tensor m1 = Tensor(n, m);
+    std::copy(dataM1.begin(), dataM1.end(), m1.data);
+    Tensor m2 = Tensor(m, k);
+    std::copy(dataM2.begin(), dataM2.end(), m2.data);
+
+    multiply(m1, 1e-6, m1);
+    multiply(m2, 1e-6, m2);
+
+    Tensor result = Tensor(n, k);
+    Tensor expected = Tensor(n, k);
+
+    for (size_t row = 0; row < n; row++) {
+        for (size_t column = 0; column < k; column++) {
+            float acc = 0;
+            for (size_t i = 0; i < m; i++) {
+                acc += m1.data[row * m + i] * m2.data[i * k + column];
             }
+            expected.data[row * k + column] = acc;
         }
     }
 
@@ -278,7 +301,7 @@ TEST(tensor_operations_device, multiply_matrix_matrix) {
 
     result.move(HOST);
 
-    ASSERT_TENSOR_CLOSE(result, expected);
+    RC_ASSERT_TENSOR_CLOSE(result, expected, 5e-4);
 }
 
 RC_GTEST_PROP(tensor_operations_device, transpose, ()) {
