@@ -320,7 +320,9 @@ void multiplyTensorOnDevice(const Tensor& tensor, float constant, Tensor& destin
 }
 
 void multiplyMatrixVectorOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
-    mulMatrixVectorKernel<<<1, matrix.shape[0]>>>(matrix.data, vector.data, destination.data, matrix.shape[0],
+    auto grid = matrix.shape[0] / matrix.session.threadsPerBlock + 1;
+    auto block = matrix.session.threadsPerBlock;
+    mulMatrixVectorKernel<<<grid, block>>>(matrix.data, vector.data, destination.data, matrix.shape[0],
                                                   matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }

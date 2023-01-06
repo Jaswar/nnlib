@@ -60,20 +60,34 @@ RC_GTEST_PROP(tensor_operations_device, add, ()) {
     RC_ASSERT_TENSOR_EQ(result, expected);
 }
 
-TEST(tensor_operations_device, add_broadcast) {
-    Tensor t1 = Tensor::construct2d({{2, 3, 4}, {5, 6, 7}, {8, 9, 0}});
-    Tensor t2 = Tensor::construct1d({5, 3, -5});
-    Tensor result = Tensor(t1.shape[0], t1.shape[1]);
+RC_GTEST_PROP(tensor_operations_device, add_broadcast, ()) {
+    const auto n = *NO_SHRINK(rc::gen::inRange<size_t>(1, 2e3));
+    const auto m = *NO_SHRINK(rc::gen::inRange<size_t>(1, 2e3));
 
-    t1.move(DEVICE);
-    t2.move(DEVICE);
+    const auto dataMatrix = *NO_SHRINK(rc::gen::container<std::vector<float>>(n * m, rc::gen::arbitrary<float>()));
+    const auto dataVector = *NO_SHRINK(rc::gen::container<std::vector<float>>(m, rc::gen::arbitrary<float>()));
+
+    Tensor matrix = Tensor(n, m);
+    std::copy(dataMatrix.begin(), dataMatrix.end(), matrix.data);
+    Tensor vector = Tensor::construct1d(dataVector);
+    Tensor result = Tensor(n, m);
+    Tensor expected = Tensor(n, m);
+
+    for (size_t i = 0; i < n; i++) {
+        for (size_t j = 0; j < m; j++) {
+            expected.data[i * m + j] = matrix.data[i * m + j] + vector.data[j];
+        }
+    }
+
+    matrix.move(DEVICE);
+    vector.move(DEVICE);
     result.move(DEVICE);
 
-    add(t1, t2, result);
+    add(matrix, vector, result);
 
     result.move(HOST);
 
-    ASSERT_TENSOR_EQ_2D(result, {{7, 6, -1}, {10, 9, 2}, {13, 12, -5}});
+    RC_ASSERT_TENSOR_EQ(result, expected);
 }
 
 RC_GTEST_PROP(tensor_operations_device, subtract, ()) {
@@ -170,6 +184,7 @@ RC_GTEST_PROP(tensor_operations_device, log, ()) {
 
     result.move(HOST);
 
+    // Need to use CLOSE here probably because of different implementations of log in CPU and GPU
     RC_ASSERT_TENSOR_CLOSE(result, expected);
 }
 
@@ -195,17 +210,38 @@ RC_GTEST_PROP(tensor_operations_device, multiply_constant, (float constant)) {
     RC_ASSERT_TENSOR_CLOSE(result, expected);
 }
 
-TEST(tensor_operations_device, multiply_matrix_vector) {
-    Tensor matrix = initializeRandom(10, 12);
-    Tensor vector = initializeRandom(12);
-    Tensor result = Tensor(10);
-    Tensor expected = Tensor(10);
+RC_GTEST_PROP(tensor_operations_device, multiply_matrix_vector, ()) {
+    const auto n = *NO_SHRINK(rc::gen::inRange<size_t>(1, 2e3));
+    const auto m = *NO_SHRINK(rc::gen::inRange<size_t>(1, 2e3));
 
-    for (size_t i = 0; i < matrix.shape[0]; i++) {
-        expected(i) = 0;
-        for (size_t j = 0; j < matrix.shape[1]; j++) {
-            expected(i) += matrix(i, j) * vector(j);
+    const auto dataMatrixInt = *NO_SHRINK(rc::gen::container<std::vector<int>>(n * m, rc::gen::inRange<int>(-1e6, 1e6)));
+    const auto dataVectorInt = *NO_SHRINK(rc::gen::container<std::vector<int>>(m, rc::gen::inRange<int>(-1e6, 1e6)));
+    std::vector<float> dataMatrix = std::vector<float>(n * m);
+    std::vector<float> dataVector = std::vector<float>(m);
+    std::transform(dataMatrixInt.begin(), dataMatrixInt.end(), dataMatrix.begin(), [](int x) {
+        return static_cast<float>(x);
+    });
+    std::transform(dataVectorInt.begin(), dataVectorInt.end(), dataVector.begin(), [](int x) {
+        return static_cast<float>(x);
+    });
+
+
+    Tensor matrix = Tensor(n, m);
+    std::copy(dataMatrix.begin(), dataMatrix.end(), matrix.data);
+    Tensor vector = Tensor::construct1d(dataVector);
+
+    multiply(matrix, 1e-6, matrix);
+    multiply(vector, 1e-6, vector);
+
+    Tensor result = Tensor(n);
+    Tensor expected = Tensor(n);
+
+    for (size_t i = 0; i < n; i++) {
+        float acc = 0;
+        for (size_t j = 0; j < m; j++) {
+            acc += matrix.data[i * m + j] * vector.data[j];
         }
+        expected.data[i] = acc;
     }
 
     matrix.move(DEVICE);
@@ -216,7 +252,7 @@ TEST(tensor_operations_device, multiply_matrix_vector) {
 
     result.move(HOST);
 
-    ASSERT_TENSOR_CLOSE(result, expected);
+    RC_ASSERT_TENSOR_CLOSE(result, expected, 5e-4);
 }
 
 TEST(tensor_operations_device, multiply_matrix_matrix) {
@@ -269,7 +305,7 @@ RC_GTEST_PROP(tensor_operations_device, transpose, ()) {
 
     result.move(HOST);
 
-    RC_ASSERT_TENSOR_CLOSE(result, expected);
+    RC_ASSERT_TENSOR_EQ(result, expected);
 }
 
 #endif

@@ -31,13 +31,32 @@
     return assertEqual(result, exp);
 }
 
-::testing::AssertionResult assertClose(const Tensor& result, const Tensor& expected, float delta) {
+bool withinBoundsAbsolute(const float v1, const float v2, const float delta) {
+    return std::abs(v1 - v2) <= delta;
+}
+
+bool withinBoundsRelative(const float v1, const float v2, const float delta) {
+    if (v2 == 0) return v1 == 0;
+    return std::abs(v1 / v2 - 1) <= delta;
+}
+
+bool withinBounds(const float v1, const float v2, const float delta, bool relative) {
+    if (relative) {
+        return withinBoundsRelative(v1, v2, delta);
+    } else {
+        return withinBoundsAbsolute(v1, v2, delta);
+    }
+}
+
+::testing::AssertionResult assertClose(const Tensor& result, const Tensor& expected, float delta, bool relative) {
     if (result.shape != expected.shape) {
         return ::testing::AssertionFailure() << "The shapes of the tensors are different.";
     }
 
     for (size_t i = 0; i < result.size; i++) {
-        if (std::abs(result.data[i] - expected.data[i]) > delta) {
+        if (!withinBounds(result.data[i], expected.data[i], delta, relative)) {
+            auto a = result.data[i];
+            auto b = expected.data[i];
             return ::testing::AssertionFailure()
                    << "The tensors are different at index " << i << " (expected: " << expected.data[i] << " was "
                    << result.data[i] << ")";
@@ -46,13 +65,13 @@
     return ::testing::AssertionSuccess();
 }
 
-::testing::AssertionResult assertClose1d(const Tensor& result, const std::vector<float>& expected, float delta) {
+::testing::AssertionResult assertClose1d(const Tensor& result, const std::vector<float>& expected, float delta, bool relative) {
     Tensor exp = Tensor::construct1d(expected);
-    return assertClose(result, exp, delta);
+    return assertClose(result, exp, delta, relative);
 }
 
 ::testing::AssertionResult assertClose2d(const Tensor& result, const std::vector<std::vector<float>>& expected,
-                                         float delta) {
+                                         float delta, bool relative) {
     Tensor exp = Tensor::construct2d(expected);
-    return assertClose(result, exp, delta);
+    return assertClose(result, exp, delta, relative);
 }

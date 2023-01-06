@@ -24,15 +24,17 @@
 
 #define ASSERT_TENSOR_CLOSE(result, ...) ASSERT_TRUE(assertClose(result, __VA_ARGS__))
 #define RC_ASSERT_TENSOR_CLOSE(result, ...) RC_ASSERT(assertClose(result, __VA_ARGS__) == ::testing::AssertionSuccess())
-::testing::AssertionResult assertClose(const Tensor& result, const Tensor& expected, float delta = 5e-5);
+::testing::AssertionResult assertClose(const Tensor& result, const Tensor& expected, float delta = 5e-5,
+                                       bool relative = false);
 
 #define ASSERT_TENSOR_CLOSE_1D(result, ...) ASSERT_TRUE(assertClose1d(result, __VA_ARGS__))
 #define RC_ASSERT_TENSOR_CLOSE_1D(result, ...) RC_ASSERT(assertClose1d(result, __VA_ARGS__) == ::testing::AssertionSuccess())
-::testing::AssertionResult assertClose1d(const Tensor& result, const std::vector<float>& expected, float delta = 5e-5);
+::testing::AssertionResult assertClose1d(const Tensor& result, const std::vector<float>& expected, float delta = 5e-5,
+                                         bool relative = false);
 
 #define ASSERT_TENSOR_CLOSE_2D(result, ...) ASSERT_TRUE(assertClose2d(result, __VA_ARGS__))
 #define RC_ASSERT_TENSOR_CLOSE_2D(result, ...) RC_ASSERT(assertClose2d(result, __VA_ARGS__) == ::testing::AssertionSuccess())
 ::testing::AssertionResult assertClose2d(const Tensor& result, const std::vector<std::vector<float>>& expected,
-                                         float delta = 5e-5);
+                                         float delta = 5e-5, bool relative = false);
 
 #endif //NNLIB_ASSERTIONS_H
