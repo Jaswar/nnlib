@@ -173,18 +173,26 @@ RC_GTEST_PROP(tensor_operations_device, log, ()) {
     RC_ASSERT_TENSOR_CLOSE(result, expected);
 }
 
-TEST(tensor_operations_device, multiply_constant) {
-    Tensor t1 = Tensor::construct1d({2, 3, -4, -5, -6, 7, 8, 9, 0});
-    Tensor result = Tensor(t1.shape[0]);
+RC_GTEST_PROP(tensor_operations_device, multiply_constant, (float constant)) {
+    const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
+    const auto data = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
 
-    t1.move(DEVICE);
+    Tensor t = Tensor::construct1d(data);
+    Tensor result = Tensor(size);
+    Tensor expected = Tensor(size);
+
+    for (size_t i = 0; i < size; i++) {
+        expected.data[i] = t.data[i] * constant;
+    }
+
+    t.move(DEVICE);
     result.move(DEVICE);
 
-    multiply(t1, -2, result);
+    multiply(t, constant, result);
 
     result.move(HOST);
 
-    ASSERT_TENSOR_EQ_1D(result, {-4, -6, 8, 10, 12, -14, -16, -18, 0});
+    RC_ASSERT_TENSOR_CLOSE(result, expected);
 }
 
 TEST(tensor_operations_device, multiply_matrix_vector) {
@@ -237,18 +245,31 @@ TEST(tensor_operations_device, multiply_matrix_matrix) {
     ASSERT_TENSOR_CLOSE(result, expected);
 }
 
-TEST(tensor_operations_device, transpose) {
-    Tensor t1 = Tensor::construct2d({{1, 2, 3, 4}, {4, 5, 6, 7}, {7, 8, 9, 10}});
-    Tensor result = Tensor(t1.shape[1], t1.shape[0]);
+RC_GTEST_PROP(tensor_operations_device, transpose, ()) {
+    const auto n = *NO_SHRINK(rc::gen::inRange<size_t>(1, 2e3));
+    const auto m = *NO_SHRINK(rc::gen::inRange<size_t>(1, 2e3));
 
-    t1.move(DEVICE);
+    const auto data = *NO_SHRINK(rc::gen::container<std::vector<float>>(n * m, rc::gen::arbitrary<float>()));
+
+    Tensor t = Tensor(n, m);
+    std::copy(data.begin(), data.end(), t.data);
+    Tensor result = Tensor(m, n);
+    Tensor expected = Tensor(m, n);
+
+    for (size_t i = 0; i < n; i++) {
+        for (size_t j = 0; j < m; j++) {
+            expected.data[j * n + i] = t.data[i * m + j];
+        }
+    }
+
+    t.move(DEVICE);
     result.move(DEVICE);
 
-    transpose(t1, result);
+    transpose(t, result);
 
     result.move(HOST);
 
-    ASSERT_TENSOR_EQ_2D(result, {{1, 4, 7}, {2, 5, 8}, {3, 6, 9}, {4, 7, 10}});
+    RC_ASSERT_TENSOR_CLOSE(result, expected);
 }
 
 #endif

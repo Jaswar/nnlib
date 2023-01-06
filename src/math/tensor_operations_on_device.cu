@@ -247,8 +247,9 @@ __global__ void logTensorKernel(const float* a, float* destination, size_t size)
  * @param m The number of columns of @p matrix.
  */
 __global__ void transposeMatrixKernel(const float* matrix, float* destination, size_t n, size_t m) {
-    auto row = blockIdx.x;
-    auto column = threadIdx.x;
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+    auto row = index / m;
+    auto column = index % m;
 
     if (row >= n || column >= m) {
         return;
@@ -333,7 +334,9 @@ void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& de
 }
 
 void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
-    transposeMatrixKernel<<<matrix.shape[0], matrix.shape[1]>>>(matrix.data, destination.data, matrix.shape[0],
+    auto grid = matrix.size / matrix.session.threadsPerBlock + 1;
+    auto block = matrix.session.threadsPerBlock;
+    transposeMatrixKernel<<<grid, block>>>(matrix.data, destination.data, matrix.shape[0],
                                                                 matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
