@@ -72,10 +72,7 @@ public:
      */
     Tensor(const Tensor& other);
 
-    explicit Tensor(std::vector<size_t> shape) : shape(std::move(shape)), location(HOST), size(0), data() {
-        computeSize();
-        data = allocate1DArray(size, 0);
-    }
+    explicit Tensor(std::vector<size_t> shape);
 
     /**
      * @brief Construct a tensor based on the passed shape.
@@ -85,10 +82,7 @@ public:
      * @param args The shapes of consecutive dimensions.
      */
     template<typename... Args>
-    explicit Tensor(Args... args) : shape({static_cast<size_t>(args)...}), location(HOST), size(0), data() {
-        computeSize();
-        data = allocate1DArray(size, 0);
-    }
+    explicit Tensor(Args... args) : Tensor(std::vector<size_t>({static_cast<size_t>(args)...})) {}
 
     /**
      * @brief The assignment operator.
