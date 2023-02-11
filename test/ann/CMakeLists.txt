@@ -1,4 +1,6 @@
 set(TEST_FILES
+        activations/linear/linear_activation_common.h
+        activations/linear/linear_activation_common.cpp
         activations/linear/linear_activation_host.cpp
         activations/linear/linear_activation_device.cpp
 
