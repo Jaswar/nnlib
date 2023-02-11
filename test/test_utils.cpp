@@ -6,6 +6,7 @@
  */
 
 #include "test_utils.h"
+#include <algorithm>
 
 float getRandomValue() {
     return ((static_cast<float>(rand()) / RAND_MAX) * 2 - 1);
