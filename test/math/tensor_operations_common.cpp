@@ -246,25 +246,12 @@ void tensorMultiplyMatrixVectorPBT(bool testDevice) {
     const auto n = *NO_SHRINK(rc::gen::inRange<size_t>(1, 2e3));
     const auto m = *NO_SHRINK(rc::gen::inRange<size_t>(1, 2e3));
 
-    const auto dataMatrixInt = *NO_SHRINK(rc::gen::container<std::vector<int>>(n * m, rc::gen::inRange<int>(-1e6, 1e6)));
-    const auto dataVectorInt = *NO_SHRINK(rc::gen::container<std::vector<int>>(m, rc::gen::inRange<int>(-1e6, 1e6)));
-    std::vector<float> dataMatrix = std::vector<float>(n * m);
-    std::vector<float> dataVector = std::vector<float>(m);
-    std::transform(dataMatrixInt.begin(), dataMatrixInt.end(), dataMatrix.begin(), [](int x) {
-        return static_cast<float>(x);
-    });
-    std::transform(dataVectorInt.begin(), dataVectorInt.end(), dataVector.begin(), [](int x) {
-        return static_cast<float>(x);
-    });
-
+    const std::vector<float> dataMatrix = rcFloatVectorInRange(n * m, -1, 1);
+    const std::vector<float> dataVector = rcFloatVectorInRange(m, -1, 1);
 
     Tensor matrix = Tensor(n, m);
     std::copy(dataMatrix.begin(), dataMatrix.end(), matrix.data);
     Tensor vector = Tensor::construct1d(dataVector);
-
-    multiply(matrix, 1e-6, matrix);
-    multiply(vector, 1e-6, vector);
-
     Tensor result = Tensor(n);
     Tensor expected = Tensor(n);
 
@@ -296,26 +283,13 @@ void tensorMultiplyMatrixMatrixPBT(bool testDevice) {
     const auto m = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1500));
     const auto k = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1500));
 
-    const auto dataM1Int = *NO_SHRINK(rc::gen::container<std::vector<int>>(n * m, rc::gen::inRange<int>(-1e6, 1e6)));
-    const auto dataM2Int = *NO_SHRINK(rc::gen::container<std::vector<int>>(m * k, rc::gen::inRange<int>(-1e6, 1e6)));
-    std::vector<float> dataM1 = std::vector<float>(n * m);
-    std::vector<float> dataM2 = std::vector<float>(m * k);
-    std::transform(dataM1Int.begin(), dataM1Int.end(), dataM1.begin(), [](int x) {
-        return static_cast<float>(x);
-    });
-    std::transform(dataM2Int.begin(), dataM2Int.end(), dataM2.begin(), [](int x) {
-        return static_cast<float>(x);
-    });
-
+    std::vector<float> dataM1 = rcFloatVectorInRange(n * m, -1, 1);
+    std::vector<float> dataM2 = rcFloatVectorInRange(m * k, -1, 1);
 
     Tensor m1 = Tensor(n, m);
     std::copy(dataM1.begin(), dataM1.end(), m1.data);
     Tensor m2 = Tensor(m, k);
     std::copy(dataM2.begin(), dataM2.end(), m2.data);
-
-    multiply(m1, 1e-6, m1);
-    multiply(m2, 1e-6, m2);
-
     Tensor result = Tensor(n, k);
     Tensor expected = Tensor(n, k);
 

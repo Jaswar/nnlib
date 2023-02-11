@@ -9,10 +9,13 @@
 #define NNLIB_TEST_UTILS_H
 
 #include <tensor.h>
+#include <rapidcheck.h>
 
 #define NO_SHRINK(...) rc::gen::noShrink(__VA_ARGS__)
 
 float getRandomValue();
+
+std::vector<float> rcFloatVectorInRange(size_t size, float lower, float upper, size_t precision = 1e6);
 
 template<typename... Args>
 Tensor initializeRandom(Args... args) {
