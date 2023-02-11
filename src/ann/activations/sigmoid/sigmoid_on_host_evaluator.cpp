@@ -12,7 +12,7 @@
 #include <utils/location_verifiers.h>
 
 float fSigmoid(float x) {
-    return 1 / (1 + static_cast<float>(exp(-static_cast<double>(x))));
+    return 1 / (1 + expf(-x));
 }
 
 void SigmoidOnHostEvaluator::forward(const Tensor& input, Tensor& result) const {
