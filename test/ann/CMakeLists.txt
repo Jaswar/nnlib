@@ -4,6 +4,8 @@ set(TEST_FILES
         activations/linear/linear_activation_host.cpp
         activations/linear/linear_activation_device.cpp
 
+        activations/ReLU/relu_activation_common.h
+        activations/ReLU/relu_activation_common.cpp
         activations/ReLU/relu_activation_host.cpp
         activations/ReLU/relu_activation_device.cpp
 
