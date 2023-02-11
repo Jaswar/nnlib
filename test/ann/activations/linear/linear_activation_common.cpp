@@ -6,6 +6,7 @@
  */
 
 #include "linear_activation_common.h"
+#include <gtest/gtest.h>
 #include <rapidcheck.h>
 #include <rapidcheck/gtest.h>
 #include <tensor.h>
