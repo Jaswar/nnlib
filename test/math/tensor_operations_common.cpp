@@ -13,6 +13,7 @@
 #include <rapidcheck.h>
 #include <rapidcheck/gtest.h>
 #include <limits>
+#include <algorithm>
 #include "tensor_operations_common.h"
 
 void tensorFillPBT(float value, bool testDevice) {
