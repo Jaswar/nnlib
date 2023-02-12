@@ -17,6 +17,8 @@ to run the library in this mode.
    - Sigmoid
  - Loss functions:
    - Mean Squared Error
+   - Binary Cross Entropy
+   - Categorical Cross Entropy
  - Optimizers:
    - Stochastic Gradient Descent
 

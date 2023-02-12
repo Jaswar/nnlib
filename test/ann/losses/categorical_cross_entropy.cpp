@@ -73,7 +73,7 @@ RC_GTEST_PROP(categorical_cross_entropy, calculate_derivatives, ()) {
         for (size_t cls = 0; cls < numClasses; cls++) {
             float y = targets(sample, cls);
             float yHat = predictions(sample, cls);
-            expected(sample, cls) += -y / yHat + 1 / sum;
+            expected(sample, cls) = -y / yHat + 1 / sum;
         }
     }
 
