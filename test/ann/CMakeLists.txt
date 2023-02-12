@@ -14,6 +14,7 @@ set(TEST_FILES
         activations/sigmoid/sigmoid_activation_host.cpp
         activations/sigmoid/sigmoid_activation_device.cpp
 
-        losses/mean_squared_error.cpp)
+        losses/mean_squared_error.cpp
+        losses/binary_cross_entropy.cpp)
 
 target_sources(${NNLIB_TEST_EXEC} PRIVATE ${TEST_FILES})
