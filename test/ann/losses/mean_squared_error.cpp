@@ -19,20 +19,20 @@
 
 RC_GTEST_PROP(mean_squared_error, calculate_loss, ()) {
     const auto numSamples = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e4));
-    const auto numFeatures = *NO_SHRINK(rc::gen::inRange<size_t>(1, 100));
-    const auto size = numSamples * numFeatures;
+    const auto numOutputs = *NO_SHRINK(rc::gen::inRange<size_t>(1, 100));
+    const auto size = numSamples * numOutputs;
 
     std::vector<float> dataTargets = rcFloatVectorInRange(size, -1, 1);
     std::vector<float> dataPredictions = rcFloatVectorInRange(size, -1, 1);
 
-    Tensor targets = Tensor(numSamples, numFeatures);
+    Tensor targets = Tensor(numSamples, numOutputs);
     std::copy(dataTargets.begin(), dataTargets.end(), targets.data);
-    Tensor predictions = Tensor(numSamples, numFeatures);
+    Tensor predictions = Tensor(numSamples, numOutputs);
     std::copy(dataPredictions.begin(), dataPredictions.end(), predictions.data);
 
     float expected = 0;
     for (size_t sample = 0; sample < numSamples; sample++) {
-        for (size_t feature = 0; feature < numFeatures; feature++) {
+        for (size_t feature = 0; feature < numOutputs; feature++) {
             expected += powf(targets(sample, feature) - predictions(sample, feature), 2);
         }
     }
@@ -50,23 +50,23 @@ RC_GTEST_PROP(mean_squared_error, calculate_loss, ()) {
 
 RC_GTEST_PROP(mean_squared_error, calculate_derivatives, ()) {
     const auto numSamples = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e4));
-    const auto numFeatures = *NO_SHRINK(rc::gen::inRange<size_t>(1, 100));
-    const auto size = numSamples * numFeatures;
+    const auto numOutputs = *NO_SHRINK(rc::gen::inRange<size_t>(1, 100));
+    const auto size = numSamples * numOutputs;
 
     const std::vector<float> dataTargets = rcFloatVectorInRange(size, -1, 1);
     const std::vector<float> dataPredictions = rcFloatVectorInRange(size, -1, 1);
 
-    Tensor targets = Tensor(numSamples, numFeatures);
+    Tensor targets = Tensor(numSamples, numOutputs);
     std::copy(dataTargets.begin(), dataTargets.end(), targets.data);
-    Tensor predictions = Tensor(numSamples, numFeatures);
+    Tensor predictions = Tensor(numSamples, numOutputs);
     std::copy(dataPredictions.begin(), dataPredictions.end(), predictions.data);
-    Tensor result = Tensor(numSamples, numFeatures);
-    Tensor expected = Tensor(numSamples, numFeatures);
+    Tensor result = Tensor(numSamples, numOutputs);
+    Tensor expected = Tensor(numSamples, numOutputs);
 
     for (size_t sample = 0; sample < numSamples; sample++) {
-        for (size_t feature = 0; feature < numFeatures; feature++) {
+        for (size_t feature = 0; feature < numOutputs; feature++) {
             expected(sample, feature) = predictions(sample, feature) - targets(sample, feature);
-            expected(sample, feature) *= 2.0f / static_cast<float>(numFeatures);
+            expected(sample, feature) *= 2.0f / static_cast<float>(numOutputs);
         }
     }
 
