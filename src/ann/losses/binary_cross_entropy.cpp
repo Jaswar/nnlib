@@ -5,8 +5,8 @@
  * @date 24 December 2022
  */
 
-#include <loss.h>
 #include <exceptions/unsupported_operation_exception.h>
+#include <loss.h>
 
 /**
  * @brief Check if the shape is valid for Binary Cross Entropy.

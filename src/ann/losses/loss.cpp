@@ -8,12 +8,9 @@
 #include <loss.h>
 
 Loss::Loss() : numSamples(0), currentTotalLoss(0) {
-
 }
 
 void Loss::reset() {
     numSamples = 0;
     currentTotalLoss = 0;
 }
-
-

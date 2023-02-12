@@ -166,7 +166,7 @@ void divideTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) 
 
 void logTensorOnHost(const Tensor& a, Tensor& destination) {
     for (size_t i = 0; i < a.size; i++) {
-        destination.data[i] = log(a.data[i]);
+        destination.data[i] = logf(a.data[i]);
     }
 }
 

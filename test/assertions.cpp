@@ -36,7 +36,8 @@ bool withinBoundsAbsolute(const float v1, const float v2, const float delta) {
 }
 
 bool withinBoundsRelative(const float v1, const float v2, const float delta) {
-    if (v2 == 0) return v1 == 0;
+    if (v2 == 0)
+        return v1 == 0;
     return std::abs(v1 / v2 - 1) <= delta;
 }
 
@@ -63,7 +64,8 @@ bool withinBounds(const float v1, const float v2, const float delta, bool relati
     return ::testing::AssertionSuccess();
 }
 
-::testing::AssertionResult assertClose1d(const Tensor& result, const std::vector<float>& expected, float delta, bool relative) {
+::testing::AssertionResult assertClose1d(const Tensor& result, const std::vector<float>& expected, float delta,
+                                         bool relative) {
     Tensor exp = Tensor::construct1d(expected);
     return assertClose(result, exp, delta, relative);
 }

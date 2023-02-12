@@ -87,7 +87,8 @@ public:
      * @param args The shapes of consecutive dimensions.
      */
     template<typename... Args>
-    explicit Tensor(Args... args) : Tensor(std::vector<size_t>({static_cast<size_t>(args)...})) {}
+    explicit Tensor(Args... args) : Tensor(std::vector<size_t>({static_cast<size_t>(args)...})) {
+    }
 
     /**
      * @brief The assignment operator.

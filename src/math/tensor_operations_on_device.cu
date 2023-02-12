@@ -6,9 +6,9 @@
  */
 
 #include "tensor_operations_on_device.cuh"
+#include <cmath>
 #include <exceptions/unexpected_cuda_call_exception.h>
 #include <gpu/assert.cuh>
-#include <cmath>
 
 #ifdef __CUDA__
 
@@ -345,7 +345,7 @@ void multiplyMatrixVectorOnDevice(const Tensor& matrix, const Tensor& vector, Te
     auto grid = matrix.shape[0] / matrix.session.threadsPerBlock + 1;
     auto block = matrix.session.threadsPerBlock;
     mulMatrixVectorKernel<<<grid, block>>>(matrix.data, vector.data, destination.data, matrix.shape[0],
-                                                  matrix.shape[1]);
+                                           matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
@@ -360,8 +360,7 @@ void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& de
 void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
     auto grid = matrix.size / matrix.session.threadsPerBlock + 1;
     auto block = matrix.session.threadsPerBlock;
-    transposeMatrixKernel<<<grid, block>>>(matrix.data, destination.data, matrix.shape[0],
-                                                                matrix.shape[1]);
+    transposeMatrixKernel<<<grid, block>>>(matrix.data, destination.data, matrix.shape[0], matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
