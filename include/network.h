@@ -101,6 +101,7 @@ public:
      * @param predicted The predictions of the network as retrieved from Network::forward.
      * @param target The targets for that batch of data.
      * @param learningRate The learning rate of the model.
+     * @param loss The loss function to use.
      */
     void backward(const Tensor& predicted, const Tensor& target, float learningRate, Loss* loss);
 
@@ -118,6 +119,7 @@ public:
      * @param epochs The number of epochs to train the network for.
      * @param batchSize The size of the batch.
      * @param learningRate The learning rate of the algorithm.
+     * @param loss The loss function to use.
      */
     //NOLINTNEXTLINE(readability-identifier-naming)
     void train(Tensor& X, Tensor& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE, float learningRate = 0.01,
@@ -135,6 +137,7 @@ private:
      * @param targets The list of targets to process. These have been split in Network::train() method.
      * @param yHost Tensor that stores the whole y array on host.
      * @param learningRate The learning rate used during training.
+     * @param loss The loss function to use.
      */
     void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost, float learningRate,
                       Loss* loss);

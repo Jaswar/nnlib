@@ -72,6 +72,11 @@ public:
      */
     Tensor(const Tensor& other);
 
+    /**
+     * @brief Tensor constructor with shape given directly by a vector.
+     *
+     * @param shape The shape of the vector to create.
+     */
     explicit Tensor(std::vector<size_t> shape);
 
     /**
