@@ -32,8 +32,8 @@ RC_GTEST_PROP(mean_squared_error, calculate_loss, ()) {
 
     float expected = 0;
     for (size_t sample = 0; sample < numSamples; sample++) {
-        for (size_t feature = 0; feature < numOutputs; feature++) {
-            expected += powf(targets(sample, feature) - predictions(sample, feature), 2);
+        for (size_t output = 0; output < numOutputs; output++) {
+            expected += powf(targets(sample, output) - predictions(sample, output), 2);
         }
     }
     expected /= static_cast<float>(size);
@@ -64,9 +64,9 @@ RC_GTEST_PROP(mean_squared_error, calculate_derivatives, ()) {
     Tensor expected = Tensor(numSamples, numOutputs);
 
     for (size_t sample = 0; sample < numSamples; sample++) {
-        for (size_t feature = 0; feature < numOutputs; feature++) {
-            expected(sample, feature) = predictions(sample, feature) - targets(sample, feature);
-            expected(sample, feature) *= 2.0f / static_cast<float>(numOutputs);
+        for (size_t output = 0; output < numOutputs; output++) {
+            expected(sample, output) = predictions(sample, output) - targets(sample, output);
+            expected(sample, output) *= 2.0f / static_cast<float>(numOutputs);
         }
     }
 
