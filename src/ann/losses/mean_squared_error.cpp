@@ -1,6 +1,6 @@
 /**
  * @file mean_squared_error.cpp
- * @brief 
+ * @brief Source file defining the methods of the MeanSquaredError class.
  * @author Jan Warchocki
  * @date 23 December 2022
  */

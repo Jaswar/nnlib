@@ -1,6 +1,6 @@
 /**
  * @file binary_cross_entropy.cpp
- * @brief 
+ * @brief Source file defining the methods of the BinaryCrossEntropy class.
  * @author Jan Warchocki
  * @date 24 December 2022
  */

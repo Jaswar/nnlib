@@ -1,6 +1,6 @@
 /**
  * @file categorical_cross_entropy.cpp
- * @brief 
+ * @brief Source file defining the methods of the CategoricalCrossEntropy class.
  * @author Jan Warchocki
  * @date 03 January 2023
  */

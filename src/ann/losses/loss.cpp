@@ -1,7 +1,6 @@
-
 /**
  * @file loss.cpp
- * @brief 
+ * @brief Source file defining the methods of the Loss class.
  * @author Jan Warchocki
  * @date 25 December 2022
  */
