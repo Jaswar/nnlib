@@ -15,6 +15,12 @@
 
 #include <tensor.h>
 
+/**
+ * @brief Sum all values of a tensor.
+ *
+ * @param tensor The tensor to sum.
+ * @return The sum of all values of a tensor.
+ */
 float sumTensor(const Tensor& tensor);
 
 /**
@@ -52,8 +58,21 @@ void subtractTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination
  */
 void hadamardTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
 
+/**
+ * @brief Divide one tensor by another.
+ *
+ * @param a The tensor to divide.
+ * @param b The tensor to divide by.
+ * @param destination Where the result of the operation should be stored.
+ */
 void divideTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
 
+/**
+ * @brief Apply natural logarithm to each element of the tensor.
+ *
+ * @param a The tensor to apply natural logarithm to.
+ * @param destination Where the result of the operation should be stored.
+ */
 void logTensorOnHost(const Tensor& a, Tensor& destination);
 
 /**

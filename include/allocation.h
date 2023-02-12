@@ -54,6 +54,13 @@ float** allocate2DArray(size_t n, size_t m);
  */
 float** allocate2DArray(size_t n, size_t m, float defaultValue);
 
+/**
+ * @brief Copy a 1D array between two locations on host.
+ *
+ * @param oldLoc The data to copy.
+ * @param newLoc Where to copy the data to.
+ * @param n The number of elements of the data to copy.
+ */
 void copy1DFromHostToHost(float* oldLoc, float* newLoc, size_t n);
 
 /**

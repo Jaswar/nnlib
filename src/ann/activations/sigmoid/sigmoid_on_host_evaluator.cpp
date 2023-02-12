@@ -11,6 +11,13 @@
 #include <exceptions/different_data_location_exception.h>
 #include <utils/location_verifiers.h>
 
+
+/**
+ * @brief The sigmoid function.
+ *
+ * @param x The input to the sigmoid.
+ * @return Sigmoid of x.
+ */
 float fSigmoid(float x) {
     return 1 / (1 + expf(-x));
 }

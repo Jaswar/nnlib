@@ -202,6 +202,7 @@ int computeCorrect(Tensor& expected, Tensor& predictions, size_t start) {
  * @param processedRows The number of samples currently processed by the network.
  * @param totalRows The total number of samples (size of the dataset).
  * @param milliseconds The time in milliseconds that passed from the start of training.
+ * @param loss The loss computed so far.
  * @param accuracy The accuracy achieved so far.
  */
 void displayEpochProgress(size_t processedRows, size_t totalRows, size_t milliseconds, float loss, double accuracy) {

@@ -8,6 +8,14 @@
 #include <loss.h>
 #include <exceptions/unsupported_operation_exception.h>
 
+/**
+ * @brief Check if the shape is valid for Binary Cross Entropy.
+ *
+ * The shape should be (n, 1) for both @p targets and @p predictions.
+ *
+ * @param targets The expected outputs of the network.
+ * @param predictions The actual outputs of the network.
+ */
 void checkValidShape(const Tensor& targets, const Tensor& predictions) {
     if (targets.shape.size() != 2 || targets.shape[1] != 1) {
         throw UnsupportedOperationException();

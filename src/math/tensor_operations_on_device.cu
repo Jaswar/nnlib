@@ -218,6 +218,14 @@ __global__ void hadamardTensorsKernel(const float* a, const float* b, float* des
     destination[index] = a[index] * b[index];
 }
 
+/**
+ * @brief Kernel method to element-wise divide one tensor by another.
+ *
+ * @param a The data of the first tensor.
+ * @param b The data of the second tensor.
+ * @param destination Where the result of the division should be stored.
+ * @param size The size of the tensors.
+ */
 __global__ void divideTensorsKernel(const float* a, const float* b, float* destination, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -228,6 +236,13 @@ __global__ void divideTensorsKernel(const float* a, const float* b, float* desti
     destination[index] = a[index] / b[index];
 }
 
+/**
+ * @brief Kernel method to apply the natural logarithm to each element of the tensor.
+ *
+ * @param a The data of the tensor to apply natural logarithm to.
+ * @param destination Where the result of the natural logarithm should be stored.
+ * @param size The size of the tensor.
+ */
 __global__ void logTensorKernel(const float* a, float* destination, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -258,6 +273,13 @@ __global__ void transposeMatrixKernel(const float* matrix, float* destination, s
     destination[column * n + row] = matrix[row * m + column];
 }
 
+/**
+ * @brief Kernel method to fill a tensor with a value.
+ *
+ * @param tensor The tensor to fill.
+ * @param value The value to fill the tensor with.
+ * @param size The size of the tensor.
+ */
 __global__ void fillTensorKernel(float* tensor, float value, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 

@@ -178,6 +178,14 @@ private:
  */
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
 
+/**
+ * @brief Sum the tensor.
+ *
+ * The sum can only be computed on host, hence if the tensor is on device, it first needs to be moved.
+ *
+ * @param tensor The tensor to sum.
+ * @return The sum of all values of the tensor.
+ */
 float sum(Tensor& tensor);
 
 /**
@@ -218,8 +226,21 @@ void subtract(const Tensor& a, const Tensor& b, Tensor& destination);
  */
 void hadamard(const Tensor& a, const Tensor& b, Tensor& destination);
 
+/**
+ * @brief Element-wise divide one tensor by another.
+ *
+ * @param a The tensor to be divided.
+ * @param b The tensor to divide by.
+ * @param destination Where to store the result of the operation.
+ */
 void divide(const Tensor& a, const Tensor& b, Tensor& destination);
 
+/**
+ * @brief Apply natural logarithm to every element of the tensor.
+ *
+ * @param a The tensor to apply natural logarithm to.
+ * @param destination Where to store the result of the operation.
+ */
 void log(const Tensor& a, Tensor& destination);
 
 /**

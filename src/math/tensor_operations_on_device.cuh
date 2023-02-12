@@ -27,8 +27,10 @@ void subtractTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destinati
 /** @copydoc tensor_operations_on_host.h::hadamardTensorsOnHost() */
 void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination);
 
+/** @copydoc tensor_operations_on_host.h::divideTensorsOnHost() */
 void divideTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination);
 
+/** @copydoc tensor_operations_on_host.h::logTensorOnHost() */
 void logTensorOnDevice(const Tensor& a, Tensor& destination);
 
 /** @copydoc tensor_operations_on_host.h::addBroadcastOnHost() */
