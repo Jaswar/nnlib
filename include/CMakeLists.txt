@@ -1,4 +1,5 @@
 set(INCLUDE_FILES
+        metric.h
         activation.h
         allocation.h
         layer.h
