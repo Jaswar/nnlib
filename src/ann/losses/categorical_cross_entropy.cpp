@@ -21,9 +21,9 @@ float CategoricalCrossEntropy::calculateLoss(const Tensor& targets, const Tensor
     hadamard(targets, workingSpace, workingSpace);
 
     numSamples += targets.shape[0];
-    currentTotalLoss += sum(workingSpace) * -1;
+    currentTotalMetric += sum(workingSpace) * -1;
 
-    return currentTotalLoss / static_cast<float>(numSamples);
+    return currentTotalMetric / static_cast<float>(numSamples);
 }
 
 void CategoricalCrossEntropy::calculateDerivatives(const Tensor& targets, const Tensor& predictions,

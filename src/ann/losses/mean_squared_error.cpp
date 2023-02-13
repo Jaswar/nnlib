@@ -26,7 +26,7 @@ float MeanSquaredError::calculateLoss(const Tensor& targets, const Tensor& predi
     hadamard(workingSpace, workingSpace, workingSpace);
 
     numSamples += targets.shape[0];
-    currentTotalLoss += sum(workingSpace) / static_cast<float>(numOutputs);
+    currentTotalMetric += sum(workingSpace) / static_cast<float>(numOutputs);
 
-    return currentTotalLoss / static_cast<float>(numSamples);
+    return currentTotalMetric / static_cast<float>(numSamples);
 }
