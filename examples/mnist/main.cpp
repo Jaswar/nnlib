@@ -20,11 +20,11 @@
  *
  * The `main.cpp` file expects one argument which is the absolute path to the `MNIST_train.txt` file.
  * The file can be downloaded from https://github.com/halimb/MNIST-txt.
- * @include main.cpp
+ * @include mnist/main.cpp
  *
  * The project can be built with the following CMake script. This script requires `CMAKE_PREFIX_PATH` to be set to
- * the install directory of nnlib.
- * @include CMakeLists.txt
+ * the install directory of `nnlib`.
+ * @include mnist/CMakeLists.txt
  */
 int main(int argc, char** argv) {
     if (argc < 2) {
