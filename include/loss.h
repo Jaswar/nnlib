@@ -9,6 +9,7 @@
 #define NNLIB_LOSS_H
 
 #include "tensor.h"
+#include "metric.h"
 
 /**
  * @brief Abstract class representing a loss function.
@@ -18,21 +19,7 @@
  *
  * The child classes need to define the `calculateLoss` and `calculateDerivatives` methods.
  */
-class Loss {
-    /**
-     * @brief The total number of samples forwarded through the loss in an epoch.
-     *
-     * Used to calculate the average loss in an epoch.
-     */
-protected:
-    uint64_t numSamples;
-
-    /**
-     * @brief The total loss computed so far in an epoch.
-     *
-     * Used to calculate the average loss in an epoch.
-     */
-    float currentTotalLoss;
+class Loss : public Metric {
 
     /**
      * @brief Constructor for the Loss class.
@@ -42,12 +29,7 @@ protected:
 public:
     Loss();
 
-    /**
-     * @brief Resets the loss.
-     *
-     * Sets `numSamples` and `currentTotalLoss` variables to 0. Is called at the start of each epoch.
-     */
-    void reset();
+    float calculateMetric(const Tensor& targets, const Tensor& predictions) override;
 
     /**
      * @brief Calculates the average loss so far in an epoch.

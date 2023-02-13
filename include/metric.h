@@ -14,6 +14,7 @@ class Metric {
 protected:
     size_t numSamples;
     float currentTotalMetric;
+
 public:
     Metric();
     void reset();

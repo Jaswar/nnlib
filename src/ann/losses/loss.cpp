@@ -7,10 +7,9 @@
 
 #include <loss.h>
 
-Loss::Loss() : numSamples(0), currentTotalLoss(0) {
+Loss::Loss() : Metric() {
 }
 
-void Loss::reset() {
-    numSamples = 0;
-    currentTotalLoss = 0;
+float Loss::calculateMetric(const Tensor& targets, const Tensor& predictions){
+    return calculateLoss(targets, predictions);
 }
