@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 include(CheckLanguage)
+message(STATUS "CMake version ${CMAKE_VERSION}")
+
+if (${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.24)
+    message(STATUS "Setting policy CMP0135 to NEW")
+    cmake_policy(SET CMP0135 NEW)
+endif()
 
 project(nnlib
         DESCRIPTION "GPU-Accelerated Neural Network Library"
