@@ -30,3 +30,6 @@ float MeanSquaredError::calculateLoss(const Tensor& targets, const Tensor& predi
 
     return currentTotalMetric / static_cast<float>(numSamples);
 }
+std::string MeanSquaredError::getShortName() const {
+    return "mean_squared_error";
+}

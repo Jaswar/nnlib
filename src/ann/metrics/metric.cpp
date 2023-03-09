@@ -10,9 +10,7 @@
 Metric::Metric() : numSamples(0), currentTotalMetric(0) {
 }
 
-void Metric::reset(){
+void Metric::reset() {
     numSamples = 0;
     currentTotalMetric = 0;
 }
-
-

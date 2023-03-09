@@ -20,6 +20,17 @@ public:
     void reset();
 
     virtual float calculateMetric(const Tensor& targets, const Tensor& predictions) = 0;
+
+    virtual std::string getShortName() const = 0;
+};
+
+class CategoricalAccuracy : public Metric {
+public:
+    CategoricalAccuracy();
+
+    float calculateMetric(const Tensor& targets, const Tensor& predictions) override;
+
+    std::string getShortName() const override;
 };
 
 #endif //NNLIB_METRIC_H

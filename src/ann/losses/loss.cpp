@@ -10,6 +10,6 @@
 Loss::Loss() : Metric() {
 }
 
-float Loss::calculateMetric(const Tensor& targets, const Tensor& predictions){
+float Loss::calculateMetric(const Tensor& targets, const Tensor& predictions) {
     return calculateLoss(targets, predictions);
 }

@@ -83,6 +83,8 @@ public:
      * @copydetails Loss::calculateDerivatives
      */
     void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) override;
+
+    std::string getShortName() const override;
 };
 
 /**
@@ -143,6 +145,9 @@ private:
      * @param predictions The actual output of the network.
      */
     void allocateWorkingSpaces(const Tensor& targets, const Tensor& predictions);
+
+public:
+    std::string getShortName() const override;
 };
 
 /**
@@ -219,6 +224,9 @@ private:
      * @param predictions The actual output of the network.
      */
     void allocateAccumulatedSums(const Tensor& targets, const Tensor& predictions);
+
+public:
+    std::string getShortName() const override;
 };
 
 

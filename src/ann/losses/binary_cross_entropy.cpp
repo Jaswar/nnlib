@@ -88,3 +88,6 @@ void BinaryCrossEntropy::allocateWorkingSpaces(const Tensor& targets, const Tens
         workingSpace2.move(targets.location);
     }
 }
+std::string BinaryCrossEntropy::getShortName() const {
+    return "binary_cross_entropy";
+}

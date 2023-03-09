@@ -18,6 +18,7 @@ set(SOURCE_FILES activations/activation.cpp
         losses/categorical_cross_entropy.cpp
 
         metrics/metric.cpp
+        metrics/categorical_accuracy.cpp
 
         layer.cpp
         network.cpp)

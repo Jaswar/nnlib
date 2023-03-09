@@ -68,3 +68,6 @@ void CategoricalCrossEntropy::allocateAccumulatedSums(const Tensor& targets, con
         accumulatedSums.move(targets.location);
     }
 }
+std::string CategoricalCrossEntropy::getShortName() const {
+    return "categorical_cross_entropy";
+}
