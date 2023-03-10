@@ -122,8 +122,8 @@ public:
      * @param loss The loss function to use.
      */
     //NOLINTNEXTLINE(readability-identifier-naming)
-    void train(Tensor& X, Tensor& y, int epochs, size_t batchSize = DEFAULT_BATCH_SIZE, float learningRate = 0.01,
-               Loss* loss = new MeanSquaredError());
+    void train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
+               std::vector<Metric*>& metrics);
 
 private:
     /**
@@ -139,8 +139,8 @@ private:
      * @param learningRate The learning rate used during training.
      * @param loss The loss function to use.
      */
-    void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost, float learningRate,
-                      Loss* loss);
+    void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, std::vector<Tensor>& targetsOnHost,
+                      float learningRate, Loss* loss, std::vector<Metric*>& metrics);
 };
 
 

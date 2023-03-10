@@ -14,7 +14,69 @@
 #include <exceptions/size_mismatch_exception.h>
 #include <iomanip>
 #include <iostream>
+#include <map>
+#include <sstream>
 #include <utils/printing.h>
+
+struct EpochProgress {
+    size_t numProcessed;
+    size_t numTotal;
+    float lossValue;
+    std::map<std::string, float> metricsValues;
+    std::chrono::time_point<std::chrono::steady_clock> timeStart;
+
+    explicit EpochProgress(size_t numTotal) : numProcessed(0), numTotal(numTotal), lossValue(0), metricsValues(), timeStart() {
+        timeStart = std::chrono::steady_clock::now();
+    }
+
+    void update(Tensor& targets, Tensor& predictions, Loss* loss, std::vector<Metric*>& metrics) {
+        const DataLocation originalPredictions = predictions.location;
+        const DataLocation originalTargets = targets.location;
+
+        predictions.move(HOST);
+        targets.move(HOST);
+
+        numProcessed += targets.shape[0];
+
+        lossValue = loss->calculateLoss(targets, predictions);
+        for (auto metric : metrics) {
+            float metricValue = metric->calculateMetric(targets, predictions);
+            metricsValues[metric->getShortName()] = metricValue;
+        }
+
+        predictions.move(originalPredictions);
+        targets.move(originalTargets);
+    }
+//
+//    std::string showEpochProgress() const {
+//        std::ostringstream result;
+//        auto timeNow = std::chrono::steady_clock::now();
+//        size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - timeStart).count();
+//
+//        result << "\r" << constructProgressBar(numProcessed, numTotal) << " "
+//               << constructPercentage(numProcessed, numTotal) << " " << constructTime(milliseconds)
+//               << ": loss = " << std::setprecision(3) << lossValue;
+//        for (auto const& entry : metricsValues) {
+//            result << "; " << entry.first << " = " << entry.second;
+//        }
+//        result << std::flush;
+//        return result.str();
+//    }
+};
+
+std::ostream& operator<<(std::ostream& stream, const EpochProgress& epochProgress) {
+    auto timeNow = std::chrono::steady_clock::now();
+    size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - epochProgress.timeStart).count();
+
+    stream << "\r" << constructProgressBar(epochProgress.numProcessed, epochProgress.numTotal) << " "
+           << constructPercentage(epochProgress.numProcessed, epochProgress.numTotal) << " " << constructTime(milliseconds)
+           << ": loss = " << std::setprecision(3) << epochProgress.lossValue;
+    for (auto const& entry : epochProgress.metricsValues) {
+        stream << "; " << entry.first << " = " << entry.second;
+    }
+    stream << std::flush;
+    return stream;
+}
 
 /**
  * @brief Split the input matrix into batches.
@@ -212,7 +274,8 @@ void displayEpochProgress(size_t processedRows, size_t totalRows, size_t millise
 }
 
 //NOLINTNEXTLINE(readability-identifier-naming)
-void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss) {
+void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
+                    std::vector<Metric*>& metrics) {
     if (X.shape[0] != y.shape[0]) {
         throw SizeMismatchException();
     }
@@ -222,49 +285,59 @@ void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float le
 
     std::vector<Tensor> batches = splitIntoBatches(X, batchSize);
     std::vector<Tensor> targets = splitIntoBatches(y, batchSize);
-
-    Tensor yHost = y;
-    yHost.move(HOST);
+    std::vector<Tensor> targetsOnHost = targets;
+    for (Tensor& batch : targetsOnHost) {
+        batch.move(HOST);
+    }
 
     for (int epoch = 1; epoch <= epochs; epoch++) {
         std::cout << "Epoch: " << epoch << "/" << epochs << std::endl;
 
         loss->reset();
-        processEpoch(batches, targets, yHost, learningRate, loss);
+        for (auto metric : metrics) {
+            metric->reset();
+        }
+        processEpoch(batches, targets, targetsOnHost, learningRate, loss, metrics);
 
         std::cout << std::endl;
     }
 }
 
-void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, Tensor& yHost,
-                           float learningRate, Loss* loss) {
-    int correct = 0;
-    int total = 0;
-    float obtainedLoss = 0;
-    auto epochStart = std::chrono::steady_clock::now();
+void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, std::vector<Tensor>& targetsOnHost,
+                           float learningRate, Loss* loss, std::vector<Metric*>& metrics) {
+//    int correct = 0;
+//    int total = 0;
+//    float obtainedLoss = 0;
+    size_t numSamples = 0;
+    for (Tensor& batch : targets) {
+        numSamples += batch.shape[0];
+    }
+    EpochProgress epochProgress = EpochProgress(numSamples);
+//    auto epochStart = std::chrono::steady_clock::now();
 
     for (int row = 0; row < batches.size(); row++) {
         const Tensor& batch = batches.at(row);
-        const Tensor& target = targets.at(row);
+        Tensor& target = targets.at(row);
 
         Tensor* output = forward(batch);
 
-        correct += computeCorrect(yHost, *output, row * batch.shape[0]);
-        total += static_cast<int>(batch.shape[0]);
+//        correct += computeCorrect(yHost, *output, row * batch.shape[0]);
+//        total += static_cast<int>(batch.shape[0]);
 
         backward(*output, target, learningRate, loss);
 
-        auto batchEnd = std::chrono::steady_clock::now();
-        size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(batchEnd - epochStart).count();
+//        auto batchEnd = std::chrono::steady_clock::now();
+//        size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(batchEnd - epochStart).count();
 
-        obtainedLoss = loss->calculateLoss(target, *output);
+//        obtainedLoss = loss->calculateLoss(target, *output);
 
-        displayEpochProgress((row + 1) * batch.shape[0], yHost.shape[0], milliseconds, obtainedLoss,
-                             static_cast<double>(correct) / total);
+        Tensor& targetOnHost = targetsOnHost.at(row);
+        epochProgress.update(targetOnHost, *output, loss, metrics);
+        std::cout << epochProgress;
     }
-    auto epochEnd = std::chrono::steady_clock::now();
-    size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(epochEnd - epochStart).count();
-
-    displayEpochProgress(yHost.shape[0], yHost.shape[0], milliseconds, obtainedLoss,
-                         static_cast<double>(correct) / total);
+//    auto epochEnd = std::chrono::steady_clock::now();
+//    size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(epochEnd - epochStart).count();
+//
+//    displayEpochProgress(yHost.shape[0], yHost.shape[0], milliseconds, obtainedLoss,
+//                         static_cast<double>(correct) / total);
 }
