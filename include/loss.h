@@ -98,17 +98,27 @@ class BinaryCrossEntropy : public Loss {
      * @brief Space containing only ones. Used when calculating the loss.
      */
 private:
-    Tensor ones;
+    Tensor onesLoss;
 
     /**
-     * @brief Space used for computation of the loss/derivatives.
+     * @brief Space containing only ones. Used when calculating the derivatives.
+     */
+    Tensor onesDerivatives;
+
+    /**
+     * @brief Space used for computation of the loss.
      */
     Tensor workingSpace;
 
     /**
-     * @brief Space used for computation of the loss/derivatives.
+     * @brief Space used for computation of the loss.
      */
     Tensor workingSpace2;
+
+    /**
+     * @brief Space used for computation of the derivatives.
+     */
+    Tensor workingSpace3;
 
     /**
      * @copybrief Loss::calculateLoss
@@ -136,15 +146,21 @@ public:
      * @param predictions The actual output of the network.
      */
 private:
-    void allocateOnes(const Tensor& targets, const Tensor& predictions);
-
     /**
-     * @brief Helper method to allocate the working spaces.
+     * @brief Helper method to allocate the working spaces for derivatives.
      *
      * @param targets The expected output of the network.
      * @param predictions The actual output of the network.
      */
-    void allocateWorkingSpaces(const Tensor& targets, const Tensor& predictions);
+    void allocateWorkingSpacesDerivatives(const Tensor& targets, const Tensor& predictions);
+
+    /**
+     * @brief Helper method to allocate the working spaces for loss.
+     *
+     * @param targets The expected output of the network.
+     * @param predictions The actual output of the network.
+     */
+    void allocateWorkingSpacesLoss(const Tensor& targets, const Tensor& predictions);
 
 public:
     std::string getShortName() const override;
@@ -170,14 +186,26 @@ private:
     /**
      * @brief Space containing only ones. Used when calculating the loss/derivatives.
      */
-    Tensor ones;
+    Tensor onesLoss;
+
+    /**
+     * @brief Space containing only ones. Used when calculating the derivatives.
+     */
+    Tensor onesDerivatives;
 
     /**
      * @brief Tensor to store the sums of predictions.
      *
      * Used to normalize the predictions, such that their sum is 1.
      */
-    Tensor accumulatedSums;
+    Tensor accumulatedSumsLoss;
+
+    /**
+     * @brief Tensor to store the sums of predictions.
+     *
+     * Used to normalize the predictions, such that their sum is 1.
+     */
+    Tensor accumulatedSumsDerivatives;
 
     /**
      * @copybrief Loss::calculateLoss
@@ -201,29 +229,21 @@ public:
     void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) override;
 
     /**
-     * @brief Allocate the working space.
+     * @brief Allocate the working spaces for calculating the loss.
      *
      * @param targets The expected output of the network.
      * @param predictions The actual output of the network.
      */
 private:
-    void allocateWorkingSpace(const Tensor& targets, const Tensor& predictions);
+    void allocateWorkingSpacesLoss(const Tensor& targets, const Tensor& predictions);
 
     /**
-     * @brief Allocate the tensor of all ones.
+     * @brief Allocate the working spaces for calculating the derivatives.
      *
      * @param targets The expected output of the network.
      * @param predictions The actual output of the network.
      */
-    void allocateOnes(const Tensor& targets, const Tensor& predictions);
-
-    /**
-     * @brief Allocate the tensor to store the sums.
-     *
-     * @param targets The expected output of the network.
-     * @param predictions The actual output of the network.
-     */
-    void allocateAccumulatedSums(const Tensor& targets, const Tensor& predictions);
+    void allocateWorkingSpacesDerivatives(const Tensor& targets, const Tensor& predictions);
 
 public:
     std::string getShortName() const override;

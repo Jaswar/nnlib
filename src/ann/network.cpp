@@ -47,21 +47,6 @@ struct EpochProgress {
         predictions.move(originalPredictions);
         targets.move(originalTargets);
     }
-//
-//    std::string showEpochProgress() const {
-//        std::ostringstream result;
-//        auto timeNow = std::chrono::steady_clock::now();
-//        size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - timeStart).count();
-//
-//        result << "\r" << constructProgressBar(numProcessed, numTotal) << " "
-//               << constructPercentage(numProcessed, numTotal) << " " << constructTime(milliseconds)
-//               << ": loss = " << std::setprecision(3) << lossValue;
-//        for (auto const& entry : metricsValues) {
-//            result << "; " << entry.first << " = " << entry.second;
-//        }
-//        result << std::flush;
-//        return result.str();
-//    }
 };
 
 std::ostream& operator<<(std::ostream& stream, const EpochProgress& epochProgress) {
@@ -195,84 +180,6 @@ void Network::backward(const Tensor& predicted, const Tensor& target, float lear
     }
 }
 
-/**
- * @brief Method to move predictions to host if necessary and return true if was moved.
- *
- * The method is used in the computeCorrect() method to move the predictions matrix between host and device
- * if and only if that is necessary.
- *
- * @param predictions The predictions of the neural network.
- * @return true if @p predictions was moved to host, false otherwise.
- */
-bool moveToHost(Tensor& predictions) {
-    if (predictions.location == DEVICE) {
-        predictions.move(HOST);
-        return true;
-    }
-    return false;
-}
-
-/**
- * @brief Compute how many predictions of the neural network were correct.
- *
- * Assumes @p expected has a 1 on the expected class and 0 otherwise. As for the prediction of the neural network,
- * the method assumes the index of the highest value.
- *
- * @p expected should be the whole `y` matrix from the Network::train() method. It is also assumed that @p expected is
- * located on host. Both of these measures are for performance reasons when training on GPU.
- *
- * @p predictions are only the predictions of the current batch of data.
- *
- * @param expected The targets for the neural network.
- * @param predictions The predictions of the neural network.
- * @param start The start of the current batch (the index).
- * @return The number of correct predictions of the neural network.
- */
-int computeCorrect(Tensor& expected, Tensor& predictions, size_t start) {
-    bool shouldRestoreToDevice = moveToHost(predictions);
-
-    // Calculate the accuracy on the training set.
-    int correct = 0;
-    for (int row = 0; row < predictions.shape[0]; row++) {
-        int maxInx = 0;
-        for (int i = 0; i < predictions.shape[1]; i++) {
-            if (predictions.data[row * predictions.shape[1] + i] >
-                predictions.data[row * predictions.shape[1] + maxInx]) {
-                maxInx = i;
-            }
-        }
-
-        if (expected.data[(start + row) * expected.shape[1] + maxInx] == 1) {
-            correct++;
-        }
-    }
-    if (shouldRestoreToDevice) {
-        predictions.move(DEVICE);
-    }
-
-    return correct;
-}
-
-/**
- * @brief Util method to display the current progress of the epoch.
- *
- * Displays information in the format:
- * ```
- * [==========>---------] [50/100 (50%)] (0h 2m 5s 127ms): accuracy = 0.745
- * ```
- *
- * @param processedRows The number of samples currently processed by the network.
- * @param totalRows The total number of samples (size of the dataset).
- * @param milliseconds The time in milliseconds that passed from the start of training.
- * @param loss The loss computed so far.
- * @param accuracy The accuracy achieved so far.
- */
-void displayEpochProgress(size_t processedRows, size_t totalRows, size_t milliseconds, float loss, double accuracy) {
-    std::cout << "\r" << constructProgressBar(processedRows, totalRows) << " "
-              << constructPercentage(processedRows, totalRows) << " " << constructTime(milliseconds)
-              << ": loss = " << std::setprecision(3) << loss << "; accuracy = " << accuracy << std::flush;
-}
-
 //NOLINTNEXTLINE(readability-identifier-naming)
 void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
                     std::vector<Metric*>& metrics) {
@@ -305,15 +212,11 @@ void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float le
 
 void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, std::vector<Tensor>& targetsOnHost,
                            float learningRate, Loss* loss, std::vector<Metric*>& metrics) {
-//    int correct = 0;
-//    int total = 0;
-//    float obtainedLoss = 0;
     size_t numSamples = 0;
     for (Tensor& batch : targets) {
         numSamples += batch.shape[0];
     }
     EpochProgress epochProgress = EpochProgress(numSamples);
-//    auto epochStart = std::chrono::steady_clock::now();
 
     for (int row = 0; row < batches.size(); row++) {
         const Tensor& batch = batches.at(row);
@@ -321,23 +224,10 @@ void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& ta
 
         Tensor* output = forward(batch);
 
-//        correct += computeCorrect(yHost, *output, row * batch.shape[0]);
-//        total += static_cast<int>(batch.shape[0]);
-
         backward(*output, target, learningRate, loss);
-
-//        auto batchEnd = std::chrono::steady_clock::now();
-//        size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(batchEnd - epochStart).count();
-
-//        obtainedLoss = loss->calculateLoss(target, *output);
 
         Tensor& targetOnHost = targetsOnHost.at(row);
         epochProgress.update(targetOnHost, *output, loss, metrics);
         std::cout << epochProgress;
     }
-//    auto epochEnd = std::chrono::steady_clock::now();
-//    size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(epochEnd - epochStart).count();
-//
-//    displayEpochProgress(yHost.shape[0], yHost.shape[0], milliseconds, obtainedLoss,
-//                         static_cast<double>(correct) / total);
 }

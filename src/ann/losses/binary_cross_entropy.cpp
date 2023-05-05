@@ -28,11 +28,10 @@ void checkValidShape(const Tensor& targets, const Tensor& predictions) {
 float BinaryCrossEntropy::calculateLoss(const Tensor& targets, const Tensor& predictions) {
     checkValidShape(targets, predictions);
 
-    allocateOnes(targets, predictions);
-    allocateWorkingSpaces(targets, predictions);
+    allocateWorkingSpacesLoss(targets, predictions);
 
-    subtract(ones, targets, workingSpace);
-    subtract(ones, predictions, workingSpace2);
+    subtract(onesLoss, targets, workingSpace);
+    subtract(onesLoss, predictions, workingSpace2);
     log(workingSpace2, workingSpace2);
     hadamard(workingSpace, workingSpace2, workingSpace2);
 
@@ -50,44 +49,47 @@ float BinaryCrossEntropy::calculateLoss(const Tensor& targets, const Tensor& pre
 void BinaryCrossEntropy::calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) {
     checkValidShape(targets, predictions);
 
-    allocateOnes(targets, predictions);
-    allocateWorkingSpaces(targets, predictions);
+    allocateWorkingSpacesDerivatives(targets, predictions);
 
     // Calculate the nominator
     subtract(predictions, targets, destination);
 
     // Calculate the denominator
-    subtract(ones, predictions, workingSpace);
-    hadamard(predictions, workingSpace, workingSpace);
+    subtract(onesDerivatives, predictions, workingSpace3);
+    hadamard(predictions, workingSpace3, workingSpace3);
 
     // Calculate the fraction
-    divide(destination, workingSpace, destination);
+    divide(destination, workingSpace3, destination);
 }
 
-void BinaryCrossEntropy::allocateOnes(const Tensor& targets, const Tensor& predictions) {
-    if (ones.shape != targets.shape) {
-        ones = Tensor(targets.shape);
-        fill(1, ones);
+void BinaryCrossEntropy::allocateWorkingSpacesDerivatives(const Tensor& targets, const Tensor& predictions) {
+    if (workingSpace3.shape != targets.shape) {
+        workingSpace3 = Tensor(targets.shape);
     }
-    if (ones.location != targets.location) {
-        ones.move(targets.location);
+    workingSpace3.move(targets.location);
+    if (onesDerivatives.shape != targets.shape) {
+        onesDerivatives = Tensor(targets.shape);
+        fill(1, onesDerivatives);
     }
+    onesDerivatives.move(targets.location);
 }
 
-void BinaryCrossEntropy::allocateWorkingSpaces(const Tensor& targets, const Tensor& predictions) {
+void BinaryCrossEntropy::allocateWorkingSpacesLoss(const Tensor& targets, const Tensor& predictions) {
     if (workingSpace.shape != targets.shape) {
         workingSpace = Tensor(targets.shape);
     }
+    workingSpace.move(targets.location);
     if (workingSpace2.shape != targets.shape) {
         workingSpace2 = Tensor(targets.shape);
     }
-    if (workingSpace.location != targets.location) {
-        workingSpace.move(targets.location);
+    workingSpace2.move(targets.location);
+    if (onesLoss.shape != targets.shape) {
+        onesLoss = Tensor(targets.shape);
+        fill(1, onesLoss);
     }
-    if (workingSpace2.location != targets.location) {
-        workingSpace2.move(targets.location);
-    }
+    onesLoss.move(targets.location);
 }
+
 std::string BinaryCrossEntropy::getShortName() const {
     return "binary_cross_entropy";
 }

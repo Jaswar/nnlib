@@ -17,7 +17,7 @@
  *
  * @return A random value.
  */
-float getRandomValue() {
+float getRandom() {
     // TODO: For large networks, the values at neurons can grow very large rendering them useless
     // A fix can lower the initial weights and biases.
     // For now don't lint it and use rand()
@@ -37,7 +37,7 @@ Tensor initializeBiases(size_t outSize) {
     Tensor biases = Tensor(outSize);
 
     for (int i = 0; i < outSize; i++) {
-        biases.data[i] = getRandomValue();
+        biases.data[i] = getRandom();
     }
 
     return biases;
@@ -57,7 +57,7 @@ Tensor initializeWeights(size_t inSize, size_t outSize) {
 
     for (int i = 0; i < inSize; i++) {
         for (int j = 0; j < outSize; j++) {
-            weights.data[i * outSize + j] = getRandomValue();
+            weights.data[i * outSize + j] = getRandom();
         }
     }
 
