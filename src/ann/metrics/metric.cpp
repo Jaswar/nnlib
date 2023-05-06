@@ -1,6 +1,6 @@
 /**
  * @file metric.cpp
- * @brief 
+ * @brief Source file defining the methods of the Metric class.
  * @author Jan Warchocki
  * @date 13 February 2023
  */

@@ -111,15 +111,13 @@ public:
      * Both X and y should have the data samples aligned on the first axis. Each row in X should be aligned
      * with the corresponding row in y.
      *
-     * The only supported metric for now is accuracy, which is calculated by default by the method.
-     * Furthermore, the method displays the progress of each epoch, including time spent and accuracy.
-     *
      * @param X The data to train the network on.
      * @param y The targets of the network.
      * @param epochs The number of epochs to train the network for.
      * @param batchSize The size of the batch.
      * @param learningRate The learning rate of the algorithm.
      * @param loss The loss function to use.
+     * @param metrics The list of metrics to compute aside from the loss function.
      */
     //NOLINTNEXTLINE(readability-identifier-naming)
     void train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
@@ -129,15 +127,16 @@ private:
     /**
      * @brief Trains the model on a single epoch.
      *
-     * Helper method used in Network::train(). The method computes accuracy, which is why yHost is passed as an argument.
-     * In this way, when the network is running on GPU, the targets will not have to be copied to host memory when
-     * computing accuracy.
+     * Helper method used in Network::train(). The method makes use of `targetsOnHost`, which are the target batches
+     * stored on host. This is for performance reasons as some of the metrics require the input matrices to be located
+     * on host.
      *
      * @param batches The list of batches to process. These have been split in Network::train() method.
      * @param targets The list of targets to process. These have been split in Network::train() method.
-     * @param yHost Tensor that stores the whole y array on host.
+     * @param targetsOnHost The list of targets to processed but stored on host.
      * @param learningRate The learning rate used during training.
      * @param loss The loss function to use.
+     * @param metrics The list of metrics to compute aside from the loss function.
      */
     void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, std::vector<Tensor>& targetsOnHost,
                       float learningRate, Loss* loss, std::vector<Metric*>& metrics);

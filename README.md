@@ -19,6 +19,10 @@ to run the library in this mode.
    - Mean Squared Error
    - Binary Cross Entropy
    - Categorical Cross Entropy
+ - Metrics:
+   - All of the above loss functions
+   - Categorical accuracy
+   - Binary accuracy
  - Optimizers:
    - Stochastic Gradient Descent
 
@@ -91,9 +95,7 @@ sudo chmod +x build_example.sh
 ./build_example.sh -c Release -p <path_to_nnlib_install> mnist
 ```
 Here, `<path_to_nnlib_install>` should be replaced with the **absolute** path to the `install` folder
-that was created in the library installation step.
-
-Running these commands will build the mnist example in `./examples/mnist/build`.
+that was created in the library installation step. Running these commands will build the mnist example in `./examples/mnist/build`.
 3. Run the example. It expects the **absolute** path to a `MNIST_train.txt` file, which can be downloaded from [here](https://github.com/halimb/MNIST-txt),
    as the first and only argument. Run the example with the following command:
 ```shell

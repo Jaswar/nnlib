@@ -14,8 +14,7 @@
 /**
  * @brief Abstract class representing a loss function.
  *
- * The loss is called after every batch is processed and reset at the end of each epoch. The loss
- * keeps track of the average loss in an epoch by maintaining the number of datapoints processed and the total loss.
+ * All loss functions are by default also metrics.
  *
  * The child classes need to define the `calculateLoss` and `calculateDerivatives` methods.
  */
@@ -29,6 +28,15 @@ class Loss : public Metric {
 public:
     Loss();
 
+    /**
+     * @brief Defines the method inherited from abstract Metric parent.
+     *
+     * It simply calls the #calculateLoss function, which is implemented by every child loss function.
+     *
+     * @param targets The desired outputs of the network.
+     * @param predictions The actual outputs of the network.
+     * @return The value of the metric. Here, the value of the loss function.
+     */
     float calculateMetric(const Tensor& targets, const Tensor& predictions) override;
 
     /**
@@ -140,18 +148,12 @@ public:
     void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) override;
 
     /**
-     * @brief Helper method to allocate the ones Tensor.
-     *
-     * @param targets The expected output of the network.
-     * @param predictions The actual output of the network.
-     */
-private:
-    /**
      * @brief Helper method to allocate the working spaces for derivatives.
      *
      * @param targets The expected output of the network.
      * @param predictions The actual output of the network.
      */
+private:
     void allocateWorkingSpacesDerivatives(const Tensor& targets, const Tensor& predictions);
 
     /**
