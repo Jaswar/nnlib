@@ -18,17 +18,53 @@
 #include <sstream>
 #include <utils/printing.h>
 
+/**
+ * @brief Structure to contain information about the current epoch.
+ */
 struct EpochProgress {
+
+    /**
+     * @brief Total number of samples already processed.
+     */
     size_t numProcessed;
+
+    /**
+     * @brief The total number of samples (processed + non-processed).
+     */
     size_t numTotal;
+
+    /**
+     * @brief The value of the loss.
+     */
     float lossValue;
+
+    /**
+     * @brief Mapping of names of metrics to their computed values.
+     */
     std::map<std::string, float> metricsValues;
+
+    /**
+     * @brief The time the epoch started.
+     */
     std::chrono::time_point<std::chrono::steady_clock> timeStart;
 
+    /**
+     * @brief The constructor of the EpochProgress class.
+     *
+     * @param numTotal The total number of samples to be processed.
+     */
     explicit EpochProgress(size_t numTotal) : numProcessed(0), numTotal(numTotal), lossValue(0), metricsValues(), timeStart() {
         timeStart = std::chrono::steady_clock::now();
     }
 
+    /**
+     * @brief Update the current state of the epoch.
+     *
+     * @param targets The desired predictions of the network in the current batch.
+     * @param predictions The actual predictions of the network in the current batch.
+     * @param loss The loss object to update.
+     * @param metrics The metrics to update given the new batch.
+     */
     void update(Tensor& targets, Tensor& predictions, Loss* loss, std::vector<Metric*>& metrics) {
         const DataLocation originalPredictions = predictions.location;
         const DataLocation originalTargets = targets.location;
@@ -49,6 +85,13 @@ struct EpochProgress {
     }
 };
 
+/**
+ * @brief A toString() method for EpochProgress.
+ *
+ * @param stream The stream to append the string representation of EpochProgress to.
+ * @param epochProgress The EpochProgress object to display.
+ * @return The string representation of the desired EpochProgress object.
+ */
 std::ostream& operator<<(std::ostream& stream, const EpochProgress& epochProgress) {
     auto timeNow = std::chrono::steady_clock::now();
     size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - epochProgress.timeStart).count();

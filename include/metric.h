@@ -33,4 +33,13 @@ public:
     std::string getShortName() const override;
 };
 
+class BinaryAccuracy : public Metric {
+public:
+    BinaryAccuracy();
+
+    float calculateMetric(const Tensor& targets, const Tensor& predictions) override;
+
+    std::string getShortName() const override;
+};
+
 #endif //NNLIB_METRIC_H

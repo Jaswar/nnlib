@@ -19,6 +19,7 @@ set(SOURCE_FILES activations/activation.cpp
 
         metrics/metric.cpp
         metrics/categorical_accuracy.cpp
+        metrics/binary_accuracy.cpp
 
         layer.cpp
         network.cpp)
