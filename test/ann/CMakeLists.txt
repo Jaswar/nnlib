@@ -19,6 +19,7 @@ set(TEST_FILES
         losses/categorical_cross_entropy.cpp
 
         metrics/categorical_accuracy.cpp
+        metrics/binary_accuracy.cpp
 
         network_test.cpp)
 
