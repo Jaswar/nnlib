@@ -55,7 +55,8 @@ int main(int argc, char** argv) {
     network.add(64);
     network.add(y.shape[1], "sigmoid");
 
-    network.train(X, y, 100, 10,  0.01, new BinaryCrossEntropy());
+    std::vector<Metric*> metrics = {new BinaryAccuracy(), new MeanSquaredError()};
+    network.train(X, y, 100, 10,  0.01, new BinaryCrossEntropy(), metrics);
 
     return 0;
 }
