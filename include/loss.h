@@ -8,8 +8,8 @@
 #ifndef NNLIB_LOSS_H
 #define NNLIB_LOSS_H
 
-#include "tensor.h"
 #include "metric.h"
+#include "tensor.h"
 
 /**
  * @brief Abstract class representing a loss function.

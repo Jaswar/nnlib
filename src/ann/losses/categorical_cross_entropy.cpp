@@ -39,7 +39,8 @@ void CategoricalCrossEntropy::calculateDerivatives(const Tensor& targets, const 
 }
 
 void CategoricalCrossEntropy::allocateWorkingSpacesDerivatives(const Tensor& targets, const Tensor& predictions) {
-    if (onesDerivatives.shape.size() != 2 || onesDerivatives.shape[0] != targets.shape[1] || onesDerivatives.shape[1] != targets.shape[1]) {
+    if (onesDerivatives.shape.size() != 2 || onesDerivatives.shape[0] != targets.shape[1] ||
+        onesDerivatives.shape[1] != targets.shape[1]) {
         onesDerivatives = Tensor(targets.shape[1], targets.shape[1]);
         fill(1, onesDerivatives);
     }

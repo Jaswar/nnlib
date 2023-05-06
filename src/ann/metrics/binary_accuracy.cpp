@@ -9,7 +9,6 @@
 #include <metric.h>
 
 BinaryAccuracy::BinaryAccuracy() : Metric() {
-
 }
 
 /**
