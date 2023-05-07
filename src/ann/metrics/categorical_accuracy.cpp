@@ -11,7 +11,6 @@
 
 
 CategoricalAccuracy::CategoricalAccuracy() : Metric() {
-
 }
 
 float CategoricalAccuracy::calculateMetric(const Tensor& targets, const Tensor& predictions) {

@@ -53,7 +53,8 @@ struct EpochProgress {
      *
      * @param numTotal The total number of samples to be processed.
      */
-    explicit EpochProgress(size_t numTotal) : numProcessed(0), numTotal(numTotal), lossValue(0), metricsValues(), timeStart() {
+    explicit EpochProgress(size_t numTotal)
+        : numProcessed(0), numTotal(numTotal), lossValue(0), metricsValues(), timeStart() {
         timeStart = std::chrono::steady_clock::now();
     }
 
@@ -94,11 +95,12 @@ struct EpochProgress {
  */
 std::ostream& operator<<(std::ostream& stream, const EpochProgress& epochProgress) {
     auto timeNow = std::chrono::steady_clock::now();
-    size_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - epochProgress.timeStart).count();
+    size_t milliseconds =
+            std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - epochProgress.timeStart).count();
 
     stream << "\r" << constructProgressBar(epochProgress.numProcessed, epochProgress.numTotal) << " "
-           << constructPercentage(epochProgress.numProcessed, epochProgress.numTotal) << " " << constructTime(milliseconds)
-           << ": loss = " << std::setprecision(3) << epochProgress.lossValue;
+           << constructPercentage(epochProgress.numProcessed, epochProgress.numTotal) << " "
+           << constructTime(milliseconds) << ": loss = " << std::setprecision(3) << epochProgress.lossValue;
     for (auto const& entry : epochProgress.metricsValues) {
         stream << "; " << entry.first << " = " << entry.second;
     }
@@ -253,8 +255,9 @@ void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float le
     }
 }
 
-void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, std::vector<Tensor>& targetsOnHost,
-                           float learningRate, Loss* loss, std::vector<Metric*>& metrics) {
+void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets,
+                           std::vector<Tensor>& targetsOnHost, float learningRate, Loss* loss,
+                           std::vector<Metric*>& metrics) {
     size_t numSamples = 0;
     for (Tensor& batch : targets) {
         numSamples += batch.shape[0];
