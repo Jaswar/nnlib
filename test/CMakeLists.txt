@@ -19,7 +19,7 @@ FetchContent_MakeAvailable(googletest)
 set(RC_ENABLE_GTEST ON CACHE BOOL "Rapidcheck GTest Support" FORCE)
 FetchContent_Declare(
         rapidcheck
-        URL https://github.com/emil-e/rapidcheck/archive/ce2b602bbe89e9264fb8725cc3f04049951f29cb.zip
+        URL https://github.com/emil-e/rapidcheck/archive/ff6af6fc683159deb51c543b065eba14dfcf329b.zip
 )
 FetchContent_MakeAvailable(rapidcheck)
 
