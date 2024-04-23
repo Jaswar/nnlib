@@ -10,19 +10,11 @@
 
 #include "allocation.h"
 #include "session.cuh"
+#include "cache.h"
 #include <cstdlib>
 #include <iostream>
 #include <utility>
 #include <vector>
-
-/**
- * @brief Enumerate to specify where data is located.
- *
- * Can be either HOST or DEVICE. In case it is set to HOST, the data is stored in RAM and is processed by the CPU.
- * In case it is set to DEVICE, the data is in VRAM and processed by the GPU. The latter is only possible if CUDA
- * is installed and there is a CUDA enabled GPU on the system.
- */
-enum DataLocation { HOST, DEVICE };
 
 /**
  * @brief Class to represent multidimensional arrays.

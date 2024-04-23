@@ -7,6 +7,7 @@
 
 #include "tensor.h"
 #include "../gpu/allocation_gpu.cuh"
+#include "cache.h"
 #include "tensor_operations_on_device.cuh"
 #include "tensor_operations_on_host.h"
 #include <exceptions/different_data_location_exception.h>
@@ -20,7 +21,8 @@ Tensor::Tensor() : shape(), size(0), location(HOST), data() {
 
 Tensor::Tensor(std::vector<size_t> shape) : shape(std::move(shape)), location(HOST), size(0), data() {
     computeSize();
-    data = allocate1DArray(size, 0);
+    Cache& cache = Cache::getInstance();
+    data = cache.get(size, location);
 }
 
 Tensor::Tensor(const Tensor& other) {
@@ -33,10 +35,12 @@ Tensor::Tensor(const Tensor& other) {
         return;
     }
 
+    Cache& cache = Cache::getInstance();
+    data = cache.get(size, other.location);
     if (location == HOST) {
-        data = copy1DArray(size, other.data);
+        copy1DArray(size, other.data, data);
     } else {
-        data = copy1DArrayDevice(size, other.data);
+        copy1DArrayDevice(size, other.data, data);
     }
 }
 
@@ -45,25 +49,19 @@ Tensor& Tensor::operator=(const Tensor& other) {
         return *this;
     }
 
-    if (size > 0) {
-        if (location == HOST) {
-            free(data);
-        } else {
-            free1DArrayDevice(data);
-        }
-    }
+    Cache& cache = Cache::getInstance();
+    cache.put(size, data, location);  // Mark the memory as reusable
 
     location = other.location;
     // This copies the vector
     shape = other.shape;
     size = other.size;
 
-    if (size > 0) {
-        if (location == HOST) {
-            data = copy1DArray(size, other.data);
-        } else {
-            data = copy1DArrayDevice(size, other.data);
-        }
+    data = cache.get(size, other.location);
+    if (location == HOST) {
+        copy1DArray(size, other.data, data);
+    } else {
+        copy1DArrayDevice(size, other.data, data);
     }
 
     return *this;
@@ -74,17 +72,15 @@ void Tensor::move(DataLocation target) {
         return;
     }
 
+    Cache& cache = Cache::getInstance();
+    cache.put(size, data, location);  // Mark the memory as reusable
+    float* newData = cache.get(size, target);
     if (location == HOST) {
-        float* newData = allocate1DArrayDevice(size);
         copy1DFromHostToDevice(data, newData, size);
-        free(data);
-        data = newData;
     } else {
-        float* newData = allocate1DArray(size);
         copy1DFromDeviceToHost(data, newData, size);
-        free1DArrayDevice(data);
-        data = newData;
     }
+    data = newData;
     location = target;
 }
 
@@ -92,12 +88,8 @@ Tensor::~Tensor() {
     if (size == 0) {
         return;
     }
-
-    if (location == HOST) {
-        free(data);
-    } else {
-        free1DArrayDevice(data);
-    }
+    Cache& cache = Cache::getInstance();
+    cache.put(size, data, location);
 }
 
 void Tensor::computeSize() {

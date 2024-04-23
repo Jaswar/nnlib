@@ -10,6 +10,7 @@ set(INCLUDE_FILES
         tensor.h
         session.cuh
         loss.h
+        cache.h
 
         PARENT_SCOPE)
 

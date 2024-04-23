@@ -80,6 +80,8 @@ void copy2DFromDeviceToHost(float* device, float** host, size_t n, size_t m);
  */
 float* copy1DArrayDevice(size_t n, float* old);
 
+void copy1DArrayDevice(size_t n, float* old, float* copy);
+
 /**
  * @brief Free a 1D array from device memory.
  *

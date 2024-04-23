@@ -53,6 +53,10 @@ float* copy1DArray(size_t n, float* original) {
     return copy;
 }
 
+void copy1DArray(size_t n, float* original, float* copy) {
+    memcpy(copy, original, n * sizeof(float));
+}
+
 float** copy2DArray(size_t n, size_t m, float** original) {
     float** copy = allocate2DArray(n, m);
 
@@ -63,7 +67,6 @@ float** copy2DArray(size_t n, size_t m, float** original) {
 
     return copy;
 }
-
 void copy1DFromHostToHost(float* oldLoc, float* newLoc, size_t n) {
     memcpy(newLoc, oldLoc, n * sizeof(float));
 }
