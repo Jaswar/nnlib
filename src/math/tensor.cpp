@@ -246,6 +246,12 @@ void add(const Tensor& a, const Tensor& b, Tensor& destination) {
     }
 }
 
+Tensor add(const Tensor& a, const Tensor& b) {
+    Tensor result = Tensor(a.shape);
+    add(a, b, result);
+    return result;
+}
+
 void subtract(const Tensor& a, const Tensor& b, Tensor& destination) {
     if (a.shape != b.shape || a.shape != destination.shape || b.shape != destination.shape) {
         throw SizeMismatchException();
@@ -259,6 +265,12 @@ void subtract(const Tensor& a, const Tensor& b, Tensor& destination) {
     } else {
         throw DifferentDataLocationException();
     }
+}
+
+Tensor subtract(const Tensor& a, const Tensor& b) {
+    Tensor result = Tensor(a.shape);
+    subtract(a, b, result);
+    return result;
 }
 
 void hadamard(const Tensor& a, const Tensor& b, Tensor& destination) {
@@ -276,6 +288,12 @@ void hadamard(const Tensor& a, const Tensor& b, Tensor& destination) {
     }
 }
 
+Tensor hadamard(const Tensor& a, const Tensor& b) {
+    Tensor result = Tensor(a.shape);
+    hadamard(a, b, result);
+    return result;
+}
+
 void divide(const Tensor& a, const Tensor& b, Tensor& destination) {
     if (a.shape != b.shape || a.shape != destination.shape || b.shape != destination.shape) {
         throw SizeMismatchException();
@@ -289,6 +307,12 @@ void divide(const Tensor& a, const Tensor& b, Tensor& destination) {
     } else {
         throw DifferentDataLocationException();
     }
+}
+
+Tensor divide(const Tensor& a, const Tensor& b) {
+    Tensor result = Tensor(a.shape);
+    divide(a, b, result);
+    return result;
 }
 
 void log(const Tensor& a, Tensor& destination) {
@@ -306,6 +330,12 @@ void log(const Tensor& a, Tensor& destination) {
     }
 }
 
+Tensor log(const Tensor& a) {
+    Tensor result = Tensor(a.shape);
+    log(a, result);
+    return result;
+}
+
 void multiply(const Tensor& tensor, float constant, Tensor& destination) {
     if (tensor.shape != destination.shape) {
         throw SizeMismatchException();
@@ -319,6 +349,12 @@ void multiply(const Tensor& tensor, float constant, Tensor& destination) {
     } else {
         throw DifferentDataLocationException();
     }
+}
+
+Tensor multiply(const Tensor& tensor, float constant) {
+    Tensor result = Tensor(tensor.shape);
+    multiply(tensor, constant, result);
+    return result;
 }
 
 /**
@@ -375,6 +411,20 @@ void multiply(const Tensor& a, const Tensor& b, Tensor& destination) {
     }
 }
 
+Tensor multiply(const Tensor& a, const Tensor& b) {
+    if (a.shape.size() == 2 && b.shape.size() == 1) {
+        Tensor result = Tensor(a.shape[0]);
+        multiplyMatrixVector(a, b, result);
+        return result;
+    } else if (a.shape.size() == 2 && b.shape.size() == 2) {
+        Tensor result = Tensor(a.shape[0], b.shape[1]);
+        multiplyMatrixMatrix(a, b, result);
+        return result;
+    } else {
+        throw UnsupportedOperationException();
+    }
+}
+
 void transpose(const Tensor& matrix, Tensor& destination) {
     if (matrix.shape.size() != 2 || destination.shape.size() != 2) {
         throw UnsupportedOperationException();
@@ -391,4 +441,14 @@ void transpose(const Tensor& matrix, Tensor& destination) {
     } else {
         throw DifferentDataLocationException();
     }
+}
+
+Tensor transpose(const Tensor& matrix) {
+    if (matrix.shape.size() != 2) {
+        throw UnsupportedOperationException();
+    }
+
+    Tensor result = Tensor(matrix.shape[1], matrix.shape[0]);
+    transpose(matrix, result);
+    return result;
 }

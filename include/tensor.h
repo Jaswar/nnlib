@@ -206,6 +206,8 @@ void fill(float value, Tensor& destination);
  */
 void add(const Tensor& a, const Tensor& b, Tensor& destination);
 
+Tensor add(const Tensor& a, const Tensor& b);
+
 /**
  * @brief Subtract one tensor from another.
  *
@@ -214,6 +216,8 @@ void add(const Tensor& a, const Tensor& b, Tensor& destination);
  * @param destination Where to store the result of the subtraction.
  */
 void subtract(const Tensor& a, const Tensor& b, Tensor& destination);
+
+Tensor subtract(const Tensor& a, const Tensor& b);
 
 /**
  * @brief Perform hadamard product (element-wise multiplication) on two tensors.
@@ -224,6 +228,8 @@ void subtract(const Tensor& a, const Tensor& b, Tensor& destination);
  */
 void hadamard(const Tensor& a, const Tensor& b, Tensor& destination);
 
+Tensor hadamard(const Tensor& a, const Tensor& b);
+
 /**
  * @brief Element-wise divide one tensor by another.
  *
@@ -233,6 +239,8 @@ void hadamard(const Tensor& a, const Tensor& b, Tensor& destination);
  */
 void divide(const Tensor& a, const Tensor& b, Tensor& destination);
 
+Tensor divide(const Tensor& a, const Tensor& b);
+
 /**
  * @brief Apply natural logarithm to every element of the tensor.
  *
@@ -240,6 +248,8 @@ void divide(const Tensor& a, const Tensor& b, Tensor& destination);
  * @param destination Where to store the result of the operation.
  */
 void log(const Tensor& a, Tensor& destination);
+
+Tensor log(const Tensor& a);
 
 /**
  * @brief Multiply a tensor with a constant.
@@ -249,6 +259,8 @@ void log(const Tensor& a, Tensor& destination);
  * @param destination Where to store the result of the multiplication.
  */
 void multiply(const Tensor& tensor, float constant, Tensor& destination);
+
+Tensor multiply(const Tensor& tensor, float constant);
 
 /**
  * @brief Multiply one tensor with another.
@@ -262,6 +274,8 @@ void multiply(const Tensor& tensor, float constant, Tensor& destination);
  */
 void multiply(const Tensor& a, const Tensor& b, Tensor& destination);
 
+Tensor multiply(const Tensor& a, const Tensor& b);
+
 /**
  * @brief Transpose a matrix.
  *
@@ -271,5 +285,7 @@ void multiply(const Tensor& a, const Tensor& b, Tensor& destination);
  * @param destination Where the result of the transpose operation should be stored.
  */
 void transpose(const Tensor& matrix, Tensor& destination);
+
+Tensor transpose(const Tensor& matrix);
 
 #endif //NNLIB_TENSOR_H
