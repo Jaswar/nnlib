@@ -12,6 +12,7 @@
 
 #include <cstdlib>
 #include <unordered_map>
+#include <stack>
 
 /**
  * @brief Enumerate to specify where data is located.
@@ -25,8 +26,8 @@ enum DataLocation { HOST, DEVICE };
 
 class Cache {
 private:
-    std::unordered_multimap<size_t, float*> hostCache;
-    std::unordered_multimap<size_t, float*> deviceCache;
+    std::unordered_map<size_t, std::stack<float*>> hostCache;
+    std::unordered_map<size_t, std::stack<float*>> deviceCache;
 
     Cache();
 

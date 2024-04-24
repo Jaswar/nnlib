@@ -30,14 +30,12 @@ class Layer {
      * Helper variable used during backpropagation.
      */
 private:
-    Tensor previousWeightsT;
 
     /**
      * @brief Matrix storing the transpose of the data passed in the forward propagation step.
      *
      * Helper variable used during backpropagation.
      */
-    Tensor dataT;
 
     /**
      * @brief Store a vector of ones.
@@ -45,14 +43,12 @@ private:
      * Required for the backpropagation algorithm. It is used to sum Layer::newDeltaT along first axis into
      * bias gradients.
      */
-    Tensor ones;
 
     /**
      * @brief Transpose of Layer::newDelta.
      *
      * Helper variable used during backpropagation.
      */
-    Tensor newDeltaT;
 
     /**
      * @brief The location of the layer.
@@ -99,24 +95,22 @@ public:
      * Stores a pointer reference to the batch that was most recently forward-propagated through the layer.
      * This data is then used in the backpropagation step.
      */
-    const Tensor* data;
+    Tensor data;
 
     /**
      * @brief The output of the layer before applying the activation function.
      */
-    Tensor aMatrix;
+     Tensor zMatrix;
 
     /**
      * @brief The output of the layer.
      */
-    Tensor zMatrix;
 
     /**
      * @brief Delta that should be passed to the previous layer in the backpropagation step.
      *
      * Stored as a matrix.
      */
-    Tensor newDelta;
 
     /**
      * @brief The derivatives of the output.
@@ -124,7 +118,6 @@ public:
      * The derivatives are computed by the activation function and stored in this variable. The data is stored as
      * a matrix.
      */
-    Tensor derivatives;
 
     /**
      * @brief The weights gradients computed by the backpropagation algorithm.
@@ -167,7 +160,7 @@ public:
      *
      * @param batch The batch that should be propagated.
      */
-    void forward(const Tensor& batch);
+    Tensor forward(const Tensor& batch);
 
     /**
      * @brief Backward-propagate one batch of data through the network.
@@ -186,8 +179,7 @@ public:
      * @param batchSize The size of the batch.
      * @param isLastLayer Boolean to specify if this layer is the last one (the output layer).
      */
-    void backward(const Tensor& delta, const Tensor& previousWeights, size_t batchSize = DEFAULT_BATCH_SIZE,
-                  bool isLastLayer = false);
+    Tensor backward(const Tensor& upstream);
 
     /**
      * @brief Apply the computed gradients.
@@ -205,66 +197,7 @@ public:
      * This calls Activation::computeDerivatives() on the Layer::activation object.
      */
 private:
-    void calculateDerivatives();
-
-    /**
-     * @brief Allocate data required for computation.
-     *
-     * Step called during forward propagation. If some matrices are in an incorrect shape, this method will reallocate
-     * their memory to match the correct shape. This method calls all <em>allocate*</em> methods.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocate(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::ones.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateOnes(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::dataT.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateDataT(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::aMatrix.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateAMatrix(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::zMatrix.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateZMatrix(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::newDelta.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateNewDelta(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::newDeltaT.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateNewDeltaT(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::derivatives.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateDerivatives(size_t batchSize);
+    Tensor calculateDerivatives();
 };
 
 #endif //NNLIB_LAYER_H

@@ -9,10 +9,11 @@
 
 #include "cache.h"
 #include "../gpu/allocation_gpu.cuh"
+#include <iostream>
 
 Cache::Cache() {
-    hostCache = std::unordered_multimap<size_t, float*>();
-    deviceCache = std::unordered_multimap<size_t, float*>();
+    hostCache = std::unordered_map<size_t, std::stack<float*>>();
+    deviceCache = std::unordered_map<size_t, std::stack<float*>>();
 }
 
 float* Cache::get(size_t size, DataLocation location) {
@@ -22,18 +23,18 @@ float* Cache::get(size_t size, DataLocation location) {
 
     if (location == HOST) {
         auto it = hostCache.find(size);
-        if (it != hostCache.end()) {
-            float* ptr = it->second;
-            hostCache.erase(it);
+        if (it != hostCache.end() && !it->second.empty()) {
+            float* ptr = it->second.top();
+            it->second.pop();
             return ptr;
         } else {
             return allocate1DArray(size);
         }
     } else {
         auto it = deviceCache.find(size);
-        if (it != deviceCache.end()) {
-            float* ptr = it->second;
-            deviceCache.erase(it);
+        if (it != deviceCache.end() && !it->second.empty()) {
+            float* ptr = it->second.top();
+            it->second.pop();
             return ptr;
         } else {
             return allocate1DArrayDevice(size);
@@ -47,17 +48,27 @@ void Cache::put(size_t size, float* ptr, DataLocation location) {
     }
 
     if (location == HOST) {
-        hostCache.insert(std::pair<size_t, float*>(size, ptr));
+        auto it = hostCache.find(size);
+        if (it == hostCache.end()) {
+            hostCache.insert(std::pair<size_t, std::stack<float*>>(size, std::stack<float*>()));
+        }
+        it = hostCache.find(size);
+        it->second.push(ptr);
     } else {
-        deviceCache.insert(std::pair<size_t, float*>(size, ptr));
+        auto it = deviceCache.find(size);
+        if (it == deviceCache.end()) {
+            deviceCache.insert(std::pair<size_t, std::stack<float*>>(size, std::stack<float*>()));
+        }
+        it = deviceCache.find(size);
+        it->second.push(ptr);
     }
 }
 
 Cache::~Cache() {
-    for (auto& pair : hostCache) {
-        free(pair.second);
-    }
-    for (auto& pair : deviceCache) {
-        free1DArrayDevice(pair.second);
-    }
+//    for (auto& pair : hostCache) {
+//        free(pair.second);
+//    }
+//    for (auto& pair : deviceCache) {
+//        free1DArrayDevice(pair.second);
+//    }
 }

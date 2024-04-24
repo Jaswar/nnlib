@@ -71,80 +71,46 @@ Layer::Layer(size_t inSize, size_t outSize, Activation* activation, DataLocation
       activation(activation),
       biases(initializeBiases(outSize)),
       weights(initializeWeights(inSize, outSize)),
-      data(),
-      dataT(inSize, DEFAULT_BATCH_SIZE),
-      aMatrix(DEFAULT_BATCH_SIZE, outSize),
-      zMatrix(DEFAULT_BATCH_SIZE, outSize),
-      newDelta(DEFAULT_BATCH_SIZE, outSize),
-      newDeltaT(outSize, DEFAULT_BATCH_SIZE),
-      derivatives(DEFAULT_BATCH_SIZE, outSize),
-      previousWeightsT(0, 0),
+      data(0, 0),
+      zMatrix(0, 0),
       weightsGradients(inSize, outSize),
-      biasesGradients(outSize),
-      ones(DEFAULT_BATCH_SIZE) {
-
-    fill(1, ones);
+      biasesGradients(outSize) {
 
     if (location == DEVICE) {
-        dataT.move(DEVICE);
-
         biases.move(DEVICE);
         weights.move(DEVICE);
-
-        aMatrix.move(DEVICE);
         zMatrix.move(DEVICE);
-
-        newDelta.move(DEVICE);
-        newDeltaT.move(DEVICE);
-        derivatives.move(DEVICE);
-
-        previousWeightsT.move(DEVICE);
-
+        data.move(DEVICE);
         weightsGradients.move(DEVICE);
         biasesGradients.move(DEVICE);
-        ones.move(DEVICE);
     }
 }
 
 Layer::~Layer() = default;
 
-void Layer::forward(const Tensor& batch) {
-    allocate(batch.shape[0]);
+Tensor Layer::forward(const Tensor& batch) {
+    zMatrix = multiply(batch, weights);
+    zMatrix = add(zMatrix, biases);
 
-    multiply(batch, weights, zMatrix);
-    add(zMatrix, biases, zMatrix);
-
-    data = &batch;
-    transpose(batch, dataT);
-
+    data = batch;
+    Tensor aMatrix = Tensor(zMatrix.shape);
+    aMatrix.move(zMatrix.location);
     activation->forward(zMatrix, aMatrix);
+    return aMatrix;
 }
 
-void Layer::backward(const Tensor& delta, const Tensor& previousWeights, size_t batchSize, bool isLastLayer) {
-    if (previousWeightsT.shape[0] != previousWeights.shape[1] ||
-        previousWeightsT.shape[1] != previousWeights.shape[0]) {
-        previousWeightsT = Tensor(previousWeights.shape[1], previousWeights.shape[0]);
-        previousWeightsT.move(location);
-    }
-    calculateDerivatives();
+Tensor Layer::backward(const Tensor& upstream) {
+    Tensor derivatives = calculateDerivatives();
+    Tensor downstream = hadamard(upstream, derivatives);
 
-    if (!isLastLayer) {
-        transpose(previousWeights, previousWeightsT);
-        multiply(delta, previousWeightsT, newDelta);
-        hadamard(newDelta, derivatives, newDelta);
+    weightsGradients = multiply(transpose(data), downstream);
+    Tensor ones = Tensor(upstream.shape[0]);
+    ones.move(location);
+    fill(1.0f, ones);
+    biasesGradients = multiply(transpose(downstream), ones);
 
-        transpose(newDelta, newDeltaT);
-        multiply(newDeltaT, ones, biasesGradients);
-
-        multiply(dataT, newDelta, weightsGradients);
-    } else {
-        hadamard(delta, derivatives, newDelta);
-
-        transpose(newDelta, newDeltaT);
-        multiply(newDeltaT, ones, biasesGradients);
-
-        multiply(dataT, newDelta, weightsGradients);
-    }
+    downstream = multiply(downstream, transpose(weights));
+    return downstream;
 }
 
 void Layer::applyGradients(size_t batchSize, float learningRate) {
@@ -155,66 +121,9 @@ void Layer::applyGradients(size_t batchSize, float learningRate) {
     subtract(weights, weightsGradients, weights);
 }
 
-void Layer::calculateDerivatives() {
+Tensor Layer::calculateDerivatives() {
+    Tensor derivatives = Tensor(zMatrix.shape);
+    derivatives.move(zMatrix.location);
     activation->computeDerivatives(zMatrix, derivatives);
-}
-
-void Layer::allocate(size_t batchSize) {
-    allocateOnes(batchSize);
-    allocateDataT(batchSize);
-    allocateAMatrix(batchSize);
-    allocateZMatrix(batchSize);
-    allocateNewDelta(batchSize);
-    allocateNewDeltaT(batchSize);
-    allocateDerivatives(batchSize);
-}
-
-void Layer::allocateOnes(size_t batchSize) {
-    if (ones.shape[0] != batchSize) {
-        ones = Tensor(batchSize);
-        fill(1, ones);
-        ones.move(location);
-    }
-}
-
-void Layer::allocateDataT(size_t batchSize) {
-    if (dataT.shape[1] != batchSize) {
-        dataT = Tensor(dataT.shape[0], batchSize);
-        dataT.move(location);
-    }
-}
-
-void Layer::allocateAMatrix(size_t batchSize) {
-    if (aMatrix.shape[0] != batchSize) {
-        aMatrix = Tensor(batchSize, aMatrix.shape[1]);
-        aMatrix.move(location);
-    }
-}
-
-void Layer::allocateZMatrix(size_t batchSize) {
-    if (zMatrix.shape[0] != batchSize) {
-        zMatrix = Tensor(batchSize, zMatrix.shape[1]);
-        zMatrix.move(location);
-    }
-}
-
-void Layer::allocateNewDelta(size_t batchSize) {
-    if (newDelta.shape[0] != batchSize) {
-        newDelta = Tensor(batchSize, newDelta.shape[1]);
-        newDelta.move(location);
-    }
-}
-
-void Layer::allocateNewDeltaT(size_t batchSize) {
-    if (newDeltaT.shape[1] != batchSize) {
-        newDeltaT = Tensor(newDeltaT.shape[0], batchSize);
-        newDeltaT.move(location);
-    }
-}
-
-void Layer::allocateDerivatives(size_t batchSize) {
-    if (derivatives.shape[0] != batchSize) {
-        derivatives = Tensor(batchSize, derivatives.shape[1]);
-        derivatives.move(location);
-    }
+    return derivatives;
 }

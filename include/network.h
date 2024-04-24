@@ -89,7 +89,7 @@ public:
      * @param batch The batch to propagate.
      * @return The pointer to the output of the network. This returns Layer::aMatrix of the last layer.
      */
-    Tensor* forward(const Tensor& batch);
+    Tensor forward(const Tensor& batch);
 
     /**
      * @brief Backward-propagate a batch through the network.

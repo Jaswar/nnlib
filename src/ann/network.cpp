@@ -190,16 +190,16 @@ void Network::add(size_t numNeurons, const std::string& activation) {
     lossData.move(location);
 }
 
-Tensor* Network::forward(const Tensor& batch) {
+Tensor Network::forward(const Tensor& batch) {
     Layer& first = layers.front();
-    first.forward(batch);
+    Tensor output = first.forward(batch);
 
     for (auto i = layers.begin() + 1; i != layers.end(); i++) {
         size_t index = i - layers.begin();
-        i->forward(layers.at(index - 1).aMatrix);
+        output = i->forward(output);
     }
 
-    return &layers.back().aMatrix;
+    return output;
 }
 
 void Network::backward(const Tensor& predicted, const Tensor& target, float learningRate, Loss* loss) {
@@ -211,13 +211,10 @@ void Network::backward(const Tensor& predicted, const Tensor& target, float lear
     loss->calculateDerivatives(target, predicted, lossData);
 
     Layer& last = layers.back();
-    last.backward(lossData, Tensor(0, 0), predicted.shape[0], true);
+    Tensor upstream = last.backward(lossData);
 
     for (auto i = layers.rbegin() + 1; i != layers.rend(); ++i) {
-        size_t index = i - layers.rbegin();
-        Layer& prev = layers.at(layers.size() - index);
-
-        i->backward(prev.newDelta, prev.weights, predicted.shape[0], false);
+        upstream = i->backward(upstream);
     }
 
     for (auto& layer : layers) {
@@ -268,12 +265,12 @@ void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& ta
         const Tensor& batch = batches.at(row);
         Tensor& target = targets.at(row);
 
-        Tensor* output = forward(batch);
+        Tensor output = forward(batch);
 
-        backward(*output, target, learningRate, loss);
+        backward(output, target, learningRate, loss);
 
         Tensor& targetOnHost = targetsOnHost.at(row);
-        epochProgress.update(targetOnHost, *output, loss, metrics);
+        epochProgress.update(targetOnHost, output, loss, metrics);
         std::cout << epochProgress;
     }
 }

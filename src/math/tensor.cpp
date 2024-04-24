@@ -248,6 +248,7 @@ void add(const Tensor& a, const Tensor& b, Tensor& destination) {
 
 Tensor add(const Tensor& a, const Tensor& b) {
     Tensor result = Tensor(a.shape);
+    result.move(a.location);
     add(a, b, result);
     return result;
 }
@@ -269,6 +270,7 @@ void subtract(const Tensor& a, const Tensor& b, Tensor& destination) {
 
 Tensor subtract(const Tensor& a, const Tensor& b) {
     Tensor result = Tensor(a.shape);
+    result.move(a.location);
     subtract(a, b, result);
     return result;
 }
@@ -290,6 +292,7 @@ void hadamard(const Tensor& a, const Tensor& b, Tensor& destination) {
 
 Tensor hadamard(const Tensor& a, const Tensor& b) {
     Tensor result = Tensor(a.shape);
+    result.move(a.location);
     hadamard(a, b, result);
     return result;
 }
@@ -311,6 +314,7 @@ void divide(const Tensor& a, const Tensor& b, Tensor& destination) {
 
 Tensor divide(const Tensor& a, const Tensor& b) {
     Tensor result = Tensor(a.shape);
+    result.move(a.location);
     divide(a, b, result);
     return result;
 }
@@ -332,6 +336,7 @@ void log(const Tensor& a, Tensor& destination) {
 
 Tensor log(const Tensor& a) {
     Tensor result = Tensor(a.shape);
+    result.move(a.location);
     log(a, result);
     return result;
 }
@@ -353,6 +358,7 @@ void multiply(const Tensor& tensor, float constant, Tensor& destination) {
 
 Tensor multiply(const Tensor& tensor, float constant) {
     Tensor result = Tensor(tensor.shape);
+    result.move(tensor.location);
     multiply(tensor, constant, result);
     return result;
 }
@@ -414,10 +420,12 @@ void multiply(const Tensor& a, const Tensor& b, Tensor& destination) {
 Tensor multiply(const Tensor& a, const Tensor& b) {
     if (a.shape.size() == 2 && b.shape.size() == 1) {
         Tensor result = Tensor(a.shape[0]);
+        result.move(a.location);
         multiplyMatrixVector(a, b, result);
         return result;
     } else if (a.shape.size() == 2 && b.shape.size() == 2) {
         Tensor result = Tensor(a.shape[0], b.shape[1]);
+        result.move(a.location);
         multiplyMatrixMatrix(a, b, result);
         return result;
     } else {
@@ -449,6 +457,7 @@ Tensor transpose(const Tensor& matrix) {
     }
 
     Tensor result = Tensor(matrix.shape[1], matrix.shape[0]);
+    result.move(matrix.location);
     transpose(matrix, result);
     return result;
 }

@@ -12,9 +12,9 @@ Session::Session() {
     numCores = std::thread::hardware_concurrency();
 #ifdef __CUDA__
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
-    cudaDeviceProp props;
-    cudaGetDeviceProperties(&props, 0);
-    threadsPerBlock = props.maxThreadsPerBlock;
+//    cudaDeviceProp props;
+//    cudaGetDeviceProperties(&props, 0);
+    threadsPerBlock = 0;
 #else
     threadsPerBlock = 0;
 #endif
