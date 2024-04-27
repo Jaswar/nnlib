@@ -190,14 +190,6 @@ public:
      * @param learningRate The learning rate of the model.
      */
     void applyGradients(size_t batchSize, float learningRate = 0.01);
-
-    /**
-     * @brief Calculate the derivatives of the output.
-     *
-     * This calls Activation::computeDerivatives() on the Layer::activation object.
-     */
-private:
-    Tensor calculateDerivatives();
 };
 
 #endif //NNLIB_LAYER_H

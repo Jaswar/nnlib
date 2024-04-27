@@ -90,17 +90,16 @@ Layer::~Layer() = default;
 
 Tensor Layer::forward(const Tensor& batch) {
     zMatrix = multiply(batch, weights);
-    zMatrix = add(zMatrix, biases);
+    add(zMatrix, biases, zMatrix);
 
     data = batch;
-    Tensor aMatrix = Tensor(zMatrix.shape);
-    aMatrix.move(zMatrix.location);
-    activation->forward(zMatrix, aMatrix);
+
+    Tensor aMatrix = activation->forward(zMatrix);
     return aMatrix;
 }
 
 Tensor Layer::backward(const Tensor& upstream) {
-    Tensor derivatives = calculateDerivatives();
+    Tensor derivatives = this->activation->computeDerivatives(zMatrix);
     Tensor downstream = hadamard(upstream, derivatives);
 
     weightsGradients = multiply(transpose(data), downstream);
@@ -119,11 +118,4 @@ void Layer::applyGradients(size_t batchSize, float learningRate) {
 
     multiply(weightsGradients, learningRate / static_cast<float>(batchSize), weightsGradients);
     subtract(weights, weightsGradients, weights);
-}
-
-Tensor Layer::calculateDerivatives() {
-    Tensor derivatives = Tensor(zMatrix.shape);
-    derivatives.move(zMatrix.location);
-    activation->computeDerivatives(zMatrix, derivatives);
-    return derivatives;
 }

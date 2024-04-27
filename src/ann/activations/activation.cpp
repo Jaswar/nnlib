@@ -24,6 +24,14 @@ void Activation::forward(const Tensor& input, Tensor& result) const {
     }
 }
 
+Tensor Activation::forward(const Tensor& input) const {
+    Tensor output = Tensor(input.shape);
+    output.move(input.location);
+    forward(input, output);
+    return output;
+}
+
+
 void Activation::computeDerivatives(const Tensor& output, Tensor& result) const {
     if (output.shape != result.shape) {
         throw SizeMismatchException();
@@ -38,6 +46,13 @@ void Activation::computeDerivatives(const Tensor& output, Tensor& result) const 
     }
 }
 
+Tensor Activation::computeDerivatives(const Tensor& output) const {
+    Tensor result = Tensor(output.shape);
+    result.move(output.location);
+    computeDerivatives(output, result);
+    return result;
+}
+
 Activation::Activation(ActivationEvaluator* hostEvaluator, ActivationEvaluator* deviceEvaluator)
     : hostEvaluator(hostEvaluator), deviceEvaluator(deviceEvaluator) {
 }
@@ -46,3 +61,4 @@ Activation::~Activation() {
     delete hostEvaluator;
     delete deviceEvaluator;
 }
+

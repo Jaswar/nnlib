@@ -89,6 +89,7 @@ public:
      * @throws DifferentDataLocationException If not all parameters are located in the same place.
      */
     void forward(const Tensor& input, Tensor& result) const;
+    Tensor forward(const Tensor& input) const;
 
     /**
      * @brief Compute the derivatives given the output of a layer of a neural network.
@@ -100,6 +101,7 @@ public:
      * @param result Where the derivatives should be written to.
      */
     void computeDerivatives(const Tensor& output, Tensor& result) const;
+    Tensor computeDerivatives(const Tensor& output) const;
 
     /**
      * @brief Virtual destructor to make the class abstract.
