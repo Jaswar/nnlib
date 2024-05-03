@@ -60,7 +60,6 @@ RC_GTEST_PROP(mean_squared_error, calculate_derivatives, ()) {
     std::copy(dataTargets.begin(), dataTargets.end(), targets.data);
     Tensor predictions = Tensor(numSamples, numOutputs);
     std::copy(dataPredictions.begin(), dataPredictions.end(), predictions.data);
-    Tensor result = Tensor(numSamples, numOutputs);
     Tensor expected = Tensor(numSamples, numOutputs);
 
     for (size_t sample = 0; sample < numSamples; sample++) {
@@ -72,7 +71,7 @@ RC_GTEST_PROP(mean_squared_error, calculate_derivatives, ()) {
 
     MeanSquaredError error = MeanSquaredError();
 
-    error.calculateDerivatives(targets, predictions, result);
+    Tensor result = error.calculateDerivatives(targets, predictions);
 
     RC_ASSERT_TENSOR_EQ(result, expected);
 }

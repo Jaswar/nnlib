@@ -58,8 +58,7 @@ public:
      * @param predictions The actual output of the network.
      * @param destination The Tensor where the derivatives should be saved.
      */
-    virtual void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) = 0;
-    Tensor calculateDerivatives(const Tensor& targets, const Tensor& predictions);
+    virtual Tensor calculateDerivatives(const Tensor& targets, const Tensor& predictions) = 0;
 };
 
 /**
@@ -85,7 +84,7 @@ public:
      *
      * @copydetails Loss::calculateDerivatives
      */
-    void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) override;
+    Tensor calculateDerivatives(const Tensor& targets, const Tensor& predictions) override;
 
     std::string getShortName() const override;
 };
@@ -114,7 +113,7 @@ public:
      *
      * @copydetails Loss::calculateDerivatives
      */
-    void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) override;
+    Tensor calculateDerivatives(const Tensor& targets, const Tensor& predictions) override;
 
     std::string getShortName() const override;
 };
@@ -149,7 +148,7 @@ public:
      *
      * @copydetails Loss::calculateDerivatives
      */
-    void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) override;
+    Tensor calculateDerivatives(const Tensor& targets, const Tensor& predictions) override;
 
     std::string getShortName() const override;
 };

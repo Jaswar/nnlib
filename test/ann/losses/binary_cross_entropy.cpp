@@ -53,7 +53,6 @@ RC_GTEST_PROP(binary_cross_entropy, calculate_derivatives, ()) {
     Tensor predictions = Tensor(numSamples, 1);
     std::copy(dataPredictions.begin(), dataPredictions.end(), predictions.data);
     Tensor expected = Tensor(numSamples, 1);
-    Tensor result = Tensor(numSamples, 1);
 
     for (size_t sample = 0; sample < numSamples; sample++) {
         float y = targets.data[sample];
@@ -62,7 +61,7 @@ RC_GTEST_PROP(binary_cross_entropy, calculate_derivatives, ()) {
     }
 
     BinaryCrossEntropy error = BinaryCrossEntropy();
-    error.calculateDerivatives(targets, predictions, result);
+    Tensor result = error.calculateDerivatives(targets, predictions);
 
     RC_ASSERT_TENSOR_EQ(result, expected);
 }

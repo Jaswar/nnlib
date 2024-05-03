@@ -28,21 +28,23 @@ float CategoricalCrossEntropy::calculateLoss(const Tensor& targets, const Tensor
     return currentTotalMetric / static_cast<float>(numSamples);
 }
 
-void CategoricalCrossEntropy::calculateDerivatives(const Tensor& targets, const Tensor& predictions,
-                                                   Tensor& destination) {
+Tensor CategoricalCrossEntropy::calculateDerivatives(const Tensor& targets, const Tensor& predictions) {
     Tensor ones = Tensor(targets.shape[1], targets.shape[1]);
     ones.move(targets.location);
     fill(1, ones);
 
     Tensor accumulatedSumsDerivatives = multiply(predictions, ones);
 
-    fill(1, destination);
-    divide(destination, accumulatedSumsDerivatives, accumulatedSumsDerivatives);
+    Tensor result = Tensor(targets.shape);
+    result.move(targets.location);
+    fill(1, result);
+    accumulatedSumsDerivatives = divide(result, accumulatedSumsDerivatives);
 
-    divide(targets, predictions, destination);
-    multiply(destination, -1, destination);
+    result = divide(targets, predictions);
+    result = multiply(result, -1);
 
-    add(destination, accumulatedSumsDerivatives, destination);
+    result = add(result, accumulatedSumsDerivatives);
+    return result;
 }
 
 std::string CategoricalCrossEntropy::getShortName() const {

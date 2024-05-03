@@ -7,9 +7,10 @@
 
 #include <loss.h>
 
-void MeanSquaredError::calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) {
-    subtract(predictions, targets, destination);
-    multiply(destination, 2.0f / static_cast<float>(predictions.shape[predictions.shape.size() - 1]), destination);
+Tensor MeanSquaredError::calculateDerivatives(const Tensor& targets, const Tensor& predictions) {
+    Tensor result = subtract(predictions, targets);
+    result = multiply(result, 2.0f / static_cast<float>(predictions.shape[predictions.shape.size() - 1]));
+    return result;
 }
 
 float MeanSquaredError::calculateLoss(const Tensor& targets, const Tensor& predictions) {

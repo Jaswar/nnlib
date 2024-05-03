@@ -61,7 +61,6 @@ RC_GTEST_PROP(categorical_cross_entropy, calculate_derivatives, ()) {
     std::copy(dataTargets.begin(), dataTargets.end(), targets.data);
     Tensor predictions = Tensor(numSamples, numClasses);
     std::copy(dataPredictions.begin(), dataPredictions.end(), predictions.data);
-    Tensor result = Tensor(numSamples, numClasses);
     Tensor expected = Tensor(numSamples, numClasses);
 
     for (size_t sample = 0; sample < numSamples; sample++) {
@@ -78,7 +77,7 @@ RC_GTEST_PROP(categorical_cross_entropy, calculate_derivatives, ()) {
     }
 
     CategoricalCrossEntropy error = CategoricalCrossEntropy();
-    error.calculateDerivatives(targets, predictions, result);
+    Tensor result = error.calculateDerivatives(targets, predictions);
 
     RC_ASSERT_TENSOR_CLOSE(result, expected);
 }

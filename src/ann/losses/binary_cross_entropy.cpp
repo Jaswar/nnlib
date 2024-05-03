@@ -48,20 +48,21 @@ float BinaryCrossEntropy::calculateLoss(const Tensor& targets, const Tensor& pre
     return currentTotalMetric / static_cast<float>(numSamples);
 }
 
-void BinaryCrossEntropy::calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) {
+Tensor BinaryCrossEntropy::calculateDerivatives(const Tensor& targets, const Tensor& predictions) {
     checkValidShape(targets, predictions);
 
     // Calculate the nominator
-    subtract(predictions, targets, destination);
+    Tensor result = subtract(predictions, targets);
 
     // Calculate the denominator
     Tensor ones = Tensor(targets.shape);
     fill(1, ones);
     Tensor denominator = subtract(ones, predictions);
-    hadamard(predictions, denominator, denominator);
+    denominator = hadamard(predictions, denominator);
 
     // Calculate the fraction
-    divide(destination, denominator, destination);
+    result = divide(result, denominator);
+    return result;
 }
 
 std::string BinaryCrossEntropy::getShortName() const {
