@@ -90,7 +90,7 @@ Layer::~Layer() = default;
 
 Tensor Layer::forward(const Tensor& batch) {
     zMatrix = multiply(batch, weights);
-    add(zMatrix, biases, zMatrix);
+    zMatrix = add(zMatrix, biases);
 
     data = batch;
 
@@ -113,9 +113,9 @@ Tensor Layer::backward(const Tensor& upstream) {
 }
 
 void Layer::applyGradients(size_t batchSize, float learningRate) {
-    multiply(biasesGradients, learningRate / static_cast<float>(batchSize), biasesGradients);
-    subtract(biases, biasesGradients, biases);
+    biasesGradients = multiply(biasesGradients, learningRate / static_cast<float>(batchSize));
+    biases = subtract(biases, biasesGradients);
 
-    multiply(weightsGradients, learningRate / static_cast<float>(batchSize), weightsGradients);
-    subtract(weights, weightsGradients, weights);
+    weightsGradients = multiply(weightsGradients, learningRate / static_cast<float>(batchSize));
+    weights = subtract(weights, weightsGradients);
 }

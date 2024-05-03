@@ -59,7 +59,7 @@ void tensorAddPBT(bool testDevice) {
         result.move(DEVICE);
     }
 
-    add(t1, t2, result);
+    result = add(t1, t2);
 
     if (testDevice) {
         result.move(HOST);
@@ -93,7 +93,7 @@ void tensorAddBroadcastPBT(bool testDevice) {
         result.move(DEVICE);
     }
 
-    add(matrix, vector, result);
+    result = add(matrix, vector);
 
     if (testDevice) {
         result.move(HOST);
@@ -122,7 +122,7 @@ void tensorSubtractPBT(bool testDevice) {
         result.move(DEVICE);
     }
 
-    subtract(t1, t2, result);
+    result = subtract(t1, t2);
 
     if (testDevice) {
         result.move(HOST);
@@ -151,7 +151,7 @@ void tensorHadamardPBT(bool testDevice) {
         result.move(DEVICE);
     }
 
-    hadamard(t1, t2, result);
+    result = hadamard(t1, t2);
 
     if (testDevice) {
         result.move(HOST);
@@ -180,7 +180,7 @@ void tensorDividePBT(bool testDevice) {
         result.move(DEVICE);
     }
 
-    divide(t1, t2, result);
+    result = divide(t1, t2);
 
     if (testDevice) {
         result.move(HOST);
@@ -206,7 +206,7 @@ void tensorLogPBT(bool testDevice) {
         result.move(DEVICE);
     }
 
-    log(t, result);
+    result = log(t);
 
     if (testDevice) {
         result.move(HOST);
@@ -233,7 +233,7 @@ void tensorMultiplyConstantPBT(float constant, bool testDevice) {
         result.move(DEVICE);
     }
 
-    multiply(t, constant, result);
+    result = multiply(t, constant);
 
     if (testDevice) {
         result.move(HOST);
@@ -269,7 +269,7 @@ void tensorMultiplyMatrixVectorPBT(bool testDevice) {
         result.move(DEVICE);
     }
 
-    multiply(matrix, vector, result);
+    result = multiply(matrix, vector);
 
     if (testDevice) {
         result.move(HOST);
@@ -309,7 +309,7 @@ void tensorMultiplyMatrixMatrixPBT(bool testDevice) {
         result.move(DEVICE);
     }
 
-    multiply(m1, m2, result);
+    result = multiply(m1, m2);
 
     if (testDevice) {
         result.move(HOST);
@@ -340,7 +340,7 @@ void tensorTransposePBT(bool testDevice) {
         result.move(DEVICE);
     }
 
-    transpose(t, result);
+    result = transpose(t);
 
     if (testDevice) {
         result.move(HOST);

@@ -275,91 +275,71 @@ Tensor subtract(const Tensor& a, const Tensor& b) {
     return result;
 }
 
-void hadamard(const Tensor& a, const Tensor& b, Tensor& destination) {
-    if (a.shape != b.shape || a.shape != destination.shape || b.shape != destination.shape) {
+Tensor hadamard(const Tensor& a, const Tensor& b) {
+    if (a.shape != b.shape) {
         throw SizeMismatchException();
     }
 
-    std::initializer_list<DataLocation> locations = {a.location, b.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        hadamardTensorsOnHost(a, b, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        hadamardTensorsOnDevice(a, b, destination);
-    } else {
-        throw DifferentDataLocationException();
-    }
-}
-
-Tensor hadamard(const Tensor& a, const Tensor& b) {
     Tensor result = Tensor(a.shape);
     result.move(a.location);
-    hadamard(a, b, result);
-    return result;
-}
 
-void divide(const Tensor& a, const Tensor& b, Tensor& destination) {
-    if (a.shape != b.shape || a.shape != destination.shape || b.shape != destination.shape) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {a.location, b.location, destination.location};
+    std::initializer_list<DataLocation> locations = {a.location, b.location};
     if (allLocationsAreHost(locations)) {
-        divideTensorsOnHost(a, b, destination);
+        hadamardTensorsOnHost(a, b, result);
     } else if (allLocationsAreDevice(locations)) {
-        divideTensorsOnDevice(a, b, destination);
+        hadamardTensorsOnDevice(a, b, result);
     } else {
         throw DifferentDataLocationException();
     }
+    return result;
 }
 
 Tensor divide(const Tensor& a, const Tensor& b) {
-    Tensor result = Tensor(a.shape);
-    result.move(a.location);
-    divide(a, b, result);
-    return result;
-}
-
-void log(const Tensor& a, Tensor& destination) {
-    if (a.shape != destination.shape) {
+    if (a.shape != b.shape) {
         throw SizeMismatchException();
     }
 
-    std::initializer_list<DataLocation> locations = {a.location, destination.location};
+    Tensor result = Tensor(a.shape);
+    result.move(a.location);
+
+    std::initializer_list<DataLocation> locations = {a.location, b.location};
     if (allLocationsAreHost(locations)) {
-        logTensorOnHost(a, destination);
+        divideTensorsOnHost(a, b, result);
     } else if (allLocationsAreDevice(locations)) {
-        logTensorOnDevice(a, destination);
+        divideTensorsOnDevice(a, b, result);
     } else {
         throw DifferentDataLocationException();
     }
+    return result;
 }
 
 Tensor log(const Tensor& a) {
     Tensor result = Tensor(a.shape);
     result.move(a.location);
-    log(a, result);
-    return result;
-}
 
-void multiply(const Tensor& tensor, float constant, Tensor& destination) {
-    if (tensor.shape != destination.shape) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {tensor.location, destination.location};
+    std::initializer_list<DataLocation> locations = {a.location};
     if (allLocationsAreHost(locations)) {
-        multiplyTensorOnHost(tensor, constant, destination);
+        logTensorOnHost(a, result);
     } else if (allLocationsAreDevice(locations)) {
-        multiplyTensorOnDevice(tensor, constant, destination);
+        logTensorOnDevice(a, result);
     } else {
         throw DifferentDataLocationException();
     }
+    return result;
 }
 
 Tensor multiply(const Tensor& tensor, float constant) {
     Tensor result = Tensor(tensor.shape);
     result.move(tensor.location);
-    multiply(tensor, constant, result);
+
+    std::initializer_list<DataLocation> locations = {tensor.location};
+    if (allLocationsAreHost(locations)) {
+        multiplyTensorOnHost(tensor, constant, result);
+    } else if (allLocationsAreDevice(locations)) {
+        multiplyTensorOnDevice(tensor, constant, result);
+    } else {
+        throw DifferentDataLocationException();
+    }
     return result;
 }
 
@@ -370,19 +350,23 @@ Tensor multiply(const Tensor& tensor, float constant) {
  * @param vector The vector tensor.
  * @param destination Where the result of the multiplication should be stored.
  */
-void multiplyMatrixVector(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
-    if (matrix.shape[1] != vector.shape[0] || matrix.shape[0] != destination.shape[0]) {
+Tensor multiplyMatrixVector(const Tensor& matrix, const Tensor& vector) {
+    if (matrix.shape[1] != vector.shape[0]) {
         throw SizeMismatchException();
     }
 
-    std::initializer_list<DataLocation> locations = {matrix.location, vector.location, destination.location};
+    Tensor result = Tensor(matrix.shape[0]);
+    result.move(matrix.location);
+
+    std::initializer_list<DataLocation> locations = {matrix.location, vector.location};
     if (allLocationsAreHost(locations)) {
-        multiplyMatrixVectorOnHost(matrix, vector, destination);
+        multiplyMatrixVectorOnHost(matrix, vector, result);
     } else if (allLocationsAreDevice(locations)) {
-        multiplyMatrixVectorOnDevice(matrix, vector, destination);
+        multiplyMatrixVectorOnDevice(matrix, vector, result);
     } else {
         throw DifferentDataLocationException();
     }
+    return result;
 }
 
 /**
@@ -392,72 +376,46 @@ void multiplyMatrixVector(const Tensor& matrix, const Tensor& vector, Tensor& de
  * @param m2 The second matrix tensor.
  * @param destination Where the result of the multiplication should be stored.
  */
-void multiplyMatrixMatrix(const Tensor& m1, const Tensor& m2, Tensor& destination) {
-    if (m1.shape[1] != m2.shape[0] || m1.shape[0] != destination.shape[0] || m2.shape[1] != destination.shape[1]) {
+Tensor multiplyMatrixMatrix(const Tensor& m1, const Tensor& m2) {
+    if (m1.shape[1] != m2.shape[0]) {
         throw SizeMismatchException();
     }
+    Tensor result = Tensor(m1.shape[0], m2.shape[1]);
+    result.move(m1.location);
 
-    std::initializer_list<DataLocation> locations = {m1.location, m2.location, destination.location};
+    std::initializer_list<DataLocation> locations = {m1.location, m2.location};
     if (allLocationsAreHost(locations)) {
-        multiplyMatrixMatrixOnHost(m1, m2, destination);
+        multiplyMatrixMatrixOnHost(m1, m2, result);
     } else if (allLocationsAreDevice(locations)) {
-        multiplyMatrixMatrixOnDevice(m1, m2, destination);
+        multiplyMatrixMatrixOnDevice(m1, m2, result);
     } else {
         throw DifferentDataLocationException();
     }
-}
-
-void multiply(const Tensor& a, const Tensor& b, Tensor& destination) {
-    if (a.shape.size() == 2 && b.shape.size() == 1 && destination.shape.size() == 1) {
-        multiplyMatrixVector(a, b, destination);
-    } else if (a.shape.size() == 2 && b.shape.size() == 2 && destination.shape.size() == 2) {
-        multiplyMatrixMatrix(a, b, destination);
-    } else {
-        throw UnsupportedOperationException();
-    }
+    return result;
 }
 
 Tensor multiply(const Tensor& a, const Tensor& b) {
     if (a.shape.size() == 2 && b.shape.size() == 1) {
-        Tensor result = Tensor(a.shape[0]);
-        result.move(a.location);
-        multiplyMatrixVector(a, b, result);
-        return result;
+        return multiplyMatrixVector(a, b);
     } else if (a.shape.size() == 2 && b.shape.size() == 2) {
-        Tensor result = Tensor(a.shape[0], b.shape[1]);
-        result.move(a.location);
-        multiplyMatrixMatrix(a, b, result);
-        return result;
+        return multiplyMatrixMatrix(a, b);
     } else {
         throw UnsupportedOperationException();
-    }
-}
-
-void transpose(const Tensor& matrix, Tensor& destination) {
-    if (matrix.shape.size() != 2 || destination.shape.size() != 2) {
-        throw UnsupportedOperationException();
-    }
-    if (matrix.shape[0] != destination.shape[1] || matrix.shape[1] != destination.shape[0]) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {matrix.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        transposeMatrixOnHost(matrix, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        transposeMatrixOnDevice(matrix, destination);
-    } else {
-        throw DifferentDataLocationException();
     }
 }
 
 Tensor transpose(const Tensor& matrix) {
-    if (matrix.shape.size() != 2) {
-        throw UnsupportedOperationException();
-    }
-
     Tensor result = Tensor(matrix.shape[1], matrix.shape[0]);
     result.move(matrix.location);
-    transpose(matrix, result);
+
+    std::initializer_list<DataLocation> locations = {matrix.location};
+    if (allLocationsAreHost(locations)) {
+        transposeMatrixOnHost(matrix, result);
+    } else if (allLocationsAreDevice(locations)) {
+        transposeMatrixOnDevice(matrix, result);
+    } else {
+        throw DifferentDataLocationException();
+    }
     return result;
 }
+

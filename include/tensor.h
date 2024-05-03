@@ -204,7 +204,6 @@ void fill(float value, Tensor& destination);
  * @param b The second tensor.
  * @param destination Where to store the result of addition.
  */
-void add(const Tensor& a, const Tensor& b, Tensor& destination);
 
 Tensor add(const Tensor& a, const Tensor& b);
 
@@ -215,7 +214,6 @@ Tensor add(const Tensor& a, const Tensor& b);
  * @param b The tensor to be subtracted.
  * @param destination Where to store the result of the subtraction.
  */
-void subtract(const Tensor& a, const Tensor& b, Tensor& destination);
 
 Tensor subtract(const Tensor& a, const Tensor& b);
 
@@ -226,7 +224,6 @@ Tensor subtract(const Tensor& a, const Tensor& b);
  * @param b The second tensor.
  * @param destination Where to store the result of the operation.
  */
-void hadamard(const Tensor& a, const Tensor& b, Tensor& destination);
 
 Tensor hadamard(const Tensor& a, const Tensor& b);
 
@@ -237,7 +234,6 @@ Tensor hadamard(const Tensor& a, const Tensor& b);
  * @param b The tensor to divide by.
  * @param destination Where to store the result of the operation.
  */
-void divide(const Tensor& a, const Tensor& b, Tensor& destination);
 
 Tensor divide(const Tensor& a, const Tensor& b);
 
@@ -247,7 +243,6 @@ Tensor divide(const Tensor& a, const Tensor& b);
  * @param a The tensor to apply natural logarithm to.
  * @param destination Where to store the result of the operation.
  */
-void log(const Tensor& a, Tensor& destination);
 
 Tensor log(const Tensor& a);
 
@@ -258,7 +253,6 @@ Tensor log(const Tensor& a);
  * @param constant The constant to multiply the tensor with.
  * @param destination Where to store the result of the multiplication.
  */
-void multiply(const Tensor& tensor, float constant, Tensor& destination);
 
 Tensor multiply(const Tensor& tensor, float constant);
 
@@ -272,7 +266,6 @@ Tensor multiply(const Tensor& tensor, float constant);
  * @param b The second tensor.
  * @param destination Where the result of multiplication should be stored.
  */
-void multiply(const Tensor& a, const Tensor& b, Tensor& destination);
 
 Tensor multiply(const Tensor& a, const Tensor& b);
 
@@ -284,7 +277,6 @@ Tensor multiply(const Tensor& a, const Tensor& b);
  * @param matrix The matrix to transpose.
  * @param destination Where the result of the transpose operation should be stored.
  */
-void transpose(const Tensor& matrix, Tensor& destination);
 
 Tensor transpose(const Tensor& matrix);
 
