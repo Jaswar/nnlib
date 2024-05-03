@@ -159,7 +159,7 @@ std::vector<Tensor> splitIntoBatches(const Tensor& data, size_t batchSize) {
 }
 
 Network::Network(size_t inputSize, bool useGPU, long long seed)
-    : seed(seed), layers(), location(HOST), previousSize(inputSize), lossData(DEFAULT_BATCH_SIZE, inputSize) {
+    : seed(seed), layers(), location(HOST), previousSize(inputSize) {
     if (this->seed == NO_SEED) {
         this->seed = time(nullptr);
     }
@@ -167,7 +167,6 @@ Network::Network(size_t inputSize, bool useGPU, long long seed)
 
     if (useGPU && isCudaAvailable()) {
         location = DEVICE;
-        lossData.move(DEVICE);
     }
 }
 
@@ -186,8 +185,6 @@ void Network::add(size_t numNeurons, const std::string& activation) {
     layers.push_back(newLayer);
 
     previousSize = numNeurons;
-    lossData = Tensor(DEFAULT_BATCH_SIZE, numNeurons);
-    lossData.move(location);
 }
 
 Tensor Network::forward(const Tensor& batch) {
@@ -203,12 +200,7 @@ Tensor Network::forward(const Tensor& batch) {
 }
 
 void Network::backward(const Tensor& predicted, const Tensor& target, float learningRate, Loss* loss) {
-    if (lossData.shape != predicted.shape) {
-        lossData = Tensor(predicted.shape[0], lossData.shape[1]);
-        lossData.move(location);
-    }
-
-    loss->calculateDerivatives(target, predicted, lossData);
+    Tensor lossData = loss->calculateDerivatives(target, predicted);
 
     Layer& last = layers.back();
     Tensor upstream = last.backward(lossData);

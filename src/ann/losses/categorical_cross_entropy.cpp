@@ -8,15 +8,19 @@
 #include <loss.h>
 
 float CategoricalCrossEntropy::calculateLoss(const Tensor& targets, const Tensor& predictions) {
-    allocateWorkingSpacesLoss(targets, predictions);
+    Tensor ones = Tensor(targets.shape[1], targets.shape[1]);
+    ones.move(targets.location);
+    fill(1, ones);
 
-    multiply(predictions, onesLoss, accumulatedSumsLoss);
-    fill(1, workingSpace);
-    divide(workingSpace, accumulatedSumsLoss, accumulatedSumsLoss);
+    Tensor accumulatedSumsLoss = multiply(predictions, ones);
 
-    hadamard(predictions, accumulatedSumsLoss, workingSpace);
-    log(workingSpace, workingSpace);
-    hadamard(targets, workingSpace, workingSpace);
+    ones = Tensor(targets.shape);
+    ones.move(targets.location);
+    fill(1, ones);
+    accumulatedSumsLoss = divide(ones, accumulatedSumsLoss);
+
+    Tensor workingSpace = hadamard(predictions, accumulatedSumsLoss);
+    workingSpace = hadamard(targets, log(workingSpace));
 
     numSamples += targets.shape[0];
     currentTotalMetric += sum(workingSpace) * -1;
@@ -26,9 +30,12 @@ float CategoricalCrossEntropy::calculateLoss(const Tensor& targets, const Tensor
 
 void CategoricalCrossEntropy::calculateDerivatives(const Tensor& targets, const Tensor& predictions,
                                                    Tensor& destination) {
-    allocateWorkingSpacesDerivatives(targets, predictions);
+    Tensor ones = Tensor(targets.shape[1], targets.shape[1]);
+    ones.move(targets.location);
+    fill(1, ones);
 
-    multiply(predictions, onesDerivatives, accumulatedSumsDerivatives);
+    Tensor accumulatedSumsDerivatives = multiply(predictions, ones);
+
     fill(1, destination);
     divide(destination, accumulatedSumsDerivatives, accumulatedSumsDerivatives);
 
@@ -36,35 +43,6 @@ void CategoricalCrossEntropy::calculateDerivatives(const Tensor& targets, const 
     multiply(destination, -1, destination);
 
     add(destination, accumulatedSumsDerivatives, destination);
-}
-
-void CategoricalCrossEntropy::allocateWorkingSpacesDerivatives(const Tensor& targets, const Tensor& predictions) {
-    if (onesDerivatives.shape.size() != 2 || onesDerivatives.shape[0] != targets.shape[1] ||
-        onesDerivatives.shape[1] != targets.shape[1]) {
-        onesDerivatives = Tensor(targets.shape[1], targets.shape[1]);
-        fill(1, onesDerivatives);
-    }
-    onesDerivatives.move(targets.location);
-    if (accumulatedSumsDerivatives.shape != targets.shape) {
-        accumulatedSumsDerivatives = Tensor(targets.shape);
-    }
-    accumulatedSumsDerivatives.move(targets.location);
-}
-
-void CategoricalCrossEntropy::allocateWorkingSpacesLoss(const Tensor& targets, const Tensor& predictions) {
-    if (onesLoss.shape.size() != 2 || onesLoss.shape[0] != targets.shape[1] || onesLoss.shape[1] != targets.shape[1]) {
-        onesLoss = Tensor(targets.shape[1], targets.shape[1]);
-        fill(1, onesLoss);
-    }
-    onesLoss.move(targets.location);
-    if (accumulatedSumsLoss.shape != targets.shape) {
-        accumulatedSumsLoss = Tensor(targets.shape);
-    }
-    accumulatedSumsLoss.move(targets.location);
-    if (workingSpace.shape != targets.shape) {
-        workingSpace = Tensor(targets.shape);
-    }
-    workingSpace.move(targets.location);
 }
 
 std::string CategoricalCrossEntropy::getShortName() const {

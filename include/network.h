@@ -29,15 +29,6 @@ class Network {
     DataLocation location;
 
     /**
-     * @brief Pre-allocated space for loss.
-     *
-     * Might require resizing/reallocating if @p batchSize != #DEFAULT_BATCH_SIZE during training. In that case,
-     * the reshaping will still only happen once. The data is pre-allocated to avoid unnecessary allocation
-     * during runtime.
-     */
-    Tensor lossData;
-
-    /**
      * @brief List of network layers.
      */
     std::vector<Layer> layers;

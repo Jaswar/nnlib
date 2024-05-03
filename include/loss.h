@@ -59,18 +59,13 @@ public:
      * @param destination The Tensor where the derivatives should be saved.
      */
     virtual void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) = 0;
+    Tensor calculateDerivatives(const Tensor& targets, const Tensor& predictions);
 };
 
 /**
  * @brief Class representing the Mean Squared Error.
  */
 class MeanSquaredError : public Loss {
-    /**
-     * @brief Space used for computation of the loss/derivatives.
-     */
-private:
-    Tensor workingSpace;
-
     /**
      * @copybrief Loss::calculateLoss
      *
@@ -103,32 +98,6 @@ public:
 class BinaryCrossEntropy : public Loss {
 
     /**
-     * @brief Space containing only ones. Used when calculating the loss.
-     */
-private:
-    Tensor onesLoss;
-
-    /**
-     * @brief Space containing only ones. Used when calculating the derivatives.
-     */
-    Tensor onesDerivatives;
-
-    /**
-     * @brief Space used for computation of the loss.
-     */
-    Tensor workingSpace;
-
-    /**
-     * @brief Space used for computation of the loss.
-     */
-    Tensor workingSpace2;
-
-    /**
-     * @brief Space used for computation of the derivatives.
-     */
-    Tensor workingSpace3;
-
-    /**
      * @copybrief Loss::calculateLoss
      *
      * The loss is calculated for each data sample as @f$ -(y \ln(\hat{y}) + (1 - y)\ln(1 - \hat{y})) @f$.
@@ -147,24 +116,6 @@ public:
      */
     void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) override;
 
-    /**
-     * @brief Helper method to allocate the working spaces for derivatives.
-     *
-     * @param targets The expected output of the network.
-     * @param predictions The actual output of the network.
-     */
-private:
-    void allocateWorkingSpacesDerivatives(const Tensor& targets, const Tensor& predictions);
-
-    /**
-     * @brief Helper method to allocate the working spaces for loss.
-     *
-     * @param targets The expected output of the network.
-     * @param predictions The actual output of the network.
-     */
-    void allocateWorkingSpacesLoss(const Tensor& targets, const Tensor& predictions);
-
-public:
     std::string getShortName() const override;
 };
 
@@ -178,36 +129,6 @@ public:
  * the derivatives.
  */
 class CategoricalCrossEntropy : public Loss {
-
-    /**
-     * @brief Space used when computing the loss/derivatives.
-     */
-private:
-    Tensor workingSpace;
-
-    /**
-     * @brief Space containing only ones. Used when calculating the loss/derivatives.
-     */
-    Tensor onesLoss;
-
-    /**
-     * @brief Space containing only ones. Used when calculating the derivatives.
-     */
-    Tensor onesDerivatives;
-
-    /**
-     * @brief Tensor to store the sums of predictions.
-     *
-     * Used to normalize the predictions, such that their sum is 1.
-     */
-    Tensor accumulatedSumsLoss;
-
-    /**
-     * @brief Tensor to store the sums of predictions.
-     *
-     * Used to normalize the predictions, such that their sum is 1.
-     */
-    Tensor accumulatedSumsDerivatives;
 
     /**
      * @copybrief Loss::calculateLoss
@@ -230,24 +151,6 @@ public:
      */
     void calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) override;
 
-    /**
-     * @brief Allocate the working spaces for calculating the loss.
-     *
-     * @param targets The expected output of the network.
-     * @param predictions The actual output of the network.
-     */
-private:
-    void allocateWorkingSpacesLoss(const Tensor& targets, const Tensor& predictions);
-
-    /**
-     * @brief Allocate the working spaces for calculating the derivatives.
-     *
-     * @param targets The expected output of the network.
-     * @param predictions The actual output of the network.
-     */
-    void allocateWorkingSpacesDerivatives(const Tensor& targets, const Tensor& predictions);
-
-public:
     std::string getShortName() const override;
 };
 
