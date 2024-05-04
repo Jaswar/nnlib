@@ -13,13 +13,16 @@
 #include <exceptions/different_data_location_exception.h>
 #include <exceptions/size_mismatch_exception.h>
 #include <exceptions/unsupported_operation_exception.h>
+#include <function.h>
+#include <memory>
+#include <queue>
 #include <string>
 #include <utils/location_verifiers.h>
 
-Tensor::Tensor() : shape(), size(0), location(HOST), data() {
+Tensor::Tensor() : shape(), size(0), location(HOST), data(), requiresGrad(false), gradFunction(), grad() {
 }
 
-Tensor::Tensor(std::vector<size_t> shape) : shape(std::move(shape)), location(HOST), size(0), data() {
+Tensor::Tensor(std::vector<size_t> shape) : shape(std::move(shape)), location(HOST), size(0), data(), requiresGrad(false), gradFunction(), grad() {
     computeSize();
     Cache& cache = Cache::getInstance();
     data = cache.get(size, location);
@@ -30,6 +33,11 @@ Tensor::Tensor(const Tensor& other) {
     // This copies the vector
     shape = other.shape;
     size = other.size;
+    requiresGrad = other.requiresGrad;
+    gradFunction = other.gradFunction;
+    if (other.grad != nullptr) {
+        grad = std::make_shared<Tensor>(*other.grad);
+    }
 
     if (size == 0) {
         return;
@@ -146,6 +154,42 @@ void Tensor::verifyIndex(const std::vector<size_t>& index) const {
     }
 }
 
+void Tensor::useGrad() {
+    requiresGrad = true;
+    grad = std::make_shared<Tensor>(shape);
+    fill(0.0f, *grad);
+}
+
+void Tensor::backward() {
+    sTensor grad = std::make_shared<Tensor>(shape);
+    fill(1.0f, *grad);
+    sTensor current = std::make_shared<Tensor>(*this);
+
+    std::queue<std::pair<sTensor, sTensor>> queue;
+    queue.emplace(current, grad);
+    while (!queue.empty()) {
+        current = queue.front().first;
+        grad = queue.front().second;
+        queue.pop();
+
+        Function* gradFn = current->gradFunction;
+        if (gradFn == nullptr) {
+            if (current->requiresGrad) {
+                current->grad = std::make_shared<Tensor>(add(*current->grad, *grad));
+            }
+            continue;
+        }
+
+        std::vector<sTensor> newGrads = gradFn->backward(grad);
+        for (int i = 0; i < newGrads.size(); i++) {
+            sTensor parent = gradFn->parents[i];
+            if (parent->requiresGrad) {
+                queue.emplace(parent, newGrads[i]);
+            }
+        }
+    }
+}
+
 /**
  * @brief Convert the shape of the tensor to a string.
  *
@@ -168,11 +212,16 @@ std::string tensorShapeToString(const Tensor& tensor) {
 }
 
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor) {
-    if (tensor.location == DEVICE) {
-        return stream << "Tensor located on device with shape: " + tensorShapeToString(tensor);
-    } else {
-        return stream << "Tensor located on host with shape: " + tensorShapeToString(tensor);
+    stream << "Tensor: ";
+    for (int i = 0; i < tensor.size; i++) {
+        stream << tensor.data[i] << " ";
     }
+    return stream;
+//    if (tensor.location == DEVICE) {
+//        return stream << "Tensor located on device with shape: " + tensorShapeToString(tensor);
+//    } else {
+//        return stream << "Tensor located on host with shape: " + tensorShapeToString(tensor);
+//    }
 }
 
 float sum(Tensor& tensor) {

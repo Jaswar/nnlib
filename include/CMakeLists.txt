@@ -11,6 +11,7 @@ set(INCLUDE_FILES
         session.cuh
         loss.h
         cache.h
+        function.h
 
         PARENT_SCOPE)
 

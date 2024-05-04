@@ -9,12 +9,16 @@
 #define NNLIB_TENSOR_H
 
 #include "allocation.h"
-#include "session.cuh"
 #include "cache.h"
+#include "session.cuh"
 #include <cstdlib>
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <memory>
+
+class Function; // forward declaration to solve a circular dependency
+
 
 /**
  * @brief Class to represent multidimensional arrays.
@@ -51,6 +55,10 @@ public:
      * @brief Session object containing information about current session.
      */
     Session session;
+
+    bool requiresGrad;
+    Function* gradFunction;
+    std::shared_ptr<Tensor> grad;
 
     /**
      * @brief Initialize an empty tensor.
@@ -100,6 +108,9 @@ public:
      * @param target The destination to move the tensor to.
      */
     void move(DataLocation target);
+
+    void useGrad();
+    void backward();
 
     /**
      * @brief Static method to easily initialize a 1D tensor with given data.
@@ -166,6 +177,8 @@ private:
      */
     void verifyIndex(const std::vector<size_t>& index) const;
 };
+
+typedef std::shared_ptr<Tensor> sTensor;
 
 /**
  * @brief Enables the tensor to be printed using std::cout.
