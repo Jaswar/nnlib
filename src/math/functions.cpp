@@ -1,5 +1,5 @@
 /**
- * @file add.cpp
+ * @file function.cpp
  * @brief
  *
  * @author Jan Warchocki
@@ -7,7 +7,7 @@
  *
  */
 
-#include <function.h>
+#include "functions.h"
 
 sTensor Matmul::forwardFn(const std::vector<sTensor>& args) {
     cacheA = std::make_shared<Tensor>(*args[0]);

@@ -13,7 +13,7 @@
 #include <exceptions/different_data_location_exception.h>
 #include <exceptions/size_mismatch_exception.h>
 #include <exceptions/unsupported_operation_exception.h>
-#include <function.h>
+#include <functions.h>
 #include <memory>
 #include <queue>
 #include <string>

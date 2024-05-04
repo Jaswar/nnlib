@@ -7,8 +7,8 @@
  *
  */
 
+#include "functions.h"
 #include "tensor.h"
-#include "function.h"
 #include <gtest/gtest.h>
 
 TEST(autograd, test) {
