@@ -26,7 +26,6 @@ public:
         for (auto& parent : parents) {
             if (parent->requiresGrad) {
                 result->requiresGrad = true;
-                result->gradFunction = this;
                 break;
             }
         }
@@ -40,6 +39,8 @@ public:
     virtual sTensor forwardFn(const std::vector<sTensor>& args) = 0;
 
     virtual std::vector<sTensor> backwardFn(sTensor grad) = 0;
+
+    virtual ~Function() = default;
 };
 
 class SumReduce : public Function {
@@ -100,6 +101,8 @@ public:
     sTensor forwardFn(const std::vector<sTensor>& args) override;
 
     std::vector<sTensor> backwardFn(sTensor grad) override;
+
+    ~Matmul() override = default;
 };
 
 class Transpose : public Function {

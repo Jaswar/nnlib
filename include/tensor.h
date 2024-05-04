@@ -57,7 +57,7 @@ public:
     Session session;
 
     bool requiresGrad;
-    Function* gradFunction;
+    std::shared_ptr<Function> gradFunction;
     std::shared_ptr<Tensor> grad;
 
     /**
@@ -99,6 +99,8 @@ public:
      * @return Assigned tensor. Always returns *this.
      */
     Tensor& operator=(const Tensor& other);
+
+    std::shared_ptr<Tensor> copy() const;
 
     /**
      * @brief Move the tensor to the designated destination.

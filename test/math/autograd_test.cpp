@@ -17,11 +17,9 @@ TEST(autograd, test) {
     a->useGrad();
     b->useGrad();
 
-    Matmul matmul;
-    sTensor result = matmul.forward({a, b});
+    sTensor result = multiply(a, b);
 
-    Matmul matmul2;
-    sTensor result2 = matmul2.forward({a, result});
+    sTensor result2 = multiply(a, result);
     result2->backward();
     std::cout << *a->grad << std::endl;
     std::cout << *b->grad << std::endl;

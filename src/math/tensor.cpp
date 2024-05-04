@@ -161,26 +161,26 @@ void Tensor::useGrad() {
 }
 
 void Tensor::backward() {
-    sTensor grad = std::make_shared<Tensor>(shape);
-    fill(1.0f, *grad);
+    sTensor gradient = std::make_shared<Tensor>(shape);
+    fill(1.0f, *gradient);
     sTensor current = std::make_shared<Tensor>(*this);
 
     std::queue<std::pair<sTensor, sTensor>> queue;
-    queue.emplace(current, grad);
+    queue.emplace(current, gradient);
     while (!queue.empty()) {
         current = queue.front().first;
-        grad = queue.front().second;
+        gradient = queue.front().second;
         queue.pop();
 
-        Function* gradFn = current->gradFunction;
+        std::shared_ptr<Function> gradFn = current->gradFunction;
         if (gradFn == nullptr) {
             if (current->requiresGrad) {
-                current->grad = std::make_shared<Tensor>(add(*current->grad, *grad));
+                current->grad = std::make_shared<Tensor>(add(*current->grad, *gradient));
             }
             continue;
         }
 
-        std::vector<sTensor> newGrads = gradFn->backward(grad);
+        std::vector<sTensor> newGrads = gradFn->backward(gradient);
         for (int i = 0; i < newGrads.size(); i++) {
             sTensor parent = gradFn->parents[i];
             if (parent->requiresGrad) {
@@ -188,6 +188,22 @@ void Tensor::backward() {
             }
         }
     }
+}
+
+std::shared_ptr<Tensor> Tensor::copy() const {
+    sTensor copy = std::make_shared<Tensor>(shape);
+    copy->move(location);
+    copy->requiresGrad = requiresGrad;
+    copy->grad = nullptr; // might need changing
+    copy->gradFunction = gradFunction;
+
+    if (location == HOST) {
+        copy1DArray(size, data, copy->data);
+    } else {
+        copy1DArrayDevice(size, data, copy->data);
+    }
+
+    return copy;
 }
 
 /**
