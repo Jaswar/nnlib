@@ -165,6 +165,10 @@ void Tensor::useGrad() {
 }
 
 void Tensor::backward() {
+    if (shape.size() != 1 || shape[0] != 1 || !requiresGrad) {
+        throw UnsupportedOperationException();
+    }
+
     sTensor gradient = std::make_shared<Tensor>(shape);
     fill(1.0f, *gradient);
     gradient->move(location);
@@ -180,7 +184,7 @@ void Tensor::backward() {
         std::shared_ptr<BackwardFunction> gradFn = current->gradFunction;
         if (gradFn == nullptr) {
             if (current->requiresGrad) {
-                current->grad = std::make_shared<Tensor>(add(*current->grad, *gradient));
+                current->grad = add(current->grad, gradient);
             }
             continue;
         }

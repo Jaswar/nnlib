@@ -136,7 +136,7 @@ sTensor Hadamard::forwardFn(const sTensor& a, const sTensor& b) {
         throw SizeMismatchException();
     }
     cacheA = a->copy();
-    cacheB = a->copy();
+    cacheB = b->copy();
 
     sTensor result = std::make_shared<Tensor>(a->shape);
     result->move(a->location);
@@ -282,6 +282,7 @@ sTensor MatVecMul::forwardFn(const sTensor& a, const sTensor& b) {
     if (a->shape[1] != b->shape[0]) {
         throw SizeMismatchException();
     }
+
     cacheA = a->copy();
     cacheB = b->copy();
     sTensor result = std::make_shared<Tensor>(a->shape[0]);
@@ -301,8 +302,10 @@ sTensor MatVecMul::forwardFn(const sTensor& a, const sTensor& b) {
 
 std::vector<sTensor> MatVecMul::backwardFn(sTensor grad) {
     cacheB->shape = {cacheB->shape[0], 1};
+    grad->shape = {grad->shape[0], 1};
     sTensor gradA = multiply(grad, transpose(cacheB));
     sTensor gradB = multiply(transpose(cacheA), grad);
+    gradB->shape = {gradB->shape[0]};
     return {gradA, gradB};
 }
 
