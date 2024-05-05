@@ -306,11 +306,11 @@ void testFork(bool useDevice) {
 }
 
 void testSimpleNN(bool useDevice) {
-    sTensor w1 = std::make_shared<Tensor>(Tensor::construct2d({{1, 2}, {2, 5}, {6, 7}}));
-    sTensor b1 = std::make_shared<Tensor>(Tensor::construct1d({3, 4}));
-    sTensor w2 = std::make_shared<Tensor>(Tensor::construct2d({{-6, 3}, {-5, 1}}));
-    sTensor b2 = std::make_shared<Tensor>(Tensor::construct1d({-3, 4}));
-    sTensor x = std::make_shared<Tensor>(Tensor::construct2d({{1, 2, 3}, {4, 6, 6}}));
+    sTensor w1 = std::make_shared<Tensor>(Tensor::construct2d({{0.1f, 0.2f}, {0.2f, 0.5f}, {0.6f, 0.7f}}));
+    sTensor b1 = std::make_shared<Tensor>(Tensor::construct1d({0.3f, 0.4f}));
+    sTensor w2 = std::make_shared<Tensor>(Tensor::construct2d({{-0.6f, 0.3f}, {-0.5f, 0.1f}}));
+    sTensor b2 = std::make_shared<Tensor>(Tensor::construct1d({-0.3f, 0.4f}));
+    sTensor x = std::make_shared<Tensor>(Tensor::construct2d({{0.1f, 0.2f, 0.3f}, {0.4f, 0.6f, 0.6f}}));
     if (useDevice) {
         w1->move(DEVICE);
         b1->move(DEVICE);
@@ -338,10 +338,11 @@ void testSimpleNN(bool useDevice) {
     b2->move(HOST);
     x->move(HOST);
 
-    std::cout << *w1->grad << std::endl;
-    std::cout << *b1->grad << std::endl;
-    std::cout << *w2->grad << std::endl;
-    std::cout << *b2->grad << std::endl;
+    ASSERT_TENSOR_CLOSE_2D(*w1->grad, {{-0.0174, -0.0309}, {-0.0286, -0.0501}, {-0.0337, -0.0578}});
+    ASSERT_TENSOR_CLOSE_1D(*b1->grad, {-0.0816, -0.1345});
+    ASSERT_TENSOR_CLOSE_2D(*w2->grad, {{0.2358, 0.2977}, {0.3360, 0.4254}});
+    ASSERT_TENSOR_CLOSE_1D(*b2->grad, {0.3576, 0.4432});
+    ASSERT_EQ(x->grad, nullptr);
 }
 
 TEST(autograd, test_add_host) {
@@ -460,6 +461,10 @@ TEST(autograd, test_combine_device) {
 
 TEST(autograd, test_fork_device) {
     testFork(true);
+}
+
+TEST(autograd, test_simple_nn_device) {
+    testSimpleNN(true);
 }
 
 #endif
