@@ -44,6 +44,7 @@ public:
 };
 
 class SumReduce : public Function {
+    std::vector<size_t> shapeCache;
 public:
     sTensor forwardFn(const std::vector<sTensor>& args) override;
 
@@ -65,6 +66,8 @@ public:
 };
 
 class Hadamard : public Function {
+    sTensor cacheA;
+    sTensor cacheB;
 public:
     sTensor forwardFn(const std::vector<sTensor>& args) override;
 
@@ -72,6 +75,8 @@ public:
 };
 
 class Divide : public Function {
+    sTensor cacheA;
+    sTensor cacheB;
 public:
     sTensor forwardFn(const std::vector<sTensor>& args) override;
 
@@ -79,6 +84,7 @@ public:
 };
 
 class Log : public Function {
+    sTensor cacheA;
 public:
     sTensor forwardFn(const std::vector<sTensor>& args) override;
 
@@ -106,6 +112,7 @@ public:
 };
 
 class Transpose : public Function {
+    sTensor cacheA;
 public:
     sTensor forwardFn(const std::vector<sTensor>& args) override;
 

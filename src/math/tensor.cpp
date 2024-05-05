@@ -194,7 +194,10 @@ std::shared_ptr<Tensor> Tensor::copy() const {
     sTensor copy = std::make_shared<Tensor>(shape);
     copy->move(location);
     copy->requiresGrad = requiresGrad;
-    copy->grad = nullptr; // might need changing
+    copy->grad = nullptr;
+    if (grad != nullptr) {
+        copy->grad = grad->copy();
+    }
     copy->gradFunction = gradFunction;
 
     if (location == HOST) {

@@ -277,7 +277,7 @@ sTensor log(sTensor a);
  */
 
 Tensor multiply(const Tensor& tensor, float constant);
-//sTensor multiply(sTensor tensor, float constant);
+sTensor multiply(sTensor tensor, float constant);
 
 /**
  * @brief Multiply one tensor with another.
