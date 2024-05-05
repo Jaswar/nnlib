@@ -160,8 +160,9 @@ void Tensor::verifyIndex(const std::vector<size_t>& index) const {
 void Tensor::useGrad() {
     requiresGrad = true;
     grad = std::make_shared<Tensor>(shape);
-    fill(0.0f, *grad);
+    fill(0.0f, grad);
     grad->move(location);
+    gradFunction = nullptr;
 }
 
 void Tensor::backward() {
@@ -170,7 +171,7 @@ void Tensor::backward() {
     }
 
     sTensor gradient = std::make_shared<Tensor>(shape);
-    fill(1.0f, *gradient);
+    fill(1.0f, gradient);
     gradient->move(location);
     sTensor current = std::make_shared<Tensor>(*this);
 

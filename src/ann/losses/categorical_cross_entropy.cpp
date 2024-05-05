@@ -50,3 +50,22 @@ Tensor CategoricalCrossEntropy::calculateDerivatives(const Tensor& targets, cons
 std::string CategoricalCrossEntropy::getShortName() const {
     return "categorical_cross_entropy";
 }
+
+sTensor CategoricalCrossEntropy::calculateLoss(const sTensor& targets, const sTensor& predictions) {
+    sTensor ones = std::make_shared<Tensor>(targets->shape[1], targets->shape[1]);
+    ones->move(targets->location);
+    fill(1.0f, ones);
+
+    sTensor accumulatedSumsLoss = multiply(predictions, ones);
+
+    ones = std::make_shared<Tensor>(targets->shape);
+    ones->move(targets->location);
+    fill(1.0f, ones);
+    accumulatedSumsLoss = divide(ones, accumulatedSumsLoss);
+
+    sTensor workingSpace = hadamard(predictions, accumulatedSumsLoss);
+    workingSpace = hadamard(targets, log(workingSpace));
+
+    workingSpace = multiply(sum(workingSpace), -1.0f);
+    return workingSpace;
+}

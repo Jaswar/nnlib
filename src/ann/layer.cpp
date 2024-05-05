@@ -33,11 +33,11 @@ float getRandom() {
  * @param outSize The size of the vector to generate. It is also the output size of the layer.
  * @return The random vector of biases.
  */
-Tensor initializeBiases(size_t outSize) {
-    Tensor biases = Tensor(outSize);
+sTensor initializeBiases(size_t outSize) {
+    sTensor biases = std::make_shared<Tensor>(outSize);
 
     for (int i = 0; i < outSize; i++) {
-        biases.data[i] = getRandom();
+        biases->data[i] = getRandom();
     }
 
     return biases;
@@ -52,70 +52,51 @@ Tensor initializeBiases(size_t outSize) {
  * @param outSize The number of columns of the matrix. It is also the output size of the layer.
  * @return The random matrix of weights.
  */
-Tensor initializeWeights(size_t inSize, size_t outSize) {
-    Tensor weights = Tensor(inSize, outSize);
+sTensor initializeWeights(size_t inSize, size_t outSize) {
+    sTensor weights = std::make_shared<Tensor>(inSize, outSize);
 
     for (int i = 0; i < inSize; i++) {
         for (int j = 0; j < outSize; j++) {
-            weights.data[i * outSize + j] = getRandom();
+            weights->data[i * outSize + j] = getRandom();
         }
     }
 
     return weights;
 }
 
-Layer::Layer(size_t inSize, size_t outSize, Activation* activation, DataLocation location)
+Layer::Layer(size_t inSize, size_t outSize, const std::string& activation, DataLocation location)
     : location(location),
       inSize(inSize),
       outSize(outSize),
       activation(activation),
       biases(initializeBiases(outSize)),
-      weights(initializeWeights(inSize, outSize)),
-      data(0, 0),
-      zMatrix(0, 0),
-      weightsGradients(inSize, outSize),
-      biasesGradients(outSize) {
+      weights(initializeWeights(inSize, outSize)) {
 
     if (location == DEVICE) {
-        biases.move(DEVICE);
-        weights.move(DEVICE);
-        zMatrix.move(DEVICE);
-        data.move(DEVICE);
-        weightsGradients.move(DEVICE);
-        biasesGradients.move(DEVICE);
+        biases->move(DEVICE);
+        weights->move(DEVICE);
     }
+    weights->useGrad();
+    biases->useGrad();
 }
 
 Layer::~Layer() = default;
 
-Tensor Layer::forward(const Tensor& batch) {
-    zMatrix = multiply(batch, weights);
-    zMatrix = add(zMatrix, biases);
+sTensor Layer::forward(const sTensor& batch) {
+    sTensor z = add(multiply(batch, weights), biases);
 
-    data = batch;
-
-    Tensor aMatrix = activation->forward(zMatrix);
-    return aMatrix;
-}
-
-Tensor Layer::backward(const Tensor& upstream) {
-    Tensor derivatives = this->activation->computeDerivatives(zMatrix);
-    Tensor downstream = hadamard(upstream, derivatives);
-
-    weightsGradients = multiply(transpose(data), downstream);
-    Tensor ones = Tensor(upstream.shape[0]);
-    ones.move(location);
-    fill(1.0f, ones);
-    biasesGradients = multiply(transpose(downstream), ones);
-
-    downstream = multiply(downstream, transpose(weights));
-    return downstream;
+    if (activation == "relu") {
+        return relu(z);
+    } else if (activation == "sigmoid") {
+        return sigmoid(z);
+    } else {
+        return z;
+    }
 }
 
 void Layer::applyGradients(size_t batchSize, float learningRate) {
-    biasesGradients = multiply(biasesGradients, learningRate / static_cast<float>(batchSize));
-    biases = subtract(biases, biasesGradients);
-
-    weightsGradients = multiply(weightsGradients, learningRate / static_cast<float>(batchSize));
-    weights = subtract(weights, weightsGradients);
+    biases = subtract(biases, multiply(biases->grad, learningRate / static_cast<float>(batchSize)));
+    weights = subtract(weights, multiply(weights->grad, learningRate / static_cast<float>(batchSize)));
+    biases->useGrad();
+    weights->useGrad();
 }

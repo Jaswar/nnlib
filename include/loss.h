@@ -51,6 +51,8 @@ public:
      */
     virtual float calculateLoss(const Tensor& targets, const Tensor& predictions) = 0;
 
+    virtual sTensor calculateLoss(const sTensor& targets, const sTensor& predictions) = 0;
+
     /**
      * @brief Computes the partial derivative of the loss with respect to the prediction.
      *
@@ -75,6 +77,7 @@ class MeanSquaredError : public Loss {
      */
 public:
     float calculateLoss(const Tensor& targets, const Tensor& predictions) override;
+    sTensor calculateLoss(const sTensor& targets, const sTensor& predictions) override;
 
     /**
      * @copybrief Loss::calculateDerivatives
@@ -105,6 +108,7 @@ class BinaryCrossEntropy : public Loss {
      */
 public:
     float calculateLoss(const Tensor& targets, const Tensor& predictions) override;
+    sTensor calculateLoss(const sTensor& targets, const sTensor& predictions) override;
 
     /**
      * @copybrief Loss::calculateDerivatives
@@ -139,6 +143,7 @@ class CategoricalCrossEntropy : public Loss {
      */
 public:
     float calculateLoss(const Tensor& targets, const Tensor& predictions) override;
+    sTensor calculateLoss(const sTensor& targets, const sTensor& predictions) override;
 
     /**
      * @copybrief Loss::calculateDerivatives

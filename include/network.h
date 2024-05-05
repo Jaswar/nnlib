@@ -80,21 +80,7 @@ public:
      * @param batch The batch to propagate.
      * @return The pointer to the output of the network. This returns Layer::aMatrix of the last layer.
      */
-    Tensor forward(const Tensor& batch);
-
-    /**
-     * @brief Backward-propagate a batch through the network.
-     *
-     * Squared error loss is used as the loss metric. The network first calculates the gradients on
-     * all layers and only then applies them. This is because layers require weights from following
-     * layers to compute the correct gradients.
-     *
-     * @param predicted The predictions of the network as retrieved from Network::forward.
-     * @param target The targets for that batch of data.
-     * @param learningRate The learning rate of the model.
-     * @param loss The loss function to use.
-     */
-    void backward(const Tensor& predicted, const Tensor& target, float learningRate, Loss* loss);
+    sTensor forward(const sTensor& batch);
 
     /**
      * @brief Train the network.

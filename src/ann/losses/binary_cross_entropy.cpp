@@ -68,3 +68,25 @@ Tensor BinaryCrossEntropy::calculateDerivatives(const Tensor& targets, const Ten
 std::string BinaryCrossEntropy::getShortName() const {
     return "binary_cross_entropy";
 }
+
+sTensor BinaryCrossEntropy::calculateLoss(const sTensor& targets, const sTensor& predictions) {
+    checkValidShape(*targets, *predictions);
+
+    sTensor totalLoss = std::make_shared<Tensor>(targets->shape);
+    {
+        sTensor ones = std::make_shared<Tensor>(targets->shape);
+        ones->move(targets->location);
+        fill(1.0f, ones);
+        sTensor diffTargets = subtract(ones, targets);
+        sTensor diffPredictions = log(subtract(ones, predictions));
+        totalLoss = hadamard(diffTargets, diffPredictions);
+    }
+
+    {
+        sTensor diffPredictions = log(predictions);
+        totalLoss = add(hadamard(targets, diffPredictions), totalLoss);
+    }
+
+    totalLoss = multiply(sum(totalLoss), -1.0f);
+    return totalLoss;
+}

@@ -12,44 +12,9 @@
 #include <string>
 
 /**
- * @brief The default batch size if no batch size is specified.
- *
- * This macro is also used to pre-allocate space when a layer is first created. In this way all required
- * tensors are initialized and may only need reshaping later when starting training.
- */
-#define DEFAULT_BATCH_SIZE 32
-
-/**
  * @brief Represents a single layer of a neural network.
  */
 class Layer {
-
-    /**
-     * @brief Matrix storing the transpose of the weights of the previous layer.
-     *
-     * Helper variable used during backpropagation.
-     */
-private:
-
-    /**
-     * @brief Matrix storing the transpose of the data passed in the forward propagation step.
-     *
-     * Helper variable used during backpropagation.
-     */
-
-    /**
-     * @brief Store a vector of ones.
-     *
-     * Required for the backpropagation algorithm. It is used to sum Layer::newDeltaT along first axis into
-     * bias gradients.
-     */
-
-    /**
-     * @brief Transpose of Layer::newDelta.
-     *
-     * Helper variable used during backpropagation.
-     */
-
     /**
      * @brief The location of the layer.
      *
@@ -77,61 +42,17 @@ public:
      *
      * Pointer to the activation function object. Can be LinearActivation, ReLUActivation or SigmoidActivation.
      */
-    Activation* activation;
+    std::string activation;
 
     /**
      * @brief The weights of the layer. Stored as a matrix.
      */
-    Tensor weights;
+    sTensor weights;
 
     /**
      * @brief The biases of the layer. Stored as a vector.
      */
-    Tensor biases;
-
-    /**
-     * @brief Matrix storing data passed to the layer.
-     *
-     * Stores a pointer reference to the batch that was most recently forward-propagated through the layer.
-     * This data is then used in the backpropagation step.
-     */
-    Tensor data;
-
-    /**
-     * @brief The output of the layer before applying the activation function.
-     */
-     Tensor zMatrix;
-
-    /**
-     * @brief The output of the layer.
-     */
-
-    /**
-     * @brief Delta that should be passed to the previous layer in the backpropagation step.
-     *
-     * Stored as a matrix.
-     */
-
-    /**
-     * @brief The derivatives of the output.
-     *
-     * The derivatives are computed by the activation function and stored in this variable. The data is stored as
-     * a matrix.
-     */
-
-    /**
-     * @brief The weights gradients computed by the backpropagation algorithm.
-     *
-     * Stored as a matrix.
-     */
-    Tensor weightsGradients;
-
-    /**
-     * @brief The biases gradients computed by the backpropagation algorithm.
-     *
-     * Stored as a vector.
-     */
-    Tensor biasesGradients;
+    sTensor biases;
 
     /**
      * @brief Construct a new layer.
@@ -144,7 +65,7 @@ public:
      * @param activation The activation function that should be used.
      * @param location The location of the layer. See Layer::location.
      */
-    Layer(size_t inSize, size_t outSize, Activation* activation, DataLocation location);
+    Layer(size_t inSize, size_t outSize, const std::string& activation, DataLocation location);
 
     /**
      * @brief The destructor of the layer object.
@@ -160,26 +81,7 @@ public:
      *
      * @param batch The batch that should be propagated.
      */
-    Tensor forward(const Tensor& batch);
-
-    /**
-     * @brief Backward-propagate one batch of data through the network.
-     *
-     * Takes a boolean to specify if this layer is the output layer in the network. If it is, a slightly
-     * different algorithm must be used to compute the gradients.
-     *
-     * This method only computes the gradients, it does not apply them. The gradients can only be applied once
-     * they have been calculated for all the layers. Otherwise, the passed @p previousWeights would change before
-     * the gradients have been computed. The gradients are applied in the Layer::applyGradients() method.
-     *
-     * Uses algorithm adapted from http://neuralnetworksanddeeplearning.com/chap2.html.
-     *
-     * @param delta @p newDelta passed from the previous layer (next in the model's architecture).
-     * @param previousWeights The weights of the previous layer (next in the model's architecture).
-     * @param batchSize The size of the batch.
-     * @param isLastLayer Boolean to specify if this layer is the last one (the output layer).
-     */
-    Tensor backward(const Tensor& upstream);
+    sTensor forward(const sTensor& batch);
 
     /**
      * @brief Apply the computed gradients.
