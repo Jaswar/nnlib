@@ -200,7 +200,7 @@ std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
  * @return The sum of all values of the tensor.
  */
 float sum(Tensor& tensor);
-sTensor sum(sTensor tensor);
+sTensor sum(const sTensor& tensor);
 
 /**
  * @brief Fill a tensor with a specific value.
@@ -209,7 +209,7 @@ sTensor sum(sTensor tensor);
  * @param destination The tensor to fill.
  */
 void fill(float value, Tensor& destination);
-void fill(float value, sTensor destination);
+void fill(float value, sTensor& destination);
 
 /**
  * @brief Add two tensors together.
@@ -223,7 +223,7 @@ void fill(float value, sTensor destination);
  */
 
 Tensor add(const Tensor& a, const Tensor& b);
-sTensor add(sTensor a, sTensor b);
+sTensor add(const sTensor& a, const sTensor& b);
 
 /**
  * @brief Subtract one tensor from another.
@@ -234,7 +234,7 @@ sTensor add(sTensor a, sTensor b);
  */
 
 Tensor subtract(const Tensor& a, const Tensor& b);
-sTensor subtract(sTensor a, sTensor b);
+sTensor subtract(const sTensor& a, const sTensor& b);
 
 /**
  * @brief Perform hadamard product (element-wise multiplication) on two tensors.
@@ -245,7 +245,7 @@ sTensor subtract(sTensor a, sTensor b);
  */
 
 Tensor hadamard(const Tensor& a, const Tensor& b);
-sTensor hadamard(sTensor a, sTensor b);
+sTensor hadamard(const sTensor& a, const sTensor& b);
 
 /**
  * @brief Element-wise divide one tensor by another.
@@ -256,7 +256,7 @@ sTensor hadamard(sTensor a, sTensor b);
  */
 
 Tensor divide(const Tensor& a, const Tensor& b);
-sTensor divide(sTensor a, sTensor b);
+sTensor divide(const sTensor& a, const sTensor& b);
 
 /**
  * @brief Apply natural logarithm to every element of the tensor.
@@ -266,7 +266,7 @@ sTensor divide(sTensor a, sTensor b);
  */
 
 Tensor log(const Tensor& a);
-sTensor log(sTensor a);
+sTensor log(const sTensor& a);
 
 /**
  * @brief Multiply a tensor with a constant.
@@ -277,7 +277,7 @@ sTensor log(sTensor a);
  */
 
 Tensor multiply(const Tensor& tensor, float constant);
-sTensor multiply(sTensor tensor, float constant);
+sTensor multiply(const sTensor& tensor, float constant);
 
 /**
  * @brief Multiply one tensor with another.
@@ -291,7 +291,7 @@ sTensor multiply(sTensor tensor, float constant);
  */
 
 Tensor multiply(const Tensor& a, const Tensor& b);
-sTensor multiply(sTensor a, sTensor b);
+sTensor multiply(const sTensor& a, const sTensor& b);
 
 /**
  * @brief Transpose a matrix.
@@ -303,6 +303,6 @@ sTensor multiply(sTensor a, sTensor b);
  */
 
 Tensor transpose(const Tensor& matrix);
-sTensor transpose(sTensor matrix);
+sTensor transpose(const sTensor& matrix);
 
 #endif //NNLIB_TENSOR_H

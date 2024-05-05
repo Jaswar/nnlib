@@ -15,11 +15,11 @@
 #include "tensor_operations_on_host.h"
 #include "utils/location_verifiers.h"
 
-void fill(float value, sTensor tensor) {
+void fill(float value, sTensor& tensor) {
     fill(value, *tensor);
 }
 
-sTensor sum(sTensor a) {
+sTensor sum(const sTensor& a) {
     auto sum = std::make_shared<SumReduce>();
     sTensor result = sum->forward(a);
     result->gradFunction = sum;
@@ -55,21 +55,21 @@ std::vector<sTensor> SumReduce::backwardFn(sTensor grad) {
     return {gradA};
 }
 
-sTensor addTensors(sTensor a, sTensor b) {
+sTensor addTensors(const sTensor& a, const sTensor& b) {
     auto add = std::make_shared<Add>();
     sTensor result = add->forward(a, b);
     result->gradFunction = add;
     return result;
 }
 
-sTensor addBroadcast(sTensor a, sTensor b) {
+sTensor addBroadcast(const sTensor& a, const sTensor& b) {
     auto add = std::make_shared<AddBroadcast>();
     sTensor result = add->forward(a, b);
     result->gradFunction = add;
     return result;
 }
 
-sTensor add(sTensor a, sTensor b) {
+sTensor add(const sTensor& a, const sTensor& b) {
     if (a->shape.size() == 2 && b->shape.size() == 1) {
         return addBroadcast(a, b);
     } else {
@@ -132,7 +132,7 @@ std::vector<sTensor> AddBroadcast::backwardFn(sTensor grad) {
     return {gradA, gradB};
 }
 
-sTensor subtract(sTensor a, sTensor b) {
+sTensor subtract(const sTensor& a, const sTensor& b) {
     auto subtract = std::make_shared<Subtract>();
     sTensor result = subtract->forward(a, b);
     result->gradFunction = subtract;
@@ -167,7 +167,7 @@ std::vector<sTensor> Subtract::backwardFn(sTensor grad) {
 }
 
 
-sTensor hadamard(sTensor a, sTensor b) {
+sTensor hadamard(const sTensor& a, const sTensor& b) {
     auto hadamard = std::make_shared<Hadamard>();
     sTensor result = hadamard->forward(a, b);
     result->gradFunction = hadamard;
@@ -203,7 +203,7 @@ std::vector<sTensor> Hadamard::backwardFn(sTensor grad) {
 }
 
 
-sTensor divide(sTensor a, sTensor b) {
+sTensor divide(const sTensor& a, const sTensor& b) {
     auto divide = std::make_shared<Divide>();
     sTensor result = divide->forward(a, b);
     result->gradFunction = divide;
@@ -239,7 +239,7 @@ std::vector<sTensor> Divide::backwardFn(sTensor grad) {
     return {gradA, gradB};
 }
 
-sTensor log(sTensor a) {
+sTensor log(const sTensor& a) {
     auto log = std::make_shared<Log>();
     sTensor result = log->forward(a);
     result->gradFunction = log;
@@ -268,7 +268,7 @@ std::vector<sTensor> Log::backwardFn(sTensor grad) {
     return {gradA};
 }
 
-sTensor multiply(sTensor a, float constant) {
+sTensor multiply(const sTensor& a, float constant) {
     auto multiply = std::make_shared<MulConstant>();
     sTensor result = multiply->forward(a, constant);
     result->gradFunction = multiply;
@@ -297,21 +297,21 @@ std::vector<sTensor> MulConstant::backwardFn(sTensor grad) {
     return {gradA};
 }
 
-sTensor matvecmul(sTensor a, sTensor b) {
+sTensor matvecmul(const sTensor& a, const sTensor& b) {
     auto matvecmul = std::make_shared<MatVecMul>();
     sTensor result = matvecmul->forward(a, b);
     result->gradFunction = matvecmul;
     return result;
 }
 
-sTensor matmul(sTensor a, sTensor b) {
+sTensor matmul(const sTensor& a, const sTensor& b) {
     auto matmul = std::make_shared<Matmul>();
     sTensor result = matmul->forward(a, b);
     result->gradFunction = matmul;
     return result;
 }
 
-sTensor multiply(sTensor a, sTensor b) {
+sTensor multiply(const sTensor& a, const sTensor& b) {
     if (a->shape.size() == 2 && b->shape.size() == 2) {
         return matmul(a, b);
     } else if (a->shape.size() == 2 && b->shape.size() == 1) {
@@ -380,7 +380,7 @@ std::vector<sTensor> Matmul::backwardFn(sTensor grad) {
     return {gradA, gradB};
 }
 
-sTensor transpose(sTensor a) {
+sTensor transpose(const sTensor& a) {
     auto transpose = std::make_shared<Transpose>();
     sTensor result = transpose->forward(a);
     result->gradFunction = transpose;
