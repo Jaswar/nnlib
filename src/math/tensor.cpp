@@ -90,6 +90,9 @@ void Tensor::move(DataLocation target) {
     }
     data = newData;
     location = target;
+    if (grad != nullptr) {
+        grad->move(target);
+    }
 }
 
 Tensor::~Tensor() {
@@ -158,11 +161,13 @@ void Tensor::useGrad() {
     requiresGrad = true;
     grad = std::make_shared<Tensor>(shape);
     fill(0.0f, *grad);
+    grad->move(location);
 }
 
 void Tensor::backward() {
     sTensor gradient = std::make_shared<Tensor>(shape);
     fill(1.0f, *gradient);
+    gradient->move(location);
     sTensor current = std::make_shared<Tensor>(*this);
 
     std::queue<std::pair<sTensor, sTensor>> queue;
