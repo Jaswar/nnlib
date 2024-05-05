@@ -119,4 +119,9 @@ void multiplyMatrixMatrixOnHost(const Tensor& m1, const Tensor& m2, Tensor& dest
  */
 void transposeMatrixOnHost(const Tensor& matrix, Tensor& destination);
 
+void reluTensorOnHost(const Tensor& tensor, Tensor& destination);
+void reluDerivativeTensorOnHost(const Tensor& tensor, Tensor& destination);
+
+void sigmoidTensorOnHost(const Tensor& tensor, Tensor& destination);
+
 #endif //NNLIB_TENSOR_OPERATIONS_ON_HOST_H

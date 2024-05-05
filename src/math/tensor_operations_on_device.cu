@@ -290,6 +290,44 @@ __global__ void fillTensorKernel(float* tensor, float value, size_t size) {
     tensor[index] = value;
 }
 
+__global__ void reluKernel(const float* input, float* result, size_t size) {
+    auto index = blockDim.x * blockIdx.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    if (input[index] <= 0) {
+        result[index] = 0;
+    } else {
+        result[index] = input[index];
+    }
+}
+
+__global__ void reluDerivativeKernel(const float* output, float* result, size_t size) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    if (output[index] <= 0) {
+        result[index] = 0;
+    } else {
+        result[index] = 1;
+    }
+}
+
+__global__ void sigmoidKernel(float* input, float* result, size_t size) {
+    auto index = blockDim.x * blockIdx.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    result[index] = 1 / (1 + expf(-input[index]));
+}
+
 // NOLINTEND(readability-static-accessed-through-instance)
 
 void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
@@ -371,6 +409,27 @@ void fillTensorOnDevice(Tensor& tensor, float value) {
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
+void reluTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
+    auto block = tensor.session.threadsPerBlock;
+    reluKernel<<<grid, block>>>(tensor.data, destination.data, tensor.size);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
+void reluDerivativeTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
+    auto block = tensor.session.threadsPerBlock;
+    reluDerivativeKernel<<<grid, block>>>(tensor.data, destination.data, tensor.size);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
+void sigmoidTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
+    auto block = tensor.session.threadsPerBlock;
+    sigmoidKernel<<<grid, block>>>(tensor.data, destination.data, tensor.size);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
 #else
 
 void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
@@ -414,6 +473,18 @@ void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
 }
 
 void fillTensorOnDevice(Tensor& tensor, float value) {
+    throw UnexpectedCUDACallException();
+}
+
+void reluTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void reluDerivativeTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void sigmoidTensorOnDevice(const Tensor& tensor, Tensor& destination) {
     throw UnexpectedCUDACallException();
 }
 

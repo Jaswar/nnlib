@@ -20,7 +20,7 @@
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
 /** @copydoc linear_on_device_evaluator.cu::linearKernel(const float *input, float *result, size_t size) */
-__global__ void reluKernel(const float* input, float* result, size_t size) {
+__global__ void reluKernel2(const float* input, float* result, size_t size) {
     auto index = blockDim.x * blockIdx.x + threadIdx.x;
 
     if (index >= size) {
@@ -35,7 +35,7 @@ __global__ void reluKernel(const float* input, float* result, size_t size) {
 }
 
 /** @copydoc linear_on_device_evaluator.cu::linearDerivativeKernel(const float *input, float *result, size_t size) */
-__global__ void reluDerivativeKernel(const float* output, float* result, size_t size) {
+__global__ void reluDerivativeKernel2(const float* output, float* result, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= size) {
@@ -58,7 +58,7 @@ void ReLUOnDeviceEvaluator::forward(const Tensor& input, Tensor& result) const {
 
     auto grid = input.size / input.session.threadsPerBlock + 1;
     auto block = input.session.threadsPerBlock;
-    reluKernel<<<grid, block>>>(input.data, result.data, input.size);
+    reluKernel2<<<grid, block>>>(input.data, result.data, input.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
@@ -69,7 +69,7 @@ void ReLUOnDeviceEvaluator::computeDerivatives(const Tensor& output, Tensor& res
 
     auto grid = output.size / output.session.threadsPerBlock + 1;
     auto block = output.session.threadsPerBlock;
-    reluDerivativeKernel<<<grid, block>>>(output.data, result.data, output.size);
+    reluDerivativeKernel2<<<grid, block>>>(output.data, result.data, output.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 

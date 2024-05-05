@@ -408,3 +408,75 @@ std::vector<sTensor> Transpose::backwardFn(sTensor grad) {
     return {transpose(grad)};
 }
 
+sTensor relu(const sTensor& a) {
+    auto relu = std::make_shared<ReLU>();
+    sTensor result = relu->forward(a);
+    result->gradFunction = relu;
+    return result;
+}
+
+sTensor ReLU::forwardFn(const sTensor& a) {
+    cacheA = a->copy();
+    sTensor result = std::make_shared<Tensor>(a->shape);
+    result->move(a->location);
+
+    std::initializer_list<DataLocation> locations = {a->location};
+    if (allLocationsAreHost(locations)) {
+        reluTensorOnHost(*a, *result);
+    } else if (allLocationsAreDevice(locations)) {
+        reluTensorOnDevice(*a, *result);
+    } else {
+        throw DifferentDataLocationException();
+    }
+
+    return result;
+}
+
+std::vector<sTensor> ReLU::backwardFn(sTensor grad) {
+    sTensor gradA = std::make_shared<Tensor>(cacheA->shape);
+    gradA->move(cacheA->location);
+
+    std::initializer_list<DataLocation> locations = {cacheA->location};
+    if (allLocationsAreHost(locations)) {
+        reluDerivativeTensorOnHost(*cacheA, *gradA);
+    } else if (allLocationsAreDevice(locations)) {
+        reluDerivativeTensorOnDevice(*cacheA, *gradA);
+    } else {
+        throw DifferentDataLocationException();
+    }
+    gradA = hadamard(grad, gradA);
+    return {gradA};
+}
+
+sTensor sigmoid(const sTensor& a) {
+    auto sigmoid = std::make_shared<Sigmoid>();
+    sTensor result = sigmoid->forward(a);
+    result->gradFunction = sigmoid;
+    return result;
+}
+
+sTensor Sigmoid::forwardFn(const sTensor& a) {
+    sTensor result = std::make_shared<Tensor>(a->shape);
+    result->move(a->location);
+
+    std::initializer_list<DataLocation> locations = {a->location};
+    if (allLocationsAreHost(locations)) {
+        sigmoidTensorOnHost(*a, *result);
+    } else if (allLocationsAreDevice(locations)) {
+        sigmoidTensorOnDevice(*a, *result);
+    } else {
+        throw DifferentDataLocationException();
+    }
+    cacheA = result->copy();
+
+    return result;
+}
+
+std::vector<sTensor> Sigmoid::backwardFn(sTensor grad) {
+    sTensor ones = std::make_shared<Tensor>(cacheA->shape);
+    ones->move(cacheA->location);
+    fill(1.0f, ones);
+
+    sTensor gradA = hadamard(grad, hadamard(cacheA, subtract(ones, cacheA)));
+    return {gradA};
+}

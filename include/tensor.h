@@ -305,4 +305,8 @@ sTensor multiply(const sTensor& a, const sTensor& b);
 Tensor transpose(const Tensor& matrix);
 sTensor transpose(const sTensor& matrix);
 
+sTensor relu(const sTensor& tensor);
+
+sTensor sigmoid(const sTensor& tensor);
+
 #endif //NNLIB_TENSOR_H

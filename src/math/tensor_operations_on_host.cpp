@@ -362,3 +362,29 @@ void transposeMatrixOnHost(const Tensor& matrix, Tensor& destination) {
         }
     }
 }
+
+void reluTensorOnHost(const Tensor& tensor, Tensor& destination) {
+    for (size_t index = 0; index < tensor.size; index++) {
+        if (tensor.data[index] <= 0) {
+            destination.data[index] = 0;
+        } else {
+            destination.data[index] = tensor.data[index];
+        }
+    }
+}
+
+void reluDerivativeTensorOnHost(const Tensor& tensor, Tensor& destination) {
+    for (size_t index = 0; index < tensor.size; index++) {
+        if (tensor.data[index] <= 0) {
+            destination.data[index] = 0;
+        } else {
+            destination.data[index] = 1;
+        }
+    }
+}
+
+void sigmoidTensorOnHost(const Tensor& tensor, Tensor& destination) {
+    for (size_t index = 0; index < tensor.size; index++) {
+        destination.data[index] = 1 / (1 + expf(-tensor.data[index]));
+    }
+}

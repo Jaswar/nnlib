@@ -31,7 +31,7 @@ __device__ float fSigmoidKernel(float x) {
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
 /** @copydoc linear_on_device_evaluator.cu::linearKernel(const float *input, float *result, size_t size) */
-__global__ void sigmoidKernel(float* input, float* result, size_t size) {
+__global__ void sigmoidKernel2(float* input, float* result, size_t size) {
     auto index = blockDim.x * blockIdx.x + threadIdx.x;
 
     if (index >= size) {
@@ -61,7 +61,7 @@ void SigmoidOnDeviceEvaluator::forward(const Tensor& input, Tensor& result) cons
 
     auto grid = input.size / input.session.threadsPerBlock + 1;
     auto block = input.session.threadsPerBlock;
-    sigmoidKernel<<<grid, block>>>(input.data, result.data, input.size);
+    sigmoidKernel2<<<grid, block>>>(input.data, result.data, input.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 

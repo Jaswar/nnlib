@@ -217,6 +217,40 @@ void testTranspose(bool useDevice) {
     ASSERT_TENSOR_CLOSE_2D(*a->grad, {{1.0, 1.0}, {1.0, 1.0}});
 }
 
+void testRelu(bool useDevice) {
+    sTensor a = std::make_shared<Tensor>(Tensor::construct2d({{1, -2}, {-2, 5}}));
+    if (useDevice) {
+        a->move(DEVICE);
+    }
+
+    a->useGrad();
+
+    sTensor result = relu(a);
+    sTensor loss = sum(result);
+    loss->backward();
+
+    a->move(HOST);
+
+    ASSERT_TENSOR_CLOSE_2D(*a->grad, {{1.0, 0.0}, {0.0, 1.0}});
+}
+
+void testSigmoid(bool useDevice) {
+    sTensor a = std::make_shared<Tensor>(Tensor::construct2d({{1, -2}, {-2, 0}}));
+    if (useDevice) {
+        a->move(DEVICE);
+    }
+
+    a->useGrad();
+
+    sTensor result = sigmoid(a);
+    sTensor loss = sum(result);
+    loss->backward();
+
+    a->move(HOST);
+
+    ASSERT_TENSOR_CLOSE_2D(*a->grad, {{0.1966, 0.1050}, {0.1050, 0.2500}});
+}
+
 void testCombine(bool useDevice) {
     sTensor a = std::make_shared<Tensor>(Tensor::construct2d({{1, 2}, {2, 5}}));
     sTensor b = std::make_shared<Tensor>(Tensor::construct2d({{3, 4}, {6, 7}}));
@@ -252,7 +286,6 @@ void testFork(bool useDevice) {
         c->move(DEVICE);
     }
 
-
     a->useGrad();
     b->useGrad();
     c->useGrad();
@@ -270,6 +303,45 @@ void testFork(bool useDevice) {
     ASSERT_TENSOR_CLOSE_2D(*a->grad, {{1401, 2553}, {1401, 2553}});
     ASSERT_TENSOR_CLOSE_2D(*b->grad, {{1272, 1818}, {1982, 3024}});
     ASSERT_TENSOR_CLOSE_2D(*c->grad, {{519, 519}, {631, 631}});
+}
+
+void testSimpleNN(bool useDevice) {
+    sTensor w1 = std::make_shared<Tensor>(Tensor::construct2d({{1, 2}, {2, 5}, {6, 7}}));
+    sTensor b1 = std::make_shared<Tensor>(Tensor::construct1d({3, 4}));
+    sTensor w2 = std::make_shared<Tensor>(Tensor::construct2d({{-6, 3}, {-5, 1}}));
+    sTensor b2 = std::make_shared<Tensor>(Tensor::construct1d({-3, 4}));
+    sTensor x = std::make_shared<Tensor>(Tensor::construct2d({{1, 2, 3}, {4, 6, 6}}));
+    if (useDevice) {
+        w1->move(DEVICE);
+        b1->move(DEVICE);
+        w2->move(DEVICE);
+        b2->move(DEVICE);
+        x->move(DEVICE);
+    }
+
+    w1->useGrad();
+    b1->useGrad();
+    w2->useGrad();
+    b2->useGrad();
+
+    sTensor z1 = add(multiply(x, w1), b1);
+    sTensor a1 = relu(z1);
+    sTensor z2 = add(multiply(a1, w2), b2);
+    sTensor a2 = sigmoid(z2);
+    sTensor loss = sum(a2);
+
+    loss->backward();
+
+    w1->move(HOST);
+    b1->move(HOST);
+    w2->move(HOST);
+    b2->move(HOST);
+    x->move(HOST);
+
+    std::cout << *w1->grad << std::endl;
+    std::cout << *b1->grad << std::endl;
+    std::cout << *w2->grad << std::endl;
+    std::cout << *b2->grad << std::endl;
 }
 
 TEST(autograd, test_add_host) {
@@ -312,12 +384,24 @@ TEST(autograd, test_transpose_host) {
     testTranspose(false);
 }
 
+TEST(autograd, test_relu_host) {
+    testRelu(false);
+}
+
+TEST(autograd, test_sigmoid_host) {
+    testSigmoid(false);
+}
+
 TEST(autograd, test_combine_host) {
     testCombine(false);
 }
 
 TEST(autograd, test_fork_host) {
     testFork(false);
+}
+
+TEST(autograd, test_simple_nn_host) {
+    testSimpleNN(false);
 }
 
 #ifdef __CUDA__
@@ -360,6 +444,14 @@ TEST(autograd, test_matmul_device) {
 
 TEST(autograd, test_transpose_device) {
     testTranspose(true);
+}
+
+TEST(autograd, test_relu_device) {
+    testRelu(true);
+}
+
+TEST(autograd, test_sigmoid_device) {
+    testSigmoid(true);
 }
 
 TEST(autograd, test_combine_device) {

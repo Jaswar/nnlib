@@ -147,5 +147,20 @@ public:
     std::vector<sTensor> backwardFn(sTensor grad) override;
 };
 
+class ReLU : public Function<sTensor> {
+    sTensor cacheA;
+public:
+    sTensor forwardFn(const sTensor& a) override;
+
+    std::vector<sTensor> backwardFn(sTensor grad) override;
+};
+
+class Sigmoid : public Function<sTensor> {
+    sTensor cacheA;
+public:
+    sTensor forwardFn(const sTensor& a) override;
+
+    std::vector<sTensor> backwardFn(sTensor grad) override;
+};
 
 #endif //NNLIB_FUNCTIONS_H
