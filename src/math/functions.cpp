@@ -55,11 +55,26 @@ std::vector<sTensor> SumReduce::backwardFn(sTensor grad) {
     return {gradA};
 }
 
-sTensor add(sTensor a, sTensor b) {
+sTensor addTensors(sTensor a, sTensor b) {
     auto add = std::make_shared<Add>();
     sTensor result = add->forward(a, b);
     result->gradFunction = add;
     return result;
+}
+
+sTensor addBroadcast(sTensor a, sTensor b) {
+    auto add = std::make_shared<AddBroadcast>();
+    sTensor result = add->forward(a, b);
+    result->gradFunction = add;
+    return result;
+}
+
+sTensor add(sTensor a, sTensor b) {
+    if (a->shape.size() == 2 && b->shape.size() == 1) {
+        return addBroadcast(a, b);
+    } else {
+        return addTensors(a, b);
+    }
 }
 
 sTensor Add::forwardFn(const sTensor& a, const sTensor& b) {
@@ -88,6 +103,34 @@ std::vector<sTensor> Add::backwardFn(sTensor grad) {
     return {gradA, gradB};
 }
 
+sTensor AddBroadcast::forwardFn(const sTensor& a, const sTensor& b) {
+    if (a->shape[1] != b->shape[0]) {
+        throw SizeMismatchException();
+    }
+
+    sTensor result = std::make_shared<Tensor>(a->shape[0], a->shape[1]);
+    result->move(a->location);
+
+    std::initializer_list<DataLocation> locations = {a->location, b->location};
+    if (allLocationsAreHost(locations)) {
+        addBroadcastOnHost(*a, *b, *result);
+    } else if (allLocationsAreDevice(locations)) {
+        addBroadcastOnDevice(*a, *b, *result);
+    } else {
+        throw DifferentDataLocationException();
+    }
+
+    return result;
+}
+
+std::vector<sTensor> AddBroadcast::backwardFn(sTensor grad) {
+    sTensor gradA = grad->copy();
+    sTensor ones = std::make_shared<Tensor>(grad->shape[0]);
+    ones->move(grad->location);
+    fill(1.0f, ones);
+    sTensor gradB = multiply(transpose(grad), ones);  // TODO: replace later with sum reduction
+    return {gradA, gradB};
+}
 
 sTensor subtract(sTensor a, sTensor b) {
     auto subtract = std::make_shared<Subtract>();

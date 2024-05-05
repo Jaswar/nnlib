@@ -71,6 +71,13 @@ public:
     std::vector<sTensor> backwardFn(sTensor grad) override;
 };
 
+class AddBroadcast : public Function<sTensor, sTensor> {
+public:
+    sTensor forwardFn(const sTensor& a, const sTensor& b) override;
+
+    std::vector<sTensor> backwardFn(sTensor grad) override;
+};
+
 class Subtract : public Function<sTensor, sTensor> {
 public:
     sTensor forwardFn(const sTensor& a, const sTensor& b) override;

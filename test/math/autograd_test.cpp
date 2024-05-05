@@ -34,6 +34,28 @@ void testAdd(bool useDevice) {
     ASSERT_TENSOR_CLOSE_2D(*b->grad, {{1, 1}, {1, 1}});
 }
 
+void testAddBroadcast(bool useDevice) {
+    sTensor a = std::make_shared<Tensor>(Tensor::construct2d({{1, 2}, {2, 5}, {6, 7}}));
+    sTensor b = std::make_shared<Tensor>(Tensor::construct1d({3, 4}));
+    if (useDevice) {
+        a->move(DEVICE);
+        b->move(DEVICE);
+    }
+
+    a->useGrad();
+    b->useGrad();
+
+    sTensor result = add(a, b);
+    sTensor loss = sum(result);
+    loss->backward();
+
+    a->move(HOST);
+    b->move(HOST);
+
+    ASSERT_TENSOR_CLOSE_2D(*a->grad, {{1.0, 1.0}, {1.0, 1.0}, {1.0, 1.0}});
+    ASSERT_TENSOR_CLOSE_1D(*b->grad, {3.0, 3.0});
+}
+
 void testSubtract(bool useDevice) {
     sTensor a = std::make_shared<Tensor>(Tensor::construct2d({{1, 2}, {2, 5}}));
     sTensor b = std::make_shared<Tensor>(Tensor::construct2d({{3, 4}, {6, 7}}));
@@ -254,6 +276,10 @@ TEST(autograd, test_add_host) {
     testAdd(false);
 }
 
+TEST(autograd, test_add_broadcast_host) {
+    testAddBroadcast(false);
+}
+
 TEST(autograd, test_subtract_host) {
     testSubtract(false);
 }
@@ -300,6 +326,9 @@ TEST(autograd, test_add_device) {
     testAdd(true);
 }
 
+TEST(autograd, test_add_broadcast_device) {
+    testAddBroadcast(true);
+}
 
 TEST(autograd, test_subtract_device) {
     testSubtract(true);
