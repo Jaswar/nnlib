@@ -17,7 +17,7 @@
 #include <vector>
 #include <memory>
 
-class Function; // forward declaration to solve a circular dependency
+class BackwardFunction; // forward declaration to solve a circular dependency
 
 
 /**
@@ -57,7 +57,7 @@ public:
     Session session;
 
     bool requiresGrad;
-    std::shared_ptr<Function> gradFunction;
+    std::shared_ptr<BackwardFunction> gradFunction;
     std::shared_ptr<Tensor> grad;
 
     /**

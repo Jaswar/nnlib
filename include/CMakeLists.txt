@@ -12,6 +12,7 @@ set(INCLUDE_FILES
         loss.h
         cache.h
         functions.h
+        tuple_utils.h
 
         PARENT_SCOPE)
 

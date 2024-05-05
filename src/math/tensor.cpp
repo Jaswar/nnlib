@@ -172,7 +172,7 @@ void Tensor::backward() {
         gradient = queue.front().second;
         queue.pop();
 
-        std::shared_ptr<Function> gradFn = current->gradFunction;
+        std::shared_ptr<BackwardFunction> gradFn = current->gradFunction;
         if (gradFn == nullptr) {
             if (current->requiresGrad) {
                 current->grad = std::make_shared<Tensor>(add(*current->grad, *gradient));

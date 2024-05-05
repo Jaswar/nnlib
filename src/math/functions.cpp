@@ -15,24 +15,28 @@
 #include "tensor_operations_on_host.h"
 #include "utils/location_verifiers.h"
 
+void fill(float value, sTensor tensor) {
+    fill(value, *tensor);
+}
+
 sTensor sum(sTensor a) {
     auto sum = std::make_shared<SumReduce>();
-    sTensor result = sum->forward({std::move(a)});
+    sTensor result = sum->forward(a);
     result->gradFunction = sum;
     return result;
 }
 
-sTensor SumReduce::forwardFn(const std::vector<sTensor>& args) {
-    shapeCache = args[0]->shape;
-    DataLocation original = args[0]->location;
-    args[0]->move(HOST);
+sTensor SumReduce::forwardFn(const sTensor& a) {
+    shapeCache = a->shape;
+    DataLocation original = a->location;
+    a->move(HOST);
 
     sTensor result = std::make_shared<Tensor>(1);
-    float sum = sumTensor(*args[0]);
+    float sum = sumTensor(*a);
     result->data[0] = sum;
 
     result->move(original);
-    args[0]->move(original);
+    a->move(original);
 
     return result;
 }
@@ -53,24 +57,24 @@ std::vector<sTensor> SumReduce::backwardFn(sTensor grad) {
 
 sTensor add(sTensor a, sTensor b) {
     auto add = std::make_shared<Add>();
-    sTensor result = add->forward({std::move(a), std::move(b)});
+    sTensor result = add->forward(a, b);
     result->gradFunction = add;
     return result;
 }
 
-sTensor Add::forwardFn(const std::vector<sTensor>& args) {
-    if (args[0]->shape != args[1]->shape) {
+sTensor Add::forwardFn(const sTensor& a, const sTensor& b) {
+    if (a->shape != b->shape) {
         throw SizeMismatchException();
     }
 
-    sTensor result = std::make_shared<Tensor>(args[0]->shape);
-    result->move(args[0]->location);
+    sTensor result = std::make_shared<Tensor>(a->shape);
+    result->move(a->location);
 
-    std::initializer_list<DataLocation> locations = {args[0]->location, args[1]->location};
+    std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
-        addTensorsOnHost(*args[0], *args[1], *result);
+        addTensorsOnHost(*a, *b, *result);
     } else if (allLocationsAreDevice(locations)) {
-        addTensorsOnDevice(*args[0], *args[1], *result);
+        addTensorsOnDevice(*a, *b, *result);
     } else {
         throw DifferentDataLocationException();
     }
@@ -87,24 +91,24 @@ std::vector<sTensor> Add::backwardFn(sTensor grad) {
 
 sTensor subtract(sTensor a, sTensor b) {
     auto subtract = std::make_shared<Subtract>();
-    sTensor result = subtract->forward({std::move(a), std::move(b)});
+    sTensor result = subtract->forward(a, b);
     result->gradFunction = subtract;
     return result;
 }
 
-sTensor Subtract::forwardFn(const std::vector<sTensor>& args) {
-    if (args[0]->shape != args[1]->shape) {
+sTensor Subtract::forwardFn(const sTensor& a, const sTensor& b) {
+    if (a->shape != b->shape) {
         throw SizeMismatchException();
     }
 
-    sTensor result = std::make_shared<Tensor>(args[0]->shape);
-    result->move(args[0]->location);
+    sTensor result = std::make_shared<Tensor>(a->shape);
+    result->move(a->location);
 
-    std::initializer_list<DataLocation> locations = {args[0]->location, args[1]->location};
+    std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
-        subtractTensorsOnHost(*args[0], *args[1], *result);
+        subtractTensorsOnHost(*a, *b, *result);
     } else if (allLocationsAreDevice(locations)) {
-        subtractTensorsOnDevice(*args[0], *args[1], *result);
+        subtractTensorsOnDevice(*a, *b, *result);
     } else {
         throw DifferentDataLocationException();
     }
@@ -122,26 +126,26 @@ std::vector<sTensor> Subtract::backwardFn(sTensor grad) {
 
 sTensor hadamard(sTensor a, sTensor b) {
     auto hadamard = std::make_shared<Hadamard>();
-    sTensor result = hadamard->forward({std::move(a), std::move(b)});
+    sTensor result = hadamard->forward(a, b);
     result->gradFunction = hadamard;
     return result;
 }
 
-sTensor Hadamard::forwardFn(const std::vector<sTensor>& args) {
-    if (args[0]->shape != args[1]->shape) {
+sTensor Hadamard::forwardFn(const sTensor& a, const sTensor& b) {
+    if (a->shape != b->shape) {
         throw SizeMismatchException();
     }
-    cacheA = args[0]->copy();
-    cacheB = args[1]->copy();
+    cacheA = a->copy();
+    cacheB = a->copy();
 
-    sTensor result = std::make_shared<Tensor>(args[0]->shape);
-    result->move(args[0]->location);
+    sTensor result = std::make_shared<Tensor>(a->shape);
+    result->move(a->location);
 
-    std::initializer_list<DataLocation> locations = {args[0]->location, args[1]->location};
+    std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
-        hadamardTensorsOnHost(*args[0], *args[1], *result);
+        hadamardTensorsOnHost(*a, *b, *result);
     } else if (allLocationsAreDevice(locations)) {
-        hadamardTensorsOnDevice(*args[0], *args[1], *result);
+        hadamardTensorsOnDevice(*a, *b, *result);
     } else {
         throw DifferentDataLocationException();
     }
@@ -158,26 +162,26 @@ std::vector<sTensor> Hadamard::backwardFn(sTensor grad) {
 
 sTensor divide(sTensor a, sTensor b) {
     auto divide = std::make_shared<Divide>();
-    sTensor result = divide->forward({std::move(a), std::move(b)});
+    sTensor result = divide->forward(a, b);
     result->gradFunction = divide;
     return result;
 }
 
-sTensor Divide::forwardFn(const std::vector<sTensor>& args) {
-    if (args[0]->shape != args[1]->shape) {
+sTensor Divide::forwardFn(const sTensor& a, const sTensor& b) {
+    if (a->shape != b->shape) {
         throw SizeMismatchException();
     }
-    cacheA = args[0]->copy();
-    cacheB = args[1]->copy();
+    cacheA = a->copy();
+    cacheB = b->copy();
 
-    sTensor result = std::make_shared<Tensor>(args[0]->shape);
-    result->move(args[0]->location);
+    sTensor result = std::make_shared<Tensor>(a->shape);
+    result->move(b->location);
 
-    std::initializer_list<DataLocation> locations = {args[0]->location, args[1]->location};
+    std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
-        divideTensorsOnHost(*args[0], *args[1], *result);
+        divideTensorsOnHost(*a, *b, *result);
     } else if (allLocationsAreDevice(locations)) {
-        divideTensorsOnDevice(*args[0], *args[1], *result);
+        divideTensorsOnDevice(*a, *b, *result);
     } else {
         throw DifferentDataLocationException();
     }
@@ -194,21 +198,21 @@ std::vector<sTensor> Divide::backwardFn(sTensor grad) {
 
 sTensor log(sTensor a) {
     auto log = std::make_shared<Log>();
-    sTensor result = log->forward({std::move(a)});
+    sTensor result = log->forward(a);
     result->gradFunction = log;
     return result;
 }
 
-sTensor Log::forwardFn(const std::vector<sTensor>& args) {
-    cacheA = args[0]->copy();
-    sTensor result = std::make_shared<Tensor>(args[0]->shape);
-    result->move(args[0]->location);
+sTensor Log::forwardFn(const sTensor& a) {
+    cacheA = a->copy();
+    sTensor result = std::make_shared<Tensor>(a->shape);
+    result->move(a->location);
 
-    std::initializer_list<DataLocation> locations = {args[0]->location};
+    std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
-        logTensorOnHost(*args[0], *result);
+        logTensorOnHost(*a, *result);
     } else if (allLocationsAreDevice(locations)) {
-        throw UnsupportedOperationException();
+        logTensorOnDevice(*a, *result);
     } else {
         throw DifferentDataLocationException();
     }
@@ -221,16 +225,45 @@ std::vector<sTensor> Log::backwardFn(sTensor grad) {
     return {gradA};
 }
 
+sTensor multiply(sTensor a, float constant) {
+    auto multiply = std::make_shared<MulConstant>();
+    sTensor result = multiply->forward(a, constant);
+    result->gradFunction = multiply;
+    return result;
+}
+
+sTensor MulConstant::forwardFn(const sTensor& a, const float& b) {
+    constantCache = b;
+    sTensor result = std::make_shared<Tensor>(a->shape);
+    result->move(a->location);
+
+    std::initializer_list<DataLocation> locations = {a->location};
+    if (allLocationsAreHost(locations)) {
+        multiplyTensorOnHost(*a, b, *result);
+    } else if (allLocationsAreDevice(locations)) {
+        multiplyTensorOnDevice(*a, b, *result);
+    } else {
+        throw DifferentDataLocationException();
+    }
+
+    return result;
+}
+
+std::vector<sTensor> MulConstant::backwardFn(sTensor grad) {
+    sTensor gradA = multiply(grad, constantCache);
+    return {gradA};
+}
+
 sTensor matvecmul(sTensor a, sTensor b) {
     auto matvecmul = std::make_shared<MatVecMul>();
-    sTensor result = matvecmul->forward({std::move(a), std::move(b)});
+    sTensor result = matvecmul->forward(a, b);
     result->gradFunction = matvecmul;
     return result;
 }
 
 sTensor matmul(sTensor a, sTensor b) {
     auto matmul = std::make_shared<Matmul>();
-    sTensor result = matmul->forward({std::move(a), std::move(b)});
+    sTensor result = matmul->forward(a, b);
     result->gradFunction = matmul;
     return result;
 }
@@ -245,20 +278,20 @@ sTensor multiply(sTensor a, sTensor b) {
     }
 }
 
-sTensor MatVecMul::forwardFn(const std::vector<sTensor>& args) {
-    if (args[0]->shape[1] != args[1]->shape[0]) {
+sTensor MatVecMul::forwardFn(const sTensor& a, const sTensor& b) {
+    if (a->shape[1] != b->shape[0]) {
         throw SizeMismatchException();
     }
-    cacheA = args[0]->copy();
-    cacheB = args[1]->copy();
-    sTensor result = std::make_shared<Tensor>(args[0]->shape[0]);
-    result->move(args[0]->location);
+    cacheA = a->copy();
+    cacheB = b->copy();
+    sTensor result = std::make_shared<Tensor>(a->shape[0]);
+    result->move(a->location);
 
-    std::initializer_list<DataLocation> locations = {args[0]->location, args[1]->location};
+    std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
-        multiplyMatrixVectorOnHost(*args[0], *args[1], *result);
+        multiplyMatrixVectorOnHost(*a, *b, *result);
     } else if (allLocationsAreDevice(locations)) {
-        multiplyMatrixVectorOnDevice(*args[0], *args[1], *result);
+        multiplyMatrixVectorOnDevice(*a, *b, *result);
     } else {
         throw DifferentDataLocationException();
     }
@@ -273,21 +306,21 @@ std::vector<sTensor> MatVecMul::backwardFn(sTensor grad) {
     return {gradA, gradB};
 }
 
-sTensor Matmul::forwardFn(const std::vector<sTensor>& args) {
-    if (args[0]->shape[1] != args[1]->shape[0]) {
+sTensor Matmul::forwardFn(const sTensor& a, const sTensor& b) {
+    if (a->shape[1] != b->shape[0]) {
         throw SizeMismatchException();
     }
 
-    cacheA = args[0]->copy();
-    cacheB = args[1]->copy();
-    sTensor result = std::make_shared<Tensor>(args[0]->shape[0], args[1]->shape[1]);
-    result->move(args[0]->location);
+    cacheA = a->copy();
+    cacheB = b->copy();
+    sTensor result = std::make_shared<Tensor>(a->shape[0], b->shape[1]);
+    result->move(a->location);
 
-    std::initializer_list<DataLocation> locations = {args[0]->location, args[1]->location};
+    std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
-        multiplyMatrixMatrixOnHost(*args[0], *args[1], *result);
+        multiplyMatrixMatrixOnHost(*a, *b, *result);
     } else if (allLocationsAreDevice(locations)) {
-        multiplyMatrixMatrixOnDevice(*args[0], *args[1], *result);
+        multiplyMatrixMatrixOnDevice(*a, *b, *result);
     } else {
         throw DifferentDataLocationException();
     }
@@ -303,21 +336,21 @@ std::vector<sTensor> Matmul::backwardFn(sTensor grad) {
 
 sTensor transpose(sTensor a) {
     auto transpose = std::make_shared<Transpose>();
-    sTensor result = transpose->forward({std::move(a)});
+    sTensor result = transpose->forward(a);
     result->gradFunction = transpose;
     return result;
 }
 
-sTensor Transpose::forwardFn(const std::vector<sTensor>& args) {
-    cacheA = args[0]->copy();
-    sTensor result = std::make_shared<Tensor>(args[0]->shape[1], args[0]->shape[0]);
-    result->move(args[0]->location);
+sTensor Transpose::forwardFn(const sTensor& a) {
+    cacheA = a->copy();
+    sTensor result = std::make_shared<Tensor>(a->shape[1], a->shape[0]);
+    result->move(a->location);
 
-    std::initializer_list<DataLocation> locations = {args[0]->location};
+    std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
-        transposeMatrixOnHost(*args[0], *result);
+        transposeMatrixOnHost(*a, *result);
     } else if (allLocationsAreDevice(locations)) {
-        transposeMatrixOnDevice(*args[0], *result);
+        transposeMatrixOnDevice(*a, *result);
     } else {
         throw DifferentDataLocationException();
     }
