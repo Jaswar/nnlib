@@ -95,6 +95,9 @@ sTensor Layer::forward(const sTensor& batch) {
 }
 
 void Layer::applyGradients(size_t batchSize, float learningRate) {
+    // causes memory leak
+    biases->grad->gradFunction = nullptr;
+    weights->grad->gradFunction = nullptr;
     biases = subtract(biases, multiply(biases->grad, learningRate / static_cast<float>(batchSize)));
     weights = subtract(weights, multiply(weights->grad, learningRate / static_cast<float>(batchSize)));
     biases->useGrad();

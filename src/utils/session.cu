@@ -9,7 +9,7 @@
 #include "verify.cuh"
 
 Session::Session() {
-    numCores = std::thread::hardware_concurrency();
+    numCores = 32;
 #ifdef __CUDA__
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 //    cudaDeviceProp props;

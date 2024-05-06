@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
     network.add(y.shape[1], "sigmoid");
 
     std::vector<Metric*> metrics = {new CategoricalAccuracy(), new MeanSquaredError()};
-    network.train(X, y, 25, 10, 0.01, new CategoricalCrossEntropy(), metrics);
+    network.train(X, y, 2, 10, 0.01, new CategoricalCrossEntropy(), metrics);
 
     return 0;
 }
