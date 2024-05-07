@@ -47,6 +47,10 @@ sTensor SumReduce::forwardFn(const sTensor& a) {
 }
 
 std::vector<sTensor> SumReduce::backwardFn(sTensor grad) {
+    if (!parents[0]->requiresGrad) {
+        return {nullptr};
+    }
+
     DataLocation original = grad->location;
     grad->move(HOST);
 
@@ -137,8 +141,8 @@ sTensor Add::forwardFn(const sTensor& a, const sTensor& b) {
 }
 
 std::vector<sTensor> Add::backwardFn(sTensor grad) {
-    sTensor gradA = grad->copy();
-    sTensor gradB = grad->copy();
+    sTensor gradA = parents[0]->requiresGrad ? grad->copy() : nullptr;
+    sTensor gradB = parents[1]->requiresGrad ? grad->copy() : nullptr;
     return {gradA, gradB};
 }
 
@@ -147,11 +151,15 @@ sTensor AddBroadcast::forwardFn(const sTensor& a, const sTensor& b) {
 }
 
 std::vector<sTensor> AddBroadcast::backwardFn(sTensor grad) {
-    sTensor gradA = grad->copy();
-    sTensor ones = std::make_shared<Tensor>(grad->shape[0]);
-    ones->move(grad->location);
-    fill(1.0f, ones);
-    sTensor gradB = no_grad::multiply(no_grad::transpose(grad), ones);  // TODO: replace later with sum reduction
+    sTensor gradA = parents[0]->requiresGrad ? grad->copy() : nullptr;
+
+    sTensor gradB = nullptr;
+    if (parents[1]->requiresGrad) {
+        sTensor ones = std::make_shared<Tensor>(grad->shape[0]);
+        ones->move(grad->location);
+        fill(1.0f, ones);
+        gradB = no_grad::multiply(no_grad::transpose(grad), ones);  // TODO: replace later with sum reduction
+    }
     return {gradA, gradB};
 }
 
@@ -187,9 +195,13 @@ sTensor Subtract::forwardFn(const sTensor& a, const sTensor& b) {
 }
 
 std::vector<sTensor> Subtract::backwardFn(sTensor grad) {
-    sTensor gradA = grad->copy();
-    sTensor gradB = grad->copy();
-    gradB = no_grad::multiply(gradB, -1.0f);
+    sTensor gradA = parents[0]->requiresGrad ? grad->copy() : nullptr;
+
+    sTensor gradB = nullptr;
+    if (parents[1]->requiresGrad) {
+        gradB = grad->copy();
+        gradB = no_grad::multiply(gradB, -1.0f);
+    }
     return {gradA, gradB};
 }
 
@@ -221,14 +233,19 @@ sTensor hadamard(const sTensor& a, const sTensor& b) {
 }
 
 sTensor Hadamard::forwardFn(const sTensor& a, const sTensor& b) {
-    cacheA = a->copy();
-    cacheB = b->copy();
+    // a and b flipped because gradient of a uses b and vice-versa
+    if (b->requiresGrad) {
+        cacheA = a->copy();
+    }
+    if (a->requiresGrad) {
+        cacheB = b->copy();
+    }
     return no_grad::hadamard(a, b);
 }
 
 std::vector<sTensor> Hadamard::backwardFn(sTensor grad) {
-    sTensor gradA = no_grad::hadamard(grad, cacheB);
-    sTensor gradB = no_grad::hadamard(grad, cacheA);
+    sTensor gradA = parents[0]->requiresGrad ? no_grad::hadamard(grad, cacheB) : nullptr;
+    sTensor gradB = parents[1]->requiresGrad ? no_grad::hadamard(grad, cacheA) : nullptr;
     return {gradA, gradB};
 }
 
@@ -261,15 +278,23 @@ sTensor divide(const sTensor& a, const sTensor& b) {
 }
 
 sTensor Divide::forwardFn(const sTensor& a, const sTensor& b) {
-    cacheA = a->copy();
-    cacheB = b->copy();
+    if (b->requiresGrad) {
+        cacheA = a->copy();
+    }
+    if (a->requiresGrad || b->requiresGrad) {
+        cacheB = b->copy();
+    }
     return no_grad::divide(a, b);
 }
 
 std::vector<sTensor> Divide::backwardFn(sTensor grad) {
-    sTensor gradA = no_grad::divide(grad, cacheB);
-    sTensor gradB = no_grad::divide(no_grad::hadamard(grad, cacheA), no_grad::hadamard(cacheB, cacheB));
-    gradB = no_grad::multiply(gradB, -1.0f);
+    sTensor gradA = parents[0]->requiresGrad ? no_grad::divide(grad, cacheB) : nullptr;
+
+    sTensor gradB = nullptr;
+    if (parents[1]->requiresGrad) {
+        gradB = no_grad::divide(no_grad::hadamard(grad, cacheA), no_grad::hadamard(cacheB, cacheB));
+        gradB = no_grad::multiply(gradB, -1.0f);
+    }
     return {gradA, gradB};
 }
 
@@ -297,12 +322,14 @@ sTensor log(const sTensor& a) {
 }
 
 sTensor Log::forwardFn(const sTensor& a) {
-    cacheA = a->copy();
+    if (a->requiresGrad) {
+        cacheA = a->copy();
+    }
     return no_grad::log(a);
 }
 
 std::vector<sTensor> Log::backwardFn(sTensor grad) {
-    sTensor gradA = no_grad::divide(grad, cacheA);
+    sTensor gradA = parents[0]->requiresGrad ? no_grad::divide(grad, cacheA) : nullptr;
     return {gradA};
 }
 
@@ -335,7 +362,7 @@ sTensor MulConstant::forwardFn(const sTensor& a, const float& b) {
 }
 
 std::vector<sTensor> MulConstant::backwardFn(sTensor grad) {
-    sTensor gradA = no_grad::multiply(grad, constantCache);
+    sTensor gradA = parents[0]->requiresGrad ? no_grad::multiply(grad, constantCache) : nullptr;
     return {gradA};
 }
 
@@ -416,29 +443,43 @@ sTensor multiply(const sTensor& a, const sTensor& b) {
 }
 
 sTensor MatVecMul::forwardFn(const sTensor& a, const sTensor& b) {
-    cacheA = a->copy();
-    cacheB = b->copy();
+    // a and b flipped because gradient of a uses b and vice-versa
+    if (b->requiresGrad) {
+        cacheA = a->copy();
+    }
+    if (a->requiresGrad) {
+        cacheB = b->copy();
+    }
     return no_grad::matvecmul(a, b);
 }
 
 std::vector<sTensor> MatVecMul::backwardFn(sTensor grad) {
     cacheB->shape = {cacheB->shape[0], 1};
     grad->shape = {grad->shape[0], 1};
-    sTensor gradA = no_grad::multiply(grad, no_grad::transpose(cacheB));
-    sTensor gradB = no_grad::multiply(no_grad::transpose(cacheA), grad);
-    gradB->shape = {gradB->shape[0]};
+
+    sTensor gradA = parents[0]->requiresGrad ? no_grad::multiply(grad, no_grad::transpose(cacheB)) : nullptr;
+    sTensor gradB = nullptr;
+    if (parents[1]->requiresGrad) {
+        gradB = no_grad::multiply(no_grad::transpose(cacheA), grad);
+        gradB->shape = {gradB->shape[0]};
+    }
     return {gradA, gradB};
 }
 
 sTensor Matmul::forwardFn(const sTensor& a, const sTensor& b) {
-    cacheA = a->copy();
-    cacheB = b->copy();
+    // a and b flipped because gradient of a uses b and vice-versa
+    if (b->requiresGrad) {
+        cacheA = a->copy();
+    }
+    if (a->requiresGrad) {
+        cacheB = b->copy();
+    }
     return no_grad::matmul(a, b);
 }
 
 std::vector<sTensor> Matmul::backwardFn(sTensor grad) {
-    sTensor gradA = no_grad::multiply(grad, no_grad::transpose(cacheB));
-    sTensor gradB = no_grad::multiply(no_grad::transpose(cacheA), grad);
+    sTensor gradA = parents[0]->requiresGrad ? no_grad::multiply(grad, no_grad::transpose(cacheB)) : nullptr;
+    sTensor gradB = parents[1]->requiresGrad ? no_grad::multiply(no_grad::transpose(cacheA), grad) : nullptr;
     return {gradA, gradB};
 }
 
@@ -466,12 +507,15 @@ sTensor transpose(const sTensor& a) {
 }
 
 sTensor Transpose::forwardFn(const sTensor& a) {
-    cacheA = a->copy();
+    if (a->requiresGrad) {
+        cacheA = a->copy();
+    }
     return no_grad::transpose(a);
 }
 
 std::vector<sTensor> Transpose::backwardFn(sTensor grad) {
-    return {no_grad::transpose(grad)};
+    sTensor gradA = parents[0]->requiresGrad ? no_grad::transpose(grad) : nullptr;
+    return {gradA};
 }
 
 sTensor no_grad::relu(const sTensor& a) {
@@ -498,11 +542,17 @@ sTensor relu(const sTensor& a) {
 }
 
 sTensor ReLU::forwardFn(const sTensor& a) {
-    cacheA = a->copy();
+    if (a->requiresGrad) {
+        cacheA = a->copy();
+    }
     return no_grad::relu(a);
 }
 
 std::vector<sTensor> ReLU::backwardFn(sTensor grad) {
+    if (!parents[0]->requiresGrad) {
+        return {nullptr};
+    }
+
     sTensor gradA = std::make_shared<Tensor>(cacheA->shape);
     gradA->move(cacheA->location);
 
@@ -543,11 +593,17 @@ sTensor sigmoid(const sTensor& a) {
 
 sTensor Sigmoid::forwardFn(const sTensor& a) {
     sTensor result = no_grad::sigmoid(a);
-    cacheA = result->copy();
+    if (a->requiresGrad) {
+        cacheA = result->copy();
+    }
     return result;
 }
 
 std::vector<sTensor> Sigmoid::backwardFn(sTensor grad) {
+    if (!parents[0]->requiresGrad) {
+        return {nullptr};
+    }
+
     sTensor ones = std::make_shared<Tensor>(cacheA->shape);
     ones->move(cacheA->location);
     fill(1.0f, ones);
