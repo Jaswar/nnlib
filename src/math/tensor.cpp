@@ -185,7 +185,7 @@ void Tensor::backward() {
         std::shared_ptr<BackwardFunction> gradFn = current->gradFunction;
         if (gradFn == nullptr) {
             if (current->requiresGrad) {
-                current->grad = add(current->grad, gradient);
+                current->grad = no_grad::add(current->grad, gradient);
             }
             continue;
         }

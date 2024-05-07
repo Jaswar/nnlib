@@ -309,4 +309,30 @@ sTensor relu(const sTensor& tensor);
 
 sTensor sigmoid(const sTensor& tensor);
 
+namespace no_grad {
+    sTensor sum(const sTensor& tensor);
+
+    void fill(float value, sTensor& destination);
+
+    sTensor add(const sTensor& a, const sTensor& b);
+
+    sTensor subtract(const sTensor& a, const sTensor& b);
+
+    sTensor hadamard(const sTensor& a, const sTensor& b);
+
+    sTensor divide(const sTensor& a, const sTensor& b);
+
+    sTensor log(const sTensor& a);
+
+    sTensor multiply(const sTensor& tensor, float constant);
+
+    sTensor multiply(const sTensor& a, const sTensor& b);
+
+    sTensor transpose(const sTensor& matrix);
+
+    sTensor relu(const sTensor& tensor);
+
+    sTensor sigmoid(const sTensor& tensor);
+}
+
 #endif //NNLIB_TENSOR_H
