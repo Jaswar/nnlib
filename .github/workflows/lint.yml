@@ -10,7 +10,9 @@ jobs:
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
           sudo apt install clang-format-18
+          sudo apt install clang
           clang-format-18 --version
+          
 
       - name: Run clang-format
         run: |
@@ -61,7 +63,9 @@ jobs:
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
           sudo apt install clang-tidy-18
+          sudo apt install clang-14.0
           clang-tidy-18 --version
+          clang --version
 
       - name: Setup CUDA
         uses: Jimver/cuda-toolkit@v0.2.7
