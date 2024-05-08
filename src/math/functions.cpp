@@ -54,8 +54,7 @@ std::vector<sTensor> SumReduce::backwardFn(sTensor grad) {
     DataLocation original = grad->location;
     grad->move(HOST);
 
-    sTensor gradA = std::make_shared<Tensor>(shapeCache);
-    gradA->move(grad->location);
+    sTensor gradA = std::make_shared<Tensor>(shapeCache, grad->location);
     fill(grad->data[0], *gradA);
 
     grad->move(original);
@@ -70,8 +69,7 @@ namespace no_grad {
             throw SizeMismatchException();
         }
 
-        sTensor result = std::make_shared<Tensor>(a->shape);
-        result->move(a->location);
+        sTensor result = std::make_shared<Tensor>(a->shape, a->location);
 
         std::initializer_list<DataLocation> locations = {a->location, b->location};
         if (allLocationsAreHost(locations)) {
@@ -90,8 +88,7 @@ namespace no_grad {
             throw SizeMismatchException();
         }
 
-        sTensor result = std::make_shared<Tensor>(a->shape[0], a->shape[1]);
-        result->move(a->location);
+        sTensor result = std::make_shared<Tensor>(a->shape, a->location);
 
         std::initializer_list<DataLocation> locations = {a->location, b->location};
         if (allLocationsAreHost(locations)) {
@@ -155,8 +152,8 @@ std::vector<sTensor> AddBroadcast::backwardFn(sTensor grad) {
 
     sTensor gradB = nullptr;
     if (parents[1]->requiresGrad) {
-        sTensor ones = std::make_shared<Tensor>(grad->shape[0]);
-        ones->move(grad->location);
+        std::vector<size_t> shape = {grad->shape[0]};
+        sTensor ones = std::make_shared<Tensor>(shape, grad->location);
         fill(1.0f, ones);
         gradB = no_grad::multiply(no_grad::transpose(grad), ones);  // TODO: replace later with sum reduction
     }
@@ -168,8 +165,7 @@ sTensor no_grad::subtract(const sTensor& a, const sTensor& b) {
         throw SizeMismatchException();
     }
 
-    sTensor result = std::make_shared<Tensor>(a->shape);
-    result->move(a->location);
+    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
@@ -210,8 +206,7 @@ sTensor no_grad::hadamard(const sTensor& a, const sTensor& b) {
         throw SizeMismatchException();
     }
 
-    sTensor result = std::make_shared<Tensor>(a->shape);
-    result->move(a->location);
+    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
@@ -255,8 +250,7 @@ sTensor no_grad::divide(const sTensor& a, const sTensor& b) {
         throw SizeMismatchException();
     }
 
-    sTensor result = std::make_shared<Tensor>(a->shape);
-    result->move(b->location);
+    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
@@ -299,8 +293,7 @@ std::vector<sTensor> Divide::backwardFn(sTensor grad) {
 }
 
 sTensor no_grad::log(const sTensor& a) {
-    sTensor result = std::make_shared<Tensor>(a->shape);
-    result->move(a->location);
+    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
@@ -334,8 +327,7 @@ std::vector<sTensor> Log::backwardFn(sTensor grad) {
 }
 
 sTensor no_grad::multiply(const sTensor& a, float b) {
-    sTensor result = std::make_shared<Tensor>(a->shape);
-    result->move(a->location);
+    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
@@ -372,8 +364,8 @@ namespace no_grad {
             throw SizeMismatchException();
         }
 
-        sTensor result = std::make_shared<Tensor>(a->shape[0]);
-        result->move(a->location);
+        std::vector<size_t> shape = {a->shape[0]};
+        sTensor result = std::make_shared<Tensor>(shape, a->location);
 
         std::initializer_list<DataLocation> locations = {a->location, b->location};
         if (allLocationsAreHost(locations)) {
@@ -392,8 +384,8 @@ namespace no_grad {
             throw SizeMismatchException();
         }
 
-        sTensor result = std::make_shared<Tensor>(a->shape[0], b->shape[1]);
-        result->move(a->location);
+        std::vector<size_t> shape = {a->shape[0], b->shape[1]};
+        sTensor result = std::make_shared<Tensor>(shape, a->location);
 
         std::initializer_list<DataLocation> locations = {a->location, b->location};
         if (allLocationsAreHost(locations)) {
@@ -484,8 +476,8 @@ std::vector<sTensor> Matmul::backwardFn(sTensor grad) {
 }
 
 sTensor no_grad::transpose(const sTensor& a) {
-    sTensor result = std::make_shared<Tensor>(a->shape[1], a->shape[0]);
-    result->move(a->location);
+    std::vector<size_t> shape = {a->shape[1], a->shape[0]};
+    sTensor result = std::make_shared<Tensor>(shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
@@ -519,8 +511,7 @@ std::vector<sTensor> Transpose::backwardFn(sTensor grad) {
 }
 
 sTensor no_grad::relu(const sTensor& a) {
-    sTensor result = std::make_shared<Tensor>(a->shape);
-    result->move(a->location);
+    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
@@ -553,8 +544,7 @@ std::vector<sTensor> ReLU::backwardFn(sTensor grad) {
         return {nullptr};
     }
 
-    sTensor gradA = std::make_shared<Tensor>(cacheA->shape);
-    gradA->move(cacheA->location);
+    sTensor gradA = std::make_shared<Tensor>(cacheA->shape, cacheA->location);
 
     std::initializer_list<DataLocation> locations = {cacheA->location};
     if (allLocationsAreHost(locations)) {
@@ -569,8 +559,7 @@ std::vector<sTensor> ReLU::backwardFn(sTensor grad) {
 }
 
 sTensor no_grad::sigmoid(const sTensor& a) {
-    sTensor result = std::make_shared<Tensor>(a->shape);
-    result->move(a->location);
+    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
@@ -604,8 +593,7 @@ std::vector<sTensor> Sigmoid::backwardFn(sTensor grad) {
         return {nullptr};
     }
 
-    sTensor ones = std::make_shared<Tensor>(cacheA->shape);
-    ones->move(cacheA->location);
+    sTensor ones = std::make_shared<Tensor>(cacheA->shape, cacheA->location);
     fill(1.0f, ones);
 
     sTensor gradA = no_grad::hadamard(grad, no_grad::hadamard(cacheA, no_grad::subtract(ones, cacheA)));

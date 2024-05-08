@@ -79,6 +79,8 @@ public:
      */
     explicit Tensor(std::vector<size_t> shape);
 
+    Tensor(std::vector<size_t> shape, DataLocation location);
+
     /**
      * @brief Construct a tensor based on the passed shape.
      *

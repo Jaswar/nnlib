@@ -28,6 +28,12 @@ Tensor::Tensor(std::vector<size_t> shape) : shape(std::move(shape)), location(HO
     data = cache.get(size, location);
 }
 
+Tensor::Tensor(std::vector<size_t> shape, DataLocation location) : shape(std::move(shape)), location(location), size(0), data(), requiresGrad(false), gradFunction(), grad() {
+    computeSize();
+    Cache& cache = Cache::getInstance();
+    data = cache.get(size, location);
+}
+
 Tensor::Tensor(const Tensor& other) {
     location = other.location;
     // This copies the vector
@@ -201,8 +207,7 @@ void Tensor::backward() {
 }
 
 std::shared_ptr<Tensor> Tensor::copy() const {
-    sTensor copy = std::make_shared<Tensor>(shape);
-    copy->move(location);
+    sTensor copy = std::make_shared<Tensor>(shape, location);
     copy->requiresGrad = requiresGrad;
     copy->grad = nullptr;
     if (grad != nullptr) {

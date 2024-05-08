@@ -72,10 +72,9 @@ std::string BinaryCrossEntropy::getShortName() const {
 sTensor BinaryCrossEntropy::calculateLoss(const sTensor& targets, const sTensor& predictions) {
     checkValidShape(*targets, *predictions);
 
-    sTensor totalLoss = std::make_shared<Tensor>(targets->shape);
+    sTensor totalLoss = std::make_shared<Tensor>(targets->shape, targets->location);
     {
-        sTensor ones = std::make_shared<Tensor>(targets->shape);
-        ones->move(targets->location);
+        sTensor ones = std::make_shared<Tensor>(targets->shape, targets->location);
         fill(1.0f, ones);
         sTensor diffTargets = subtract(ones, targets);
         sTensor diffPredictions = log(subtract(ones, predictions));

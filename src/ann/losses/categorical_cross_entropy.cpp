@@ -52,14 +52,13 @@ std::string CategoricalCrossEntropy::getShortName() const {
 }
 
 sTensor CategoricalCrossEntropy::calculateLoss(const sTensor& targets, const sTensor& predictions) {
-    sTensor ones = std::make_shared<Tensor>(targets->shape[1], targets->shape[1]);
-    ones->move(targets->location);
+    std::vector<size_t> shape = {targets->shape[1], targets->shape[1]};
+    sTensor ones = std::make_shared<Tensor>(shape, targets->location);
     fill(1.0f, ones);
 
     sTensor accumulatedSumsLoss = multiply(predictions, ones);
 
-    ones = std::make_shared<Tensor>(targets->shape);
-    ones->move(targets->location);
+    ones = std::make_shared<Tensor>(targets->shape, targets->location);
     fill(1.0f, ones);
     accumulatedSumsLoss = divide(ones, accumulatedSumsLoss);
 
