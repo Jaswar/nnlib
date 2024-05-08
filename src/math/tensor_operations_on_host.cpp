@@ -48,7 +48,7 @@ float horizontalAdd(__m256 value) {
 }
 #endif
 
-float sumTensor(const Tensor& tensor) {
+void sumTensorOnHost(const Tensor& tensor, Tensor& destination) {
 #if defined __AVX2__ || defined __AVX__
     __m256 accumulator = _mm256_setzero_ps();
     for (size_t index = 0; index < tensor.size / 8; index++) {
@@ -60,14 +60,13 @@ float sumTensor(const Tensor& tensor) {
     for (size_t index = (tensor.size / 8) * 8; index < tensor.size; index++) {
         accumulated += tensor.data[index];
     }
-    return accumulated;
+    destination.data[0] = accumulated;
 #else
     float sum = 0;
     for (size_t i = 0; i < tensor.size; i++) {
         sum += tensor.data[i];
     }
-
-    return sum;
+    destination.data[0] = sum;
 #endif
 }
 

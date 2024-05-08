@@ -24,16 +24,14 @@ void fill(float value, sTensor& tensor) {
 }
 
 sTensor no_grad::sum(const sTensor& a) {
-    DataLocation original = a->location;
-    a->move(HOST);
-
-    sTensor result = std::make_shared<Tensor>(1);
-    float sum = sumTensor(*a);
-    result->data[0] = sum;
-
-    result->move(original);
-    a->move(original);
-
+    std::vector<size_t> shape = {1};
+    sTensor result = std::make_shared<Tensor>(shape, a->location);
+    ::fill(0.0f, result);
+    if (a->location == HOST) {
+        sumTensorOnHost(*a, *result);
+    } else {
+        sumTensorOnDevice(*a, *result);
+    }
     return result;
 }
 

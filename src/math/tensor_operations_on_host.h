@@ -21,7 +21,7 @@
  * @param tensor The tensor to sum.
  * @return The sum of all values of a tensor.
  */
-float sumTensor(const Tensor& tensor);
+void sumTensorOnHost(const Tensor& tensor, Tensor& destination);
 
 /**
  * @brief Fill a tensor with a constant value.

@@ -8,6 +8,7 @@
 #ifndef NNLIB_TENSOR_OPERATIONS_COMMON_H
 #define NNLIB_TENSOR_OPERATIONS_COMMON_H
 
+void tensorSumPBT(bool testDevice);
 void tensorFillPBT(float value, bool testDevice);
 void tensorAddPBT(bool testDevice);
 void tensorAddBroadcastPBT(bool testDevice);

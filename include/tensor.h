@@ -193,15 +193,6 @@ typedef std::shared_ptr<Tensor> sTensor;
  */
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
 
-/**
- * @brief Sum the tensor.
- *
- * The sum can only be computed on host, hence if the tensor is on device, it first needs to be moved.
- *
- * @param tensor The tensor to sum.
- * @return The sum of all values of the tensor.
- */
-float sum(Tensor& tensor);
 sTensor sum(const sTensor& tensor);
 
 void fill(float value, sTensor& destination);

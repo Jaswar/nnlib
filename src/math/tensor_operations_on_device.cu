@@ -19,6 +19,34 @@
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
+__global__ void sumTensorKernel(const float* a, float* destination, size_t size, size_t n) {
+    extern __shared__ float shared[];
+    auto threadId = threadIdx.x;
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+    size_t start = index * n;
+
+    shared[threadIdx.x] = 0;
+    if (start >= size) {
+        return;
+    }
+
+    float reduced = 0;
+    for (int i = 0; i < n; i++) {
+        if (start + i < size) {
+            reduced += a[start + i];
+        }
+    }
+    shared[threadIdx.x] = reduced;
+
+    __syncthreads();
+
+    if (threadId == 0) {
+        for (int i = 0; i < blockDim.x; i++) {
+            atomicAdd(destination, shared[i]);
+        }
+    }
+}
+
 /**
  * @brief Kernel method to add two tensors together.
  *
@@ -329,6 +357,15 @@ __global__ void sigmoidKernel(float* input, float* result, size_t size) {
 }
 
 // NOLINTEND(readability-static-accessed-through-instance)
+
+void sumTensorOnDevice(const Tensor& a, Tensor& destination) {
+    auto grid = 1;
+    auto block = a.session.threadsPerBlock;
+    size_t n = a.size / a.session.threadsPerBlock + 1;
+    size_t smemSize = a.session.threadsPerBlock * sizeof(float);
+    sumTensorKernel<<<grid, block, smemSize>>>(a.data, destination.data, a.size, n);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
 
 void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
     auto grid = a.size / a.session.threadsPerBlock + 1;

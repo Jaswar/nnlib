@@ -16,6 +16,34 @@
 #include <algorithm>
 #include "tensor_operations_common.h"
 
+void tensorSumPBT(bool testDevice) {
+    const auto size = *rc::gen::inRange<size_t>(1, 1e5);
+    const auto data = rcFloatVectorInRange(size, -1, 1);
+
+    sTensor t = std::make_shared<Tensor>(Tensor::construct1d(data));
+    sTensor result = std::make_shared<Tensor>(1);
+    sTensor expected = std::make_shared<Tensor>(1);
+
+    float total = 0;
+    for (size_t i = 0; i < size; i++) {
+        total += t->data[i];
+    }
+    expected->data[0] = total;
+
+    if (testDevice) {
+        t->move(DEVICE);
+        result->move(DEVICE);
+    }
+
+    result = no_grad::sum(t);
+
+    if (testDevice) {
+        result->move(HOST);
+    }
+
+    RC_ASSERT_TENSOR_CLOSE(*result, *expected, 1e-5, true);
+}
+
 void tensorFillPBT(float value, bool testDevice) {
     const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e6));
 

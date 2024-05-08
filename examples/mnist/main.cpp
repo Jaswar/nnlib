@@ -48,12 +48,12 @@ int main(int argc, char** argv) {
 
     std::cout << y << std::endl;
 
-    Network network = Network(X->shape[1], false);
+    Network network = Network(X->shape[1], true);
     network.add(64);
     network.add(y->shape[1], "sigmoid");
 
     std::vector<Metric*> metrics = {new CategoricalAccuracy(), new MeanSquaredError()};
-    network.train(X, y, 25, 10, 0.01, new CategoricalCrossEntropy(), metrics);
+    network.train(X, y, 10, 10, 0.01, new CategoricalCrossEntropy(), metrics);
 
     return 0;
 }

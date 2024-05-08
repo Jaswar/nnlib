@@ -15,6 +15,8 @@
 
 #include <tensor.h>
 
+void sumTensorOnDevice(const Tensor& tensor, Tensor& destination);
+
 /** @copydoc tensor_operations_on_host.h::fillTensorOnHost() */
 void fillTensorOnDevice(Tensor& tensor, float value);
 

@@ -13,6 +13,10 @@
 
 #ifdef __CUDA__
 
+RC_GTEST_PROP(tensor_operations_device, sum, ()) {
+    tensorSumPBT(true);
+}
+
 RC_GTEST_PROP(tensor_operations_device, fill, (float value)) {
     tensorFillPBT(value, true);
 }
