@@ -8,6 +8,7 @@
 #include "tensor.h"
 #include "../gpu/allocation_gpu.cuh"
 #include "cache.h"
+#include "runtime.h"
 #include "tensor_operations_on_device.cuh"
 #include "tensor_operations_on_host.h"
 #include <exceptions/different_data_location_exception.h>
@@ -174,7 +175,6 @@ void Tensor::backward() {
     if (shape.size() != 1 || shape[0] != 1 || !requiresGrad) {
         throw UnsupportedOperationException();
     }
-
     sTensor gradient = std::make_shared<Tensor>(shape, location);
     fill(1.0f, gradient);
     sTensor current = std::make_shared<Tensor>(*this);

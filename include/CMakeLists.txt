@@ -12,6 +12,7 @@ set(INCLUDE_FILES
         cache.h
         functions.h
         tuple_utils.h
+        runtime.h
 
         PARENT_SCOPE)
 

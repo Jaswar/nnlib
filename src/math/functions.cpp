@@ -11,10 +11,11 @@
 #include "exceptions/different_data_location_exception.h"
 #include "exceptions/size_mismatch_exception.h"
 #include "exceptions/unsupported_operation_exception.h"
+#include "runtime.h"
+#include "tensor.h"
 #include "tensor_operations_on_device.cuh"
 #include "tensor_operations_on_host.h"
 #include "utils/location_verifiers.h"
-#include "tensor.h"
 
 
 void fill(float value, sTensor& tensor) {
@@ -46,10 +47,14 @@ sTensor no_grad::sum(const sTensor& a) {
 }
 
 sTensor sum(const sTensor& a) {
-    auto sum = std::make_shared<SumReduce>();
-    sTensor result = sum->forward(a);
-    result->gradFunction = sum;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto sum = std::make_shared<SumReduce>();
+        sTensor result = sum->forward(a);
+        result->gradFunction = sum;
+        return result;
+    } else {
+        return no_grad::sum(a);
+    }
 }
 
 sTensor SumReduce::forwardFn(const sTensor& a) {
@@ -117,17 +122,25 @@ sTensor no_grad::add(const sTensor& a, const sTensor& b) {
 }
 
 sTensor addTensors(const sTensor& a, const sTensor& b) {
-    auto add = std::make_shared<Add>();
-    sTensor result = add->forward(a, b);
-    result->gradFunction = add;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto add = std::make_shared<Add>();
+        sTensor result = add->forward(a, b);
+        result->gradFunction = add;
+        return result;
+    } else {
+        return no_grad::addTensors(a, b);
+    }
 }
 
 sTensor addBroadcast(const sTensor& a, const sTensor& b) {
-    auto add = std::make_shared<AddBroadcast>();
-    sTensor result = add->forward(a, b);
-    result->gradFunction = add;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto add = std::make_shared<AddBroadcast>();
+        sTensor result = add->forward(a, b);
+        result->gradFunction = add;
+        return result;
+    } else {
+        return no_grad::addBroadcast(a, b);
+    }
 }
 
 sTensor add(const sTensor& a, const sTensor& b) {
@@ -185,10 +198,14 @@ sTensor no_grad::subtract(const sTensor& a, const sTensor& b) {
 }
 
 sTensor subtract(const sTensor& a, const sTensor& b) {
-    auto subtract = std::make_shared<Subtract>();
-    sTensor result = subtract->forward(a, b);
-    result->gradFunction = subtract;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto subtract = std::make_shared<Subtract>();
+        sTensor result = subtract->forward(a, b);
+        result->gradFunction = subtract;
+        return result;
+    } else {
+        return no_grad::subtract(a, b);
+    }
 }
 
 sTensor Subtract::forwardFn(const sTensor& a, const sTensor& b) {
@@ -221,10 +238,14 @@ sTensor no_grad::hadamard(const sTensor& a, const sTensor& b) {
 }
 
 sTensor hadamard(const sTensor& a, const sTensor& b) {
-    auto hadamard = std::make_shared<Hadamard>();
-    sTensor result = hadamard->forward(a, b);
-    result->gradFunction = hadamard;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto hadamard = std::make_shared<Hadamard>();
+        sTensor result = hadamard->forward(a, b);
+        result->gradFunction = hadamard;
+        return result;
+    } else {
+        return no_grad::hadamard(a, b);
+    }
 }
 
 sTensor Hadamard::forwardFn(const sTensor& a, const sTensor& b) {
@@ -265,10 +286,14 @@ sTensor no_grad::divide(const sTensor& a, const sTensor& b) {
 }
 
 sTensor divide(const sTensor& a, const sTensor& b) {
-    auto divide = std::make_shared<Divide>();
-    sTensor result = divide->forward(a, b);
-    result->gradFunction = divide;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto divide = std::make_shared<Divide>();
+        sTensor result = divide->forward(a, b);
+        result->gradFunction = divide;
+        return result;
+    } else {
+        return no_grad::divide(a, b);
+    }
 }
 
 sTensor Divide::forwardFn(const sTensor& a, const sTensor& b) {
@@ -308,10 +333,14 @@ sTensor no_grad::log(const sTensor& a) {
 }
 
 sTensor log(const sTensor& a) {
-    auto log = std::make_shared<Log>();
-    sTensor result = log->forward(a);
-    result->gradFunction = log;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto log = std::make_shared<Log>();
+        sTensor result = log->forward(a);
+        result->gradFunction = log;
+        return result;
+    } else {
+        return no_grad::log(a);
+    }
 }
 
 sTensor Log::forwardFn(const sTensor& a) {
@@ -342,10 +371,14 @@ sTensor no_grad::multiply(const sTensor& a, float b) {
 }
 
 sTensor multiply(const sTensor& a, float constant) {
-    auto multiply = std::make_shared<MulConstant>();
-    sTensor result = multiply->forward(a, constant);
-    result->gradFunction = multiply;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto multiply = std::make_shared<MulConstant>();
+        sTensor result = multiply->forward(a, constant);
+        result->gradFunction = multiply;
+        return result;
+    } else {
+        return no_grad::multiply(a, constant);
+    }
 }
 
 sTensor MulConstant::forwardFn(const sTensor& a, const float& b) {
@@ -411,17 +444,25 @@ sTensor no_grad::multiply(const sTensor& a, const sTensor& b) {
 }
 
 sTensor matvecmul(const sTensor& a, const sTensor& b) {
-    auto matvecmul = std::make_shared<MatVecMul>();
-    sTensor result = matvecmul->forward(a, b);
-    result->gradFunction = matvecmul;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto matvecmul = std::make_shared<MatVecMul>();
+        sTensor result = matvecmul->forward(a, b);
+        result->gradFunction = matvecmul;
+        return result;
+    } else {
+        return no_grad::matvecmul(a, b);
+    }
 }
 
 sTensor matmul(const sTensor& a, const sTensor& b) {
-    auto matmul = std::make_shared<Matmul>();
-    sTensor result = matmul->forward(a, b);
-    result->gradFunction = matmul;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto matmul = std::make_shared<Matmul>();
+        sTensor result = matmul->forward(a, b);
+        result->gradFunction = matmul;
+        return result;
+    } else {
+        return no_grad::matmul(a, b);
+    }
 }
 
 sTensor multiply(const sTensor& a, const sTensor& b) {
@@ -492,10 +533,14 @@ sTensor no_grad::transpose(const sTensor& a) {
 }
 
 sTensor transpose(const sTensor& a) {
-    auto transpose = std::make_shared<Transpose>();
-    sTensor result = transpose->forward(a);
-    result->gradFunction = transpose;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto transpose = std::make_shared<Transpose>();
+        sTensor result = transpose->forward(a);
+        result->gradFunction = transpose;
+        return result;
+    } else {
+        return no_grad::transpose(a);
+    }
 }
 
 sTensor Transpose::forwardFn(const sTensor& a) {
@@ -526,10 +571,14 @@ sTensor no_grad::relu(const sTensor& a) {
 }
 
 sTensor relu(const sTensor& a) {
-    auto relu = std::make_shared<ReLU>();
-    sTensor result = relu->forward(a);
-    result->gradFunction = relu;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto relu = std::make_shared<ReLU>();
+        sTensor result = relu->forward(a);
+        result->gradFunction = relu;
+        return result;
+    } else {
+        return no_grad::relu(a);
+    }
 }
 
 sTensor ReLU::forwardFn(const sTensor& a) {
@@ -574,10 +623,14 @@ sTensor no_grad::sigmoid(const sTensor& a) {
 }
 
 sTensor sigmoid(const sTensor& a) {
-    auto sigmoid = std::make_shared<Sigmoid>();
-    sTensor result = sigmoid->forward(a);
-    result->gradFunction = sigmoid;
-    return result;
+    if (Runtime::getInstance().useGradient) {
+        auto sigmoid = std::make_shared<Sigmoid>();
+        sTensor result = sigmoid->forward(a);
+        result->gradFunction = sigmoid;
+        return result;
+    } else {
+        return no_grad::sigmoid(a);
+    }
 }
 
 sTensor Sigmoid::forwardFn(const sTensor& a) {

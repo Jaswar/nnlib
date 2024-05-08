@@ -17,7 +17,7 @@
 #include "tensor_operations_common.h"
 
 void tensorSumPBT(bool testDevice) {
-    const auto size = *rc::gen::inRange<size_t>(1, 1e5);
+    const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
     const auto data = rcFloatVectorInRange(size, -1, 1);
 
     sTensor t = std::make_shared<Tensor>(Tensor::construct1d(data));

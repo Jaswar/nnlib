@@ -7,6 +7,7 @@
 
 #include "../../include/network.h"
 #include "../gpu/allocation_gpu.cuh"
+#include "runtime.h"
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -76,11 +77,13 @@ struct EpochProgress {
 
         numProcessed += targets->shape[0];
 
+        Runtime::getInstance().disableGradient();
         lossValue = loss->calculateMetric(targets, predictions);
         for (auto metric : metrics) {
             float metricValue = metric->calculateMetric(targets, predictions);
             metricsValues[metric->getShortName()] = metricValue;
         }
+        Runtime::getInstance().enableGradient();
 
         predictions->move(originalPredictions);
         targets->move(originalTargets);
