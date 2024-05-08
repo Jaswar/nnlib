@@ -14,12 +14,22 @@
 #include "tensor_operations_on_device.cuh"
 #include "tensor_operations_on_host.h"
 #include "utils/location_verifiers.h"
+#include "tensor.h"
+
 
 void fill(float value, sTensor& tensor) {
     if (tensor->location == HOST) {
         fillTensorOnHost(*tensor, value);
     } else {
         fillTensorOnDevice(*tensor, value);
+    }
+}
+
+void fill(const sTensor& value, sTensor& destination) {
+    if (destination->location == HOST) {
+        fillTensorOnHost(*destination, *value);
+    } else {
+        fillTensorOnDevice(*destination, *value);
     }
 }
 
@@ -53,15 +63,8 @@ std::vector<sTensor> SumReduce::backwardFn(sTensor grad) {
         return {nullptr};
     }
 
-    DataLocation original = grad->location;
-    grad->move(HOST);
-
     sTensor gradA = std::make_shared<Tensor>(shapeCache, grad->location);
-    fill(grad->data[0], gradA);
-
-    grad->move(original);
-    gradA->move(original);
-
+    fill(grad, gradA);
     return {gradA};
 }
 

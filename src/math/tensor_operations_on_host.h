@@ -31,6 +31,8 @@ void sumTensorOnHost(const Tensor& tensor, Tensor& destination);
  */
 void fillTensorOnHost(Tensor& tensor, float value);
 
+void fillTensorOnHost(Tensor& tensor, const Tensor& value);
+
 /**
  * @brief Element-wise add two tensors.
  *

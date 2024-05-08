@@ -20,6 +20,8 @@ void sumTensorOnDevice(const Tensor& tensor, Tensor& destination);
 /** @copydoc tensor_operations_on_host.h::fillTensorOnHost() */
 void fillTensorOnDevice(Tensor& tensor, float value);
 
+void fillTensorOnDevice(Tensor& tensor, const Tensor& value);
+
 /** @copydoc tensor_operations_on_host.h::addTensorsOnHost() */
 void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination);
 

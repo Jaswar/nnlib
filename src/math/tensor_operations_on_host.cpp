@@ -86,6 +86,23 @@ void fillTensorOnHost(Tensor& tensor, float value) {
 #endif
 }
 
+void fillTensorOnHost(Tensor& tensor, const Tensor& value) {
+    float val = value.data[0];
+#if defined __AVX2__ || defined __AVX__
+    __m256 valueVector = _mm256_set1_ps(val);
+    for (size_t i = 0; i < tensor.size / 8; i++) {
+        _mm256_storeu_ps(tensor.data + i * 8, valueVector);
+    }
+    for (size_t i = (tensor.size / 8) * 8; i < tensor.size; i++) {
+        tensor.data[i] = val;
+    }
+#else
+    for (size_t i = 0; i < tensor.size; i++) {
+        tensor.data[i] = val;
+    }
+#endif
+}
+
 void addTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < a.size / 8; index++) {

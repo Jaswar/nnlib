@@ -196,6 +196,7 @@ std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
 sTensor sum(const sTensor& tensor);
 
 void fill(float value, sTensor& destination);
+void fill(const sTensor& value, sTensor& destination);
 
 sTensor add(const sTensor& a, const sTensor& b);
 
@@ -219,8 +220,6 @@ sTensor sigmoid(const sTensor& tensor);
 
 namespace no_grad {
     sTensor sum(const sTensor& tensor);
-
-    void fill(float value, sTensor& destination);
 
     sTensor add(const sTensor& a, const sTensor& b);
 

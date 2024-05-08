@@ -48,6 +48,34 @@ __global__ void sumTensorKernel(const float* a, float* destination, size_t size,
 }
 
 /**
+ * @brief Kernel method to fill a tensor with a value.
+ *
+ * @param tensor The tensor to fill.
+ * @param value The value to fill the tensor with.
+ * @param size The size of the tensor.
+ */
+__global__ void fillTensorKernel(float* tensor, float value, size_t size) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    tensor[index] = value;
+}
+
+__global__ void fillTensorKernel(float* tensor, float* value, size_t size) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    tensor[index] = value[0];
+}
+
+
+/**
  * @brief Kernel method to add two tensors together.
  *
  * @param a The data of the first tensor.
@@ -301,23 +329,6 @@ __global__ void transposeMatrixKernel(const float* matrix, float* destination, s
     destination[column * n + row] = matrix[row * m + column];
 }
 
-/**
- * @brief Kernel method to fill a tensor with a value.
- *
- * @param tensor The tensor to fill.
- * @param value The value to fill the tensor with.
- * @param size The size of the tensor.
- */
-__global__ void fillTensorKernel(float* tensor, float value, size_t size) {
-    auto index = blockIdx.x * blockDim.x + threadIdx.x;
-
-    if (index >= size) {
-        return;
-    }
-
-    tensor[index] = value;
-}
-
 __global__ void reluKernel(const float* input, float* result, size_t size) {
     auto index = blockDim.x * blockIdx.x + threadIdx.x;
 
@@ -364,6 +375,20 @@ void sumTensorOnDevice(const Tensor& a, Tensor& destination) {
     size_t n = a.size / a.session.threadsPerBlock + 1;
     size_t smemSize = a.session.threadsPerBlock * sizeof(float);
     sumTensorKernel<<<grid, block, smemSize>>>(a.data, destination.data, a.size, n);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
+void fillTensorOnDevice(Tensor& tensor, float value) {
+    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
+    auto block = tensor.session.threadsPerBlock;
+    fillTensorKernel<<<grid, block>>>(tensor.data, value, tensor.size);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
+void fillTensorOnDevice(Tensor& tensor, const Tensor& value) {
+    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
+    auto block = tensor.session.threadsPerBlock;
+    fillTensorKernel<<<grid, block>>>(tensor.data, value.data, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
@@ -436,13 +461,6 @@ void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
     auto grid = matrix.size / matrix.session.threadsPerBlock + 1;
     auto block = matrix.session.threadsPerBlock;
     transposeMatrixKernel<<<grid, block>>>(matrix.data, destination.data, matrix.shape[0], matrix.shape[1]);
-    GPU_CHECK_ERROR(cudaGetLastError());
-}
-
-void fillTensorOnDevice(Tensor& tensor, float value) {
-    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
-    auto block = tensor.session.threadsPerBlock;
-    fillTensorKernel<<<grid, block>>>(tensor.data, value, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
