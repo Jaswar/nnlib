@@ -165,9 +165,8 @@ void Tensor::verifyIndex(const std::vector<size_t>& index) const {
 
 void Tensor::useGrad() {
     requiresGrad = true;
-    grad = std::make_shared<Tensor>(shape);
+    grad = std::make_shared<Tensor>(shape, location);
     fill(0.0f, grad);
-    grad->move(location);
     gradFunction = nullptr;
 }
 
