@@ -487,6 +487,18 @@ void sigmoidTensorOnDevice(const Tensor& tensor, Tensor& destination) {
 
 #else
 
+void sumTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void fillTensorOnDevice(Tensor& tensor, float value) {
+    throw UnexpectedCUDACallException();
+}
+
+void fillTensorOnDevice(Tensor& tensor, const Tensor& value) {
+    throw UnexpectedCUDACallException();
+}
+
 void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
     throw UnexpectedCUDACallException();
 }
@@ -524,10 +536,6 @@ void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& de
 }
 
 void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
-    throw UnexpectedCUDACallException();
-}
-
-void fillTensorOnDevice(Tensor& tensor, float value) {
     throw UnexpectedCUDACallException();
 }
 
