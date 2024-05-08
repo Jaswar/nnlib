@@ -10,6 +10,12 @@
 Loss::Loss() : Metric() {
 }
 
-float Loss::calculateMetric(const Tensor& targets, const Tensor& predictions) {
-    return calculateLoss(targets, predictions);
+float Loss::calculateMetric(const sTensor& targets, const sTensor& predictions) {
+    sTensor loss = calculateLoss(targets, predictions)->copy();
+    loss->move(HOST);
+    float l = loss->data[0];
+    numSamples += targets->shape[0];
+    currentTotalMetric += l;
+
+    return currentTotalMetric / static_cast<float>(numSamples);
 }

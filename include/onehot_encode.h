@@ -16,6 +16,6 @@
  * @param vector The vector to encode.
  * @return Matrix corresponding to the one hot encoded vector.
  */
-Tensor oneHotEncode(const Tensor& vector);
+sTensor oneHotEncode(const sTensor& vector);
 
 #endif //NNLIB_ONEHOT_ENCODE_H

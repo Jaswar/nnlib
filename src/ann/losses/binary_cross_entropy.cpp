@@ -25,46 +25,6 @@ void checkValidShape(const Tensor& targets, const Tensor& predictions) {
     }
 }
 
-float BinaryCrossEntropy::calculateLoss(const Tensor& targets, const Tensor& predictions) {
-    checkValidShape(targets, predictions);
-
-    Tensor totalLoss = Tensor(targets.shape);
-    {
-        Tensor ones = Tensor(targets.shape);
-        fill(1, ones);
-        Tensor diffTargets = subtract(ones, targets);
-        Tensor diffPredictions = log(subtract(ones, predictions));
-        totalLoss = hadamard(diffTargets, diffPredictions);
-    }
-
-    {
-        Tensor diffPredictions = log(predictions);
-        totalLoss = add(hadamard(targets, diffPredictions), totalLoss);
-    }
-
-    numSamples += targets.shape[0];
-    currentTotalMetric += sum(totalLoss) * -1;
-
-    return currentTotalMetric / static_cast<float>(numSamples);
-}
-
-Tensor BinaryCrossEntropy::calculateDerivatives(const Tensor& targets, const Tensor& predictions) {
-    checkValidShape(targets, predictions);
-
-    // Calculate the nominator
-    Tensor result = subtract(predictions, targets);
-
-    // Calculate the denominator
-    Tensor ones = Tensor(targets.shape);
-    fill(1, ones);
-    Tensor denominator = subtract(ones, predictions);
-    denominator = hadamard(predictions, denominator);
-
-    // Calculate the fraction
-    result = divide(result, denominator);
-    return result;
-}
-
 std::string BinaryCrossEntropy::getShortName() const {
     return "binary_cross_entropy";
 }

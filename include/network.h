@@ -97,7 +97,7 @@ public:
      * @param metrics The list of metrics to compute aside from the loss function.
      */
     //NOLINTNEXTLINE(readability-identifier-naming)
-    void train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
+    void train(sTensor& X, sTensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
                std::vector<Metric*>& metrics);
 
 private:
@@ -115,7 +115,7 @@ private:
      * @param loss The loss function to use.
      * @param metrics The list of metrics to compute aside from the loss function.
      */
-    void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, std::vector<Tensor>& targetsOnHost,
+    void processEpoch(std::vector<sTensor>& batches, std::vector<sTensor>& targets, std::vector<sTensor>& targetsOnHost,
                       float learningRate, Loss* loss, std::vector<Metric*>& metrics);
 };
 

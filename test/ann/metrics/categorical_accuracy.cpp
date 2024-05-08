@@ -11,8 +11,8 @@
 #include <metric.h>
 
 TEST(categorical_accuracy, calculate_metric) {
-    Tensor expected = Tensor::construct2d({{0, 0, 1}, {0, 1, 0}, {0, 0, 1}, {1, 0, 0}});
-    Tensor actual = Tensor::construct2d({{1.1f, 0, 0}, {0.25f, 0, 0}, {0, 0, 1.5f}, {0, 0.77f, 0}});
+    sTensor expected = std::make_shared<Tensor>(Tensor::construct2d({{0, 0, 1}, {0, 1, 0}, {0, 0, 1}, {1, 0, 0}}));
+    sTensor actual = std::make_shared<Tensor>(Tensor::construct2d({{1.1f, 0, 0}, {0.25f, 0, 0}, {0, 0, 1.5f}, {0, 0.77f, 0}}));
 
     CategoricalAccuracy metric = CategoricalAccuracy();
     float accuracy = metric.calculateMetric(expected, actual);

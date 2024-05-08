@@ -49,7 +49,7 @@ public:
      * @param predictions The actual outputs of the network.
      * @return The value of the metric.
      */
-    virtual float calculateMetric(const Tensor& targets, const Tensor& predictions) = 0;
+    virtual float calculateMetric(const sTensor& targets, const sTensor& predictions) = 0;
 
     /**
      * @brief Short string identifier of the metric.
@@ -79,7 +79,7 @@ public:
     /**
      * @copydoc Metric::calculateMetric()
      */
-    float calculateMetric(const Tensor& targets, const Tensor& predictions) override;
+    float calculateMetric(const sTensor& targets, const sTensor& predictions) override;
 
     /**
      * @copydoc Metric::getShortName()
@@ -105,7 +105,7 @@ public:
     /**
      * @copydoc Metric::calculateMetric()
      */
-    float calculateMetric(const Tensor& targets, const Tensor& predictions) override;
+    float calculateMetric(const sTensor& targets, const sTensor& predictions) override;
 
     /**
      * @copydoc Metric::getShortName()

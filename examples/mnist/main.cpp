@@ -33,24 +33,24 @@ int main(int argc, char** argv) {
 
     showCudaInfo();
 
-    Tensor dataset = readCSV(argv[1], ",", 4);
-    Tensor X = Tensor(dataset.shape[0], dataset.shape[1] - 1);
-    Tensor yv = Tensor(dataset.shape[0]);
+    sTensor dataset = readCSV(argv[1], ",", 4);
+    sTensor X = std::make_shared<Tensor>(dataset->shape[0], dataset->shape[1] - 1);
+    sTensor yv = std::make_shared<Tensor>(dataset->shape[0]);
 
-    for (int i = 0; i < dataset.shape[0]; i++) {
-        yv.data[i] = dataset.data[i * dataset.shape[1] + 0];
-        for (int j = 1; j < dataset.shape[1]; j++) {
-            X.data[i * X.shape[1] + j - 1] = dataset.data[i * dataset.shape[1] + j] / 255;
+    for (int i = 0; i < dataset->shape[0]; i++) {
+        yv->data[i] = dataset->data[i * dataset->shape[1] + 0];
+        for (int j = 1; j < dataset->shape[1]; j++) {
+            X->data[i * X->shape[1] + j - 1] = dataset->data[i * dataset->shape[1] + j] / 255;
         }
     }
 
-    Tensor y = oneHotEncode(yv);
+    sTensor y = oneHotEncode(yv);
 
     std::cout << y << std::endl;
 
-    Network network = Network(X.shape[1], false);
+    Network network = Network(X->shape[1], false);
     network.add(64);
-    network.add(y.shape[1], "sigmoid");
+    network.add(y->shape[1], "sigmoid");
 
     std::vector<Metric*> metrics = {new CategoricalAccuracy(), new MeanSquaredError()};
     network.train(X, y, 25, 10, 0.01, new CategoricalCrossEntropy(), metrics);

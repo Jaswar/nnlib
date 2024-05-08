@@ -16,7 +16,11 @@
 #include "utils/location_verifiers.h"
 
 void fill(float value, sTensor& tensor) {
-    fill(value, *tensor);
+    if (tensor->location == HOST) {
+        fillTensorOnHost(*tensor, value);
+    } else {
+        fillTensorOnDevice(*tensor, value);
+    }
 }
 
 sTensor no_grad::sum(const sTensor& a) {
@@ -55,7 +59,7 @@ std::vector<sTensor> SumReduce::backwardFn(sTensor grad) {
     grad->move(HOST);
 
     sTensor gradA = std::make_shared<Tensor>(shapeCache, grad->location);
-    fill(grad->data[0], *gradA);
+    fill(grad->data[0], gradA);
 
     grad->move(original);
     gradA->move(original);

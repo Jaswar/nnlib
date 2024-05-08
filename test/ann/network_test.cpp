@@ -9,8 +9,8 @@
 #include <gtest/gtest.h>
 
 TEST(network, test) {
-    Tensor X = Tensor::construct2d({{0, 0}, {0, 1}, {1, 0}, {1, 1}});
-    Tensor y = Tensor::construct2d({{1}, {0}, {0}, {1}});
+    sTensor X = std::make_shared<Tensor>(Tensor::construct2d({{0, 0}, {0, 1}, {1, 0}, {1, 1}}));
+    sTensor y = std::make_shared<Tensor>(Tensor::construct2d({{1}, {0}, {0}, {1}}));
 
     Network network = Network(2, false);
     network.add(5, "relu");

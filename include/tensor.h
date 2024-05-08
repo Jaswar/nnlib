@@ -204,107 +204,22 @@ std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
 float sum(Tensor& tensor);
 sTensor sum(const sTensor& tensor);
 
-/**
- * @brief Fill a tensor with a specific value.
- *
- * @param value The value to fill the tensor with.
- * @param destination The tensor to fill.
- */
-void fill(float value, Tensor& destination);
 void fill(float value, sTensor& destination);
 
-/**
- * @brief Add two tensors together.
- *
- * If the first tensor is a matrix and the second a vector, the operation performed is broadcast-add.
- * See addBroadcast() for more details.
- *
- * @param a The first tensor.
- * @param b The second tensor.
- * @param destination Where to store the result of addition.
- */
-
-Tensor add(const Tensor& a, const Tensor& b);
 sTensor add(const sTensor& a, const sTensor& b);
 
-/**
- * @brief Subtract one tensor from another.
- *
- * @param a The tensor to subtract from.
- * @param b The tensor to be subtracted.
- * @param destination Where to store the result of the subtraction.
- */
-
-Tensor subtract(const Tensor& a, const Tensor& b);
 sTensor subtract(const sTensor& a, const sTensor& b);
 
-/**
- * @brief Perform hadamard product (element-wise multiplication) on two tensors.
- *
- * @param a The first tensor.
- * @param b The second tensor.
- * @param destination Where to store the result of the operation.
- */
-
-Tensor hadamard(const Tensor& a, const Tensor& b);
 sTensor hadamard(const sTensor& a, const sTensor& b);
 
-/**
- * @brief Element-wise divide one tensor by another.
- *
- * @param a The tensor to be divided.
- * @param b The tensor to divide by.
- * @param destination Where to store the result of the operation.
- */
-
-Tensor divide(const Tensor& a, const Tensor& b);
 sTensor divide(const sTensor& a, const sTensor& b);
 
-/**
- * @brief Apply natural logarithm to every element of the tensor.
- *
- * @param a The tensor to apply natural logarithm to.
- * @param destination Where to store the result of the operation.
- */
-
-Tensor log(const Tensor& a);
 sTensor log(const sTensor& a);
 
-/**
- * @brief Multiply a tensor with a constant.
- *
- * @param tensor The tensor to multiply.
- * @param constant The constant to multiply the tensor with.
- * @param destination Where to store the result of the multiplication.
- */
-
-Tensor multiply(const Tensor& tensor, float constant);
 sTensor multiply(const sTensor& tensor, float constant);
 
-/**
- * @brief Multiply one tensor with another.
- *
- * The only currently supported multiplications are matrix-matrix and matrix-vector. If tensors with different
- * shapes will be passed, UnsupportedOperationException will be thrown.
- *
- * @param a The first tensor.
- * @param b The second tensor.
- * @param destination Where the result of multiplication should be stored.
- */
-
-Tensor multiply(const Tensor& a, const Tensor& b);
 sTensor multiply(const sTensor& a, const sTensor& b);
 
-/**
- * @brief Transpose a matrix.
- *
- * The tensor must be a 2D tensor, otherwise UnsupportedOperationException is thrown.
- *
- * @param matrix The matrix to transpose.
- * @param destination Where the result of the transpose operation should be stored.
- */
-
-Tensor transpose(const Tensor& matrix);
 sTensor transpose(const sTensor& matrix);
 
 sTensor relu(const sTensor& tensor);
