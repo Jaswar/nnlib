@@ -38,22 +38,22 @@ int main(int argc, char** argv) {
 
     showCudaInfo();
 
-    Tensor dataset = readCSV(argv[1], ",", 4);
-    Tensor X = Tensor(dataset.shape[0], dataset.shape[1] - 1);
-    Tensor y = Tensor(dataset.shape[0], 1);
+    sTensor dataset = readCSV(argv[1], ",", 4);
+    sTensor X = std::make_shared<Tensor>(dataset->shape[0], dataset->shape[1] - 1);
+    sTensor y = std::make_shared<Tensor>(dataset->shape[0], 1);
 
-    for (int i = 0; i < dataset.shape[0]; i++) {
-        y.data[i] = dataset.data[i * dataset.shape[1] + dataset.shape[1] - 1];
-        for (int j = 0; j < dataset.shape[1] - 1; j++) {
-            X.data[i * X.shape[1] + j] = dataset.data[i * dataset.shape[1] + j];
+    for (int i = 0; i < dataset->shape[0]; i++) {
+        y->data[i] = dataset->data[i * dataset->shape[1] + dataset->shape[1] - 1];
+        for (int j = 0; j < dataset->shape[1] - 1; j++) {
+            X->data[i * X->shape[1] + j] = dataset->data[i * dataset->shape[1] + j];
         }
     }
 
     std::cout << y << std::endl;
 
-    Network network = Network(X.shape[1]);
+    Network network = Network(X->shape[1]);
     network.add(64);
-    network.add(y.shape[1], "sigmoid");
+    network.add(y->shape[1], "sigmoid");
 
     std::vector<Metric*> metrics = {new BinaryAccuracy(), new MeanSquaredError()};
     network.train(X, y, 100, 10,  0.01, new BinaryCrossEntropy(), metrics);
