@@ -13,9 +13,9 @@
 #include "session.cuh"
 #include <cstdlib>
 #include <iostream>
+#include <memory>
 #include <utility>
 #include <vector>
-#include <memory>
 
 class BackwardFunction; // forward declaration to solve a circular dependency
 
@@ -172,7 +172,7 @@ private:
      * @param depth The dimension that is currently considered in the recursive call.
      * @return The address of the element in the flattened data array.
      */
-    size_t findEffectiveAddress(const std::vector<size_t>& index, size_t depth) const;
+    [[nodiscard]] size_t findEffectiveAddress(const std::vector<size_t>& index, size_t depth) const;
 
     /**
      * @brief Verify that an index of an element is within the shape of the tensor.
@@ -193,10 +193,10 @@ typedef std::shared_ptr<Tensor> sTensor;
  */
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
 
-sTensor sum(const sTensor& tensor);
+sTensor sum(const sTensor& a);
 
-void fill(float value, sTensor& destination);
-void fill(const sTensor& value, sTensor& destination);
+void fill(float value, sTensor& tensor);
+void fill(const sTensor& value, sTensor& tensor);
 
 sTensor add(const sTensor& a, const sTensor& b);
 
@@ -208,18 +208,18 @@ sTensor divide(const sTensor& a, const sTensor& b);
 
 sTensor log(const sTensor& a);
 
-sTensor multiply(const sTensor& tensor, float constant);
+sTensor multiply(const sTensor& a, float constant);
 
 sTensor multiply(const sTensor& a, const sTensor& b);
 
-sTensor transpose(const sTensor& matrix);
+sTensor transpose(const sTensor& a);
 
-sTensor relu(const sTensor& tensor);
+sTensor relu(const sTensor& a);
 
-sTensor sigmoid(const sTensor& tensor);
+sTensor sigmoid(const sTensor& a);
 
 namespace no_grad {
-    sTensor sum(const sTensor& tensor);
+    sTensor sum(const sTensor& a);
 
     sTensor add(const sTensor& a, const sTensor& b);
 
@@ -231,15 +231,15 @@ namespace no_grad {
 
     sTensor log(const sTensor& a);
 
-    sTensor multiply(const sTensor& tensor, float constant);
+    sTensor multiply(const sTensor& a, float constant);
 
     sTensor multiply(const sTensor& a, const sTensor& b);
 
-    sTensor transpose(const sTensor& matrix);
+    sTensor transpose(const sTensor& a);
 
-    sTensor relu(const sTensor& tensor);
+    sTensor relu(const sTensor& a);
 
-    sTensor sigmoid(const sTensor& tensor);
-}
+    sTensor sigmoid(const sTensor& a);
+} // namespace no_grad
 
 #endif //NNLIB_TENSOR_H

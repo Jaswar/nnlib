@@ -8,8 +8,8 @@
 #ifndef NNLIB_LAYER_H
 #define NNLIB_LAYER_H
 
-#include <string>
 #include "tensor.h"
+#include <string>
 
 /**
  * @brief Represents a single layer of a neural network.
@@ -65,7 +65,7 @@ public:
      * @param activation The activation function that should be used.
      * @param location The location of the layer. See Layer::location.
      */
-    Layer(size_t inSize, size_t outSize, const std::string& activation, DataLocation location);
+    Layer(size_t inSize, size_t outSize, std::string activation, DataLocation location);
 
     /**
      * @brief The destructor of the layer object.
@@ -81,7 +81,9 @@ public:
      *
      * @param batch The batch that should be propagated.
      */
-    sTensor forward(const sTensor& batch);
+    // You might want to ignore the return value of forward, so don't use [[nodiscard]]
+    // NOLINTNEXTLINE(modernize-use-nodiscard)
+    sTensor forward(const sTensor& batch) const;
 
     /**
      * @brief Apply the computed gradients.

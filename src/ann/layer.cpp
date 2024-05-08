@@ -65,11 +65,11 @@ sTensor initializeWeights(size_t inSize, size_t outSize) {
     return weights;
 }
 
-Layer::Layer(size_t inSize, size_t outSize, const std::string& activation, DataLocation location)
+Layer::Layer(size_t inSize, size_t outSize, std::string activation, DataLocation location)
     : location(location),
       inSize(inSize),
       outSize(outSize),
-      activation(activation),
+      activation(std::move(activation)),
       biases(initializeBiases(outSize)),
       weights(initializeWeights(inSize, outSize)) {
 
@@ -83,7 +83,7 @@ Layer::Layer(size_t inSize, size_t outSize, const std::string& activation, DataL
 
 Layer::~Layer() = default;
 
-sTensor Layer::forward(const sTensor& batch) {
+sTensor Layer::forward(const sTensor& batch) const {
     sTensor z = add(multiply(batch, weights), biases);
 
     if (activation == "relu") {

@@ -11,8 +11,8 @@
 #define NNLIB_CACHE_H
 
 #include <cstdlib>
-#include <unordered_map>
 #include <stack>
+#include <unordered_map>
 
 /**
  * @brief Enumerate to specify where data is located.

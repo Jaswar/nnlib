@@ -120,4 +120,6 @@ Checks:   '-*,
           readability-identifier-naming,
           performance-*,
           bugprone-*,
-          -bugprone-easily-swappable-parameters'
+          -bugprone-easily-swappable-parameters,
+          -performance-enum-size,
+          -performance-avoid-endl'

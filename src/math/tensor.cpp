@@ -23,13 +23,15 @@
 Tensor::Tensor() : shape(), size(0), location(HOST), data(), requiresGrad(false), gradFunction(), grad() {
 }
 
-Tensor::Tensor(std::vector<size_t> shape) : shape(std::move(shape)), location(HOST), size(0), data(), requiresGrad(false), gradFunction(), grad() {
+Tensor::Tensor(std::vector<size_t> shape)
+    : shape(std::move(shape)), location(HOST), size(0), data(), requiresGrad(false), gradFunction(), grad() {
     computeSize();
     Cache& cache = Cache::getInstance();
     data = cache.get(size, location);
 }
 
-Tensor::Tensor(std::vector<size_t> shape, DataLocation location) : shape(std::move(shape)), location(location), size(0), data(), requiresGrad(false), gradFunction(), grad() {
+Tensor::Tensor(std::vector<size_t> shape, DataLocation location)
+    : shape(std::move(shape)), location(location), size(0), data(), requiresGrad(false), gradFunction(), grad() {
     computeSize();
     Cache& cache = Cache::getInstance();
     data = cache.get(size, location);
@@ -65,7 +67,7 @@ Tensor& Tensor::operator=(const Tensor& other) {
     }
 
     Cache& cache = Cache::getInstance();
-    cache.put(size, data, location);  // Mark the memory as reusable
+    cache.put(size, data, location); // Mark the memory as reusable
 
     location = other.location;
     // This copies the vector
@@ -88,7 +90,7 @@ void Tensor::move(DataLocation target) {
     }
 
     Cache& cache = Cache::getInstance();
-    cache.put(size, data, location);  // Mark the memory as reusable
+    cache.put(size, data, location); // Mark the memory as reusable
     float* newData = cache.get(size, target);
     if (location == HOST) {
         copy1DFromHostToDevice(data, newData, size);
@@ -171,10 +173,16 @@ void Tensor::useGrad() {
     gradFunction = nullptr;
 }
 
+bool canBackPropagate(const Tensor& tensor) {
+    return !(tensor.shape.size() != 1 || tensor.shape[0] != 1 || !tensor.requiresGrad);
+}
+
+// NOLINTNEXTLINE(google-readability-function-size)
 void Tensor::backward() {
-    if (shape.size() != 1 || shape[0] != 1 || !requiresGrad) {
+    if (!canBackPropagate(*this)) {
         throw UnsupportedOperationException();
     }
+
     sTensor gradient = std::make_shared<Tensor>(shape, location);
     fill(1.0f, gradient);
     sTensor current = std::make_shared<Tensor>(*this);
@@ -191,14 +199,13 @@ void Tensor::backward() {
             if (current->requiresGrad) {
                 current->grad = no_grad::add(current->grad, gradient);
             }
-            continue;
-        }
-
-        std::vector<sTensor> newGrads = gradFn->backward(gradient);
-        for (int i = 0; i < newGrads.size(); i++) {
-            sTensor parent = gradFn->parents[i];
-            if (parent->requiresGrad) {
-                queue.emplace(parent, newGrads[i]);
+        } else {
+            std::vector<sTensor> newGrads = gradFn->backward(gradient);
+            for (int i = 0; i < newGrads.size(); i++) {
+                sTensor parent = gradFn->parents[i];
+                if (parent->requiresGrad) {
+                    queue.emplace(parent, newGrads[i]);
+                }
             }
         }
     }
@@ -249,9 +256,9 @@ std::ostream& operator<<(std::ostream& stream, const Tensor& tensor) {
         stream << tensor.data[i] << " ";
     }
     return stream;
-//    if (tensor.location == DEVICE) {
-//        return stream << "Tensor located on device with shape: " + tensorShapeToString(tensor);
-//    } else {
-//        return stream << "Tensor located on host with shape: " + tensorShapeToString(tensor);
-//    }
+    //    if (tensor.location == DEVICE) {
+    //        return stream << "Tensor located on device with shape: " + tensorShapeToString(tensor);
+    //    } else {
+    //        return stream << "Tensor located on host with shape: " + tensorShapeToString(tensor);
+    //    }
 }

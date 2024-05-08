@@ -64,7 +64,7 @@ __global__ void fillTensorKernel(float* tensor, float value, size_t size) {
     tensor[index] = value;
 }
 
-__global__ void fillTensorKernel(float* tensor, float* value, size_t size) {
+__global__ void fillTensorKernel(float* tensor, const float* value, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= size) {
@@ -369,12 +369,12 @@ __global__ void sigmoidKernel(float* input, float* result, size_t size) {
 
 // NOLINTEND(readability-static-accessed-through-instance)
 
-void sumTensorOnDevice(const Tensor& a, Tensor& destination) {
+void sumTensorOnDevice(const Tensor& tensor, Tensor& destination) {
     auto grid = 1;
-    auto block = a.session.threadsPerBlock;
-    size_t n = a.size / a.session.threadsPerBlock + 1;
-    size_t smemSize = a.session.threadsPerBlock * sizeof(float);
-    sumTensorKernel<<<grid, block, smemSize>>>(a.data, destination.data, a.size, n);
+    auto block = tensor.session.threadsPerBlock;
+    size_t n = tensor.size / tensor.session.threadsPerBlock + 1;
+    size_t smemSize = tensor.session.threadsPerBlock * sizeof(float);
+    sumTensorKernel<<<grid, block, smemSize>>>(tensor.data, destination.data, tensor.size, n);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 

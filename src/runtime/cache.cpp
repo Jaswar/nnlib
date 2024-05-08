@@ -65,10 +65,13 @@ void Cache::put(size_t size, float* ptr, DataLocation location) {
 }
 
 Cache::~Cache() {
-//    for (auto& pair : hostCache) {
-//        free(pair.second);
-//    }
-//    for (auto& pair : deviceCache) {
-//        free1DArrayDevice(pair.second);
-//    }
+    for (auto& pair : hostCache) {
+        while (!pair.second.empty()) {
+            float* ptr = pair.second.top();
+            free(ptr);
+            pair.second.pop();
+        }
+    }
+    // cuda memory cannot be deallocated because the cuda context is already destroyed
+    // hopefully cuda will deallocate the memory itself
 }

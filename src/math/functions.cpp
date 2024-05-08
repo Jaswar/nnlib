@@ -26,11 +26,11 @@ void fill(float value, sTensor& tensor) {
     }
 }
 
-void fill(const sTensor& value, sTensor& destination) {
-    if (destination->location == HOST) {
-        fillTensorOnHost(*destination, *value);
+void fill(const sTensor& value, sTensor& tensor) {
+    if (tensor->location == HOST) {
+        fillTensorOnHost(*tensor, *value);
     } else {
-        fillTensorOnDevice(*destination, *value);
+        fillTensorOnDevice(*tensor, *value);
     }
 }
 
@@ -111,7 +111,7 @@ namespace no_grad {
 
         return result;
     }
-}
+} // namespace no_grad
 
 sTensor no_grad::add(const sTensor& a, const sTensor& b) {
     if (a->shape.size() == 2 && b->shape.size() == 1) {
@@ -173,7 +173,7 @@ std::vector<sTensor> AddBroadcast::backwardFn(sTensor grad) {
         std::vector<size_t> shape = {grad->shape[0]};
         sTensor ones = std::make_shared<Tensor>(shape, grad->location);
         fill(1.0f, ones);
-        gradB = no_grad::multiply(no_grad::transpose(grad), ones);  // TODO: replace later with sum reduction
+        gradB = no_grad::multiply(no_grad::transpose(grad), ones); // TODO: replace later with sum reduction
     }
     return {gradA, gradB};
 }
@@ -355,14 +355,14 @@ std::vector<sTensor> Log::backwardFn(sTensor grad) {
     return {gradA};
 }
 
-sTensor no_grad::multiply(const sTensor& a, float b) {
+sTensor no_grad::multiply(const sTensor& a, float constant) {
     sTensor result = std::make_shared<Tensor>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
-        multiplyTensorOnHost(*a, b, *result);
+        multiplyTensorOnHost(*a, constant, *result);
     } else if (allLocationsAreDevice(locations)) {
-        multiplyTensorOnDevice(*a, b, *result);
+        multiplyTensorOnDevice(*a, constant, *result);
     } else {
         throw DifferentDataLocationException();
     }
@@ -431,7 +431,7 @@ namespace no_grad {
 
         return result;
     }
-}
+} // namespace no_grad
 
 sTensor no_grad::multiply(const sTensor& a, const sTensor& b) {
     if (a->shape.size() == 2 && b->shape.size() == 2) {

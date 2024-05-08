@@ -49,7 +49,7 @@ class MeanSquaredError : public Loss {
 public:
     sTensor calculateLoss(const sTensor& targets, const sTensor& predictions) override;
 
-    std::string getShortName() const override;
+    [[nodiscard]] std::string getShortName() const override;
 };
 
 /**
@@ -61,7 +61,7 @@ class BinaryCrossEntropy : public Loss {
 public:
     sTensor calculateLoss(const sTensor& targets, const sTensor& predictions) override;
 
-    std::string getShortName() const override;
+    [[nodiscard]] std::string getShortName() const override;
 };
 
 /**
@@ -77,7 +77,7 @@ class CategoricalCrossEntropy : public Loss {
 public:
     sTensor calculateLoss(const sTensor& targets, const sTensor& predictions) override;
 
-    std::string getShortName() const override;
+    [[nodiscard]] std::string getShortName() const override;
 };
 
 

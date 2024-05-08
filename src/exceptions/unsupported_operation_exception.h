@@ -23,7 +23,7 @@ class UnsupportedOperationException : public std::exception {
      *
      * @return The exception description.
      */
-    const char* what() const noexcept override;
+    [[nodiscard]] const char* what() const noexcept override;
 };
 
 

@@ -16,7 +16,6 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
-#include <sstream>
 #include <utils/printing.h>
 #include <verify.cuh>
 
@@ -150,9 +149,11 @@ std::vector<sTensor> splitIntoBatches(const sTensor& data, size_t batchSize) {
 
         sTensor batch = std::make_shared<Tensor>(rowsInBatch, data->shape[1]);
         if (data->location == DEVICE) {
-            copy1DFromDeviceToHost(data->data + i * data->shape[1] * batchSize, batch->data, data->shape[1] * rowsInBatch);
+            copy1DFromDeviceToHost(data->data + i * data->shape[1] * batchSize, batch->data,
+                                   data->shape[1] * rowsInBatch);
         } else {
-            copy1DFromHostToHost(data->data + i * data->shape[1] * batchSize, batch->data, data->shape[1] * rowsInBatch);
+            copy1DFromHostToHost(data->data + i * data->shape[1] * batchSize, batch->data,
+                                 data->shape[1] * rowsInBatch);
         }
         batch->move(data->location);
 
@@ -243,7 +244,7 @@ void Network::processEpoch(std::vector<sTensor>& batches, std::vector<sTensor>& 
         sTensor l = loss->calculateLoss(target, output);
         l->backward();
 
-        for (auto & layer : layers) {
+        for (auto& layer : layers) {
             layer.applyGradients(batch->shape[0], learningRate);
         }
 

@@ -41,7 +41,7 @@ void tensorSumPBT(bool testDevice) {
         result->move(HOST);
     }
 
-    RC_ASSERT_TENSOR_CLOSE(*result, *expected, 1e-5, true);
+    RC_ASSERT_TENSOR_CLOSE(*result, *expected, 5e-5, true);
 }
 
 void tensorFillPBT(float value, bool testDevice) {

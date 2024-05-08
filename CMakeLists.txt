@@ -25,13 +25,20 @@ target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 check_language(CUDA)
 if (CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
-    set(CMAKE_CUDA_STANDARD 14)
+    set(CMAKE_CUDA_STANDARD 17)
 
     include_directories(${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 
     # Add flag to specify the architecture of the GPU (compute capability)
     if (NOT DEFINED CUDA_ARCHITECTURES)
-        set_target_properties(nnlib PROPERTIES CUDA_ARCHITECTURES "50")
+        message(STATUS "CUDA_ARCHITECTURES not set, defaulting to 89")
+        set_target_properties(nnlib PROPERTIES CUDA_ARCHITECTURES "89")
+    endif()
+
+    # Used by the linter to set the architecture
+    if (SET_CLANG_CUDA_ARCH AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        message(STATUS "Setting clang CUDA architecture to sm_89")
+        set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -ccbin clang --cuda-gpu-arch=sm_89 -Qunused-arguments")
     endif()
 
     add_definitions(-D__CUDA__)

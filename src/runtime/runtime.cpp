@@ -20,4 +20,3 @@ void Runtime::disableGradient() {
 void Runtime::enableGradient() {
     useGradient = true;
 }
-

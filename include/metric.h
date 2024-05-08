@@ -58,7 +58,7 @@ public:
      *
      * @return A string identifier of the metric.
      */
-    virtual std::string getShortName() const = 0;
+    [[nodiscard]] virtual std::string getShortName() const = 0;
 };
 
 /**
@@ -84,7 +84,7 @@ public:
     /**
      * @copydoc Metric::getShortName()
      */
-    std::string getShortName() const override;
+    [[nodiscard]] std::string getShortName() const override;
 };
 
 /**
@@ -110,7 +110,7 @@ public:
     /**
      * @copydoc Metric::getShortName()
      */
-    std::string getShortName() const override;
+    [[nodiscard]] std::string getShortName() const override;
 };
 
 #endif //NNLIB_METRIC_H

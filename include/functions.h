@@ -10,8 +10,8 @@
 #ifndef NNLIB_FUNCTIONS_H
 #define NNLIB_FUNCTIONS_H
 
-#include <utility>
 #include <typeinfo>
+#include <utility>
 
 #include "tensor.h"
 #include "tuple_utils.h"
@@ -32,8 +32,8 @@ public:
     Function() = default;
 
     sTensor forward(const Types&... args) {
-        auto tup = get_type<sTensor>(std::make_tuple(args...));
-        parents = to_vector(tup);
+        auto tup = getType<sTensor>(std::make_tuple(args...));
+        parents = toVector(tup);
 
         sTensor result = forwardFn(args...);
         for (auto& parent : parents) {
@@ -58,6 +58,7 @@ public:
 
 class SumReduce : public Function<sTensor> {
     std::vector<size_t> shapeCache;
+
 public:
     sTensor forwardFn(const sTensor& a) override;
 
@@ -88,6 +89,7 @@ public:
 class Hadamard : public Function<sTensor, sTensor> {
     sTensor cacheA;
     sTensor cacheB;
+
 public:
     sTensor forwardFn(const sTensor& a, const sTensor& b) override;
 
@@ -97,6 +99,7 @@ public:
 class Divide : public Function<sTensor, sTensor> {
     sTensor cacheA;
     sTensor cacheB;
+
 public:
     sTensor forwardFn(const sTensor& a, const sTensor& b) override;
 
@@ -105,6 +108,7 @@ public:
 
 class Log : public Function<sTensor> {
     sTensor cacheA;
+
 public:
     sTensor forwardFn(const sTensor& args) override;
 
@@ -113,6 +117,7 @@ public:
 
 class MulConstant : public Function<sTensor, float> {
     float constantCache;
+
 public:
     sTensor forwardFn(const sTensor& a, const float& b) override;
 
@@ -122,6 +127,7 @@ public:
 class MatVecMul : public Function<sTensor, sTensor> {
     sTensor cacheA;
     sTensor cacheB;
+
 public:
     sTensor forwardFn(const sTensor& a, const sTensor& b) override;
 
@@ -131,6 +137,7 @@ public:
 class Matmul : public Function<sTensor, sTensor> {
     sTensor cacheA;
     sTensor cacheB;
+
 public:
     sTensor forwardFn(const sTensor& a, const sTensor& b) override;
 
@@ -141,6 +148,7 @@ public:
 
 class Transpose : public Function<sTensor> {
     sTensor cacheA;
+
 public:
     sTensor forwardFn(const sTensor& a) override;
 
@@ -149,6 +157,7 @@ public:
 
 class ReLU : public Function<sTensor> {
     sTensor cacheA;
+
 public:
     sTensor forwardFn(const sTensor& a) override;
 
@@ -157,6 +166,7 @@ public:
 
 class Sigmoid : public Function<sTensor> {
     sTensor cacheA;
+
 public:
     sTensor forwardFn(const sTensor& a) override;
 
