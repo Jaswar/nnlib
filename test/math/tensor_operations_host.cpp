@@ -52,3 +52,11 @@ RC_GTEST_PROP(tensor_operations_host, multiply_matrix_matrix, ()) {
 RC_GTEST_PROP(tensor_operations_host, transpose, ()) {
     tensorTransposePBT(false);
 }
+
+RC_GTEST_PROP(tensor_operations_host, relu, ()) {
+    tensorReluPBT(false);
+}
+
+RC_GTEST_PROP(tensor_operations_host, sigmoid, ()) {
+    tensorSigmoidPBT(false);
+}

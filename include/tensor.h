@@ -102,7 +102,7 @@ public:
      */
     Tensor& operator=(const Tensor& other);
 
-    std::shared_ptr<Tensor> copy() const;
+    [[nodiscard]] std::shared_ptr<Tensor> copy() const;
 
     /**
      * @brief Move the tensor to the designated destination.

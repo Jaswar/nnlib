@@ -57,4 +57,12 @@ RC_GTEST_PROP(tensor_operations_device, transpose, ()) {
     tensorTransposePBT(true);
 }
 
+RC_GTEST_PROP(tensor_operations_device, relu, ()) {
+    tensorReluPBT(true);
+}
+
+RC_GTEST_PROP(tensor_operations_device, sigmoid, ()) {
+    tensorSigmoidPBT(true);
+}
+
 #endif

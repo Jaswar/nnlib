@@ -17,6 +17,7 @@
 #include <map>
 #include <sstream>
 #include <utils/printing.h>
+#include <verify.cuh>
 
 /**
  * @brief Structure to contain information about the current epoch.

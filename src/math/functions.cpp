@@ -192,12 +192,7 @@ sTensor Subtract::forwardFn(const sTensor& a, const sTensor& b) {
 
 std::vector<sTensor> Subtract::backwardFn(sTensor grad) {
     sTensor gradA = parents[0]->requiresGrad ? grad->copy() : nullptr;
-
-    sTensor gradB = nullptr;
-    if (parents[1]->requiresGrad) {
-        gradB = grad->copy();
-        gradB = no_grad::multiply(gradB, -1.0f);
-    }
+    sTensor gradB = parents[1]->requiresGrad ? no_grad::multiply(grad, -1.0f) : nullptr;
     return {gradA, gradB};
 }
 

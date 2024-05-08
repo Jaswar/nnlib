@@ -8,8 +8,8 @@
 #ifndef NNLIB_LAYER_H
 #define NNLIB_LAYER_H
 
-#include "activation.h"
 #include <string>
+#include "tensor.h"
 
 /**
  * @brief Represents a single layer of a neural network.
