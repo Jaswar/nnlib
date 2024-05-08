@@ -31,8 +31,8 @@ if (CMAKE_CUDA_COMPILER)
 
     # Add flag to specify the architecture of the GPU (compute capability)
     if (NOT DEFINED CUDA_ARCHITECTURES)
-        message(STATUS "CUDA_ARCHITECTURES not set, defaulting to 89")
-        set_target_properties(nnlib PROPERTIES CUDA_ARCHITECTURES "89")
+        message(STATUS "CUDA_ARCHITECTURES not set, defaulting to 50")
+        set_target_properties(nnlib PROPERTIES CUDA_ARCHITECTURES "50")
     endif()
 
     # Used by the linter to set the architecture
