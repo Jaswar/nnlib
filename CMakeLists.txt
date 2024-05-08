@@ -37,8 +37,8 @@ if (CMAKE_CUDA_COMPILER)
 
     # Used by the linter to set the architecture
     if (SET_CLANG_CUDA_ARCH AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        message(STATUS "Setting clang CUDA architecture to sm_89")
-        set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -ccbin clang --cuda-gpu-arch=sm_89 -Qunused-arguments")
+        message(STATUS "Setting clang CUDA architecture to sm_50")
+        set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -ccbin clang --cuda-gpu-arch=sm_50 -Qunused-arguments")
     endif()
 
     add_definitions(-D__CUDA__)
