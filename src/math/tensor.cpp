@@ -7,20 +7,34 @@
 
 #include "tensor.h"
 #include "../gpu/allocation_gpu.cuh"
+#include "cache.h"
+#include "runtime.h"
 #include "tensor_operations_on_device.cuh"
 #include "tensor_operations_on_host.h"
 #include <exceptions/different_data_location_exception.h>
 #include <exceptions/size_mismatch_exception.h>
 #include <exceptions/unsupported_operation_exception.h>
+#include <functions.h>
+#include <memory>
+#include <queue>
 #include <string>
 #include <utils/location_verifiers.h>
 
-Tensor::Tensor() : shape(), size(0), location(HOST), data() {
+Tensor::Tensor() : shape(), size(0), location(HOST), data(), requiresGrad(false), gradFunction(), grad() {
 }
 
-Tensor::Tensor(std::vector<size_t> shape) : shape(std::move(shape)), location(HOST), size(0), data() {
+Tensor::Tensor(std::vector<size_t> shape)
+    : shape(std::move(shape)), location(HOST), size(0), data(), requiresGrad(false), gradFunction(), grad() {
     computeSize();
-    data = allocate1DArray(size, 0);
+    Cache& cache = Cache::getInstance();
+    data = cache.get(size, location);
+}
+
+Tensor::Tensor(std::vector<size_t> shape, DataLocation location)
+    : shape(std::move(shape)), location(location), size(0), data(), requiresGrad(false), gradFunction(), grad() {
+    computeSize();
+    Cache& cache = Cache::getInstance();
+    data = cache.get(size, location);
 }
 
 Tensor::Tensor(const Tensor& other) {
@@ -28,15 +42,22 @@ Tensor::Tensor(const Tensor& other) {
     // This copies the vector
     shape = other.shape;
     size = other.size;
+    requiresGrad = other.requiresGrad;
+    gradFunction = other.gradFunction;
+    if (other.grad != nullptr) {
+        grad = std::make_shared<Tensor>(*other.grad);
+    }
 
     if (size == 0) {
         return;
     }
 
+    Cache& cache = Cache::getInstance();
+    data = cache.get(size, other.location);
     if (location == HOST) {
-        data = copy1DArray(size, other.data);
+        copy1DArray(size, other.data, data);
     } else {
-        data = copy1DArrayDevice(size, other.data);
+        copy1DArrayDevice(size, other.data, data);
     }
 }
 
@@ -45,25 +66,19 @@ Tensor& Tensor::operator=(const Tensor& other) {
         return *this;
     }
 
-    if (size > 0) {
-        if (location == HOST) {
-            free(data);
-        } else {
-            free1DArrayDevice(data);
-        }
-    }
+    Cache& cache = Cache::getInstance();
+    cache.put(size, data, location); // Mark the memory as reusable
 
     location = other.location;
     // This copies the vector
     shape = other.shape;
     size = other.size;
 
-    if (size > 0) {
-        if (location == HOST) {
-            data = copy1DArray(size, other.data);
-        } else {
-            data = copy1DArrayDevice(size, other.data);
-        }
+    data = cache.get(size, other.location);
+    if (location == HOST) {
+        copy1DArray(size, other.data, data);
+    } else {
+        copy1DArrayDevice(size, other.data, data);
     }
 
     return *this;
@@ -74,30 +89,27 @@ void Tensor::move(DataLocation target) {
         return;
     }
 
+    Cache& cache = Cache::getInstance();
+    cache.put(size, data, location); // Mark the memory as reusable
+    float* newData = cache.get(size, target);
     if (location == HOST) {
-        float* newData = allocate1DArrayDevice(size);
         copy1DFromHostToDevice(data, newData, size);
-        free(data);
-        data = newData;
     } else {
-        float* newData = allocate1DArray(size);
         copy1DFromDeviceToHost(data, newData, size);
-        free1DArrayDevice(data);
-        data = newData;
     }
+    data = newData;
     location = target;
+    if (grad != nullptr) {
+        grad->move(target);
+    }
 }
 
 Tensor::~Tensor() {
     if (size == 0) {
         return;
     }
-
-    if (location == HOST) {
-        free(data);
-    } else {
-        free1DArrayDevice(data);
-    }
+    Cache& cache = Cache::getInstance();
+    cache.put(size, data, location);
 }
 
 void Tensor::computeSize() {
@@ -154,6 +166,69 @@ void Tensor::verifyIndex(const std::vector<size_t>& index) const {
     }
 }
 
+void Tensor::useGrad() {
+    requiresGrad = true;
+    grad = std::make_shared<Tensor>(shape, location);
+    fill(0.0f, grad);
+    gradFunction = nullptr;
+}
+
+bool canBackPropagate(const Tensor& tensor) {
+    return !(tensor.shape.size() != 1 || tensor.shape[0] != 1 || !tensor.requiresGrad);
+}
+
+// NOLINTNEXTLINE(google-readability-function-size)
+void Tensor::backward() {
+    if (!canBackPropagate(*this)) {
+        throw UnsupportedOperationException();
+    }
+
+    sTensor gradient = std::make_shared<Tensor>(shape, location);
+    fill(1.0f, gradient);
+    sTensor current = std::make_shared<Tensor>(*this);
+
+    std::queue<std::pair<sTensor, sTensor>> queue;
+    queue.emplace(current, gradient);
+    while (!queue.empty()) {
+        current = queue.front().first;
+        gradient = queue.front().second;
+        queue.pop();
+
+        std::shared_ptr<BackwardFunction> gradFn = current->gradFunction;
+        if (gradFn == nullptr) {
+            if (current->requiresGrad) {
+                current->grad = no_grad::add(current->grad, gradient);
+            }
+        } else {
+            std::vector<sTensor> newGrads = gradFn->backward(gradient);
+            for (int i = 0; i < newGrads.size(); i++) {
+                sTensor parent = gradFn->parents[i];
+                if (parent->requiresGrad) {
+                    queue.emplace(parent, newGrads[i]);
+                }
+            }
+        }
+    }
+}
+
+std::shared_ptr<Tensor> Tensor::copy() const {
+    sTensor copy = std::make_shared<Tensor>(shape, location);
+    copy->requiresGrad = requiresGrad;
+    copy->grad = nullptr;
+    if (grad != nullptr) {
+        copy->grad = grad->copy();
+    }
+    copy->gradFunction = gradFunction;
+
+    if (location == HOST) {
+        copy1DArray(size, data, copy->data);
+    } else {
+        copy1DArrayDevice(size, data, copy->data);
+    }
+
+    return copy;
+}
+
 /**
  * @brief Convert the shape of the tensor to a string.
  *
@@ -176,227 +251,14 @@ std::string tensorShapeToString(const Tensor& tensor) {
 }
 
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor) {
-    if (tensor.location == DEVICE) {
-        return stream << "Tensor located on device with shape: " + tensorShapeToString(tensor);
-    } else {
-        return stream << "Tensor located on host with shape: " + tensorShapeToString(tensor);
+    stream << "Tensor: ";
+    for (int i = 0; i < tensor.size; i++) {
+        stream << tensor.data[i] << " ";
     }
-}
-
-float sum(Tensor& tensor) {
-    const DataLocation& oldLocation = tensor.location;
-    tensor.move(HOST);
-    float sum = sumTensor(tensor);
-    tensor.move(oldLocation);
-    return sum;
-}
-
-void fill(float value, Tensor& destination) {
-    if (destination.location == HOST) {
-        fillTensorOnHost(destination, value);
-    } else {
-        fillTensorOnDevice(destination, value);
-    }
-}
-
-/**
- * @brief Method to perform element-wise addition on tensors.
- *
- * @param a The first tensor.
- * @param b The second tensor.
- * @param destination Where the result of the addition should be stored.
- */
-void addTensors(const Tensor& a, const Tensor& b, Tensor& destination) {
-    if (a.shape != b.shape || a.shape != destination.shape || b.shape != destination.shape) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {a.location, b.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        addTensorsOnHost(a, b, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        addTensorsOnDevice(a, b, destination);
-    } else {
-        throw DifferentDataLocationException();
-    }
-}
-
-/**
- * @brief Method to perform broadcast-add operation on tensors.
- *
- * This operation adds @p vector to every row of @p matrix.
- *
- * @param matrix The first tensor, must be a matrix.
- * @param vector The second tensor, must be a vector.
- * @param destination Where the result of the addition should be stored.
- */
-void addBroadcast(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
-    if (matrix.shape[1] != vector.shape[0] || matrix.shape != destination.shape) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {matrix.location, vector.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        addBroadcastOnHost(matrix, vector, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        addBroadcastOnDevice(matrix, vector, destination);
-    } else {
-        throw DifferentDataLocationException();
-    }
-}
-
-
-void add(const Tensor& a, const Tensor& b, Tensor& destination) {
-    if (a.shape.size() == 2 && b.shape.size() == 1 && destination.shape.size() == 2) {
-        addBroadcast(a, b, destination);
-    } else {
-        addTensors(a, b, destination);
-    }
-}
-
-void subtract(const Tensor& a, const Tensor& b, Tensor& destination) {
-    if (a.shape != b.shape || a.shape != destination.shape || b.shape != destination.shape) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {a.location, b.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        subtractTensorsOnHost(a, b, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        subtractTensorsOnDevice(a, b, destination);
-    } else {
-        throw DifferentDataLocationException();
-    }
-}
-
-void hadamard(const Tensor& a, const Tensor& b, Tensor& destination) {
-    if (a.shape != b.shape || a.shape != destination.shape || b.shape != destination.shape) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {a.location, b.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        hadamardTensorsOnHost(a, b, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        hadamardTensorsOnDevice(a, b, destination);
-    } else {
-        throw DifferentDataLocationException();
-    }
-}
-
-void divide(const Tensor& a, const Tensor& b, Tensor& destination) {
-    if (a.shape != b.shape || a.shape != destination.shape || b.shape != destination.shape) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {a.location, b.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        divideTensorsOnHost(a, b, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        divideTensorsOnDevice(a, b, destination);
-    } else {
-        throw DifferentDataLocationException();
-    }
-}
-
-void log(const Tensor& a, Tensor& destination) {
-    if (a.shape != destination.shape) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {a.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        logTensorOnHost(a, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        logTensorOnDevice(a, destination);
-    } else {
-        throw DifferentDataLocationException();
-    }
-}
-
-void multiply(const Tensor& tensor, float constant, Tensor& destination) {
-    if (tensor.shape != destination.shape) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {tensor.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        multiplyTensorOnHost(tensor, constant, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        multiplyTensorOnDevice(tensor, constant, destination);
-    } else {
-        throw DifferentDataLocationException();
-    }
-}
-
-/**
- * @brief Method to perform matrix-vector multiplication on tensors.
- *
- * @param matrix The matrix tensor.
- * @param vector The vector tensor.
- * @param destination Where the result of the multiplication should be stored.
- */
-void multiplyMatrixVector(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
-    if (matrix.shape[1] != vector.shape[0] || matrix.shape[0] != destination.shape[0]) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {matrix.location, vector.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        multiplyMatrixVectorOnHost(matrix, vector, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        multiplyMatrixVectorOnDevice(matrix, vector, destination);
-    } else {
-        throw DifferentDataLocationException();
-    }
-}
-
-/**
- * @brief Method to perform matrix-matrix multiplication on tensors.
- *
- * @param m1 The first matrix tensor.
- * @param m2 The second matrix tensor.
- * @param destination Where the result of the multiplication should be stored.
- */
-void multiplyMatrixMatrix(const Tensor& m1, const Tensor& m2, Tensor& destination) {
-    if (m1.shape[1] != m2.shape[0] || m1.shape[0] != destination.shape[0] || m2.shape[1] != destination.shape[1]) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {m1.location, m2.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        multiplyMatrixMatrixOnHost(m1, m2, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        multiplyMatrixMatrixOnDevice(m1, m2, destination);
-    } else {
-        throw DifferentDataLocationException();
-    }
-}
-
-void multiply(const Tensor& a, const Tensor& b, Tensor& destination) {
-    if (a.shape.size() == 2 && b.shape.size() == 1 && destination.shape.size() == 1) {
-        multiplyMatrixVector(a, b, destination);
-    } else if (a.shape.size() == 2 && b.shape.size() == 2 && destination.shape.size() == 2) {
-        multiplyMatrixMatrix(a, b, destination);
-    } else {
-        throw UnsupportedOperationException();
-    }
-}
-
-void transpose(const Tensor& matrix, Tensor& destination) {
-    if (matrix.shape.size() != 2 || destination.shape.size() != 2) {
-        throw UnsupportedOperationException();
-    }
-    if (matrix.shape[0] != destination.shape[1] || matrix.shape[1] != destination.shape[0]) {
-        throw SizeMismatchException();
-    }
-
-    std::initializer_list<DataLocation> locations = {matrix.location, destination.location};
-    if (allLocationsAreHost(locations)) {
-        transposeMatrixOnHost(matrix, destination);
-    } else if (allLocationsAreDevice(locations)) {
-        transposeMatrixOnDevice(matrix, destination);
-    } else {
-        throw DifferentDataLocationException();
-    }
+    return stream;
+    //    if (tensor.location == DEVICE) {
+    //        return stream << "Tensor located on device with shape: " + tensorShapeToString(tensor);
+    //    } else {
+    //        return stream << "Tensor located on host with shape: " + tensorShapeToString(tensor);
+    //    }
 }

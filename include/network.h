@@ -29,15 +29,6 @@ class Network {
     DataLocation location;
 
     /**
-     * @brief Pre-allocated space for loss.
-     *
-     * Might require resizing/reallocating if @p batchSize != #DEFAULT_BATCH_SIZE during training. In that case,
-     * the reshaping will still only happen once. The data is pre-allocated to avoid unnecessary allocation
-     * during runtime.
-     */
-    Tensor lossData;
-
-    /**
      * @brief List of network layers.
      */
     std::vector<Layer> layers;
@@ -89,21 +80,7 @@ public:
      * @param batch The batch to propagate.
      * @return The pointer to the output of the network. This returns Layer::aMatrix of the last layer.
      */
-    Tensor* forward(const Tensor& batch);
-
-    /**
-     * @brief Backward-propagate a batch through the network.
-     *
-     * Squared error loss is used as the loss metric. The network first calculates the gradients on
-     * all layers and only then applies them. This is because layers require weights from following
-     * layers to compute the correct gradients.
-     *
-     * @param predicted The predictions of the network as retrieved from Network::forward.
-     * @param target The targets for that batch of data.
-     * @param learningRate The learning rate of the model.
-     * @param loss The loss function to use.
-     */
-    void backward(const Tensor& predicted, const Tensor& target, float learningRate, Loss* loss);
+    sTensor forward(const sTensor& batch);
 
     /**
      * @brief Train the network.
@@ -120,7 +97,7 @@ public:
      * @param metrics The list of metrics to compute aside from the loss function.
      */
     //NOLINTNEXTLINE(readability-identifier-naming)
-    void train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
+    void train(sTensor& X, sTensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
                std::vector<Metric*>& metrics);
 
 private:
@@ -138,7 +115,7 @@ private:
      * @param loss The loss function to use.
      * @param metrics The list of metrics to compute aside from the loss function.
      */
-    void processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets, std::vector<Tensor>& targetsOnHost,
+    void processEpoch(std::vector<sTensor>& batches, std::vector<sTensor>& targets, std::vector<sTensor>& targetsOnHost,
                       float learningRate, Loss* loss, std::vector<Metric*>& metrics);
 };
 

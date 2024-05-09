@@ -8,6 +8,7 @@
 #ifndef NNLIB_TENSOR_OPERATIONS_COMMON_H
 #define NNLIB_TENSOR_OPERATIONS_COMMON_H
 
+void tensorSumPBT(bool testDevice);
 void tensorFillPBT(float value, bool testDevice);
 void tensorAddPBT(bool testDevice);
 void tensorAddBroadcastPBT(bool testDevice);
@@ -19,5 +20,7 @@ void tensorMultiplyConstantPBT(float constant, bool testDevice);
 void tensorMultiplyMatrixVectorPBT(bool testDevice);
 void tensorMultiplyMatrixMatrixPBT(bool testDevice);
 void tensorTransposePBT(bool testDevice);
+void tensorReluPBT(bool testDevice);
+void tensorSigmoidPBT(bool testDevice);
 
 #endif //NNLIB_TENSOR_OPERATIONS_COMMON_H

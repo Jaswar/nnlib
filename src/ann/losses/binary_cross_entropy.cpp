@@ -25,71 +25,27 @@ void checkValidShape(const Tensor& targets, const Tensor& predictions) {
     }
 }
 
-float BinaryCrossEntropy::calculateLoss(const Tensor& targets, const Tensor& predictions) {
-    checkValidShape(targets, predictions);
-
-    allocateWorkingSpacesLoss(targets, predictions);
-
-    subtract(onesLoss, targets, workingSpace);
-    subtract(onesLoss, predictions, workingSpace2);
-    log(workingSpace2, workingSpace2);
-    hadamard(workingSpace, workingSpace2, workingSpace2);
-
-    log(predictions, workingSpace);
-    hadamard(targets, workingSpace, workingSpace);
-
-    add(workingSpace, workingSpace2, workingSpace);
-
-    numSamples += targets.shape[0];
-    currentTotalMetric += sum(workingSpace) * -1;
-
-    return currentTotalMetric / static_cast<float>(numSamples);
-}
-
-void BinaryCrossEntropy::calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) {
-    checkValidShape(targets, predictions);
-
-    allocateWorkingSpacesDerivatives(targets, predictions);
-
-    // Calculate the nominator
-    subtract(predictions, targets, destination);
-
-    // Calculate the denominator
-    subtract(onesDerivatives, predictions, workingSpace3);
-    hadamard(predictions, workingSpace3, workingSpace3);
-
-    // Calculate the fraction
-    divide(destination, workingSpace3, destination);
-}
-
-void BinaryCrossEntropy::allocateWorkingSpacesDerivatives(const Tensor& targets, const Tensor& predictions) {
-    if (workingSpace3.shape != targets.shape) {
-        workingSpace3 = Tensor(targets.shape);
-    }
-    workingSpace3.move(targets.location);
-    if (onesDerivatives.shape != targets.shape) {
-        onesDerivatives = Tensor(targets.shape);
-        fill(1, onesDerivatives);
-    }
-    onesDerivatives.move(targets.location);
-}
-
-void BinaryCrossEntropy::allocateWorkingSpacesLoss(const Tensor& targets, const Tensor& predictions) {
-    if (workingSpace.shape != targets.shape) {
-        workingSpace = Tensor(targets.shape);
-    }
-    workingSpace.move(targets.location);
-    if (workingSpace2.shape != targets.shape) {
-        workingSpace2 = Tensor(targets.shape);
-    }
-    workingSpace2.move(targets.location);
-    if (onesLoss.shape != targets.shape) {
-        onesLoss = Tensor(targets.shape);
-        fill(1, onesLoss);
-    }
-    onesLoss.move(targets.location);
-}
-
 std::string BinaryCrossEntropy::getShortName() const {
     return "binary_cross_entropy";
+}
+
+sTensor BinaryCrossEntropy::calculateLoss(const sTensor& targets, const sTensor& predictions) {
+    checkValidShape(*targets, *predictions);
+
+    sTensor totalLoss = std::make_shared<Tensor>(targets->shape, targets->location);
+    {
+        sTensor ones = std::make_shared<Tensor>(targets->shape, targets->location);
+        fill(1.0f, ones);
+        sTensor diffTargets = subtract(ones, targets);
+        sTensor diffPredictions = log(subtract(ones, predictions));
+        totalLoss = hadamard(diffTargets, diffPredictions);
+    }
+
+    {
+        sTensor diffPredictions = log(predictions);
+        totalLoss = add(hadamard(targets, diffPredictions), totalLoss);
+    }
+
+    totalLoss = multiply(sum(totalLoss), -1.0f);
+    return totalLoss;
 }

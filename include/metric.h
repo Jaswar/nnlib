@@ -49,7 +49,7 @@ public:
      * @param predictions The actual outputs of the network.
      * @return The value of the metric.
      */
-    virtual float calculateMetric(const Tensor& targets, const Tensor& predictions) = 0;
+    virtual float calculateMetric(const sTensor& targets, const sTensor& predictions) = 0;
 
     /**
      * @brief Short string identifier of the metric.
@@ -58,7 +58,7 @@ public:
      *
      * @return A string identifier of the metric.
      */
-    virtual std::string getShortName() const = 0;
+    [[nodiscard]] virtual std::string getShortName() const = 0;
 };
 
 /**
@@ -79,12 +79,12 @@ public:
     /**
      * @copydoc Metric::calculateMetric()
      */
-    float calculateMetric(const Tensor& targets, const Tensor& predictions) override;
+    float calculateMetric(const sTensor& targets, const sTensor& predictions) override;
 
     /**
      * @copydoc Metric::getShortName()
      */
-    std::string getShortName() const override;
+    [[nodiscard]] std::string getShortName() const override;
 };
 
 /**
@@ -105,12 +105,12 @@ public:
     /**
      * @copydoc Metric::calculateMetric()
      */
-    float calculateMetric(const Tensor& targets, const Tensor& predictions) override;
+    float calculateMetric(const sTensor& targets, const sTensor& predictions) override;
 
     /**
      * @copydoc Metric::getShortName()
      */
-    std::string getShortName() const override;
+    [[nodiscard]] std::string getShortName() const override;
 };
 
 #endif //NNLIB_METRIC_H

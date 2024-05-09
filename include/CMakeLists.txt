@@ -1,6 +1,5 @@
 set(INCLUDE_FILES
         metric.h
-        activation.h
         allocation.h
         layer.h
         network.h
@@ -10,6 +9,10 @@ set(INCLUDE_FILES
         tensor.h
         session.cuh
         loss.h
+        cache.h
+        functions.h
+        tuple_utils.h
+        runtime.h
 
         PARENT_SCOPE)
 

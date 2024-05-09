@@ -19,6 +19,62 @@
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 
+__global__ void sumTensorKernel(const float* a, float* destination, size_t size, size_t n) {
+    extern __shared__ float shared[];
+    auto threadId = threadIdx.x;
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+    size_t start = index * n;
+
+    shared[threadIdx.x] = 0;
+    if (start >= size) {
+        return;
+    }
+
+    float reduced = 0;
+    for (int i = 0; i < n; i++) {
+        if (start + i < size) {
+            reduced += a[start + i];
+        }
+    }
+    shared[threadIdx.x] = reduced;
+
+    __syncthreads();
+
+    if (threadId == 0) {
+        for (int i = 0; i < blockDim.x; i++) {
+            atomicAdd(destination, shared[i]);
+        }
+    }
+}
+
+/**
+ * @brief Kernel method to fill a tensor with a value.
+ *
+ * @param tensor The tensor to fill.
+ * @param value The value to fill the tensor with.
+ * @param size The size of the tensor.
+ */
+__global__ void fillTensorKernel(float* tensor, float value, size_t size) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    tensor[index] = value;
+}
+
+__global__ void fillTensorKernel(float* tensor, const float* value, size_t size) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    tensor[index] = value[0];
+}
+
+
 /**
  * @brief Kernel method to add two tensors together.
  *
@@ -273,24 +329,68 @@ __global__ void transposeMatrixKernel(const float* matrix, float* destination, s
     destination[column * n + row] = matrix[row * m + column];
 }
 
-/**
- * @brief Kernel method to fill a tensor with a value.
- *
- * @param tensor The tensor to fill.
- * @param value The value to fill the tensor with.
- * @param size The size of the tensor.
- */
-__global__ void fillTensorKernel(float* tensor, float value, size_t size) {
+__global__ void reluKernel(const float* input, float* result, size_t size) {
+    auto index = blockDim.x * blockIdx.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    if (input[index] <= 0) {
+        result[index] = 0;
+    } else {
+        result[index] = input[index];
+    }
+}
+
+__global__ void reluDerivativeKernel(const float* output, float* result, size_t size) {
     auto index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (index >= size) {
         return;
     }
 
-    tensor[index] = value;
+    if (output[index] <= 0) {
+        result[index] = 0;
+    } else {
+        result[index] = 1;
+    }
+}
+
+__global__ void sigmoidKernel(float* input, float* result, size_t size) {
+    auto index = blockDim.x * blockIdx.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    result[index] = 1 / (1 + expf(-input[index]));
 }
 
 // NOLINTEND(readability-static-accessed-through-instance)
+
+void sumTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    auto grid = 1;
+    auto block = tensor.session.threadsPerBlock;
+    size_t n = tensor.size / tensor.session.threadsPerBlock + 1;
+    size_t smemSize = tensor.session.threadsPerBlock * sizeof(float);
+    sumTensorKernel<<<grid, block, smemSize>>>(tensor.data, destination.data, tensor.size, n);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
+void fillTensorOnDevice(Tensor& tensor, float value) {
+    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
+    auto block = tensor.session.threadsPerBlock;
+    fillTensorKernel<<<grid, block>>>(tensor.data, value, tensor.size);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
+void fillTensorOnDevice(Tensor& tensor, const Tensor& value) {
+    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
+    auto block = tensor.session.threadsPerBlock;
+    fillTensorKernel<<<grid, block>>>(tensor.data, value.data, tensor.size);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
 
 void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
     auto grid = a.size / a.session.threadsPerBlock + 1;
@@ -364,14 +464,40 @@ void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void fillTensorOnDevice(Tensor& tensor, float value) {
+void reluTensorOnDevice(const Tensor& tensor, Tensor& destination) {
     auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
     auto block = tensor.session.threadsPerBlock;
-    fillTensorKernel<<<grid, block>>>(tensor.data, value, tensor.size);
+    reluKernel<<<grid, block>>>(tensor.data, destination.data, tensor.size);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
+void reluDerivativeTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
+    auto block = tensor.session.threadsPerBlock;
+    reluDerivativeKernel<<<grid, block>>>(tensor.data, destination.data, tensor.size);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
+void sigmoidTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
+    auto block = tensor.session.threadsPerBlock;
+    sigmoidKernel<<<grid, block>>>(tensor.data, destination.data, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
 #else
+
+void sumTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void fillTensorOnDevice(Tensor& tensor, float value) {
+    throw UnexpectedCUDACallException();
+}
+
+void fillTensorOnDevice(Tensor& tensor, const Tensor& value) {
+    throw UnexpectedCUDACallException();
+}
 
 void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
     throw UnexpectedCUDACallException();
@@ -413,7 +539,15 @@ void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void fillTensorOnDevice(Tensor& tensor, float value) {
+void reluTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void reluDerivativeTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+void sigmoidTensorOnDevice(const Tensor& tensor, Tensor& destination) {
     throw UnexpectedCUDACallException();
 }
 

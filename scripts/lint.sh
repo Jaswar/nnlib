@@ -36,20 +36,25 @@ if [[ -d build ]]; then
     rm -rf build
 fi
 
+# Set the compiler to clang
+export CC=$(which clang)
+export CXX=$(which clang++)
+
 # Create the build directory and cd into it
 echo ">>> Creating build directory"
 mkdir build && cd build
 
 # Build the library while exporting compilation database and testing
 echo ">>> Building the library for linting"
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TEST_NNLIB=ON -DCMAKE_FORCE_ARCHITECTURE=$architecture ..
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TEST_NNLIB=ON -DCMAKE_FORCE_ARCHITECTURE=$architecture -DSET_CLANG_CUDA_ARCH=ON ..
 cmake --build .
 
 # Try to remove CUDA compile flags (otherwise clang-tidy throws errors)
-sed -i 's/-forward-unknown-to-host-compiler/ /g' compile_commands.json
-sed -i 's/-rdc=true/ /g' compile_commands.json
-sed -i 's/--options-file [^ ]*/ /g' compile_commands.json
-sed -i 's/--generate-code=arch=compute_[[:digit:]]*,code=\[compute_[[:digit:]]*,sm_[[:digit:]]*\]/ /g' compile_commands.json
+sed -i 's/ -forward-unknown-to-host-compiler//g' compile_commands.json
+sed -i 's/ -rdc=true//g' compile_commands.json
+sed -i 's/ --options-file [^ ]*//g' compile_commands.json
+sed -i 's/--generate-code=arch=compute_[[:digit:]]*,code=\[compute_[[:digit:]]*,sm_[[:digit:]]*\]//g' compile_commands.json
+sed -i 's/ -ccbin clang //g' compile_commands.json
 
 # Run clang tidy on every wanted file
 echo ">>> Starting clang-tidy, warnings should be ignored"

@@ -65,6 +65,10 @@ float* copy1DArrayDevice(size_t n, float* old) {
     return allocated;
 }
 
+void copy1DArrayDevice(size_t n, float* old, float* copy) {
+    GPU_CHECK_ERROR(cudaMemcpy(copy, old, n * sizeof(float), cudaMemcpyDeviceToDevice));
+}
+
 #else
 
 float* allocate1DArrayDevice(size_t n) {
@@ -96,6 +100,10 @@ void copy2DFromDeviceToHost(float* device, float** host, size_t n, size_t m) {
 }
 
 float* copy1DArrayDevice(size_t n, float* old) {
+    throw UnexpectedCUDACallException();
+}
+
+void copy1DArrayDevice(size_t n, float* old, float* copy) {
     throw UnexpectedCUDACallException();
 }
 

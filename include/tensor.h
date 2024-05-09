@@ -9,20 +9,16 @@
 #define NNLIB_TENSOR_H
 
 #include "allocation.h"
+#include "cache.h"
 #include "session.cuh"
 #include <cstdlib>
 #include <iostream>
+#include <memory>
 #include <utility>
 #include <vector>
 
-/**
- * @brief Enumerate to specify where data is located.
- *
- * Can be either HOST or DEVICE. In case it is set to HOST, the data is stored in RAM and is processed by the CPU.
- * In case it is set to DEVICE, the data is in VRAM and processed by the GPU. The latter is only possible if CUDA
- * is installed and there is a CUDA enabled GPU on the system.
- */
-enum DataLocation { HOST, DEVICE };
+class BackwardFunction; // forward declaration to solve a circular dependency
+
 
 /**
  * @brief Class to represent multidimensional arrays.
@@ -60,6 +56,10 @@ public:
      */
     Session session;
 
+    bool requiresGrad;
+    std::shared_ptr<BackwardFunction> gradFunction;
+    std::shared_ptr<Tensor> grad;
+
     /**
      * @brief Initialize an empty tensor.
      */
@@ -78,6 +78,8 @@ public:
      * @param shape The shape of the vector to create.
      */
     explicit Tensor(std::vector<size_t> shape);
+
+    Tensor(std::vector<size_t> shape, DataLocation location);
 
     /**
      * @brief Construct a tensor based on the passed shape.
@@ -100,6 +102,8 @@ public:
      */
     Tensor& operator=(const Tensor& other);
 
+    [[nodiscard]] std::shared_ptr<Tensor> copy() const;
+
     /**
      * @brief Move the tensor to the designated destination.
      *
@@ -108,6 +112,9 @@ public:
      * @param target The destination to move the tensor to.
      */
     void move(DataLocation target);
+
+    void useGrad();
+    void backward();
 
     /**
      * @brief Static method to easily initialize a 1D tensor with given data.
@@ -165,7 +172,7 @@ private:
      * @param depth The dimension that is currently considered in the recursive call.
      * @return The address of the element in the flattened data array.
      */
-    size_t findEffectiveAddress(const std::vector<size_t>& index, size_t depth) const;
+    [[nodiscard]] size_t findEffectiveAddress(const std::vector<size_t>& index, size_t depth) const;
 
     /**
      * @brief Verify that an index of an element is within the shape of the tensor.
@@ -174,6 +181,8 @@ private:
      */
     void verifyIndex(const std::vector<size_t>& index) const;
 };
+
+typedef std::shared_ptr<Tensor> sTensor;
 
 /**
  * @brief Enables the tensor to be printed using std::cout.
@@ -184,100 +193,53 @@ private:
  */
 std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
 
-/**
- * @brief Sum the tensor.
- *
- * The sum can only be computed on host, hence if the tensor is on device, it first needs to be moved.
- *
- * @param tensor The tensor to sum.
- * @return The sum of all values of the tensor.
- */
-float sum(Tensor& tensor);
+sTensor sum(const sTensor& a);
 
-/**
- * @brief Fill a tensor with a specific value.
- *
- * @param value The value to fill the tensor with.
- * @param destination The tensor to fill.
- */
-void fill(float value, Tensor& destination);
+void fill(float value, sTensor& tensor);
+void fill(const sTensor& value, sTensor& tensor);
 
-/**
- * @brief Add two tensors together.
- *
- * If the first tensor is a matrix and the second a vector, the operation performed is broadcast-add.
- * See addBroadcast() for more details.
- *
- * @param a The first tensor.
- * @param b The second tensor.
- * @param destination Where to store the result of addition.
- */
-void add(const Tensor& a, const Tensor& b, Tensor& destination);
+sTensor add(const sTensor& a, const sTensor& b);
 
-/**
- * @brief Subtract one tensor from another.
- *
- * @param a The tensor to subtract from.
- * @param b The tensor to be subtracted.
- * @param destination Where to store the result of the subtraction.
- */
-void subtract(const Tensor& a, const Tensor& b, Tensor& destination);
+sTensor subtract(const sTensor& a, const sTensor& b);
 
-/**
- * @brief Perform hadamard product (element-wise multiplication) on two tensors.
- *
- * @param a The first tensor.
- * @param b The second tensor.
- * @param destination Where to store the result of the operation.
- */
-void hadamard(const Tensor& a, const Tensor& b, Tensor& destination);
+sTensor hadamard(const sTensor& a, const sTensor& b);
 
-/**
- * @brief Element-wise divide one tensor by another.
- *
- * @param a The tensor to be divided.
- * @param b The tensor to divide by.
- * @param destination Where to store the result of the operation.
- */
-void divide(const Tensor& a, const Tensor& b, Tensor& destination);
+sTensor divide(const sTensor& a, const sTensor& b);
 
-/**
- * @brief Apply natural logarithm to every element of the tensor.
- *
- * @param a The tensor to apply natural logarithm to.
- * @param destination Where to store the result of the operation.
- */
-void log(const Tensor& a, Tensor& destination);
+sTensor log(const sTensor& a);
 
-/**
- * @brief Multiply a tensor with a constant.
- *
- * @param tensor The tensor to multiply.
- * @param constant The constant to multiply the tensor with.
- * @param destination Where to store the result of the multiplication.
- */
-void multiply(const Tensor& tensor, float constant, Tensor& destination);
+sTensor multiply(const sTensor& a, float constant);
 
-/**
- * @brief Multiply one tensor with another.
- *
- * The only currently supported multiplications are matrix-matrix and matrix-vector. If tensors with different
- * shapes will be passed, UnsupportedOperationException will be thrown.
- *
- * @param a The first tensor.
- * @param b The second tensor.
- * @param destination Where the result of multiplication should be stored.
- */
-void multiply(const Tensor& a, const Tensor& b, Tensor& destination);
+sTensor multiply(const sTensor& a, const sTensor& b);
 
-/**
- * @brief Transpose a matrix.
- *
- * The tensor must be a 2D tensor, otherwise UnsupportedOperationException is thrown.
- *
- * @param matrix The matrix to transpose.
- * @param destination Where the result of the transpose operation should be stored.
- */
-void transpose(const Tensor& matrix, Tensor& destination);
+sTensor transpose(const sTensor& a);
+
+sTensor relu(const sTensor& a);
+
+sTensor sigmoid(const sTensor& a);
+
+namespace no_grad {
+    sTensor sum(const sTensor& a);
+
+    sTensor add(const sTensor& a, const sTensor& b);
+
+    sTensor subtract(const sTensor& a, const sTensor& b);
+
+    sTensor hadamard(const sTensor& a, const sTensor& b);
+
+    sTensor divide(const sTensor& a, const sTensor& b);
+
+    sTensor log(const sTensor& a);
+
+    sTensor multiply(const sTensor& a, float constant);
+
+    sTensor multiply(const sTensor& a, const sTensor& b);
+
+    sTensor transpose(const sTensor& a);
+
+    sTensor relu(const sTensor& a);
+
+    sTensor sigmoid(const sTensor& a);
+} // namespace no_grad
 
 #endif //NNLIB_TENSOR_H

@@ -48,7 +48,7 @@ float horizontalAdd(__m256 value) {
 }
 #endif
 
-float sumTensor(const Tensor& tensor) {
+void sumTensorOnHost(const Tensor& tensor, Tensor& destination) {
 #if defined __AVX2__ || defined __AVX__
     __m256 accumulator = _mm256_setzero_ps();
     for (size_t index = 0; index < tensor.size / 8; index++) {
@@ -60,14 +60,13 @@ float sumTensor(const Tensor& tensor) {
     for (size_t index = (tensor.size / 8) * 8; index < tensor.size; index++) {
         accumulated += tensor.data[index];
     }
-    return accumulated;
+    destination.data[0] = accumulated;
 #else
     float sum = 0;
     for (size_t i = 0; i < tensor.size; i++) {
         sum += tensor.data[i];
     }
-
-    return sum;
+    destination.data[0] = sum;
 #endif
 }
 
@@ -83,6 +82,23 @@ void fillTensorOnHost(Tensor& tensor, float value) {
 #else
     for (size_t i = 0; i < tensor.size; i++) {
         tensor.data[i] = value;
+    }
+#endif
+}
+
+void fillTensorOnHost(Tensor& tensor, const Tensor& value) {
+    float val = value.data[0];
+#if defined __AVX2__ || defined __AVX__
+    __m256 valueVector = _mm256_set1_ps(val);
+    for (size_t i = 0; i < tensor.size / 8; i++) {
+        _mm256_storeu_ps(tensor.data + i * 8, valueVector);
+    }
+    for (size_t i = (tensor.size / 8) * 8; i < tensor.size; i++) {
+        tensor.data[i] = val;
+    }
+#else
+    for (size_t i = 0; i < tensor.size; i++) {
+        tensor.data[i] = val;
     }
 #endif
 }
@@ -360,5 +376,31 @@ void transposeMatrixOnHost(const Tensor& matrix, Tensor& destination) {
         for (size_t j = 0; j < matrix.shape[1]; j++) {
             destination.data[j * destination.shape[1] + i] = matrix.data[i * matrix.shape[1] + j];
         }
+    }
+}
+
+void reluTensorOnHost(const Tensor& tensor, Tensor& destination) {
+    for (size_t index = 0; index < tensor.size; index++) {
+        if (tensor.data[index] <= 0) {
+            destination.data[index] = 0;
+        } else {
+            destination.data[index] = tensor.data[index];
+        }
+    }
+}
+
+void reluDerivativeTensorOnHost(const Tensor& tensor, Tensor& destination) {
+    for (size_t index = 0; index < tensor.size; index++) {
+        if (tensor.data[index] <= 0) {
+            destination.data[index] = 0;
+        } else {
+            destination.data[index] = 1;
+        }
+    }
+}
+
+void sigmoidTensorOnHost(const Tensor& tensor, Tensor& destination) {
+    for (size_t index = 0; index < tensor.size; index++) {
+        destination.data[index] = 1 / (1 + expf(-tensor.data[index]));
     }
 }

@@ -9,13 +9,15 @@ jobs:
       - name: Download clang-format
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
-          sudo apt install clang-format-15
-          clang-format-15 --version
+          sudo apt install clang-format-18
+          sudo apt install clang
+          clang-format-18 --version
+          
 
       - name: Run clang-format
         run: |
           chmod +x ./scripts/format.sh
-          ./scripts/format.sh -p clang-format-15
+          ./scripts/format.sh -p clang-format-18
 
   Lint-No-CUDA:
     needs: Style-Check
@@ -26,13 +28,13 @@ jobs:
       - name: Download clang-tidy
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
-          sudo apt install clang-tidy-15
-          clang-tidy-15 --version
+          sudo apt install clang-tidy-18
+          clang-tidy-18 --version
 
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh -p clang-tidy-15 -a None
+          ./scripts/lint.sh -p clang-tidy-18 -a None
 
   Lint-No-CUDA-AVX:
     needs: Style-Check
@@ -43,13 +45,13 @@ jobs:
       - name: Download clang-tidy
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
-          sudo apt install clang-tidy-15
-          clang-tidy-15 --version
+          sudo apt install clang-tidy-18
+          clang-tidy-18 --version
 
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh -p clang-tidy-15 -a AVX2
+          ./scripts/lint.sh -p clang-tidy-18 -a AVX2
 
   Lint-CUDA:
     needs: Style-Check
@@ -60,12 +62,16 @@ jobs:
       - name: Download clang-tidy
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
-          sudo apt install clang-tidy-15
-          clang-tidy-15 --version
+          sudo apt install clang-tidy-18
+          sudo apt install clang-14
+          clang-tidy-18 --version
+          clang --version
 
       - name: Setup CUDA
-        uses: Jimver/cuda-toolkit@v0.2.7
+        uses: Jimver/cuda-toolkit@v0.2.15
         id: cuda-toolkit
+        with:
+          cuda: '12.1.0'
 
       - name: Verify CUDA installation
         run: |
@@ -75,4 +81,4 @@ jobs:
       - name: Run clang-tidy
         run: |
           chmod +x ./scripts/lint.sh
-          ./scripts/lint.sh -p clang-tidy-15
+          ./scripts/lint.sh -p clang-tidy-18

@@ -104,7 +104,7 @@ void threadCSVJob(const std::vector<std::string>& lines, const std::string& deli
     }
 }
 
-Tensor readCSV(const std::string& filepath, const std::string& delim, int numThreads) {
+sTensor readCSV(const std::string& filepath, const std::string& delim, int numThreads) {
     std::cout << "Reading CSV file " << filepath << std::endl;
 
     auto lines = readFile(filepath);
@@ -125,5 +125,5 @@ Tensor readCSV(const std::string& filepath, const std::string& delim, int numThr
 
     std::cout << std::endl;
 
-    return result;
+    return std::make_shared<Tensor>(result);
 }

@@ -7,29 +7,16 @@
 
 #include <loss.h>
 
-void MeanSquaredError::calculateDerivatives(const Tensor& targets, const Tensor& predictions, Tensor& destination) {
-    subtract(predictions, targets, destination);
-    multiply(destination, 2.0f / static_cast<float>(predictions.shape[predictions.shape.size() - 1]), destination);
-}
-
-float MeanSquaredError::calculateLoss(const Tensor& targets, const Tensor& predictions) {
-    if (workingSpace.shape != targets.shape) {
-        workingSpace = Tensor(targets.shape);
-    }
-    if (targets.location != workingSpace.location) {
-        workingSpace.move(targets.location);
-    }
-
-    size_t numOutputs = targets.shape[targets.shape.size() - 1];
-
-    subtract(predictions, targets, workingSpace);
-    hadamard(workingSpace, workingSpace, workingSpace);
-
-    numSamples += targets.shape[0];
-    currentTotalMetric += sum(workingSpace) / static_cast<float>(numOutputs);
-
-    return currentTotalMetric / static_cast<float>(numSamples);
-}
 std::string MeanSquaredError::getShortName() const {
     return "mean_squared_error";
+}
+
+sTensor MeanSquaredError::calculateLoss(const sTensor& targets, const sTensor& predictions) {
+    size_t numOutputs = targets->shape[targets->shape.size() - 1];
+
+    sTensor difference = subtract(predictions, targets);
+    sTensor loss = hadamard(difference, difference);
+    loss = multiply(sum(loss), 1.0f / static_cast<float>(numOutputs));
+
+    return loss;
 }

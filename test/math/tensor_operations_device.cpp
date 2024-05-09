@@ -13,6 +13,10 @@
 
 #ifdef __CUDA__
 
+RC_GTEST_PROP(tensor_operations_device, sum, ()) {
+    tensorSumPBT(true);
+}
+
 RC_GTEST_PROP(tensor_operations_device, fill, (float value)) {
     tensorFillPBT(value, true);
 }
@@ -55,6 +59,14 @@ RC_GTEST_PROP(tensor_operations_device, multiply_matrix_matrix, ()) {
 
 RC_GTEST_PROP(tensor_operations_device, transpose, ()) {
     tensorTransposePBT(true);
+}
+
+RC_GTEST_PROP(tensor_operations_device, relu, ()) {
+    tensorReluPBT(true);
+}
+
+RC_GTEST_PROP(tensor_operations_device, sigmoid, ()) {
+    tensorSigmoidPBT(true);
 }
 
 #endif

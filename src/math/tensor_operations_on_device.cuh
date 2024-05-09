@@ -15,8 +15,12 @@
 
 #include <tensor.h>
 
+void sumTensorOnDevice(const Tensor& tensor, Tensor& destination);
+
 /** @copydoc tensor_operations_on_host.h::fillTensorOnHost() */
 void fillTensorOnDevice(Tensor& tensor, float value);
+
+void fillTensorOnDevice(Tensor& tensor, const Tensor& value);
 
 /** @copydoc tensor_operations_on_host.h::addTensorsOnHost() */
 void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination);
@@ -47,5 +51,10 @@ void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& de
 
 /** @copydoc tensor_operations_on_host.h::transposeMatrixOnHost() */
 void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination);
+
+void reluTensorOnDevice(const Tensor& tensor, Tensor& destination);
+void reluDerivativeTensorOnDevice(const Tensor& tensor, Tensor& destination);
+
+void sigmoidTensorOnDevice(const Tensor& tensor, Tensor& destination);
 
 #endif //NNLIB_TENSOR_OPERATIONS_ON_DEVICE_CUH

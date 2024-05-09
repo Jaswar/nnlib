@@ -7,6 +7,7 @@
 
 #include "../../include/network.h"
 #include "../gpu/allocation_gpu.cuh"
+#include "runtime.h"
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -15,8 +16,8 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
-#include <sstream>
 #include <utils/printing.h>
+#include <verify.cuh>
 
 /**
  * @brief Structure to contain information about the current epoch.
@@ -66,23 +67,25 @@ struct EpochProgress {
      * @param loss The loss object to update.
      * @param metrics The metrics to update given the new batch.
      */
-    void update(Tensor& targets, Tensor& predictions, Loss* loss, std::vector<Metric*>& metrics) {
-        const DataLocation originalPredictions = predictions.location;
-        const DataLocation originalTargets = targets.location;
+    void update(sTensor& targets, sTensor& predictions, Loss* loss, std::vector<Metric*>& metrics) {
+        const DataLocation originalPredictions = predictions->location;
+        const DataLocation originalTargets = targets->location;
 
-        predictions.move(HOST);
-        targets.move(HOST);
+        predictions->move(HOST);
+        targets->move(HOST);
 
-        numProcessed += targets.shape[0];
+        numProcessed += targets->shape[0];
 
-        lossValue = loss->calculateLoss(targets, predictions);
+        Runtime::getInstance().disableGradient();
+        lossValue = loss->calculateMetric(targets, predictions);
         for (auto metric : metrics) {
             float metricValue = metric->calculateMetric(targets, predictions);
             metricsValues[metric->getShortName()] = metricValue;
         }
+        Runtime::getInstance().enableGradient();
 
-        predictions.move(originalPredictions);
-        targets.move(originalTargets);
+        predictions->move(originalPredictions);
+        targets->move(originalTargets);
     }
 };
 
@@ -137,20 +140,22 @@ std::ostream& operator<<(std::ostream& stream, const EpochProgress& epochProgres
  * @param batchSize The size of the batch to split on.
  * @return The vector of batches.
  */
-std::vector<Tensor> splitIntoBatches(const Tensor& data, size_t batchSize) {
-    std::vector<Tensor> result;
+std::vector<sTensor> splitIntoBatches(const sTensor& data, size_t batchSize) {
+    std::vector<sTensor> result;
 
-    int numBatches = std::ceil(static_cast<double>(data.shape[0]) / static_cast<double>(batchSize));
+    int numBatches = std::ceil(static_cast<double>(data->shape[0]) / static_cast<double>(batchSize));
     for (int i = 0; i < numBatches; i++) {
-        auto rowsInBatch = std::min(batchSize, data.shape[0] - batchSize * i);
+        auto rowsInBatch = std::min(batchSize, data->shape[0] - batchSize * i);
 
-        Tensor batch = Tensor(rowsInBatch, data.shape[1]);
-        if (data.location == DEVICE) {
-            copy1DFromDeviceToHost(data.data + i * data.shape[1] * batchSize, batch.data, data.shape[1] * rowsInBatch);
+        sTensor batch = std::make_shared<Tensor>(rowsInBatch, data->shape[1]);
+        if (data->location == DEVICE) {
+            copy1DFromDeviceToHost(data->data + i * data->shape[1] * batchSize, batch->data,
+                                   data->shape[1] * rowsInBatch);
         } else {
-            copy1DFromHostToHost(data.data + i * data.shape[1] * batchSize, batch.data, data.shape[1] * rowsInBatch);
+            copy1DFromHostToHost(data->data + i * data->shape[1] * batchSize, batch->data,
+                                 data->shape[1] * rowsInBatch);
         }
-        batch.move(data.location);
+        batch->move(data->location);
 
         result.push_back(batch);
     }
@@ -159,7 +164,7 @@ std::vector<Tensor> splitIntoBatches(const Tensor& data, size_t batchSize) {
 }
 
 Network::Network(size_t inputSize, bool useGPU, long long seed)
-    : seed(seed), layers(), location(HOST), previousSize(inputSize), lossData(DEFAULT_BATCH_SIZE, inputSize) {
+    : seed(seed), layers(), location(HOST), previousSize(inputSize) {
     if (this->seed == NO_SEED) {
         this->seed = time(nullptr);
     }
@@ -167,79 +172,45 @@ Network::Network(size_t inputSize, bool useGPU, long long seed)
 
     if (useGPU && isCudaAvailable()) {
         location = DEVICE;
-        lossData.move(DEVICE);
     }
 }
 
 void Network::add(size_t numNeurons, const std::string& activation) {
-    Activation* activationFunction;
-    if (activation == "relu") {
-        activationFunction = new ReLUActivation();
-    } else if (activation == "sigmoid") {
-        activationFunction = new SigmoidActivation();
-    } else {
-        activationFunction = new LinearActivation();
-    }
-
-    Layer newLayer = Layer(previousSize, numNeurons, activationFunction, location);
+    Layer newLayer = Layer(previousSize, numNeurons, activation, location);
 
     layers.push_back(newLayer);
 
     previousSize = numNeurons;
-    lossData = Tensor(DEFAULT_BATCH_SIZE, numNeurons);
-    lossData.move(location);
 }
 
-Tensor* Network::forward(const Tensor& batch) {
+sTensor Network::forward(const sTensor& batch) {
     Layer& first = layers.front();
-    first.forward(batch);
+    sTensor output = first.forward(batch);
 
     for (auto i = layers.begin() + 1; i != layers.end(); i++) {
-        size_t index = i - layers.begin();
-        i->forward(layers.at(index - 1).aMatrix);
+        output = i->forward(output);
     }
 
-    return &layers.back().aMatrix;
-}
-
-void Network::backward(const Tensor& predicted, const Tensor& target, float learningRate, Loss* loss) {
-    if (lossData.shape != predicted.shape) {
-        lossData = Tensor(predicted.shape[0], lossData.shape[1]);
-        lossData.move(location);
-    }
-
-    loss->calculateDerivatives(target, predicted, lossData);
-
-    Layer& last = layers.back();
-    last.backward(lossData, Tensor(0, 0), predicted.shape[0], true);
-
-    for (auto i = layers.rbegin() + 1; i != layers.rend(); ++i) {
-        size_t index = i - layers.rbegin();
-        Layer& prev = layers.at(layers.size() - index);
-
-        i->backward(prev.newDelta, prev.weights, predicted.shape[0], false);
-    }
-
-    for (auto& layer : layers) {
-        layer.applyGradients(predicted.shape[0], learningRate);
-    }
+    return output;
 }
 
 //NOLINTNEXTLINE(readability-identifier-naming)
-void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
+void Network::train(sTensor& X, sTensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
                     std::vector<Metric*>& metrics) {
-    if (X.shape[0] != y.shape[0]) {
+    if (X->shape[0] != y->shape[0]) {
         throw SizeMismatchException();
     }
 
-    X.move(location);
-    y.move(location);
+    X->move(location);
+    y->move(location);
 
-    std::vector<Tensor> batches = splitIntoBatches(X, batchSize);
-    std::vector<Tensor> targets = splitIntoBatches(y, batchSize);
-    std::vector<Tensor> targetsOnHost = targets;
-    for (Tensor& batch : targetsOnHost) {
-        batch.move(HOST);
+    std::vector<sTensor> batches = splitIntoBatches(X, batchSize);
+    std::vector<sTensor> targets = splitIntoBatches(y, batchSize);
+    std::vector<sTensor> targetsOnHost = std::vector<sTensor>();
+    for (sTensor& batch : targets) {
+        sTensor batchOnHost = batch->copy();
+        batchOnHost->move(HOST);
+        targetsOnHost.push_back(batchOnHost);
     }
 
     for (int epoch = 1; epoch <= epochs; epoch++) {
@@ -255,25 +226,30 @@ void Network::train(Tensor& X, Tensor& y, int epochs, size_t batchSize, float le
     }
 }
 
-void Network::processEpoch(std::vector<Tensor>& batches, std::vector<Tensor>& targets,
-                           std::vector<Tensor>& targetsOnHost, float learningRate, Loss* loss,
+void Network::processEpoch(std::vector<sTensor>& batches, std::vector<sTensor>& targets,
+                           std::vector<sTensor>& targetsOnHost, float learningRate, Loss* loss,
                            std::vector<Metric*>& metrics) {
     size_t numSamples = 0;
-    for (Tensor& batch : targets) {
-        numSamples += batch.shape[0];
+    for (sTensor& batch : targets) {
+        numSamples += batch->shape[0];
     }
     EpochProgress epochProgress = EpochProgress(numSamples);
 
     for (int row = 0; row < batches.size(); row++) {
-        const Tensor& batch = batches.at(row);
-        Tensor& target = targets.at(row);
+        sTensor batch = batches.at(row);
+        sTensor target = targets.at(row);
 
-        Tensor* output = forward(batch);
+        sTensor output = forward(batch);
 
-        backward(*output, target, learningRate, loss);
+        sTensor l = loss->calculateLoss(target, output);
+        l->backward();
 
-        Tensor& targetOnHost = targetsOnHost.at(row);
-        epochProgress.update(targetOnHost, *output, loss, metrics);
+        for (auto& layer : layers) {
+            layer.applyGradients(batch->shape[0], learningRate);
+        }
+
+        sTensor targetOnHost = targetsOnHost.at(row);
+        epochProgress.update(targetOnHost, output, loss, metrics);
         std::cout << epochProgress;
     }
 }

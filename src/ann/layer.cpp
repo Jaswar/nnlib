@@ -7,6 +7,7 @@
 
 #include "../../include/layer.h"
 #include "../gpu/allocation_gpu.cuh"
+#include "runtime.h"
 #include "verify.cuh"
 #include <utility>
 
@@ -33,11 +34,11 @@ float getRandom() {
  * @param outSize The size of the vector to generate. It is also the output size of the layer.
  * @return The random vector of biases.
  */
-Tensor initializeBiases(size_t outSize) {
-    Tensor biases = Tensor(outSize);
+sTensor initializeBiases(size_t outSize) {
+    sTensor biases = std::make_shared<Tensor>(outSize);
 
     for (int i = 0; i < outSize; i++) {
-        biases.data[i] = getRandom();
+        biases->data[i] = getRandom();
     }
 
     return biases;
@@ -52,169 +53,52 @@ Tensor initializeBiases(size_t outSize) {
  * @param outSize The number of columns of the matrix. It is also the output size of the layer.
  * @return The random matrix of weights.
  */
-Tensor initializeWeights(size_t inSize, size_t outSize) {
-    Tensor weights = Tensor(inSize, outSize);
+sTensor initializeWeights(size_t inSize, size_t outSize) {
+    sTensor weights = std::make_shared<Tensor>(inSize, outSize);
 
     for (int i = 0; i < inSize; i++) {
         for (int j = 0; j < outSize; j++) {
-            weights.data[i * outSize + j] = getRandom();
+            weights->data[i * outSize + j] = getRandom();
         }
     }
 
     return weights;
 }
 
-Layer::Layer(size_t inSize, size_t outSize, Activation* activation, DataLocation location)
+Layer::Layer(size_t inSize, size_t outSize, std::string activation, DataLocation location)
     : location(location),
       inSize(inSize),
       outSize(outSize),
-      activation(activation),
+      activation(std::move(activation)),
       biases(initializeBiases(outSize)),
-      weights(initializeWeights(inSize, outSize)),
-      data(),
-      dataT(inSize, DEFAULT_BATCH_SIZE),
-      aMatrix(DEFAULT_BATCH_SIZE, outSize),
-      zMatrix(DEFAULT_BATCH_SIZE, outSize),
-      newDelta(DEFAULT_BATCH_SIZE, outSize),
-      newDeltaT(outSize, DEFAULT_BATCH_SIZE),
-      derivatives(DEFAULT_BATCH_SIZE, outSize),
-      previousWeightsT(0, 0),
-      weightsGradients(inSize, outSize),
-      biasesGradients(outSize),
-      ones(DEFAULT_BATCH_SIZE) {
-
-    fill(1, ones);
+      weights(initializeWeights(inSize, outSize)) {
 
     if (location == DEVICE) {
-        dataT.move(DEVICE);
-
-        biases.move(DEVICE);
-        weights.move(DEVICE);
-
-        aMatrix.move(DEVICE);
-        zMatrix.move(DEVICE);
-
-        newDelta.move(DEVICE);
-        newDeltaT.move(DEVICE);
-        derivatives.move(DEVICE);
-
-        previousWeightsT.move(DEVICE);
-
-        weightsGradients.move(DEVICE);
-        biasesGradients.move(DEVICE);
-        ones.move(DEVICE);
+        biases->move(DEVICE);
+        weights->move(DEVICE);
     }
+    weights->useGrad();
+    biases->useGrad();
 }
 
 Layer::~Layer() = default;
 
-void Layer::forward(const Tensor& batch) {
-    allocate(batch.shape[0]);
+sTensor Layer::forward(const sTensor& batch) const {
+    sTensor z = add(multiply(batch, weights), biases);
 
-    multiply(batch, weights, zMatrix);
-    add(zMatrix, biases, zMatrix);
-
-    data = &batch;
-    transpose(batch, dataT);
-
-    activation->forward(zMatrix, aMatrix);
-}
-
-void Layer::backward(const Tensor& delta, const Tensor& previousWeights, size_t batchSize, bool isLastLayer) {
-    if (previousWeightsT.shape[0] != previousWeights.shape[1] ||
-        previousWeightsT.shape[1] != previousWeights.shape[0]) {
-        previousWeightsT = Tensor(previousWeights.shape[1], previousWeights.shape[0]);
-        previousWeightsT.move(location);
-    }
-    calculateDerivatives();
-
-    if (!isLastLayer) {
-        transpose(previousWeights, previousWeightsT);
-        multiply(delta, previousWeightsT, newDelta);
-        hadamard(newDelta, derivatives, newDelta);
-
-        transpose(newDelta, newDeltaT);
-        multiply(newDeltaT, ones, biasesGradients);
-
-        multiply(dataT, newDelta, weightsGradients);
+    if (activation == "relu") {
+        return relu(z);
+    } else if (activation == "sigmoid") {
+        return sigmoid(z);
     } else {
-        hadamard(delta, derivatives, newDelta);
-
-        transpose(newDelta, newDeltaT);
-        multiply(newDeltaT, ones, biasesGradients);
-
-        multiply(dataT, newDelta, weightsGradients);
+        return z;
     }
 }
 
 void Layer::applyGradients(size_t batchSize, float learningRate) {
-    multiply(biasesGradients, learningRate / static_cast<float>(batchSize), biasesGradients);
-    subtract(biases, biasesGradients, biases);
-
-    multiply(weightsGradients, learningRate / static_cast<float>(batchSize), weightsGradients);
-    subtract(weights, weightsGradients, weights);
-}
-
-void Layer::calculateDerivatives() {
-    activation->computeDerivatives(zMatrix, derivatives);
-}
-
-void Layer::allocate(size_t batchSize) {
-    allocateOnes(batchSize);
-    allocateDataT(batchSize);
-    allocateAMatrix(batchSize);
-    allocateZMatrix(batchSize);
-    allocateNewDelta(batchSize);
-    allocateNewDeltaT(batchSize);
-    allocateDerivatives(batchSize);
-}
-
-void Layer::allocateOnes(size_t batchSize) {
-    if (ones.shape[0] != batchSize) {
-        ones = Tensor(batchSize);
-        fill(1, ones);
-        ones.move(location);
-    }
-}
-
-void Layer::allocateDataT(size_t batchSize) {
-    if (dataT.shape[1] != batchSize) {
-        dataT = Tensor(dataT.shape[0], batchSize);
-        dataT.move(location);
-    }
-}
-
-void Layer::allocateAMatrix(size_t batchSize) {
-    if (aMatrix.shape[0] != batchSize) {
-        aMatrix = Tensor(batchSize, aMatrix.shape[1]);
-        aMatrix.move(location);
-    }
-}
-
-void Layer::allocateZMatrix(size_t batchSize) {
-    if (zMatrix.shape[0] != batchSize) {
-        zMatrix = Tensor(batchSize, zMatrix.shape[1]);
-        zMatrix.move(location);
-    }
-}
-
-void Layer::allocateNewDelta(size_t batchSize) {
-    if (newDelta.shape[0] != batchSize) {
-        newDelta = Tensor(batchSize, newDelta.shape[1]);
-        newDelta.move(location);
-    }
-}
-
-void Layer::allocateNewDeltaT(size_t batchSize) {
-    if (newDeltaT.shape[1] != batchSize) {
-        newDeltaT = Tensor(newDeltaT.shape[0], batchSize);
-        newDeltaT.move(location);
-    }
-}
-
-void Layer::allocateDerivatives(size_t batchSize) {
-    if (derivatives.shape[0] != batchSize) {
-        derivatives = Tensor(batchSize, derivatives.shape[1]);
-        derivatives.move(location);
-    }
+    float lrPerBatch = learningRate / static_cast<float>(batchSize);
+    biases = no_grad::subtract(biases, no_grad::multiply(biases->grad, lrPerBatch));
+    weights = no_grad::subtract(weights, no_grad::multiply(weights->grad, lrPerBatch));
+    biases->useGrad();
+    weights->useGrad();
 }

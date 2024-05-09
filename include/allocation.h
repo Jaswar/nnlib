@@ -72,6 +72,8 @@ void copy1DFromHostToHost(float* oldLoc, float* newLoc, size_t n);
  */
 float* copy1DArray(size_t n, float* original);
 
+void copy1DArray(size_t n, float* original, float* copy);
+
 /**
  * @brief Copy 2D array to a new location.
  *

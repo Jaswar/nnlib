@@ -8,52 +8,13 @@
 #ifndef NNLIB_LAYER_H
 #define NNLIB_LAYER_H
 
-#include "activation.h"
+#include "tensor.h"
 #include <string>
-
-/**
- * @brief The default batch size if no batch size is specified.
- *
- * This macro is also used to pre-allocate space when a layer is first created. In this way all required
- * tensors are initialized and may only need reshaping later when starting training.
- */
-#define DEFAULT_BATCH_SIZE 32
 
 /**
  * @brief Represents a single layer of a neural network.
  */
 class Layer {
-
-    /**
-     * @brief Matrix storing the transpose of the weights of the previous layer.
-     *
-     * Helper variable used during backpropagation.
-     */
-private:
-    Tensor previousWeightsT;
-
-    /**
-     * @brief Matrix storing the transpose of the data passed in the forward propagation step.
-     *
-     * Helper variable used during backpropagation.
-     */
-    Tensor dataT;
-
-    /**
-     * @brief Store a vector of ones.
-     *
-     * Required for the backpropagation algorithm. It is used to sum Layer::newDeltaT along first axis into
-     * bias gradients.
-     */
-    Tensor ones;
-
-    /**
-     * @brief Transpose of Layer::newDelta.
-     *
-     * Helper variable used during backpropagation.
-     */
-    Tensor newDeltaT;
-
     /**
      * @brief The location of the layer.
      *
@@ -81,64 +42,17 @@ public:
      *
      * Pointer to the activation function object. Can be LinearActivation, ReLUActivation or SigmoidActivation.
      */
-    Activation* activation;
+    std::string activation;
 
     /**
      * @brief The weights of the layer. Stored as a matrix.
      */
-    Tensor weights;
+    sTensor weights;
 
     /**
      * @brief The biases of the layer. Stored as a vector.
      */
-    Tensor biases;
-
-    /**
-     * @brief Matrix storing data passed to the layer.
-     *
-     * Stores a pointer reference to the batch that was most recently forward-propagated through the layer.
-     * This data is then used in the backpropagation step.
-     */
-    const Tensor* data;
-
-    /**
-     * @brief The output of the layer before applying the activation function.
-     */
-    Tensor aMatrix;
-
-    /**
-     * @brief The output of the layer.
-     */
-    Tensor zMatrix;
-
-    /**
-     * @brief Delta that should be passed to the previous layer in the backpropagation step.
-     *
-     * Stored as a matrix.
-     */
-    Tensor newDelta;
-
-    /**
-     * @brief The derivatives of the output.
-     *
-     * The derivatives are computed by the activation function and stored in this variable. The data is stored as
-     * a matrix.
-     */
-    Tensor derivatives;
-
-    /**
-     * @brief The weights gradients computed by the backpropagation algorithm.
-     *
-     * Stored as a matrix.
-     */
-    Tensor weightsGradients;
-
-    /**
-     * @brief The biases gradients computed by the backpropagation algorithm.
-     *
-     * Stored as a vector.
-     */
-    Tensor biasesGradients;
+    sTensor biases;
 
     /**
      * @brief Construct a new layer.
@@ -151,7 +65,7 @@ public:
      * @param activation The activation function that should be used.
      * @param location The location of the layer. See Layer::location.
      */
-    Layer(size_t inSize, size_t outSize, Activation* activation, DataLocation location);
+    Layer(size_t inSize, size_t outSize, std::string activation, DataLocation location);
 
     /**
      * @brief The destructor of the layer object.
@@ -167,27 +81,9 @@ public:
      *
      * @param batch The batch that should be propagated.
      */
-    void forward(const Tensor& batch);
-
-    /**
-     * @brief Backward-propagate one batch of data through the network.
-     *
-     * Takes a boolean to specify if this layer is the output layer in the network. If it is, a slightly
-     * different algorithm must be used to compute the gradients.
-     *
-     * This method only computes the gradients, it does not apply them. The gradients can only be applied once
-     * they have been calculated for all the layers. Otherwise, the passed @p previousWeights would change before
-     * the gradients have been computed. The gradients are applied in the Layer::applyGradients() method.
-     *
-     * Uses algorithm adapted from http://neuralnetworksanddeeplearning.com/chap2.html.
-     *
-     * @param delta @p newDelta passed from the previous layer (next in the model's architecture).
-     * @param previousWeights The weights of the previous layer (next in the model's architecture).
-     * @param batchSize The size of the batch.
-     * @param isLastLayer Boolean to specify if this layer is the last one (the output layer).
-     */
-    void backward(const Tensor& delta, const Tensor& previousWeights, size_t batchSize = DEFAULT_BATCH_SIZE,
-                  bool isLastLayer = false);
+    // You might want to ignore the return value of forward, so don't use [[nodiscard]]
+    // NOLINTNEXTLINE(modernize-use-nodiscard)
+    sTensor forward(const sTensor& batch) const;
 
     /**
      * @brief Apply the computed gradients.
@@ -198,73 +94,6 @@ public:
      * @param learningRate The learning rate of the model.
      */
     void applyGradients(size_t batchSize, float learningRate = 0.01);
-
-    /**
-     * @brief Calculate the derivatives of the output.
-     *
-     * This calls Activation::computeDerivatives() on the Layer::activation object.
-     */
-private:
-    void calculateDerivatives();
-
-    /**
-     * @brief Allocate data required for computation.
-     *
-     * Step called during forward propagation. If some matrices are in an incorrect shape, this method will reallocate
-     * their memory to match the correct shape. This method calls all <em>allocate*</em> methods.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocate(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::ones.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateOnes(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::dataT.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateDataT(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::aMatrix.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateAMatrix(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::zMatrix.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateZMatrix(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::newDelta.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateNewDelta(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::newDeltaT.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateNewDeltaT(size_t batchSize);
-
-    /**
-     * @brief Allocate Layer::derivatives.
-     *
-     * @param batchSize The size of the batch.
-     */
-    void allocateDerivatives(size_t batchSize);
 };
 
 #endif //NNLIB_LAYER_H

@@ -28,26 +28,26 @@ int indexOf(float value, const std::set<float>& set) {
     return -1;
 }
 
-Tensor oneHotEncode(const Tensor& vector) {
-    if (vector.shape.size() != 1) {
+sTensor oneHotEncode(const sTensor& vector) {
+    if (vector->shape.size() != 1) {
         throw UnsupportedOperationException();
     }
 
     std::set<float> unique;
-    for (int i = 0; i < vector.shape[0]; i++) {
-        unique.insert(vector.data[i]);
+    for (int i = 0; i < vector->shape[0]; i++) {
+        unique.insert(vector->data[i]);
     }
 
-    auto n = vector.shape[0];
+    auto n = vector->shape[0];
     auto m = unique.size();
 
-    Tensor result = Tensor(n, m);
+    sTensor result = std::make_shared<Tensor>(n, m);
     fill(0, result);
 
-    for (int i = 0; i < vector.shape[0]; i++) {
-        float value = vector.data[i];
+    for (int i = 0; i < vector->shape[0]; i++) {
+        float value = vector->data[i];
         int index = indexOf(value, unique);
-        result.data[i * result.shape[1] + index] = 1;
+        result->data[i * result->shape[1] + index] = 1;
     }
 
     return result;

@@ -21,7 +21,7 @@
  * @param tensor The tensor to sum.
  * @return The sum of all values of a tensor.
  */
-float sumTensor(const Tensor& tensor);
+void sumTensorOnHost(const Tensor& tensor, Tensor& destination);
 
 /**
  * @brief Fill a tensor with a constant value.
@@ -30,6 +30,8 @@ float sumTensor(const Tensor& tensor);
  * @param value The value to fill the tensor with.
  */
 void fillTensorOnHost(Tensor& tensor, float value);
+
+void fillTensorOnHost(Tensor& tensor, const Tensor& value);
 
 /**
  * @brief Element-wise add two tensors.
@@ -118,5 +120,10 @@ void multiplyMatrixMatrixOnHost(const Tensor& m1, const Tensor& m2, Tensor& dest
  * @param destination Where the result of the transpose operation should be stored.
  */
 void transposeMatrixOnHost(const Tensor& matrix, Tensor& destination);
+
+void reluTensorOnHost(const Tensor& tensor, Tensor& destination);
+void reluDerivativeTensorOnHost(const Tensor& tensor, Tensor& destination);
+
+void sigmoidTensorOnHost(const Tensor& tensor, Tensor& destination);
 
 #endif //NNLIB_TENSOR_OPERATIONS_ON_HOST_H

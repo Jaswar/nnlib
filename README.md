@@ -1,6 +1,6 @@
 ## Overview
 
-*nnlib* is a GPU-accelerated, static, C/C++ neural network library. It was designed to work in one of the following two modes:
+*nnlib* is a GPU-accelerated, static, C/C++ neural network library with autograd support. It was designed to work in one of the following two modes:
  - CPU-only: All operations take place on CPU and all data is stored in the main memory. Single Instruction Multiple Data (SIMD) 
 instruction sets, AVX and AVX2, are used to increase performance.
  - GPU-accelerated: Most of the operations are performed on GPU and most of the data is stored on GPU' memory. The library then

@@ -21,7 +21,7 @@ CheckOptions:
   - key: readability-identifier-naming.MethodCase
     value: camelBack
   - key: readability-identifier-naming.NamespaceCase
-    value: camelBack
+    value: lower_case
   - key: readability-identifier-naming.ParameterCase
     value: camelBack
   - key: readability-identifier-naming.StructCase
@@ -120,4 +120,6 @@ Checks:   '-*,
           readability-identifier-naming,
           performance-*,
           bugprone-*,
-          -bugprone-easily-swappable-parameters'
+          -bugprone-easily-swappable-parameters,
+          -performance-enum-size,
+          -performance-avoid-endl'
