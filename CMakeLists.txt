@@ -44,6 +44,7 @@ if (CMAKE_CUDA_COMPILER)
     if (SET_CLANG_CUDA_ARCH AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         message(STATUS "Setting clang CUDA architecture to sm_50")
         set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -ccbin clang --cuda-gpu-arch=sm_50 -Qunused-arguments")
+        set_target_properties(nnlib PROPERTIES CUDA_ARCHITECTURES "50")
     endif()
 
     add_definitions(-D__CUDA__)
