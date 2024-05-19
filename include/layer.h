@@ -47,12 +47,12 @@ public:
     /**
      * @brief The weights of the layer. Stored as a matrix.
      */
-    sTensor weights;
+    sfTensor weights;
 
     /**
      * @brief The biases of the layer. Stored as a vector.
      */
-    sTensor biases;
+    sfTensor biases;
 
     /**
      * @brief Construct a new layer.
@@ -83,7 +83,7 @@ public:
      */
     // You might want to ignore the return value of forward, so don't use [[nodiscard]]
     // NOLINTNEXTLINE(modernize-use-nodiscard)
-    sTensor forward(const sTensor& batch) const;
+    sfTensor forward(const sfTensor& batch) const;
 
     /**
      * @brief Apply the computed gradients.

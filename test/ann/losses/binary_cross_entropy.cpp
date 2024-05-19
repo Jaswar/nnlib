@@ -23,9 +23,9 @@ RC_GTEST_PROP(binary_cross_entropy, calculate_loss, ()) {
     const auto dataTargets = *NO_SHRINK(rc::gen::container<std::vector<float>>(numSamples, allowed));
     const auto dataPredictions = rcFloatVectorInRange(numSamples, 1e-4, 1 - 1e-4);
 
-    sTensor targets = std::make_shared<Tensor>(numSamples, 1);
+    sfTensor targets = std::make_shared<Tensor<float>>(numSamples, 1);
     std::copy(dataTargets.begin(), dataTargets.end(), targets->data);
-    sTensor predictions = std::make_shared<Tensor>(numSamples, 1);
+    sfTensor predictions = std::make_shared<Tensor<float>>(numSamples, 1);
     std::copy(dataPredictions.begin(), dataPredictions.end(), predictions->data);
 
     float expected = 0;

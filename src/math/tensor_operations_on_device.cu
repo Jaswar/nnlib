@@ -369,7 +369,7 @@ __global__ void sigmoidKernel(float* input, float* result, size_t size) {
 
 // NOLINTEND(readability-static-accessed-through-instance)
 
-void sumTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+void sumTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& destination) {
     auto grid = 1;
     auto block = tensor.session.threadsPerBlock;
     size_t n = tensor.size / tensor.session.threadsPerBlock + 1;
@@ -378,70 +378,70 @@ void sumTensorOnDevice(const Tensor& tensor, Tensor& destination) {
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void fillTensorOnDevice(Tensor& tensor, float value) {
+void fillTensorOnDevice(Tensor<float>& tensor, float value) {
     auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
     auto block = tensor.session.threadsPerBlock;
     fillTensorKernel<<<grid, block>>>(tensor.data, value, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void fillTensorOnDevice(Tensor& tensor, const Tensor& value) {
+void fillTensorOnDevice(Tensor<float>& tensor, const Tensor<float>& value) {
     auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
     auto block = tensor.session.threadsPerBlock;
     fillTensorKernel<<<grid, block>>>(tensor.data, value.data, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+void addTensorsOnDevice(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
     auto grid = a.size / a.session.threadsPerBlock + 1;
     auto block = a.session.threadsPerBlock;
     addTensorsKernel<<<grid, block>>>(a.data, b.data, destination.data, a.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void subtractTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+void subtractTensorsOnDevice(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
     auto grid = a.size / a.session.threadsPerBlock + 1;
     auto block = a.session.threadsPerBlock;
     subtractTensorsKernel<<<grid, block>>>(a.data, b.data, destination.data, a.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+void hadamardTensorsOnDevice(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
     auto grid = a.size / a.session.threadsPerBlock + 1;
     auto block = a.session.threadsPerBlock;
     hadamardTensorsKernel<<<grid, block>>>(a.data, b.data, destination.data, a.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void divideTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+void divideTensorsOnDevice(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
     auto grid = a.size / a.session.threadsPerBlock + 1;
     auto block = a.session.threadsPerBlock;
     divideTensorsKernel<<<grid, block>>>(a.data, b.data, destination.data, a.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void logTensorOnDevice(const Tensor& a, Tensor& destination) {
+void logTensorOnDevice(const Tensor<float>& a, Tensor<float>& destination) {
     auto grid = a.size / a.session.threadsPerBlock + 1;
     auto block = a.session.threadsPerBlock;
     logTensorKernel<<<grid, block>>>(a.data, destination.data, a.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void addBroadcastOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
+void addBroadcastOnDevice(const Tensor<float>& matrix, const Tensor<float>& vector, Tensor<float>& destination) {
     auto grid = matrix.size / matrix.session.threadsPerBlock + 1;
     auto block = matrix.session.threadsPerBlock;
     addBroadcastKernel<<<grid, block>>>(matrix.data, vector.data, destination.data, matrix.shape[0], matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void multiplyTensorOnDevice(const Tensor& tensor, float constant, Tensor& destination) {
+void multiplyTensorOnDevice(const Tensor<float>& tensor, float constant, Tensor<float>& destination) {
     auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
     auto block = tensor.session.threadsPerBlock;
     multiplyTensorKernel<<<grid, block>>>(tensor.data, constant, destination.data, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void multiplyMatrixVectorOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
+void multiplyMatrixVectorOnDevice(const Tensor<float>& matrix, const Tensor<float>& vector, Tensor<float>& destination) {
     auto grid = matrix.shape[0] / matrix.session.threadsPerBlock + 1;
     auto block = matrix.session.threadsPerBlock;
     mulMatrixVectorKernel<<<grid, block>>>(matrix.data, vector.data, destination.data, matrix.shape[0],
@@ -449,7 +449,7 @@ void multiplyMatrixVectorOnDevice(const Tensor& matrix, const Tensor& vector, Te
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& destination) {
+void multiplyMatrixMatrixOnDevice(const Tensor<float>& m1, const Tensor<float>& m2, Tensor<float>& destination) {
     auto grid = destination.size / destination.session.threadsPerBlock + 1;
     auto block = destination.session.threadsPerBlock;
     multiplyMatricesNoTilingKernel<<<grid, block>>>(m1.data, m2.data, destination.data, m1.shape[0], m1.shape[1],
@@ -457,28 +457,28 @@ void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& de
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
+void transposeMatrixOnDevice(const Tensor<float>& matrix, Tensor<float>& destination) {
     auto grid = matrix.size / matrix.session.threadsPerBlock + 1;
     auto block = matrix.session.threadsPerBlock;
     transposeMatrixKernel<<<grid, block>>>(matrix.data, destination.data, matrix.shape[0], matrix.shape[1]);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void reluTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+void reluTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& destination) {
     auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
     auto block = tensor.session.threadsPerBlock;
     reluKernel<<<grid, block>>>(tensor.data, destination.data, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void reluDerivativeTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+void reluDerivativeTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& destination) {
     auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
     auto block = tensor.session.threadsPerBlock;
     reluDerivativeKernel<<<grid, block>>>(tensor.data, destination.data, tensor.size);
     GPU_CHECK_ERROR(cudaGetLastError());
 }
 
-void sigmoidTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+void sigmoidTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& destination) {
     auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
     auto block = tensor.session.threadsPerBlock;
     sigmoidKernel<<<grid, block>>>(tensor.data, destination.data, tensor.size);
@@ -487,67 +487,67 @@ void sigmoidTensorOnDevice(const Tensor& tensor, Tensor& destination) {
 
 #else
 
-void sumTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+void sumTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void fillTensorOnDevice(Tensor& tensor, float value) {
+void fillTensorOnDevice(Tensor<float>& tensor, float value) {
     throw UnexpectedCUDACallException();
 }
 
-void fillTensorOnDevice(Tensor& tensor, const Tensor& value) {
+void fillTensorOnDevice(Tensor<float>& tensor, const Tensor<float>& value) {
     throw UnexpectedCUDACallException();
 }
 
-void addTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+void addTensorsOnDevice(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void subtractTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+void subtractTensorsOnDevice(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void hadamardTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+void hadamardTensorsOnDevice(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void divideTensorsOnDevice(const Tensor& a, const Tensor& b, Tensor& destination) {
+void divideTensorsOnDevice(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void logTensorOnDevice(const Tensor& a, Tensor& destination) {
+void logTensorOnDevice(const Tensor<float>& a, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void addBroadcastOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
+void addBroadcastOnDevice(const Tensor<float>& matrix, const Tensor<float>& vector, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void multiplyTensorOnDevice(const Tensor& tensor, float constant, Tensor& destination) {
+void multiplyTensorOnDevice(const Tensor<float>& tensor, float constant, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void multiplyMatrixVectorOnDevice(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
+void multiplyMatrixVectorOnDevice(const Tensor<float>& matrix, const Tensor<float>& vector, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void multiplyMatrixMatrixOnDevice(const Tensor& m1, const Tensor& m2, Tensor& destination) {
+void multiplyMatrixMatrixOnDevice(const Tensor<float>& m1, const Tensor<float>& m2, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void transposeMatrixOnDevice(const Tensor& matrix, Tensor& destination) {
+void transposeMatrixOnDevice(const Tensor<float>& matrix, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void reluTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+void reluTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void reluDerivativeTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+void reluDerivativeTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 
-void sigmoidTensorOnDevice(const Tensor& tensor, Tensor& destination) {
+void sigmoidTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& destination) {
     throw UnexpectedCUDACallException();
 }
 

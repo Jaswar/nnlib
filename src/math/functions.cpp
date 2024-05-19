@@ -18,7 +18,8 @@
 #include "utils/location_verifiers.h"
 
 
-void fill(float value, sTensor& tensor) {
+template<typename T>
+void fill(float value, std::shared_ptr<Tensor<T>>& tensor) {
     if (tensor->location == HOST) {
         fillTensorOnHost(*tensor, value);
     } else {
@@ -26,7 +27,8 @@ void fill(float value, sTensor& tensor) {
     }
 }
 
-void fill(const sTensor& value, sTensor& tensor) {
+template<typename T>
+void fill(const std::shared_ptr<Tensor<T>>& value, std::shared_ptr<Tensor<T>>& tensor) {
     if (tensor->location == HOST) {
         fillTensorOnHost(*tensor, *value);
     } else {
@@ -34,9 +36,10 @@ void fill(const sTensor& value, sTensor& tensor) {
     }
 }
 
-sTensor no_grad::sum(const sTensor& a) {
+template<typename T>
+std::shared_ptr<Tensor<T>> no_grad::sum(const std::shared_ptr<Tensor<T>>& a) {
     std::vector<size_t> shape = {1};
-    sTensor result = std::make_shared<Tensor>(shape, a->location);
+    auto result = std::make_shared<Tensor<T>>(shape, a->location);
     ::fill(0.0f, result);
     if (a->location == HOST) {
         sumTensorOnHost(*a, *result);
@@ -46,10 +49,11 @@ sTensor no_grad::sum(const sTensor& a) {
     return result;
 }
 
-sTensor sum(const sTensor& a) {
+template<typename T>
+std::shared_ptr<Tensor<T>> sum(const std::shared_ptr<Tensor<T>>& a) {
     if (Runtime::getInstance().useGradient) {
-        auto sum = std::make_shared<SumReduce>();
-        sTensor result = sum->forward(a);
+        auto sum = std::make_shared<SumReduce<T>>();
+        auto result = sum->forward(a);
         result->gradFunction = sum;
         return result;
     } else {
@@ -57,29 +61,32 @@ sTensor sum(const sTensor& a) {
     }
 }
 
-sTensor SumReduce::forwardFn(const sTensor& a) {
+template<typename T>
+std::shared_ptr<Tensor<T>> SumReduce<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a) {
     shapeCache = a->shape;
-    sTensor result = no_grad::sum(a);
+    auto result = no_grad::sum(a);
     return result;
 }
 
-std::vector<sTensor> SumReduce::backwardFn(sTensor grad) {
-    if (!parents[0]->requiresGrad) {
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> SumReduce<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    if (!this->parents[0]->requiresGrad) {
         return {nullptr};
     }
 
-    sTensor gradA = std::make_shared<Tensor>(shapeCache, grad->location);
+    auto gradA = std::make_shared<Tensor<T>>(shapeCache, grad->location);
     fill(grad, gradA);
     return {gradA};
 }
 
 namespace no_grad {
-    sTensor addTensors(const sTensor& a, const sTensor& b) {
+    template<typename T>
+    std::shared_ptr<Tensor<T>> addTensors(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
         if (a->shape != b->shape) {
             throw SizeMismatchException();
         }
 
-        sTensor result = std::make_shared<Tensor>(a->shape, a->location);
+        auto result = std::make_shared<Tensor<T>>(a->shape, a->location);
 
         std::initializer_list<DataLocation> locations = {a->location, b->location};
         if (allLocationsAreHost(locations)) {
@@ -93,12 +100,13 @@ namespace no_grad {
         return result;
     }
 
-    sTensor addBroadcast(const sTensor& a, const sTensor& b) {
+    template<typename T>
+    std::shared_ptr<Tensor<T>> addBroadcast(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
         if (a->shape[1] != b->shape[0]) {
             throw SizeMismatchException();
         }
 
-        sTensor result = std::make_shared<Tensor>(a->shape, a->location);
+        auto result = std::make_shared<Tensor<T>>(a->shape, a->location);
 
         std::initializer_list<DataLocation> locations = {a->location, b->location};
         if (allLocationsAreHost(locations)) {
@@ -113,7 +121,8 @@ namespace no_grad {
     }
 } // namespace no_grad
 
-sTensor no_grad::add(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> no_grad::add(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (a->shape.size() == 2 && b->shape.size() == 1) {
         return no_grad::addBroadcast(a, b);
     } else {
@@ -121,10 +130,11 @@ sTensor no_grad::add(const sTensor& a, const sTensor& b) {
     }
 }
 
-sTensor addTensors(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> addTensors(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (Runtime::getInstance().useGradient) {
-        auto add = std::make_shared<Add>();
-        sTensor result = add->forward(a, b);
+        auto add = std::make_shared<Add<T>>();
+        auto result = add->forward(a, b);
         result->gradFunction = add;
         return result;
     } else {
@@ -132,10 +142,11 @@ sTensor addTensors(const sTensor& a, const sTensor& b) {
     }
 }
 
-sTensor addBroadcast(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> addBroadcast(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (Runtime::getInstance().useGradient) {
-        auto add = std::make_shared<AddBroadcast>();
-        sTensor result = add->forward(a, b);
+        auto add = std::make_shared<AddBroadcast<T>>();
+        auto result = add->forward(a, b);
         result->gradFunction = add;
         return result;
     } else {
@@ -143,7 +154,8 @@ sTensor addBroadcast(const sTensor& a, const sTensor& b) {
     }
 }
 
-sTensor add(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> add(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (a->shape.size() == 2 && b->shape.size() == 1) {
         return addBroadcast(a, b);
     } else {
@@ -151,39 +163,44 @@ sTensor add(const sTensor& a, const sTensor& b) {
     }
 }
 
-sTensor Add::forwardFn(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> Add<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     return no_grad::addTensors(a, b);
 }
 
-std::vector<sTensor> Add::backwardFn(sTensor grad) {
-    sTensor gradA = parents[0]->requiresGrad ? grad->copy() : nullptr;
-    sTensor gradB = parents[1]->requiresGrad ? grad->copy() : nullptr;
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> Add<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    auto gradA = this->parents[0]->requiresGrad ? grad->copy() : nullptr;
+    auto gradB = this->parents[1]->requiresGrad ? grad->copy() : nullptr;
     return {gradA, gradB};
 }
 
-sTensor AddBroadcast::forwardFn(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> AddBroadcast<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     return no_grad::addBroadcast(a, b);
 }
 
-std::vector<sTensor> AddBroadcast::backwardFn(sTensor grad) {
-    sTensor gradA = parents[0]->requiresGrad ? grad->copy() : nullptr;
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> AddBroadcast<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    auto gradA = this->parents[0]->requiresGrad ? grad->copy() : nullptr;
 
-    sTensor gradB = nullptr;
-    if (parents[1]->requiresGrad) {
+    std::shared_ptr<Tensor<T>> gradB = nullptr;
+    if (this->parents[1]->requiresGrad) {
         std::vector<size_t> shape = {grad->shape[0]};
-        sTensor ones = std::make_shared<Tensor>(shape, grad->location);
+        auto ones = std::make_shared<Tensor<T>>(shape, grad->location);
         fill(1.0f, ones);
         gradB = no_grad::multiply(no_grad::transpose(grad), ones); // TODO: replace later with sum reduction
     }
     return {gradA, gradB};
 }
 
-sTensor no_grad::subtract(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> no_grad::subtract(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (a->shape != b->shape) {
         throw SizeMismatchException();
     }
 
-    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
+    std::shared_ptr<Tensor<T>> result = std::make_shared<Tensor<T>>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
@@ -197,10 +214,11 @@ sTensor no_grad::subtract(const sTensor& a, const sTensor& b) {
     return result;
 }
 
-sTensor subtract(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> subtract(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (Runtime::getInstance().useGradient) {
-        auto subtract = std::make_shared<Subtract>();
-        sTensor result = subtract->forward(a, b);
+        auto subtract = std::make_shared<Subtract<T>>();
+        auto result = subtract->forward(a, b);
         result->gradFunction = subtract;
         return result;
     } else {
@@ -208,22 +226,25 @@ sTensor subtract(const sTensor& a, const sTensor& b) {
     }
 }
 
-sTensor Subtract::forwardFn(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> Subtract<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     return no_grad::subtract(a, b);
 }
 
-std::vector<sTensor> Subtract::backwardFn(sTensor grad) {
-    sTensor gradA = parents[0]->requiresGrad ? grad->copy() : nullptr;
-    sTensor gradB = parents[1]->requiresGrad ? no_grad::multiply(grad, -1.0f) : nullptr;
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> Subtract<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    auto gradA = this->parents[0]->requiresGrad ? grad->copy() : nullptr;
+    auto gradB = this->parents[1]->requiresGrad ? no_grad::multiply(grad, -1.0f) : nullptr;
     return {gradA, gradB};
 }
 
-sTensor no_grad::hadamard(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> no_grad::hadamard(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (a->shape != b->shape) {
         throw SizeMismatchException();
     }
 
-    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
+    auto result = std::make_shared<Tensor<T>>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
@@ -237,10 +258,11 @@ sTensor no_grad::hadamard(const sTensor& a, const sTensor& b) {
     return result;
 }
 
-sTensor hadamard(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> hadamard(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (Runtime::getInstance().useGradient) {
-        auto hadamard = std::make_shared<Hadamard>();
-        sTensor result = hadamard->forward(a, b);
+        auto hadamard = std::make_shared<Hadamard<T>>();
+        auto result = hadamard->forward(a, b);
         result->gradFunction = hadamard;
         return result;
     } else {
@@ -248,7 +270,8 @@ sTensor hadamard(const sTensor& a, const sTensor& b) {
     }
 }
 
-sTensor Hadamard::forwardFn(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> Hadamard<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     // a and b flipped because gradient of a uses b and vice-versa
     if (b->requiresGrad) {
         cacheA = a->copy();
@@ -259,19 +282,21 @@ sTensor Hadamard::forwardFn(const sTensor& a, const sTensor& b) {
     return no_grad::hadamard(a, b);
 }
 
-std::vector<sTensor> Hadamard::backwardFn(sTensor grad) {
-    sTensor gradA = parents[0]->requiresGrad ? no_grad::hadamard(grad, cacheB) : nullptr;
-    sTensor gradB = parents[1]->requiresGrad ? no_grad::hadamard(grad, cacheA) : nullptr;
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> Hadamard<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    auto gradA = this->parents[0]->requiresGrad ? no_grad::hadamard(grad, cacheB) : nullptr;
+    auto gradB = this->parents[1]->requiresGrad ? no_grad::hadamard(grad, cacheA) : nullptr;
     return {gradA, gradB};
 }
 
 
-sTensor no_grad::divide(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> no_grad::divide(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (a->shape != b->shape) {
         throw SizeMismatchException();
     }
 
-    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
+    auto result = std::make_shared<Tensor<T>>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location, b->location};
     if (allLocationsAreHost(locations)) {
@@ -285,10 +310,11 @@ sTensor no_grad::divide(const sTensor& a, const sTensor& b) {
     return result;
 }
 
-sTensor divide(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> divide(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (Runtime::getInstance().useGradient) {
-        auto divide = std::make_shared<Divide>();
-        sTensor result = divide->forward(a, b);
+        auto divide = std::make_shared<Divide<T>>();
+        auto result = divide->forward(a, b);
         result->gradFunction = divide;
         return result;
     } else {
@@ -296,7 +322,8 @@ sTensor divide(const sTensor& a, const sTensor& b) {
     }
 }
 
-sTensor Divide::forwardFn(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> Divide<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (b->requiresGrad) {
         cacheA = a->copy();
     }
@@ -306,19 +333,21 @@ sTensor Divide::forwardFn(const sTensor& a, const sTensor& b) {
     return no_grad::divide(a, b);
 }
 
-std::vector<sTensor> Divide::backwardFn(sTensor grad) {
-    sTensor gradA = parents[0]->requiresGrad ? no_grad::divide(grad, cacheB) : nullptr;
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> Divide<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    auto gradA = this->parents[0]->requiresGrad ? no_grad::divide(grad, cacheB) : nullptr;
 
-    sTensor gradB = nullptr;
-    if (parents[1]->requiresGrad) {
+    std::shared_ptr<Tensor<T>> gradB = nullptr;
+    if (this->parents[1]->requiresGrad) {
         gradB = no_grad::divide(no_grad::hadamard(grad, cacheA), no_grad::hadamard(cacheB, cacheB));
         gradB = no_grad::multiply(gradB, -1.0f);
     }
     return {gradA, gradB};
 }
 
-sTensor no_grad::log(const sTensor& a) {
-    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
+template<typename T>
+std::shared_ptr<Tensor<T>> no_grad::log(const std::shared_ptr<Tensor<T>>& a) {
+    auto result = std::make_shared<Tensor<T>>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
@@ -332,10 +361,11 @@ sTensor no_grad::log(const sTensor& a) {
     return result;
 }
 
-sTensor log(const sTensor& a) {
+template<typename T>
+std::shared_ptr<Tensor<T>> log(const std::shared_ptr<Tensor<T>>& a) {
     if (Runtime::getInstance().useGradient) {
-        auto log = std::make_shared<Log>();
-        sTensor result = log->forward(a);
+        auto log = std::make_shared<Log<T>>();
+        auto result = log->forward(a);
         result->gradFunction = log;
         return result;
     } else {
@@ -343,20 +373,23 @@ sTensor log(const sTensor& a) {
     }
 }
 
-sTensor Log::forwardFn(const sTensor& a) {
+template<typename T>
+std::shared_ptr<Tensor<T>> Log<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a) {
     if (a->requiresGrad) {
         cacheA = a->copy();
     }
     return no_grad::log(a);
 }
 
-std::vector<sTensor> Log::backwardFn(sTensor grad) {
-    sTensor gradA = parents[0]->requiresGrad ? no_grad::divide(grad, cacheA) : nullptr;
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> Log<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    auto gradA = this->parents[0]->requiresGrad ? no_grad::divide(grad, cacheA) : nullptr;
     return {gradA};
 }
 
-sTensor no_grad::multiply(const sTensor& a, float constant) {
-    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
+template<typename T>
+std::shared_ptr<Tensor<T>> no_grad::multiply(const std::shared_ptr<Tensor<T>>& a, float constant) {
+    auto result = std::make_shared<Tensor<T>>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
@@ -370,10 +403,11 @@ sTensor no_grad::multiply(const sTensor& a, float constant) {
     return result;
 }
 
-sTensor multiply(const sTensor& a, float constant) {
+template<typename T>
+std::shared_ptr<Tensor<T>> multiply(const std::shared_ptr<Tensor<T>>& a, float constant) {
     if (Runtime::getInstance().useGradient) {
-        auto multiply = std::make_shared<MulConstant>();
-        sTensor result = multiply->forward(a, constant);
+        auto multiply = std::make_shared<MulConstant<T>>();
+        auto result = multiply->forward(a, constant);
         result->gradFunction = multiply;
         return result;
     } else {
@@ -381,24 +415,27 @@ sTensor multiply(const sTensor& a, float constant) {
     }
 }
 
-sTensor MulConstant::forwardFn(const sTensor& a, const float& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> MulConstant<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a, const float& b) {
     constantCache = b;
     return no_grad::multiply(a, b);
 }
 
-std::vector<sTensor> MulConstant::backwardFn(sTensor grad) {
-    sTensor gradA = parents[0]->requiresGrad ? no_grad::multiply(grad, constantCache) : nullptr;
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> MulConstant<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    auto gradA = this->parents[0]->requiresGrad ? no_grad::multiply(grad, constantCache) : nullptr;
     return {gradA};
 }
 
 namespace no_grad {
-    sTensor matvecmul(const sTensor& a, const sTensor& b) {
+    template<typename T>
+    std::shared_ptr<Tensor<T>> matvecmul(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
         if (a->shape[1] != b->shape[0]) {
             throw SizeMismatchException();
         }
 
         std::vector<size_t> shape = {a->shape[0]};
-        sTensor result = std::make_shared<Tensor>(shape, a->location);
+        auto result = std::make_shared<Tensor<T>>(shape, a->location);
 
         std::initializer_list<DataLocation> locations = {a->location, b->location};
         if (allLocationsAreHost(locations)) {
@@ -412,13 +449,14 @@ namespace no_grad {
         return result;
     }
 
-    sTensor matmul(const sTensor& a, const sTensor& b) {
+    template<typename T>
+    std::shared_ptr<Tensor<T>> matmul(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
         if (a->shape[1] != b->shape[0]) {
             throw SizeMismatchException();
         }
 
         std::vector<size_t> shape = {a->shape[0], b->shape[1]};
-        sTensor result = std::make_shared<Tensor>(shape, a->location);
+        auto result = std::make_shared<Tensor<T>>(shape, a->location);
 
         std::initializer_list<DataLocation> locations = {a->location, b->location};
         if (allLocationsAreHost(locations)) {
@@ -433,7 +471,8 @@ namespace no_grad {
     }
 } // namespace no_grad
 
-sTensor no_grad::multiply(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> no_grad::multiply(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (a->shape.size() == 2 && b->shape.size() == 2) {
         return no_grad::matmul(a, b);
     } else if (a->shape.size() == 2 && b->shape.size() == 1) {
@@ -443,10 +482,11 @@ sTensor no_grad::multiply(const sTensor& a, const sTensor& b) {
     }
 }
 
-sTensor matvecmul(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> matvecmul(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (Runtime::getInstance().useGradient) {
-        auto matvecmul = std::make_shared<MatVecMul>();
-        sTensor result = matvecmul->forward(a, b);
+        auto matvecmul = std::make_shared<MatVecMul<T>>();
+        auto result = matvecmul->forward(a, b);
         result->gradFunction = matvecmul;
         return result;
     } else {
@@ -454,10 +494,11 @@ sTensor matvecmul(const sTensor& a, const sTensor& b) {
     }
 }
 
-sTensor matmul(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> matmul(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (Runtime::getInstance().useGradient) {
-        auto matmul = std::make_shared<Matmul>();
-        sTensor result = matmul->forward(a, b);
+        auto matmul = std::make_shared<Matmul<T>>();
+        auto result = matmul->forward(a, b);
         result->gradFunction = matmul;
         return result;
     } else {
@@ -465,7 +506,8 @@ sTensor matmul(const sTensor& a, const sTensor& b) {
     }
 }
 
-sTensor multiply(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> multiply(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     if (a->shape.size() == 2 && b->shape.size() == 2) {
         return matmul(a, b);
     } else if (a->shape.size() == 2 && b->shape.size() == 1) {
@@ -475,7 +517,8 @@ sTensor multiply(const sTensor& a, const sTensor& b) {
     }
 }
 
-sTensor MatVecMul::forwardFn(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> MatVecMul<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     // a and b flipped because gradient of a uses b and vice-versa
     if (b->requiresGrad) {
         cacheA = a->copy();
@@ -486,20 +529,22 @@ sTensor MatVecMul::forwardFn(const sTensor& a, const sTensor& b) {
     return no_grad::matvecmul(a, b);
 }
 
-std::vector<sTensor> MatVecMul::backwardFn(sTensor grad) {
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> MatVecMul<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
     cacheB->shape = {cacheB->shape[0], 1};
     grad->shape = {grad->shape[0], 1};
 
-    sTensor gradA = parents[0]->requiresGrad ? no_grad::multiply(grad, no_grad::transpose(cacheB)) : nullptr;
-    sTensor gradB = nullptr;
-    if (parents[1]->requiresGrad) {
+    auto gradA = this->parents[0]->requiresGrad ? no_grad::multiply(grad, no_grad::transpose(cacheB)) : nullptr;
+    std::shared_ptr<Tensor<T>> gradB = nullptr;
+    if (this->parents[1]->requiresGrad) {
         gradB = no_grad::multiply(no_grad::transpose(cacheA), grad);
         gradB->shape = {gradB->shape[0]};
     }
     return {gradA, gradB};
 }
 
-sTensor Matmul::forwardFn(const sTensor& a, const sTensor& b) {
+template<typename T>
+std::shared_ptr<Tensor<T>> Matmul<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) {
     // a and b flipped because gradient of a uses b and vice-versa
     if (b->requiresGrad) {
         cacheA = a->copy();
@@ -510,15 +555,17 @@ sTensor Matmul::forwardFn(const sTensor& a, const sTensor& b) {
     return no_grad::matmul(a, b);
 }
 
-std::vector<sTensor> Matmul::backwardFn(sTensor grad) {
-    sTensor gradA = parents[0]->requiresGrad ? no_grad::multiply(grad, no_grad::transpose(cacheB)) : nullptr;
-    sTensor gradB = parents[1]->requiresGrad ? no_grad::multiply(no_grad::transpose(cacheA), grad) : nullptr;
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> Matmul<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    auto gradA = this->parents[0]->requiresGrad ? no_grad::multiply(grad, no_grad::transpose(cacheB)) : nullptr;
+    auto gradB = this->parents[1]->requiresGrad ? no_grad::multiply(no_grad::transpose(cacheA), grad) : nullptr;
     return {gradA, gradB};
 }
 
-sTensor no_grad::transpose(const sTensor& a) {
+template<typename T>
+std::shared_ptr<Tensor<T>> no_grad::transpose(const std::shared_ptr<Tensor<T>>& a) {
     std::vector<size_t> shape = {a->shape[1], a->shape[0]};
-    sTensor result = std::make_shared<Tensor>(shape, a->location);
+    auto result = std::make_shared<Tensor<T>>(shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
@@ -532,10 +579,11 @@ sTensor no_grad::transpose(const sTensor& a) {
     return result;
 }
 
-sTensor transpose(const sTensor& a) {
+template<typename T>
+std::shared_ptr<Tensor<T>> transpose(const std::shared_ptr<Tensor<T>>& a) {
     if (Runtime::getInstance().useGradient) {
-        auto transpose = std::make_shared<Transpose>();
-        sTensor result = transpose->forward(a);
+        auto transpose = std::make_shared<Transpose<T>>();
+        auto result = transpose->forward(a);
         result->gradFunction = transpose;
         return result;
     } else {
@@ -543,20 +591,23 @@ sTensor transpose(const sTensor& a) {
     }
 }
 
-sTensor Transpose::forwardFn(const sTensor& a) {
+template<typename T>
+std::shared_ptr<Tensor<T>> Transpose<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a) {
     if (a->requiresGrad) {
         cacheA = a->copy();
     }
     return no_grad::transpose(a);
 }
 
-std::vector<sTensor> Transpose::backwardFn(sTensor grad) {
-    sTensor gradA = parents[0]->requiresGrad ? no_grad::transpose(grad) : nullptr;
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> Transpose<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    auto gradA = this->parents[0]->requiresGrad ? no_grad::transpose(grad) : nullptr;
     return {gradA};
 }
 
-sTensor no_grad::relu(const sTensor& a) {
-    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
+template<typename T>
+std::shared_ptr<Tensor<T>> no_grad::relu(const std::shared_ptr<Tensor<T>>& a) {
+    auto result = std::make_shared<Tensor<T>>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
@@ -570,10 +621,11 @@ sTensor no_grad::relu(const sTensor& a) {
     return result;
 }
 
-sTensor relu(const sTensor& a) {
+template<typename T>
+std::shared_ptr<Tensor<T>> relu(const std::shared_ptr<Tensor<T>>& a) {
     if (Runtime::getInstance().useGradient) {
-        auto relu = std::make_shared<ReLU>();
-        sTensor result = relu->forward(a);
+        auto relu = std::make_shared<ReLU<T>>();
+        auto result = relu->forward(a);
         result->gradFunction = relu;
         return result;
     } else {
@@ -581,19 +633,21 @@ sTensor relu(const sTensor& a) {
     }
 }
 
-sTensor ReLU::forwardFn(const sTensor& a) {
+template<typename T>
+std::shared_ptr<Tensor<T>> ReLU<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a) {
     if (a->requiresGrad) {
         cacheA = a->copy();
     }
     return no_grad::relu(a);
 }
 
-std::vector<sTensor> ReLU::backwardFn(sTensor grad) {
-    if (!parents[0]->requiresGrad) {
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> ReLU<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    if (!this->parents[0]->requiresGrad) {
         return {nullptr};
     }
 
-    sTensor gradA = std::make_shared<Tensor>(cacheA->shape, cacheA->location);
+    auto gradA = std::make_shared<Tensor<T>>(cacheA->shape, cacheA->location);
 
     std::initializer_list<DataLocation> locations = {cacheA->location};
     if (allLocationsAreHost(locations)) {
@@ -607,8 +661,9 @@ std::vector<sTensor> ReLU::backwardFn(sTensor grad) {
     return {gradA};
 }
 
-sTensor no_grad::sigmoid(const sTensor& a) {
-    sTensor result = std::make_shared<Tensor>(a->shape, a->location);
+template<typename T>
+std::shared_ptr<Tensor<T>> no_grad::sigmoid(const std::shared_ptr<Tensor<T>>& a) {
+    auto result = std::make_shared<Tensor<T>>(a->shape, a->location);
 
     std::initializer_list<DataLocation> locations = {a->location};
     if (allLocationsAreHost(locations)) {
@@ -622,10 +677,11 @@ sTensor no_grad::sigmoid(const sTensor& a) {
     return result;
 }
 
-sTensor sigmoid(const sTensor& a) {
+template<typename T>
+std::shared_ptr<Tensor<T>> sigmoid(const std::shared_ptr<Tensor<T>>& a) {
     if (Runtime::getInstance().useGradient) {
-        auto sigmoid = std::make_shared<Sigmoid>();
-        sTensor result = sigmoid->forward(a);
+        auto sigmoid = std::make_shared<Sigmoid<T>>();
+        auto result = sigmoid->forward(a);
         result->gradFunction = sigmoid;
         return result;
     } else {
@@ -633,22 +689,24 @@ sTensor sigmoid(const sTensor& a) {
     }
 }
 
-sTensor Sigmoid::forwardFn(const sTensor& a) {
-    sTensor result = no_grad::sigmoid(a);
+template<typename T>
+std::shared_ptr<Tensor<T>> Sigmoid<T>::forwardFn(const std::shared_ptr<Tensor<T>>& a) {
+    auto result = no_grad::sigmoid(a);
     if (a->requiresGrad) {
         cacheA = result->copy();
     }
     return result;
 }
 
-std::vector<sTensor> Sigmoid::backwardFn(sTensor grad) {
-    if (!parents[0]->requiresGrad) {
+template<typename T>
+std::vector<std::shared_ptr<Tensor<T>>> Sigmoid<T>::backwardFn(std::shared_ptr<Tensor<T>> grad) {
+    if (!this->parents[0]->requiresGrad) {
         return {nullptr};
     }
 
-    sTensor ones = std::make_shared<Tensor>(cacheA->shape, cacheA->location);
+    auto ones = std::make_shared<Tensor<T>>(cacheA->shape, cacheA->location);
     fill(1.0f, ones);
 
-    sTensor gradA = no_grad::hadamard(grad, no_grad::hadamard(cacheA, no_grad::subtract(ones, cacheA)));
+    auto gradA = no_grad::hadamard(grad, no_grad::hadamard(cacheA, no_grad::subtract(ones, cacheA)));
     return {gradA};
 }

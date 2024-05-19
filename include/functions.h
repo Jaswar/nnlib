@@ -16,27 +16,27 @@
 #include "tensor.h"
 #include "tuple_utils.h"
 
-
+template<typename T>
 class BackwardFunction {
 public:
-    std::vector<sTensor> parents;
+    std::vector<std::shared_ptr<Tensor<T>>> parents;
 
-    virtual std::vector<sTensor> backward(sTensor grad) = 0;
+    virtual std::vector<std::shared_ptr<Tensor<T>>> backward(std::shared_ptr<Tensor<T>> grad) = 0;
 
     virtual ~BackwardFunction() = default;
 };
 
-template<typename... Types>
-class Function : public BackwardFunction {
+template<typename T, typename... Types>
+class Function : public BackwardFunction<T> {
 public:
     Function() = default;
 
-    sTensor forward(const Types&... args) {
-        auto tup = getType<sTensor>(std::make_tuple(args...));
-        parents = toVector(tup);
+    std::shared_ptr<Tensor<T>> forward(const Types&... args) {
+        auto tup = getType<std::shared_ptr<Tensor<T>>>(std::make_tuple(args...));
+        this->parents = toVector(tup);
 
-        sTensor result = forwardFn(args...);
-        for (auto& parent : parents) {
+        auto result = forwardFn(args...);
+        for (auto& parent : this->parents) {
             if (parent->requiresGrad) {
                 result->requiresGrad = true;
                 break;
@@ -45,132 +45,145 @@ public:
         return result;
     }
 
-    std::vector<sTensor> backward(sTensor grad) override {
+    std::vector<std::shared_ptr<Tensor<T>>> backward(std::shared_ptr<Tensor<T>> grad) override {
         return backwardFn(std::move(grad));
     }
 
-    virtual sTensor forwardFn(const Types&... args) = 0;
+    virtual std::shared_ptr<Tensor<T>> forwardFn(const Types&... args) = 0;
 
-    virtual std::vector<sTensor> backwardFn(sTensor grad) = 0;
+    virtual std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) = 0;
 
     ~Function() override = default;
 };
 
-class SumReduce : public Function<sTensor> {
+template<typename T>
+class SumReduce : public Function<T, std::shared_ptr<Tensor<T>>> {
     std::vector<size_t> shapeCache;
 
 public:
-    sTensor forwardFn(const sTensor& a) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 };
 
-class Add : public Function<sTensor, sTensor> {
+template<typename T>
+class Add : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
 public:
-    sTensor forwardFn(const sTensor& a, const sTensor& b) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 };
 
-class AddBroadcast : public Function<sTensor, sTensor> {
+template<typename T>
+class AddBroadcast : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
 public:
-    sTensor forwardFn(const sTensor& a, const sTensor& b) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 };
 
-class Subtract : public Function<sTensor, sTensor> {
+template<typename T>
+class Subtract : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
 public:
-    sTensor forwardFn(const sTensor& a, const sTensor& b) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 };
 
-class Hadamard : public Function<sTensor, sTensor> {
-    sTensor cacheA;
-    sTensor cacheB;
-
-public:
-    sTensor forwardFn(const sTensor& a, const sTensor& b) override;
-
-    std::vector<sTensor> backwardFn(sTensor grad) override;
-};
-
-class Divide : public Function<sTensor, sTensor> {
-    sTensor cacheA;
-    sTensor cacheB;
+template<typename T>
+class Hadamard : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
+    std::shared_ptr<Tensor<T>> cacheA;
+    std::shared_ptr<Tensor<T>> cacheB;
 
 public:
-    sTensor forwardFn(const sTensor& a, const sTensor& b) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 };
 
-class Log : public Function<sTensor> {
-    sTensor cacheA;
+template<typename T>
+class Divide : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
+    std::shared_ptr<Tensor<T>> cacheA;
+    std::shared_ptr<Tensor<T>> cacheB;
 
 public:
-    sTensor forwardFn(const sTensor& args) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 };
 
-class MulConstant : public Function<sTensor, float> {
+template<typename T>
+class Log : public Function<T, std::shared_ptr<Tensor<T>>> {
+    std::shared_ptr<Tensor<T>> cacheA;
+
+public:
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& args) override;
+
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
+};
+
+template<typename T>
+class MulConstant : public Function<T, std::shared_ptr<Tensor<T>>, float> {
     float constantCache;
 
 public:
-    sTensor forwardFn(const sTensor& a, const float& b) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a, const float& b) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 };
 
-class MatVecMul : public Function<sTensor, sTensor> {
-    sTensor cacheA;
-    sTensor cacheB;
+template<typename T>
+class MatVecMul : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
+    std::shared_ptr<Tensor<T>> cacheA;
+    std::shared_ptr<Tensor<T>> cacheB;
 
 public:
-    sTensor forwardFn(const sTensor& a, const sTensor& b) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 };
 
-class Matmul : public Function<sTensor, sTensor> {
-    sTensor cacheA;
-    sTensor cacheB;
+template<typename T>
+class Matmul : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
+    std::shared_ptr<Tensor<T>> cacheA;
+    std::shared_ptr<Tensor<T>> cacheB;
 
 public:
-    sTensor forwardFn(const sTensor& a, const sTensor& b) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 
     ~Matmul() override = default;
 };
 
-class Transpose : public Function<sTensor> {
-    sTensor cacheA;
+template<typename T>
+class Transpose : public Function<T, std::shared_ptr<Tensor<T>>> {
+    std::shared_ptr<Tensor<T>> cacheA;
 
 public:
-    sTensor forwardFn(const sTensor& a) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 };
 
-class ReLU : public Function<sTensor> {
-    sTensor cacheA;
+template<typename T>
+class ReLU : public Function<T, std::shared_ptr<Tensor<T>>> {
+    std::shared_ptr<Tensor<T>> cacheA;
 
 public:
-    sTensor forwardFn(const sTensor& a) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 };
 
-class Sigmoid : public Function<sTensor> {
-    sTensor cacheA;
+template<typename T>
+class Sigmoid : public Function<T, std::shared_ptr<Tensor<T>>> {
+    std::shared_ptr<Tensor<T>> cacheA;
 
 public:
-    sTensor forwardFn(const sTensor& a) override;
+    std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a) override;
 
-    std::vector<sTensor> backwardFn(sTensor grad) override;
+    std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) override;
 };
 
 #endif //NNLIB_FUNCTIONS_H

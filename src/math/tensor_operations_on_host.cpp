@@ -48,7 +48,7 @@ float horizontalAdd(__m256 value) {
 }
 #endif
 
-void sumTensorOnHost(const Tensor& tensor, Tensor& destination) {
+void sumTensorOnHost(const Tensor<float>& tensor, Tensor<float>& destination) {
 #if defined __AVX2__ || defined __AVX__
     __m256 accumulator = _mm256_setzero_ps();
     for (size_t index = 0; index < tensor.size / 8; index++) {
@@ -70,7 +70,7 @@ void sumTensorOnHost(const Tensor& tensor, Tensor& destination) {
 #endif
 }
 
-void fillTensorOnHost(Tensor& tensor, float value) {
+void fillTensorOnHost(Tensor<float>& tensor, float value) {
 #if defined __AVX2__ || defined __AVX__
     __m256 valueVector = _mm256_set1_ps(value);
     for (size_t i = 0; i < tensor.size / 8; i++) {
@@ -86,7 +86,7 @@ void fillTensorOnHost(Tensor& tensor, float value) {
 #endif
 }
 
-void fillTensorOnHost(Tensor& tensor, const Tensor& value) {
+void fillTensorOnHost(Tensor<float>& tensor, const Tensor<float>& value) {
     float val = value.data[0];
 #if defined __AVX2__ || defined __AVX__
     __m256 valueVector = _mm256_set1_ps(val);
@@ -103,7 +103,7 @@ void fillTensorOnHost(Tensor& tensor, const Tensor& value) {
 #endif
 }
 
-void addTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
+void addTensorsOnHost(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < a.size / 8; index++) {
         __m256 am256 = _mm256_loadu_ps(a.data + index * 8);
@@ -122,7 +122,7 @@ void addTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
 #endif
 }
 
-void subtractTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
+void subtractTensorsOnHost(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < a.size / 8; index++) {
         __m256 am256 = _mm256_loadu_ps(a.data + index * 8);
@@ -141,7 +141,7 @@ void subtractTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination
 #endif
 }
 
-void hadamardTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
+void hadamardTensorsOnHost(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < a.size / 8; index++) {
         __m256 am256 = _mm256_loadu_ps(a.data + index * 8);
@@ -161,7 +161,7 @@ void hadamardTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination
 }
 
 
-void divideTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) {
+void divideTensorsOnHost(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t index = 0; index < a.size / 8; index++) {
         __m256 am256 = _mm256_loadu_ps(a.data + index * 8);
@@ -180,13 +180,13 @@ void divideTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination) 
 #endif
 }
 
-void logTensorOnHost(const Tensor& a, Tensor& destination) {
+void logTensorOnHost(const Tensor<float>& a, Tensor<float>& destination) {
     for (size_t i = 0; i < a.size; i++) {
         destination.data[i] = logf(a.data[i]);
     }
 }
 
-void addBroadcastOnHost(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
+void addBroadcastOnHost(const Tensor<float>& matrix, const Tensor<float>& vector, Tensor<float>& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t row = 0; row < matrix.shape[0]; row++) {
         for (size_t index = 0; index < matrix.shape[1] / 8; index++) {
@@ -210,7 +210,7 @@ void addBroadcastOnHost(const Tensor& matrix, const Tensor& vector, Tensor& dest
 #endif
 }
 
-void multiplyTensorOnHost(const Tensor& tensor, float constant, Tensor& destination) {
+void multiplyTensorOnHost(const Tensor<float>& tensor, float constant, Tensor<float>& destination) {
 #if defined __AVX2__ || defined __AVX__
     const __m256 constValue = _mm256_set1_ps(constant);
     for (size_t index = 0; index < tensor.size / 8; index++) {
@@ -229,7 +229,7 @@ void multiplyTensorOnHost(const Tensor& tensor, float constant, Tensor& destinat
 #endif
 }
 
-void multiplyMatrixVectorOnHost(const Tensor& matrix, const Tensor& vector, Tensor& destination) {
+void multiplyMatrixVectorOnHost(const Tensor<float>& matrix, const Tensor<float>& vector, Tensor<float>& destination) {
 #if defined __AVX2__ || defined __AVX__
     for (size_t i = 0; i < matrix.shape[0]; i++) {
         float accumulator = 0;
@@ -267,7 +267,7 @@ void multiplyMatrixVectorOnHost(const Tensor& matrix, const Tensor& vector, Tens
  * @param rowStart Specify which rows should be computed.
  * @param columnStart Specify which columns should be computed.
  */
-void naiveMatMul(const Tensor& m1, const Tensor& m2, Tensor& destination, size_t rowStart = 0, size_t columnStart = 0) {
+void naiveMatMul(const Tensor<float>& m1, const Tensor<float>& m2, Tensor<float>& destination, size_t rowStart = 0, size_t columnStart = 0) {
     size_t n = m1.shape[0];
     size_t k = m1.shape[1];
     size_t m = m2.shape[1];
@@ -345,7 +345,7 @@ void naiveMatMul(const Tensor& m1, const Tensor& m2, Tensor& destination, size_t
 // Based on https://github.com/yzhaiustc/Optimizing-DGEMM-on-Intel-CPUs-with-AVX512F/blob/master/include/kernel5.h
 // Disable linter about the number of lines. That's the tradeoff for a slightly faster method.
 // NOLINTNEXTLINE(google-readability-function-size)
-void multiplyMatrixMatrixOnHost(const Tensor& m1, const Tensor& m2, Tensor& destination) {
+void multiplyMatrixMatrixOnHost(const Tensor<float>& m1, const Tensor<float>& m2, Tensor<float>& destination) {
 #if defined __AVX2__ || defined __AVX__
     size_t n = m1.shape[0];
     size_t k = m1.shape[1];
@@ -371,7 +371,7 @@ void multiplyMatrixMatrixOnHost(const Tensor& m1, const Tensor& m2, Tensor& dest
 #endif
 }
 
-void transposeMatrixOnHost(const Tensor& matrix, Tensor& destination) {
+void transposeMatrixOnHost(const Tensor<float>& matrix, Tensor<float>& destination) {
     for (size_t i = 0; i < matrix.shape[0]; i++) {
         for (size_t j = 0; j < matrix.shape[1]; j++) {
             destination.data[j * destination.shape[1] + i] = matrix.data[i * matrix.shape[1] + j];
@@ -379,7 +379,7 @@ void transposeMatrixOnHost(const Tensor& matrix, Tensor& destination) {
     }
 }
 
-void reluTensorOnHost(const Tensor& tensor, Tensor& destination) {
+void reluTensorOnHost(const Tensor<float>& tensor, Tensor<float>& destination) {
     for (size_t index = 0; index < tensor.size; index++) {
         if (tensor.data[index] <= 0) {
             destination.data[index] = 0;
@@ -389,7 +389,7 @@ void reluTensorOnHost(const Tensor& tensor, Tensor& destination) {
     }
 }
 
-void reluDerivativeTensorOnHost(const Tensor& tensor, Tensor& destination) {
+void reluDerivativeTensorOnHost(const Tensor<float>& tensor, Tensor<float>& destination) {
     for (size_t index = 0; index < tensor.size; index++) {
         if (tensor.data[index] <= 0) {
             destination.data[index] = 0;
@@ -399,7 +399,7 @@ void reluDerivativeTensorOnHost(const Tensor& tensor, Tensor& destination) {
     }
 }
 
-void sigmoidTensorOnHost(const Tensor& tensor, Tensor& destination) {
+void sigmoidTensorOnHost(const Tensor<float>& tensor, Tensor<float>& destination) {
     for (size_t index = 0; index < tensor.size; index++) {
         destination.data[index] = 1 / (1 + expf(-tensor.data[index]));
     }

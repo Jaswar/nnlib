@@ -80,7 +80,7 @@ public:
      * @param batch The batch to propagate.
      * @return The pointer to the output of the network. This returns Layer::aMatrix of the last layer.
      */
-    sTensor forward(const sTensor& batch);
+    sfTensor forward(const sfTensor& batch);
 
     /**
      * @brief Train the network.
@@ -97,7 +97,7 @@ public:
      * @param metrics The list of metrics to compute aside from the loss function.
      */
     //NOLINTNEXTLINE(readability-identifier-naming)
-    void train(sTensor& X, sTensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
+    void train(sfTensor& X, sfTensor& y, int epochs, size_t batchSize, float learningRate, Loss* loss,
                std::vector<Metric*>& metrics);
 
 private:
@@ -115,7 +115,7 @@ private:
      * @param loss The loss function to use.
      * @param metrics The list of metrics to compute aside from the loss function.
      */
-    void processEpoch(std::vector<sTensor>& batches, std::vector<sTensor>& targets, std::vector<sTensor>& targetsOnHost,
+    void processEpoch(std::vector<sfTensor>& batches, std::vector<sfTensor>& targets, std::vector<sfTensor>& targetsOnHost,
                       float learningRate, Loss* loss, std::vector<Metric*>& metrics);
 };
 

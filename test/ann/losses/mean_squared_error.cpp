@@ -25,9 +25,9 @@ RC_GTEST_PROP(mean_squared_error, calculate_loss, ()) {
     std::vector<float> dataTargets = rcFloatVectorInRange(size, -1, 1);
     std::vector<float> dataPredictions = rcFloatVectorInRange(size, -1, 1);
 
-    sTensor targets = std::make_shared<Tensor>(numSamples, numOutputs);
+    sfTensor targets = std::make_shared<Tensor<float>>(numSamples, numOutputs);
     std::copy(dataTargets.begin(), dataTargets.end(), targets->data);
-    sTensor predictions = std::make_shared<Tensor>(numSamples, numOutputs);
+    sfTensor predictions = std::make_shared<Tensor<float>>(numSamples, numOutputs);
     std::copy(dataPredictions.begin(), dataPredictions.end(), predictions->data);
 
     float expected = 0;

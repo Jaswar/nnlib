@@ -16,7 +16,8 @@
  * @param targets The expected outputs of the network.
  * @param predictions The actual outputs of the network.
  */
-void checkValidShape(const Tensor& targets, const Tensor& predictions) {
+template<typename T>
+void checkValidShape(const Tensor<T>& targets, const Tensor<T>& predictions) {
     if (targets.shape.size() != 2 || targets.shape[1] != 1) {
         throw UnsupportedOperationException();
     }
@@ -29,20 +30,20 @@ std::string BinaryCrossEntropy::getShortName() const {
     return "binary_cross_entropy";
 }
 
-sTensor BinaryCrossEntropy::calculateLoss(const sTensor& targets, const sTensor& predictions) {
+sfTensor BinaryCrossEntropy::calculateLoss(const sfTensor& targets, const sfTensor& predictions) {
     checkValidShape(*targets, *predictions);
 
-    sTensor totalLoss = std::make_shared<Tensor>(targets->shape, targets->location);
+    sfTensor totalLoss = std::make_shared<Tensor<float>>(targets->shape, targets->location);
     {
-        sTensor ones = std::make_shared<Tensor>(targets->shape, targets->location);
+        sfTensor ones = std::make_shared<Tensor<float>>(targets->shape, targets->location);
         fill(1.0f, ones);
-        sTensor diffTargets = subtract(ones, targets);
-        sTensor diffPredictions = log(subtract(ones, predictions));
+        sfTensor diffTargets = subtract(ones, targets);
+        sfTensor diffPredictions = log(subtract(ones, predictions));
         totalLoss = hadamard(diffTargets, diffPredictions);
     }
 
     {
-        sTensor diffPredictions = log(predictions);
+        sfTensor diffPredictions = log(predictions);
         totalLoss = add(hadamard(targets, diffPredictions), totalLoss);
     }
 

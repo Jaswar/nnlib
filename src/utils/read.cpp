@@ -73,7 +73,7 @@ std::vector<std::string> readFile(const std::string& filepath) {
  * @param id The id of the thread.
  * @param numThreads The total number of threads launched.
  */
-void threadCSVJob(const std::vector<std::string>& lines, const std::string& delim, Tensor& result, int id,
+void threadCSVJob(const std::vector<std::string>& lines, const std::string& delim, Tensor<float>& result, int id,
                   int numThreads) {
     int size = static_cast<int>(lines.size());
     int numIterations = std::ceil(size / static_cast<double>(numThreads));
@@ -104,14 +104,14 @@ void threadCSVJob(const std::vector<std::string>& lines, const std::string& deli
     }
 }
 
-sTensor readCSV(const std::string& filepath, const std::string& delim, int numThreads) {
+sfTensor readCSV(const std::string& filepath, const std::string& delim, int numThreads) {
     std::cout << "Reading CSV file " << filepath << std::endl;
 
     auto lines = readFile(filepath);
 
     auto n = lines.size();
     auto m = n > 0 ? split(lines.front(), delim).size() : 1;
-    Tensor result = Tensor(n, m);
+    Tensor<float> result = Tensor<float>(n, m);
 
     std::vector<std::thread> threads;
     for (int id = 0; id < numThreads; id++) {
@@ -125,5 +125,5 @@ sTensor readCSV(const std::string& filepath, const std::string& delim, int numTh
 
     std::cout << std::endl;
 
-    return std::make_shared<Tensor>(result);
+    return std::make_shared<Tensor<float>>(result);
 }

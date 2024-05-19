@@ -10,8 +10,8 @@
 Loss::Loss() : Metric() {
 }
 
-float Loss::calculateMetric(const sTensor& targets, const sTensor& predictions) {
-    sTensor loss = calculateLoss(targets, predictions)->copy();
+float Loss::calculateMetric(const sfTensor& targets, const sfTensor& predictions) {
+    sfTensor loss = calculateLoss(targets, predictions)->copy();
     loss->move(HOST);
     float l = loss->data[0];
     numSamples += targets->shape[0];

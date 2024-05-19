@@ -11,11 +11,11 @@ std::string MeanSquaredError::getShortName() const {
     return "mean_squared_error";
 }
 
-sTensor MeanSquaredError::calculateLoss(const sTensor& targets, const sTensor& predictions) {
+sfTensor MeanSquaredError::calculateLoss(const sfTensor& targets, const sfTensor& predictions) {
     size_t numOutputs = targets->shape[targets->shape.size() - 1];
 
-    sTensor difference = subtract(predictions, targets);
-    sTensor loss = hadamard(difference, difference);
+    sfTensor difference = subtract(predictions, targets);
+    sfTensor loss = hadamard(difference, difference);
     loss = multiply(sum(loss), 1.0f / static_cast<float>(numOutputs));
 
     return loss;

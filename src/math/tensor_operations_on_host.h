@@ -21,7 +21,7 @@
  * @param tensor The tensor to sum.
  * @return The sum of all values of a tensor.
  */
-void sumTensorOnHost(const Tensor& tensor, Tensor& destination);
+void sumTensorOnHost(const Tensor<float>& tensor, Tensor<float>& destination);
 
 /**
  * @brief Fill a tensor with a constant value.
@@ -29,9 +29,9 @@ void sumTensorOnHost(const Tensor& tensor, Tensor& destination);
  * @param tensor The tensor to fill.
  * @param value The value to fill the tensor with.
  */
-void fillTensorOnHost(Tensor& tensor, float value);
+void fillTensorOnHost(Tensor<float>& tensor, float value);
 
-void fillTensorOnHost(Tensor& tensor, const Tensor& value);
+void fillTensorOnHost(Tensor<float>& tensor, const Tensor<float>& value);
 
 /**
  * @brief Element-wise add two tensors.
@@ -40,7 +40,7 @@ void fillTensorOnHost(Tensor& tensor, const Tensor& value);
  * @param b The second tensor.
  * @param destination Where the result of the addition should be stored.
  */
-void addTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
+void addTensorsOnHost(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination);
 
 /**
  * @brief Subtract one tensor from another.
@@ -49,7 +49,7 @@ void addTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
  * @param b The tensor to be subtracted.
  * @param destination Where the result of the subtraction should be stored.
  */
-void subtractTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
+void subtractTensorsOnHost(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination);
 
 /**
  * @brief Perform hadamard product (element-wise multiplication) between two tensors.
@@ -58,7 +58,7 @@ void subtractTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination
  * @param b The second tensor.
  * @param destination Where the result of the operation should be stored.
  */
-void hadamardTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
+void hadamardTensorsOnHost(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination);
 
 /**
  * @brief Divide one tensor by another.
@@ -67,7 +67,7 @@ void hadamardTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination
  * @param b The tensor to divide by.
  * @param destination Where the result of the operation should be stored.
  */
-void divideTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
+void divideTensorsOnHost(const Tensor<float>& a, const Tensor<float>& b, Tensor<float>& destination);
 
 /**
  * @brief Apply natural logarithm to each element of the tensor.
@@ -75,7 +75,7 @@ void divideTensorsOnHost(const Tensor& a, const Tensor& b, Tensor& destination);
  * @param a The tensor to apply natural logarithm to.
  * @param destination Where the result of the operation should be stored.
  */
-void logTensorOnHost(const Tensor& a, Tensor& destination);
+void logTensorOnHost(const Tensor<float>& a, Tensor<float>& destination);
 
 /**
  * @brief Perform the broadcast-add operation.
@@ -84,7 +84,7 @@ void logTensorOnHost(const Tensor& a, Tensor& destination);
  * @param vector The vector tensor.
  * @param destination Where the result of the addition should be stored.
  */
-void addBroadcastOnHost(const Tensor& matrix, const Tensor& vector, Tensor& destination);
+void addBroadcastOnHost(const Tensor<float>& matrix, const Tensor<float>& vector, Tensor<float>& destination);
 
 /**
  * @brief Multiply a tensor with a constant.
@@ -93,7 +93,7 @@ void addBroadcastOnHost(const Tensor& matrix, const Tensor& vector, Tensor& dest
  * @param constant The constant to multiply with.
  * @param destination Where the result of the multiplication should be stored.
  */
-void multiplyTensorOnHost(const Tensor& tensor, float constant, Tensor& destination);
+void multiplyTensorOnHost(const Tensor<float>& tensor, float constant, Tensor<float>& destination);
 
 /**
  * @brief Multiply a matrix with a vector.
@@ -102,7 +102,7 @@ void multiplyTensorOnHost(const Tensor& tensor, float constant, Tensor& destinat
  * @param vector The vector tensor.
  * @param destination Where the result of the multiplication should be stored.
  */
-void multiplyMatrixVectorOnHost(const Tensor& matrix, const Tensor& vector, Tensor& destination);
+void multiplyMatrixVectorOnHost(const Tensor<float>& matrix, const Tensor<float>& vector, Tensor<float>& destination);
 
 /**
  * @brief Multiply a matrix with a matrix.
@@ -111,7 +111,7 @@ void multiplyMatrixVectorOnHost(const Tensor& matrix, const Tensor& vector, Tens
  * @param m2 The second matrix tensor.
  * @param destination Where the result of the multiplication should be stored.
  */
-void multiplyMatrixMatrixOnHost(const Tensor& m1, const Tensor& m2, Tensor& destination);
+void multiplyMatrixMatrixOnHost(const Tensor<float>& m1, const Tensor<float>& m2, Tensor<float>& destination);
 
 /**
  * @brief Transpose a matrix.
@@ -119,11 +119,11 @@ void multiplyMatrixMatrixOnHost(const Tensor& m1, const Tensor& m2, Tensor& dest
  * @param matrix The matrix vector to transpose.
  * @param destination Where the result of the transpose operation should be stored.
  */
-void transposeMatrixOnHost(const Tensor& matrix, Tensor& destination);
+void transposeMatrixOnHost(const Tensor<float>& matrix, Tensor<float>& destination);
 
-void reluTensorOnHost(const Tensor& tensor, Tensor& destination);
-void reluDerivativeTensorOnHost(const Tensor& tensor, Tensor& destination);
+void reluTensorOnHost(const Tensor<float>& tensor, Tensor<float>& destination);
+void reluDerivativeTensorOnHost(const Tensor<float>& tensor, Tensor<float>& destination);
 
-void sigmoidTensorOnHost(const Tensor& tensor, Tensor& destination);
+void sigmoidTensorOnHost(const Tensor<float>& tensor, Tensor<float>& destination);
 
 #endif //NNLIB_TENSOR_OPERATIONS_ON_HOST_H

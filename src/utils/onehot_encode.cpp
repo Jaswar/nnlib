@@ -28,7 +28,7 @@ int indexOf(float value, const std::set<float>& set) {
     return -1;
 }
 
-sTensor oneHotEncode(const sTensor& vector) {
+sfTensor oneHotEncode(const sfTensor& vector) {
     if (vector->shape.size() != 1) {
         throw UnsupportedOperationException();
     }
@@ -41,7 +41,7 @@ sTensor oneHotEncode(const sTensor& vector) {
     auto n = vector->shape[0];
     auto m = unique.size();
 
-    sTensor result = std::make_shared<Tensor>(n, m);
+    sfTensor result = std::make_shared<Tensor<float>>(n, m);
     fill(0, result);
 
     for (int i = 0; i < vector->shape[0]; i++) {

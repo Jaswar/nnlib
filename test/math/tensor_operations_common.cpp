@@ -20,9 +20,9 @@ void tensorSumPBT(bool testDevice) {
     const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
     const auto data = rcFloatVectorInRange(size, -1, 1);
 
-    sTensor t = std::make_shared<Tensor>(Tensor::construct1d(data));
-    sTensor result = std::make_shared<Tensor>(1);
-    sTensor expected = std::make_shared<Tensor>(1);
+    sfTensor t = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data));
+    sfTensor result = std::make_shared<Tensor<float>>(1);
+    sfTensor expected = std::make_shared<Tensor<float>>(1);
 
     float total = 0;
     for (size_t i = 0; i < size; i++) {
@@ -47,8 +47,8 @@ void tensorSumPBT(bool testDevice) {
 void tensorFillPBT(float value, bool testDevice) {
     const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e6));
 
-    sTensor result = std::make_shared<Tensor>(size);
-    sTensor expected = std::make_shared<Tensor>(size);
+    sfTensor result = std::make_shared<Tensor<float>>(size);
+    sfTensor expected = std::make_shared<Tensor<float>>(size);
 
     for (size_t i = 0; i < size; i++) {
         expected->data[i] = value;
@@ -72,10 +72,10 @@ void tensorAddPBT(bool testDevice) {
     const auto data1 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
     const auto data2 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
 
-    sTensor t1 = std::make_shared<Tensor>(Tensor::construct1d(data1));
-    sTensor t2 = std::make_shared<Tensor>(Tensor::construct1d(data2));
-    sTensor result = std::make_shared<Tensor>(size);
-    sTensor expected = std::make_shared<Tensor>(size);
+    sfTensor t1 = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data1));
+    sfTensor t2 = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data2));
+    sfTensor result = std::make_shared<Tensor<float>>(size);
+    sfTensor expected = std::make_shared<Tensor<float>>(size);
 
     for (size_t i = 0; i < size; i++) {
         expected->data[i] = t1->data[i] + t2->data[i];
@@ -103,11 +103,11 @@ void tensorAddBroadcastPBT(bool testDevice) {
     const auto dataMatrix = *NO_SHRINK(rc::gen::container<std::vector<float>>(n * m, rc::gen::arbitrary<float>()));
     const auto dataVector = *NO_SHRINK(rc::gen::container<std::vector<float>>(m, rc::gen::arbitrary<float>()));
 
-    sTensor matrix = std::make_shared<Tensor>(n, m);
+    sfTensor matrix = std::make_shared<Tensor<float>>(n, m);
     std::copy(dataMatrix.begin(), dataMatrix.end(), matrix->data);
-    sTensor vector = std::make_shared<Tensor>(Tensor::construct1d(dataVector));
-    sTensor result = std::make_shared<Tensor>(n, m);
-    sTensor expected = std::make_shared<Tensor>(n, m);
+    sfTensor vector = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(dataVector));
+    sfTensor result = std::make_shared<Tensor<float>>(n, m);
+    sfTensor expected = std::make_shared<Tensor<float>>(n, m);
 
     for (size_t i = 0; i < n; i++) {
         for (size_t j = 0; j < m; j++) {
@@ -135,10 +135,10 @@ void tensorSubtractPBT(bool testDevice) {
     const auto data1 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
     const auto data2 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
 
-    sTensor t1 = std::make_shared<Tensor>(Tensor::construct1d(data1));
-    sTensor t2 = std::make_shared<Tensor>(Tensor::construct1d(data2));
-    sTensor result = std::make_shared<Tensor>(size);
-    sTensor expected = std::make_shared<Tensor>(size);
+    sfTensor t1 = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data1));
+    sfTensor t2 = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data2));
+    sfTensor result = std::make_shared<Tensor<float>>(size);
+    sfTensor expected = std::make_shared<Tensor<float>>(size);
 
     for (size_t i = 0; i < size; i++) {
         expected->data[i] = t1->data[i] - t2->data[i];
@@ -164,10 +164,10 @@ void tensorHadamardPBT(bool testDevice) {
     const auto data1 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
     const auto data2 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
 
-    sTensor t1 = std::make_shared<Tensor>(Tensor::construct1d(data1));
-    sTensor t2 = std::make_shared<Tensor>(Tensor::construct1d(data2));
-    sTensor result = std::make_shared<Tensor>(size);
-    sTensor expected = std::make_shared<Tensor>(size);
+    sfTensor t1 = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data1));
+    sfTensor t2 = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data2));
+    sfTensor result = std::make_shared<Tensor<float>>(size);
+    sfTensor expected = std::make_shared<Tensor<float>>(size);
 
     for (size_t i = 0; i < size; i++) {
         expected->data[i] = t1->data[i] * t2->data[i];
@@ -193,10 +193,10 @@ void tensorDividePBT(bool testDevice) {
     const auto data1 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
     const auto data2 = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::nonZero<float>()));
 
-    sTensor t1 = std::make_shared<Tensor>(Tensor::construct1d(data1));
-    sTensor t2 = std::make_shared<Tensor>(Tensor::construct1d(data2));
-    sTensor result = std::make_shared<Tensor>(size);
-    sTensor expected = std::make_shared<Tensor>(size);
+    sfTensor t1 = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data1));
+    sfTensor t2 = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data2));
+    sfTensor result = std::make_shared<Tensor<float>>(size);
+    sfTensor expected = std::make_shared<Tensor<float>>(size);
 
     for (size_t i = 0; i < size; i++) {
         expected->data[i] = t1->data[i] / t2->data[i];
@@ -221,9 +221,9 @@ void tensorLogPBT(bool testDevice) {
     const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
     const auto data = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::positive<float>()));
 
-    sTensor t = std::make_shared<Tensor>(Tensor::construct1d(data));
-    sTensor result = std::make_shared<Tensor>(size);
-    sTensor expected = std::make_shared<Tensor>(size);
+    sfTensor t = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data));
+    sfTensor result = std::make_shared<Tensor<float>>(size);
+    sfTensor expected = std::make_shared<Tensor<float>>(size);
 
     for (size_t i = 0; i < size; i++) {
         expected->data[i] = log(t->data[i]);
@@ -248,9 +248,9 @@ void tensorMultiplyConstantPBT(float constant, bool testDevice) {
     const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
     const auto data = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::arbitrary<float>()));
 
-    sTensor t = std::make_shared<Tensor>(Tensor::construct1d(data));
-    sTensor result = std::make_shared<Tensor>(size);
-    sTensor expected = std::make_shared<Tensor>(size);
+    sfTensor t = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data));
+    sfTensor result = std::make_shared<Tensor<float>>(size);
+    sfTensor expected = std::make_shared<Tensor<float>>(size);
 
     for (size_t i = 0; i < size; i++) {
         expected->data[i] = t->data[i] * constant;
@@ -277,11 +277,11 @@ void tensorMultiplyMatrixVectorPBT(bool testDevice) {
     const std::vector<float> dataMatrix = rcFloatVectorInRange(n * m, -1, 1);
     const std::vector<float> dataVector = rcFloatVectorInRange(m, -1, 1);
 
-    sTensor matrix = std::make_shared<Tensor>(n, m);
+    sfTensor matrix = std::make_shared<Tensor<float>>(n, m);
     std::copy(dataMatrix.begin(), dataMatrix.end(), matrix->data);
-    sTensor vector = std::make_shared<Tensor>(Tensor::construct1d(dataVector));
-    sTensor result = std::make_shared<Tensor>(n);
-    sTensor expected = std::make_shared<Tensor>(n);
+    sfTensor vector = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(dataVector));
+    sfTensor result = std::make_shared<Tensor<float>>(n);
+    sfTensor expected = std::make_shared<Tensor<float>>(n);
 
     for (size_t i = 0; i < n; i++) {
         float acc = 0;
@@ -314,12 +314,12 @@ void tensorMultiplyMatrixMatrixPBT(bool testDevice) {
     std::vector<float> dataM1 = rcFloatVectorInRange(n * m, -1, 1);
     std::vector<float> dataM2 = rcFloatVectorInRange(m * k, -1, 1);
 
-    sTensor m1 = std::make_shared<Tensor>(n, m);
+    sfTensor m1 = std::make_shared<Tensor<float>>(n, m);
     std::copy(dataM1.begin(), dataM1.end(), m1->data);
-    sTensor m2 = std::make_shared<Tensor>(m, k);
+    sfTensor m2 = std::make_shared<Tensor<float>>(m, k);
     std::copy(dataM2.begin(), dataM2.end(), m2->data);
-    sTensor result = std::make_shared<Tensor>(n, k);
-    sTensor expected = std::make_shared<Tensor>(n, k);
+    sfTensor result = std::make_shared<Tensor<float>>(n, k);
+    sfTensor expected = std::make_shared<Tensor<float>>(n, k);
 
     for (size_t row = 0; row < n; row++) {
         for (size_t column = 0; column < k; column++) {
@@ -352,10 +352,10 @@ void tensorTransposePBT(bool testDevice) {
 
     const auto data = *NO_SHRINK(rc::gen::container<std::vector<float>>(n * m, rc::gen::arbitrary<float>()));
 
-    sTensor t = std::make_shared<Tensor>(n, m);
+    sfTensor t = std::make_shared<Tensor<float>>(n, m);
     std::copy(data.begin(), data.end(), t->data);
-    sTensor result = std::make_shared<Tensor>(m, n);
-    sTensor expected = std::make_shared<Tensor>(m, n);
+    sfTensor result = std::make_shared<Tensor<float>>(m, n);
+    sfTensor expected = std::make_shared<Tensor<float>>(m, n);
 
     for (size_t i = 0; i < n; i++) {
         for (size_t j = 0; j < m; j++) {
@@ -381,9 +381,9 @@ void tensorReluPBT(bool testDevice) {
     const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
     const auto data = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::positive<float>()));
 
-    sTensor t = std::make_shared<Tensor>(Tensor::construct1d(data));
-    sTensor result = std::make_shared<Tensor>(size);
-    sTensor expected = std::make_shared<Tensor>(size);
+    sfTensor t = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data));
+    sfTensor result = std::make_shared<Tensor<float>>(size);
+    sfTensor expected = std::make_shared<Tensor<float>>(size);
 
     for (size_t i = 0; i < size; i++) {
         if (t->data[i] > 0) {
@@ -412,9 +412,9 @@ void tensorSigmoidPBT(bool testDevice) {
     const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));
     const auto data = *NO_SHRINK(rc::gen::container<std::vector<float>>(size, rc::gen::positive<float>()));
 
-    sTensor t = std::make_shared<Tensor>(Tensor::construct1d(data));
-    sTensor result = std::make_shared<Tensor>(size);
-    sTensor expected = std::make_shared<Tensor>(size);
+    sfTensor t = std::make_shared<Tensor<float>>(Tensor<float>::construct1d(data));
+    sfTensor result = std::make_shared<Tensor<float>>(size);
+    sfTensor expected = std::make_shared<Tensor<float>>(size);
 
     for (size_t i = 0; i < size; i++) {
         expected->data[i] = 1 / (1 + expf(-t->data[i]));

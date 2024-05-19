@@ -18,7 +18,7 @@ float getRandomValue();
 std::vector<float> rcFloatVectorInRange(size_t size, float lower, float upper, size_t precision = 1e6);
 
 template<typename... Args>
-Tensor initializeRandom(Args... args) {
+Tensor<float> initializeRandom(Args... args) {
     Tensor tensor = Tensor(args...);
 
     for (size_t i = 0; i < tensor.size; i++) {

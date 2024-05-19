@@ -37,9 +37,9 @@ public:
      * @param predictions The actual outputs of the network.
      * @return The value of the metric. Here, the value of the loss function.
      */
-    float calculateMetric(const sTensor& targets, const sTensor& predictions) override;
+    float calculateMetric(const sfTensor& targets, const sfTensor& predictions) override;
 
-    virtual sTensor calculateLoss(const sTensor& targets, const sTensor& predictions) = 0;
+    virtual sfTensor calculateLoss(const sfTensor& targets, const sfTensor& predictions) = 0;
 };
 
 /**
@@ -47,7 +47,7 @@ public:
  */
 class MeanSquaredError : public Loss {
 public:
-    sTensor calculateLoss(const sTensor& targets, const sTensor& predictions) override;
+    sfTensor calculateLoss(const sfTensor& targets, const sfTensor& predictions) override;
 
     [[nodiscard]] std::string getShortName() const override;
 };
@@ -59,7 +59,7 @@ public:
  */
 class BinaryCrossEntropy : public Loss {
 public:
-    sTensor calculateLoss(const sTensor& targets, const sTensor& predictions) override;
+    sfTensor calculateLoss(const sfTensor& targets, const sfTensor& predictions) override;
 
     [[nodiscard]] std::string getShortName() const override;
 };
@@ -75,7 +75,7 @@ public:
  */
 class CategoricalCrossEntropy : public Loss {
 public:
-    sTensor calculateLoss(const sTensor& targets, const sTensor& predictions) override;
+    sfTensor calculateLoss(const sfTensor& targets, const sfTensor& predictions) override;
 
     [[nodiscard]] std::string getShortName() const override;
 };

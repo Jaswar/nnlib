@@ -24,7 +24,7 @@ bool isCorrectPrediction(const float expected, const float actual) {
     return (expected == 1 && actual >= 0.5) || (expected == 0 && actual < 0.5);
 }
 
-float BinaryAccuracy::calculateMetric(const sTensor& targets, const sTensor& predictions) {
+float BinaryAccuracy::calculateMetric(const sfTensor& targets, const sfTensor& predictions) {
     if (targets->shape.size() != 2 || targets->shape[1] != 1 || targets->shape != predictions->shape) {
         throw UnsupportedOperationException();
     }

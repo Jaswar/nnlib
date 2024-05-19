@@ -20,24 +20,28 @@
 #include <string>
 #include <utils/location_verifiers.h>
 
-Tensor::Tensor() : shape(), size(0), location(HOST), data(), requiresGrad(false), gradFunction(), grad() {
+template<typename T>
+Tensor<T>::Tensor() : shape(), size(0), location(HOST), data(), requiresGrad(false), gradFunction(), grad() {
 }
 
-Tensor::Tensor(std::vector<size_t> shape)
+template<typename T>
+Tensor<T>::Tensor(std::vector<size_t> shape)
     : shape(std::move(shape)), location(HOST), size(0), data(), requiresGrad(false), gradFunction(), grad() {
     computeSize();
     Cache& cache = Cache::getInstance();
     data = cache.get(size, location);
 }
 
-Tensor::Tensor(std::vector<size_t> shape, DataLocation location)
+template<typename T>
+Tensor<T>::Tensor(std::vector<size_t> shape, DataLocation location)
     : shape(std::move(shape)), location(location), size(0), data(), requiresGrad(false), gradFunction(), grad() {
     computeSize();
     Cache& cache = Cache::getInstance();
     data = cache.get(size, location);
 }
 
-Tensor::Tensor(const Tensor& other) {
+template<typename T>
+Tensor<T>::Tensor(const Tensor<T>& other) {
     location = other.location;
     // This copies the vector
     shape = other.shape;
@@ -61,7 +65,8 @@ Tensor::Tensor(const Tensor& other) {
     }
 }
 
-Tensor& Tensor::operator=(const Tensor& other) {
+template<typename T>
+Tensor<T>& Tensor<T>::operator=(const Tensor<T>& other) {
     if (&other == this) {
         return *this;
     }
@@ -84,7 +89,8 @@ Tensor& Tensor::operator=(const Tensor& other) {
     return *this;
 }
 
-void Tensor::move(DataLocation target) {
+template<typename T>
+void Tensor<T>::move(DataLocation target) {
     if (location == target) {
         return;
     }
@@ -104,7 +110,8 @@ void Tensor::move(DataLocation target) {
     }
 }
 
-Tensor::~Tensor() {
+template<typename T>
+Tensor<T>::~Tensor() {
     if (size == 0) {
         return;
     }
@@ -112,14 +119,16 @@ Tensor::~Tensor() {
     cache.put(size, data, location);
 }
 
-void Tensor::computeSize() {
+template<typename T>
+void Tensor<T>::computeSize() {
     size = 1;
     for (auto it = shape.begin(); it < shape.end(); it++) {
         size *= *it;
     }
 }
 
-Tensor Tensor::construct1d(const std::vector<float>& data) {
+template<typename T>
+Tensor<T> Tensor<T>::construct1d(const std::vector<float>& data) {
     if (data.empty()) {
         throw SizeMismatchException();
     }
@@ -128,7 +137,8 @@ Tensor Tensor::construct1d(const std::vector<float>& data) {
     return result;
 }
 
-Tensor Tensor::construct2d(const std::vector<std::vector<float>>& data) {
+template<typename T>
+Tensor<T> Tensor<T>::construct2d(const std::vector<std::vector<float>>& data) {
     if (data.empty() || data[0].empty()) {
         throw SizeMismatchException();
     }
@@ -147,7 +157,8 @@ Tensor Tensor::construct2d(const std::vector<std::vector<float>>& data) {
     return result;
 }
 
-size_t Tensor::findEffectiveAddress(const std::vector<size_t>& index, size_t depth) const {
+template<typename T>
+size_t Tensor<T>::findEffectiveAddress(const std::vector<size_t>& index, size_t depth) const {
     if (depth == 0) {
         return index.front();
     }
@@ -155,7 +166,8 @@ size_t Tensor::findEffectiveAddress(const std::vector<size_t>& index, size_t dep
     return shape.at(depth) * findEffectiveAddress(index, depth - 1) + index.at(depth);
 }
 
-void Tensor::verifyIndex(const std::vector<size_t>& index) const {
+template<typename T>
+void Tensor<T>::verifyIndex(const std::vector<size_t>& index) const {
     if (index.size() != shape.size()) {
         throw SizeMismatchException();
     }
@@ -166,43 +178,46 @@ void Tensor::verifyIndex(const std::vector<size_t>& index) const {
     }
 }
 
-void Tensor::useGrad() {
+template<typename T>
+void Tensor<T>::useGrad() {
     requiresGrad = true;
     grad = std::make_shared<Tensor>(shape, location);
     fill(0.0f, grad);
     gradFunction = nullptr;
 }
 
-bool canBackPropagate(const Tensor& tensor) {
+template<typename T>
+bool canBackPropagate(const Tensor<T>& tensor) {
     return !(tensor.shape.size() != 1 || tensor.shape[0] != 1 || !tensor.requiresGrad);
 }
 
+template<typename T>
 // NOLINTNEXTLINE(google-readability-function-size)
-void Tensor::backward() {
+void Tensor<T>::backward() {
     if (!canBackPropagate(*this)) {
         throw UnsupportedOperationException();
     }
 
-    sTensor gradient = std::make_shared<Tensor>(shape, location);
+    auto gradient = std::make_shared<Tensor<T>>(shape, location);
     fill(1.0f, gradient);
-    sTensor current = std::make_shared<Tensor>(*this);
+    auto current = std::make_shared<Tensor>(*this);
 
-    std::queue<std::pair<sTensor, sTensor>> queue;
+    std::queue<std::pair<std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>>> queue;
     queue.emplace(current, gradient);
     while (!queue.empty()) {
         current = queue.front().first;
         gradient = queue.front().second;
         queue.pop();
 
-        std::shared_ptr<BackwardFunction> gradFn = current->gradFunction;
+        std::shared_ptr<BackwardFunction<T>> gradFn = current->gradFunction;
         if (gradFn == nullptr) {
             if (current->requiresGrad) {
                 current->grad = no_grad::add(current->grad, gradient);
             }
         } else {
-            std::vector<sTensor> newGrads = gradFn->backward(gradient);
+            auto newGrads = gradFn->backward(gradient);
             for (int i = 0; i < newGrads.size(); i++) {
-                sTensor parent = gradFn->parents[i];
+                auto parent = gradFn->parents[i];
                 if (parent->requiresGrad) {
                     queue.emplace(parent, newGrads[i]);
                 }
@@ -211,8 +226,9 @@ void Tensor::backward() {
     }
 }
 
-std::shared_ptr<Tensor> Tensor::copy() const {
-    sTensor copy = std::make_shared<Tensor>(shape, location);
+template<typename T>
+std::shared_ptr<Tensor<T>> Tensor<T>::copy() const {
+    auto copy = std::make_shared<Tensor<T>>(shape, location);
     copy->requiresGrad = requiresGrad;
     copy->grad = nullptr;
     if (grad != nullptr) {
@@ -237,7 +253,8 @@ std::shared_ptr<Tensor> Tensor::copy() const {
  * @param tensor The tensor whose shape to show as a string.
  * @return The string representation of the shape of the tensor.
  */
-std::string tensorShapeToString(const Tensor& tensor) {
+template<typename T>
+std::string tensorShapeToString(const Tensor<T>& tensor) {
     std::string shapeString = "[";
 
     for (auto it = tensor.shape.begin(); it < tensor.shape.end(); it++) {
@@ -250,7 +267,8 @@ std::string tensorShapeToString(const Tensor& tensor) {
     return shapeString + "]";
 }
 
-std::ostream& operator<<(std::ostream& stream, const Tensor& tensor) {
+template<typename T>
+std::ostream& operator<<(std::ostream& stream, const Tensor<T>& tensor) {
     stream << "Tensor: ";
     for (int i = 0; i < tensor.size; i++) {
         stream << tensor.data[i] << " ";

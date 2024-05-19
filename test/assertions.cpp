@@ -6,7 +6,8 @@
 
 #include <utility>
 
-::testing::AssertionResult assertEqual(const Tensor& result, const Tensor& expected) {
+template<typename T>
+::testing::AssertionResult assertEqual(const Tensor<T>& result, const Tensor<T>& expected) {
     if (result.shape != expected.shape) {
         return ::testing::AssertionFailure() << "The shapes of the tensors are different.";
     }
@@ -21,13 +22,15 @@
     return ::testing::AssertionSuccess();
 }
 
-::testing::AssertionResult assertEqual1d(const Tensor& result, const std::vector<float>& expected) {
-    Tensor exp = Tensor::construct1d(expected);
+template<typename T>
+::testing::AssertionResult assertEqual1d(const Tensor<T>& result, const std::vector<float>& expected) {
+    Tensor exp = Tensor<T>::construct1d(expected);
     return assertEqual(result, exp);
 }
 
-::testing::AssertionResult assertEqual2d(const Tensor& result, const std::vector<std::vector<float>>& expected) {
-    Tensor exp = Tensor::construct2d(expected);
+template<typename T>
+::testing::AssertionResult assertEqual2d(const Tensor<T>& result, const std::vector<std::vector<float>>& expected) {
+    Tensor exp = Tensor<T>::construct2d(expected);
     return assertEqual(result, exp);
 }
 
@@ -49,7 +52,8 @@ bool withinBounds(const float v1, const float v2, const float delta, bool relati
     }
 }
 
-::testing::AssertionResult assertClose(const Tensor& result, const Tensor& expected, float delta, bool relative) {
+template<typename T>
+::testing::AssertionResult assertClose(const Tensor<T>& result, const Tensor<T>& expected, float delta, bool relative) {
     if (result.shape != expected.shape) {
         return ::testing::AssertionFailure() << "The shapes of the tensors are different.";
     }
@@ -64,14 +68,16 @@ bool withinBounds(const float v1, const float v2, const float delta, bool relati
     return ::testing::AssertionSuccess();
 }
 
-::testing::AssertionResult assertClose1d(const Tensor& result, const std::vector<float>& expected, float delta,
+template<typename T>
+::testing::AssertionResult assertClose1d(const Tensor<T>& result, const std::vector<float>& expected, float delta,
                                          bool relative) {
-    Tensor exp = Tensor::construct1d(expected);
+    Tensor exp = Tensor<T>::construct1d(expected);
     return assertClose(result, exp, delta, relative);
 }
 
-::testing::AssertionResult assertClose2d(const Tensor& result, const std::vector<std::vector<float>>& expected,
+template<typename T>
+::testing::AssertionResult assertClose2d(const Tensor<T>& result, const std::vector<std::vector<float>>& expected,
                                          float delta, bool relative) {
-    Tensor exp = Tensor::construct2d(expected);
+    Tensor exp = Tensor<T>::construct2d(expected);
     return assertClose(result, exp, delta, relative);
 }

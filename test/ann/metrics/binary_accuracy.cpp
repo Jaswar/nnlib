@@ -11,8 +11,8 @@
 #include <metric.h>
 
 TEST(binary_accuracy, calculate_metric) {
-    sTensor expected = std::make_shared<Tensor>(Tensor::construct2d({{1}, {1}, {1}, {0}, {0}}));
-    sTensor actual = std::make_shared<Tensor>(Tensor::construct2d({{0.9}, {0.5}, {0.25}, {0.1}, {0.5}}));
+    sfTensor expected = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1}, {1}, {1}, {0}, {0}}));
+    sfTensor actual = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{0.9}, {0.5}, {0.25}, {0.1}, {0.5}}));
 
     BinaryAccuracy metric = BinaryAccuracy();
     float accuracy = metric.calculateMetric(expected, actual);

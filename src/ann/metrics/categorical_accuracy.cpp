@@ -13,7 +13,7 @@
 CategoricalAccuracy::CategoricalAccuracy() : Metric() {
 }
 
-float CategoricalAccuracy::calculateMetric(const sTensor& targets, const sTensor& predictions) {
+float CategoricalAccuracy::calculateMetric(const sfTensor& targets, const sfTensor& predictions) {
     if (targets->shape.size() != 2 || predictions->shape.size() != 2 || targets->shape != predictions->shape) {
         throw UnsupportedOperationException();
     }

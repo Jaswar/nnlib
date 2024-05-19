@@ -34,8 +34,8 @@ float getRandom() {
  * @param outSize The size of the vector to generate. It is also the output size of the layer.
  * @return The random vector of biases.
  */
-sTensor initializeBiases(size_t outSize) {
-    sTensor biases = std::make_shared<Tensor>(outSize);
+sfTensor initializeBiases(size_t outSize) {
+    sfTensor biases = std::make_shared<Tensor<float>>(outSize);
 
     for (int i = 0; i < outSize; i++) {
         biases->data[i] = getRandom();
@@ -53,8 +53,8 @@ sTensor initializeBiases(size_t outSize) {
  * @param outSize The number of columns of the matrix. It is also the output size of the layer.
  * @return The random matrix of weights.
  */
-sTensor initializeWeights(size_t inSize, size_t outSize) {
-    sTensor weights = std::make_shared<Tensor>(inSize, outSize);
+sfTensor initializeWeights(size_t inSize, size_t outSize) {
+    sfTensor weights = std::make_shared<Tensor<float>>(inSize, outSize);
 
     for (int i = 0; i < inSize; i++) {
         for (int j = 0; j < outSize; j++) {
@@ -83,8 +83,8 @@ Layer::Layer(size_t inSize, size_t outSize, std::string activation, DataLocation
 
 Layer::~Layer() = default;
 
-sTensor Layer::forward(const sTensor& batch) const {
-    sTensor z = add(multiply(batch, weights), biases);
+sfTensor Layer::forward(const sfTensor& batch) const {
+    sfTensor z = add(multiply(batch, weights), biases);
 
     if (activation == "relu") {
         return relu(z);

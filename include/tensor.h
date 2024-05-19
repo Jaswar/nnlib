@@ -17,12 +17,14 @@
 #include <utility>
 #include <vector>
 
+template <typename T>
 class BackwardFunction; // forward declaration to solve a circular dependency
 
 
 /**
  * @brief Class to represent multidimensional arrays.
  */
+template<typename T>
 class Tensor {
 
     /**
@@ -49,7 +51,7 @@ public:
     /**
      * @brief The data stored by the tensor.
      */
-    float* data;
+    T* data;
 
     /**
      * @brief Session object containing information about current session.
@@ -57,8 +59,8 @@ public:
     Session session;
 
     bool requiresGrad;
-    std::shared_ptr<BackwardFunction> gradFunction;
-    std::shared_ptr<Tensor> grad;
+    std::shared_ptr<BackwardFunction<T>> gradFunction;
+    std::shared_ptr<Tensor<T>> grad;
 
     /**
      * @brief Initialize an empty tensor.
@@ -70,7 +72,7 @@ public:
      *
      * @param other The tensor based on which this one should be initialized.
      */
-    Tensor(const Tensor& other);
+    Tensor(const Tensor<T>& other);
 
     /**
      * @brief Tensor constructor with shape given directly by a vector.
@@ -102,7 +104,7 @@ public:
      */
     Tensor& operator=(const Tensor& other);
 
-    [[nodiscard]] std::shared_ptr<Tensor> copy() const;
+    [[nodiscard]] std::shared_ptr<Tensor<T>> copy() const;
 
     /**
      * @brief Move the tensor to the designated destination.
@@ -182,7 +184,8 @@ private:
     void verifyIndex(const std::vector<size_t>& index) const;
 };
 
-typedef std::shared_ptr<Tensor> sTensor;
+typedef std::shared_ptr<Tensor<float>> sfTensor;
+typedef std::shared_ptr<Tensor<double>> sdTensor;
 
 /**
  * @brief Enables the tensor to be printed using std::cout.
@@ -191,55 +194,81 @@ typedef std::shared_ptr<Tensor> sTensor;
  * @param tensor The tensor to print.
  * @return The stream with the string representation of the tensor added to it.
  */
-std::ostream& operator<<(std::ostream& stream, const Tensor& tensor);
+template<typename T>
+std::ostream& operator<<(std::ostream& stream, const Tensor<T>& tensor);
 
-sTensor sum(const sTensor& a);
+template<typename T>
+std::shared_ptr<Tensor<T>> sum(const std::shared_ptr<Tensor<T>>& a);
 
-void fill(float value, sTensor& tensor);
-void fill(const sTensor& value, sTensor& tensor);
+template<typename T>
+void fill(float value, std::shared_ptr<Tensor<T>>& tensor);
 
-sTensor add(const sTensor& a, const sTensor& b);
+template<typename T>
+void fill(const std::shared_ptr<Tensor<T>>& value, std::shared_ptr<Tensor<T>>& tensor);
 
-sTensor subtract(const sTensor& a, const sTensor& b);
+template<typename T>
+std::shared_ptr<Tensor<T>> add(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b);
 
-sTensor hadamard(const sTensor& a, const sTensor& b);
+template<typename T>
+std::shared_ptr<Tensor<T>> subtract(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b);
 
-sTensor divide(const sTensor& a, const sTensor& b);
+template<typename T>
+std::shared_ptr<Tensor<T>> hadamard(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b);
 
-sTensor log(const sTensor& a);
+template<typename T>
+std::shared_ptr<Tensor<T>> divide(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b);
 
-sTensor multiply(const sTensor& a, float constant);
+template<typename T>
+std::shared_ptr<Tensor<T>> log(const std::shared_ptr<Tensor<T>>& a);
 
-sTensor multiply(const sTensor& a, const sTensor& b);
+template<typename T>
+std::shared_ptr<Tensor<T>> multiply(const std::shared_ptr<Tensor<T>>& a, float constant);
 
-sTensor transpose(const sTensor& a);
+template<typename T>
+std::shared_ptr<Tensor<T>> multiply(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b);
 
-sTensor relu(const sTensor& a);
+template<typename T>
+std::shared_ptr<Tensor<T>> transpose(const std::shared_ptr<Tensor<T>>& a);
 
-sTensor sigmoid(const sTensor& a);
+template<typename T>
+std::shared_ptr<Tensor<T>> relu(const std::shared_ptr<Tensor<T>>& a);
+
+template<typename T>
+std::shared_ptr<Tensor<T>> sigmoid(const std::shared_ptr<Tensor<T>>& a);
 
 namespace no_grad {
-    sTensor sum(const sTensor& a);
+    template<typename T>
+    std::shared_ptr<Tensor<T>> sum(const std::shared_ptr<Tensor<T>>& a);
 
-    sTensor add(const sTensor& a, const sTensor& b);
+    template<typename T>
+    std::shared_ptr<Tensor<T>> add(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b);
 
-    sTensor subtract(const sTensor& a, const sTensor& b);
+    template<typename T>
+    std::shared_ptr<Tensor<T>> subtract(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b);
 
-    sTensor hadamard(const sTensor& a, const sTensor& b);
+    template<typename T>
+    std::shared_ptr<Tensor<T>> hadamard(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b);
 
-    sTensor divide(const sTensor& a, const sTensor& b);
+    template<typename T>
+    std::shared_ptr<Tensor<T>> divide(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b);
 
-    sTensor log(const sTensor& a);
+    template<typename T>
+    std::shared_ptr<Tensor<T>> log(const std::shared_ptr<Tensor<T>>& a);
 
-    sTensor multiply(const sTensor& a, float constant);
+    template<typename T>
+    std::shared_ptr<Tensor<T>> multiply(const std::shared_ptr<Tensor<T>>& a, float constant);
 
-    sTensor multiply(const sTensor& a, const sTensor& b);
+    template<typename T>
+    std::shared_ptr<Tensor<T>> multiply(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b);
 
-    sTensor transpose(const sTensor& a);
+    template<typename T>
+    std::shared_ptr<Tensor<T>> transpose(const std::shared_ptr<Tensor<T>>& a);
 
-    sTensor relu(const sTensor& a);
+    template<typename T>
+    std::shared_ptr<Tensor<T>> relu(const std::shared_ptr<Tensor<T>>& a);
 
-    sTensor sigmoid(const sTensor& a);
+    template<typename T>
+    std::shared_ptr<Tensor<T>> sigmoid(const std::shared_ptr<Tensor<T>>& a);
 } // namespace no_grad
 
 #endif //NNLIB_TENSOR_H
