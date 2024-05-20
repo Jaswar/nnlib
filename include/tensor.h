@@ -218,15 +218,19 @@ public:
         }
     }
 
-    void useGrad() {
+    // only enable if the tensor is a floating point tensor
+    template <typename U = T>
+    typename std::enable_if<std::is_floating_point<U>::value, void>::type useGrad() {
         requiresGrad = true;
-        grad = std::make_shared<Tensor>(shape, location);
+        grad = std::make_shared<Tensor<T>>(shape, location);
         fill(0.0f, grad);
         gradFunction = nullptr;
     }
 
+    // only enable if the tensor is a floating point tensor
+    template <typename U = T>
     // NOLINTNEXTLINE(google-readability-function-size)
-    void backward() {
+    typename std::enable_if<std::is_floating_point<U>::value, void>::type backward() {
         if (!canBackPropagate(*this)) {
             throw UnsupportedOperationException();
         }
@@ -374,11 +378,13 @@ private:
         }
     }
 
-    bool canBackPropagate(const Tensor<T>& tensor) {
+    template <typename U = T>
+    typename std::enable_if<std::is_floating_point<U>::value, bool>::type canBackPropagate(const Tensor<T>& tensor) {
         return !(tensor.shape.size() != 1 || tensor.shape[0] != 1 || !tensor.requiresGrad);
     }
 };
 
+typedef std::shared_ptr<Tensor<int>> siTensor;
 typedef std::shared_ptr<Tensor<float>> sfTensor;
 typedef std::shared_ptr<Tensor<double>> sdTensor;
 
