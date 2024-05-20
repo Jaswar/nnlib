@@ -1,5 +1,4 @@
-set(SOURCE_FILES allocation_gpu.cu ../../include/allocation_gpu.cuh
-        assert.cuh
+set(SOURCE_FILES
         verify.cu)
 
 target_sources(nnlib PRIVATE ${SOURCE_FILES})

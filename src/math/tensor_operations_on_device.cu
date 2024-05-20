@@ -5,10 +5,10 @@
  * @date 29 August 2022
  */
 
+#include "assert.cuh"
 #include "tensor_operations_on_device.cuh"
 #include <cmath>
 #include <exceptions.h>
-#include <gpu/assert.cuh>
 
 #ifdef __CUDA__
 

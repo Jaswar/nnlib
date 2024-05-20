@@ -93,7 +93,7 @@ public:
     Tensor(std::vector<size_t> shape, DataLocation location) : shape(std::move(shape)), location(location), size(0), data(), requiresGrad(false), gradFunction(), grad() {
         computeSize();
         Cache& cache = Cache::getInstance();
-        data = cache.get(size, location);
+        data = cache.get<T>(size, location);
     }
 
     /**
@@ -124,11 +124,11 @@ public:
         }
 
         Cache& cache = Cache::getInstance();
-        data = cache.get(size, other.location);
+        data = cache.get<T>(size, other.location);
         if (location == HOST) {
-            copy1DArray(size, other.data, data);
+            copy1DArrayHost(other.data, data, size);
         } else {
-            copy1DArrayDevice(size, other.data, data);
+            copy1DArrayDevice(other.data, data, size);
         }
     }
 
@@ -163,7 +163,7 @@ public:
         shape = other.shape;
         size = other.size;
 
-        data = cache.get(size, other.location);
+        data = cache.get<T>(size, other.location);
         if (location == HOST) {
             copy1DArray(size, other.data, data);
         } else {
@@ -183,9 +183,9 @@ public:
         copy->gradFunction = gradFunction;
 
         if (location == HOST) {
-            copy1DArray(size, data, copy->data);
+            copy1DArrayHost(data, copy->data, size);
         } else {
-            copy1DArrayDevice(size, data, copy->data);
+            copy1DArrayDevice(data, copy->data, size);
         }
 
         return copy;
@@ -205,7 +205,7 @@ public:
 
         Cache& cache = Cache::getInstance();
         cache.put(size, data, location); // Mark the memory as reusable
-        float* newData = cache.get(size, target);
+        T* newData = cache.get<T>(size, target);
         if (location == HOST) {
             copy1DFromHostToDevice(data, newData, size);
         } else {
@@ -265,12 +265,12 @@ public:
      * @param data The data based on which a tensor should be constructed.
      * @return The constructed tensor.
      */
-    static Tensor construct1d(const std::vector<float>& data) {
+    static std::shared_ptr<Tensor<T>> construct1d(const std::vector<T>& data) {
         if (data.empty()) {
             throw SizeMismatchException();
         }
-        Tensor result = Tensor(data.size());
-        std::copy(data.begin(), data.end(), result.data);
+        std::shared_ptr<Tensor<T>> result = std::make_shared<Tensor<T>>(data.size());
+        std::copy(data.begin(), data.end(), result->data);
         return result;
     }
 
@@ -280,20 +280,20 @@ public:
      * @param data The data based on which a tensor should be constructed.
      * @return The constructed tensor.
      */
-    static Tensor construct2d(const std::vector<std::vector<float>>& data) {
+    static std::shared_ptr<Tensor<T>> construct2d(const std::vector<std::vector<T>>& data) {
         if (data.empty() || data[0].empty()) {
             throw SizeMismatchException();
         }
 
-        Tensor result = Tensor(data.size(), data[0].size());
+        std::shared_ptr<Tensor<T>> result = std::make_shared<Tensor<T>>(data.size(), data[0].size());
         for (size_t i = 0; i < data.size(); i++) {
             // Make sure the array has the same number of columns in each row
-            if (data[i].size() != result.shape[1]) {
+            if (data[i].size() != result->shape[1]) {
                 throw SizeMismatchException();
             }
 
             for (size_t j = 0; j < data[0].size(); j++) {
-                result.data[i * result.shape[1] + j] = data[i][j];
+                result->data[i * result->shape[1] + j] = data[i][j];
             }
         }
         return result;
@@ -309,7 +309,7 @@ public:
      * @return A reference to the requested element.
      */
     template<typename... Args>
-    float& operator()(Args... args) {
+    T& operator()(Args... args) {
         std::vector<size_t> index = std::vector<size_t>({static_cast<size_t>(args)...});
         // Make sure the indexes are within acceptable range and throw SizeMismatchException if not.
         verifyIndex(index);

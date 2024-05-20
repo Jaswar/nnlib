@@ -1,4 +1,4 @@
-set(SOURCE_FILES allocation.cpp
+set(SOURCE_FILES
         onehot_encode.cpp
         read.cpp
         printing.cpp printing.h

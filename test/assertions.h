@@ -31,7 +31,7 @@ template<typename T>
 #define RC_ASSERT_TENSOR_EQ_1D(result, ...) \
     RC_ASSERT(assertEqual1d(result, __VA_ARGS__) == ::testing::AssertionSuccess())
 template<typename T>
-::testing::AssertionResult assertEqual1d(const Tensor<T>& result, const std::vector<float>& expected) {
+::testing::AssertionResult assertEqual1d(const Tensor<T>& result, const std::vector<T>& expected) {
     Tensor exp = Tensor<T>::construct1d(expected);
     return assertEqual(result, exp);
 }
@@ -40,7 +40,7 @@ template<typename T>
 #define RC_ASSERT_TENSOR_EQ_2D(result, ...) \
     RC_ASSERT(assertEqual2d(result, __VA_ARGS__) == ::testing::AssertionSuccess())
 template<typename T>
-::testing::AssertionResult assertEqual2d(const Tensor<T>& result, const std::vector<std::vector<float>>& expected) {
+::testing::AssertionResult assertEqual2d(const Tensor<T>& result, const std::vector<std::vector<T>>& expected) {
     Tensor exp = Tensor<T>::construct2d(expected);
     return assertEqual(result, exp);
 }
@@ -70,20 +70,20 @@ template<typename T>
 #define RC_ASSERT_TENSOR_CLOSE_1D(result, ...) \
     RC_ASSERT(assertClose1d(result, __VA_ARGS__) == ::testing::AssertionSuccess())
 template<typename T>
-::testing::AssertionResult assertClose1d(const Tensor<T>& result, const std::vector<float>& expected, float delta = 5e-5,
+::testing::AssertionResult assertClose1d(const Tensor<T>& result, const std::vector<T>& expected, float delta = 5e-5,
                                          bool relative = false) {
-    Tensor exp = Tensor<T>::construct1d(expected);
-    return assertClose(result, exp, delta, relative);
+    std::shared_ptr<Tensor<T>> exp = Tensor<T>::construct1d(expected);
+    return assertClose(result, *exp, delta, relative);
 }
 
 #define ASSERT_TENSOR_CLOSE_2D(result, ...) ASSERT_TRUE(assertClose2d(result, __VA_ARGS__))
 #define RC_ASSERT_TENSOR_CLOSE_2D(result, ...) \
     RC_ASSERT(assertClose2d(result, __VA_ARGS__) == ::testing::AssertionSuccess())
 template<typename T>
-::testing::AssertionResult assertClose2d(const Tensor<T>& result, const std::vector<std::vector<float>>& expected,
+::testing::AssertionResult assertClose2d(const Tensor<T>& result, const std::vector<std::vector<T>>& expected,
                                          float delta = 5e-5, bool relative = false) {
-    Tensor exp = Tensor<T>::construct2d(expected);
-    return assertClose(result, exp, delta, relative);
+    std::shared_ptr<Tensor<T>> exp = Tensor<T>::construct2d(expected);
+    return assertClose(result, *exp, delta, relative);
 }
 
 #endif //NNLIB_ASSERTIONS_H

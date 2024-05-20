@@ -153,7 +153,7 @@ std::vector<sfTensor> splitIntoBatches(const sfTensor& data, size_t batchSize) {
             copy1DFromDeviceToHost(data->data + i * data->shape[1] * batchSize, batch->data,
                                    data->shape[1] * rowsInBatch);
         } else {
-            copy1DFromHostToHost(data->data + i * data->shape[1] * batchSize, batch->data,
+            copy1DArrayHost(data->data + i * data->shape[1] * batchSize, batch->data,
                                  data->shape[1] * rowsInBatch);
         }
         batch->move(data->location);

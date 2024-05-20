@@ -1,6 +1,7 @@
 set(INCLUDE_FILES
         metric.h
         allocation.h
+        allocation_gpu.cuh
         layer.h
         network.h
         onehot_encode.h
@@ -17,7 +18,7 @@ set(INCLUDE_FILES
         tensor_operations_on_device.cuh
         tensor_operations_on_host.h
         location_verifiers.h
-        allocation_gpu.cuh
+        assert.cuh
 
         PARENT_SCOPE)
 

@@ -13,8 +13,8 @@
 #include "../assertions.h"
 
 void testAdd(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}}));
-    sfTensor b = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{3, 4}, {6, 7}}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}});
+    sfTensor b = Tensor<float>::construct2d({{3, 4}, {6, 7}});
     if (useDevice) {
         a->move(DEVICE);
         b->move(DEVICE);
@@ -23,8 +23,8 @@ void testAdd(bool useDevice) {
     a->useGrad();
     b->useGrad();
 
-    sfTensor result = add(a, b);
-    sfTensor loss = sum(result);
+    auto result = add(a, b);
+    auto loss = sum(result);
     loss->backward();
 
     a->move(HOST);
@@ -35,8 +35,8 @@ void testAdd(bool useDevice) {
 }
 
 void testAddBroadcast(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}, {6, 7}}));
-    sfTensor b = std::make_shared<Tensor<float>>(Tensor<float>::construct1d({3, 4}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}, {6, 7}});
+    sfTensor b = Tensor<float>::construct1d({3, 4});
     if (useDevice) {
         a->move(DEVICE);
         b->move(DEVICE);
@@ -57,8 +57,8 @@ void testAddBroadcast(bool useDevice) {
 }
 
 void testSubtract(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}}));
-    sfTensor b = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{3, 4}, {6, 7}}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}});
+    sfTensor b = Tensor<float>::construct2d({{3, 4}, {6, 7}});
     if (useDevice) {
         a->move(DEVICE);
         b->move(DEVICE);
@@ -79,8 +79,8 @@ void testSubtract(bool useDevice) {
 }
 
 void testHadamard(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}}));
-    sfTensor b = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{3, 4}, {6, 7}}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}});
+    sfTensor b = Tensor<float>::construct2d({{3, 4}, {6, 7}});
     if (useDevice) {
         a->move(DEVICE);
         b->move(DEVICE);
@@ -101,8 +101,8 @@ void testHadamard(bool useDevice) {
 }
 
 void testDivide(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}}));
-    sfTensor b = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{3, 4}, {6, 7}}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}});
+    sfTensor b = Tensor<float>::construct2d({{3, 4}, {6, 7}});
     if (useDevice) {
         a->move(DEVICE);
         b->move(DEVICE);
@@ -123,7 +123,7 @@ void testDivide(bool useDevice) {
 }
 
 void testLog(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}});
     if (useDevice) {
         a->move(DEVICE);
     }
@@ -140,7 +140,7 @@ void testLog(bool useDevice) {
 }
 
 void testMultiplyConstant(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}});
     if (useDevice) {
         a->move(DEVICE);
     }
@@ -157,8 +157,8 @@ void testMultiplyConstant(bool useDevice) {
 }
 
 void testMatVecMul(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}}));
-    sfTensor b = std::make_shared<Tensor<float>>(Tensor<float>::construct1d({3, 4}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}});
+    sfTensor b = Tensor<float>::construct1d({3, 4});
     if (useDevice) {
         a->move(DEVICE);
         b->move(DEVICE);
@@ -179,8 +179,8 @@ void testMatVecMul(bool useDevice) {
 }
 
 void testMatmul(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}}));
-    sfTensor b = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{3, 4}, {6, 7}}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}});
+    sfTensor b = Tensor<float>::construct2d({{3, 4}, {6, 7}});
     if (useDevice) {
         a->move(DEVICE);
         b->move(DEVICE);
@@ -201,7 +201,7 @@ void testMatmul(bool useDevice) {
 }
 
 void testTranspose(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}});
     if (useDevice) {
         a->move(DEVICE);
     }
@@ -218,7 +218,7 @@ void testTranspose(bool useDevice) {
 }
 
 void testRelu(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, -2}, {-2, 5}}));
+    sfTensor a = Tensor<float>::construct2d({{1, -2}, {-2, 5}});
     if (useDevice) {
         a->move(DEVICE);
     }
@@ -235,7 +235,7 @@ void testRelu(bool useDevice) {
 }
 
 void testSigmoid(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, -2}, {-2, 0}}));
+    sfTensor a = Tensor<float>::construct2d({{1, -2}, {-2, 0}});
     if (useDevice) {
         a->move(DEVICE);
     }
@@ -252,8 +252,8 @@ void testSigmoid(bool useDevice) {
 }
 
 void testCombine(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}}));
-    sfTensor b = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{3, 4}, {6, 7}}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}});
+    sfTensor b = Tensor<float>::construct2d({{3, 4}, {6, 7}});
     if (useDevice) {
         a->move(DEVICE);
         b->move(DEVICE);
@@ -277,9 +277,9 @@ void testCombine(bool useDevice) {
 }
 
 void testFork(bool useDevice) {
-    sfTensor a = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{1, 2}, {2, 5}}));
-    sfTensor b = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{3, 4}, {6, 7}}));
-    sfTensor c = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{9, 8}, {11, 10}}));
+    sfTensor a = Tensor<float>::construct2d({{1, 2}, {2, 5}});
+    sfTensor b = Tensor<float>::construct2d({{3, 4}, {6, 7}});
+    sfTensor c = Tensor<float>::construct2d({{9, 8}, {11, 10}});
     if (useDevice) {
         a->move(DEVICE);
         b->move(DEVICE);
@@ -306,11 +306,11 @@ void testFork(bool useDevice) {
 }
 
 void testSimpleNN(bool useDevice) {
-    sfTensor w1 = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{0.1f, 0.2f}, {0.2f, 0.5f}, {0.6f, 0.7f}}));
-    sfTensor b1 = std::make_shared<Tensor<float>>(Tensor<float>::construct1d({0.3f, 0.4f}));
-    sfTensor w2 = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{-0.6f, 0.3f}, {-0.5f, 0.1f}}));
-    sfTensor b2 = std::make_shared<Tensor<float>>(Tensor<float>::construct1d({-0.3f, 0.4f}));
-    sfTensor x = std::make_shared<Tensor<float>>(Tensor<float>::construct2d({{0.1f, 0.2f, 0.3f}, {0.4f, 0.6f, 0.6f}}));
+    sfTensor w1 = Tensor<float>::construct2d({{0.1f, 0.2f}, {0.2f, 0.5f}, {0.6f, 0.7f}});
+    sfTensor b1 = Tensor<float>::construct1d({0.3f, 0.4f});
+    sfTensor w2 = Tensor<float>::construct2d({{-0.6f, 0.3f}, {-0.5f, 0.1f}});
+    sfTensor b2 = Tensor<float>::construct1d({-0.3f, 0.4f});
+    sfTensor x = Tensor<float>::construct2d({{0.1f, 0.2f, 0.3f}, {0.4f, 0.6f, 0.6f}});
     if (useDevice) {
         w1->move(DEVICE);
         b1->move(DEVICE);
