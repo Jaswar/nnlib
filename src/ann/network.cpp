@@ -6,7 +6,7 @@
  */
 
 #include "../../include/network.h"
-#include "../gpu/allocation_gpu.cuh"
+#include "allocation_gpu.cuh"
 #include "runtime.h"
 #include <algorithm>
 #include <chrono>

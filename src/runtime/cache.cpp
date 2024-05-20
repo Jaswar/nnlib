@@ -8,7 +8,7 @@
  */
 
 #include "cache.h"
-#include "../gpu/allocation_gpu.cuh"
+#include "allocation_gpu.cuh"
 #include <iostream>
 
 Cache::Cache() {

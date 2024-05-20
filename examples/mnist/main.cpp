@@ -33,9 +33,9 @@ int main(int argc, char** argv) {
 
     showCudaInfo();
 
-    sTensor dataset = readCSV(argv[1], ",", 4);
-    sTensor X = std::make_shared<Tensor>(dataset->shape[0], dataset->shape[1] - 1);
-    sTensor yv = std::make_shared<Tensor>(dataset->shape[0]);
+    sfTensor dataset = readCSV(argv[1], ",", 4);
+    sfTensor X = std::make_shared<Tensor<float>>(dataset->shape[0], dataset->shape[1] - 1);
+    sfTensor yv = std::make_shared<Tensor<float>>(dataset->shape[0]);
 
     for (int i = 0; i < dataset->shape[0]; i++) {
         yv->data[i] = dataset->data[i * dataset->shape[1] + 0];
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    sTensor y = oneHotEncode(yv);
+    sfTensor y = oneHotEncode(yv);
 
     std::cout << y << std::endl;
 

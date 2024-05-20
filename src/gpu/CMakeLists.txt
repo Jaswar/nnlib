@@ -1,4 +1,4 @@
-set(SOURCE_FILES allocation_gpu.cu allocation_gpu.cuh
+set(SOURCE_FILES allocation_gpu.cu ../../include/allocation_gpu.cuh
         assert.cuh
         verify.cu)
 

@@ -6,7 +6,7 @@
  */
 
 #include "../../include/layer.h"
-#include "../gpu/allocation_gpu.cuh"
+#include "allocation_gpu.cuh"
 #include "runtime.h"
 #include "verify.cuh"
 #include <functions.h>

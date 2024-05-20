@@ -17,6 +17,7 @@ set(INCLUDE_FILES
         tensor_operations_on_device.cuh
         tensor_operations_on_host.h
         location_verifiers.h
+        allocation_gpu.cuh
 
         PARENT_SCOPE)
 

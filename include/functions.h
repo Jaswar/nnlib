@@ -298,15 +298,7 @@ namespace no_grad {
 
 
 
-template<typename T>
-class BackwardFunction {
-public:
-    std::vector<std::shared_ptr<Tensor<T>>> parents;
 
-    virtual std::vector<std::shared_ptr<Tensor<T>>> backward(std::shared_ptr<Tensor<T>> grad) = 0;
-
-    virtual ~BackwardFunction() = default;
-};
 
 template<typename T, typename... Types>
 class Function : public BackwardFunction<T> {
