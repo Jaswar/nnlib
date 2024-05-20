@@ -5,7 +5,7 @@
  * @date 03 March 2022
  */
 
-#include "size_mismatch_exception.h"
+#include <exceptions.h>
 
 const char* SizeMismatchException::what() const noexcept {
     return "Size mismatch exception";

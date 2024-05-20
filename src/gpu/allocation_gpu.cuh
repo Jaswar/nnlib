@@ -11,7 +11,7 @@
 #ifndef NNLIB_ALLOCATION_GPU_CUH
 #define NNLIB_ALLOCATION_GPU_CUH
 
-#include "../../include/allocation.h"
+#include <allocation.h>
 
 /**
  * @brief Allocate a 1D array.

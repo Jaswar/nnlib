@@ -5,7 +5,7 @@
  * @date 28 May 2022
  */
 
-#include "unexpected_cuda_call_exception.h"
+#include <exceptions.h>
 
 const char* UnexpectedCUDACallException::what() const noexcept {
     return "Called a CUDA only method in a non-CUDA setup";

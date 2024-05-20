@@ -5,7 +5,7 @@
  * @date 29 August 2022
  */
 
-#include "unsupported_operation_exception.h"
+#include <exceptions.h>
 
 const char* UnsupportedOperationException::what() const noexcept {
     return "This operation is not supported";

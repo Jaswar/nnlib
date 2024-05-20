@@ -5,7 +5,7 @@
  * @date 03 March 2022
  */
 
-#include "../../include/allocation.h"
+#include <allocation.h>
 #include <cstdlib>
 #include <cstring>
 

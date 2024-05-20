@@ -7,7 +7,7 @@
 
 
 #include "onehot_encode.h"
-#include <exceptions/unsupported_operation_exception.h>
+#include <exceptions.h>
 #include <set>
 
 /**

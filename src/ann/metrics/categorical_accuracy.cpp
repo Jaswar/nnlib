@@ -5,7 +5,7 @@
  * @date 13 February 2023
  */
 
-#include "exceptions/unsupported_operation_exception.h"
+#include <exceptions.h>
 #include <loss.h>
 #include <metric.h>
 

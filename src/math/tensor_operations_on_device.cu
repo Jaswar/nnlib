@@ -7,7 +7,7 @@
 
 #include "tensor_operations_on_device.cuh"
 #include <cmath>
-#include <exceptions/unexpected_cuda_call_exception.h>
+#include <exceptions.h>
 #include <gpu/assert.cuh>
 
 #ifdef __CUDA__

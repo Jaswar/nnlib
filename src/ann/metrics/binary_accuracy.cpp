@@ -5,8 +5,8 @@
  * @date 07 May 2023
  */
 
-#include "exceptions/unsupported_operation_exception.h"
 #include <metric.h>
+#include <exceptions.h>
 
 BinaryAccuracy::BinaryAccuracy() : Metric() {
 }

@@ -5,7 +5,7 @@
  * @date 14 March 2022
  */
 
-#include "different_data_location_exception.h"
+#include <exceptions.h>
 
 const char* DifferentDataLocationException::what() const noexcept {
     return "Different data location exception";

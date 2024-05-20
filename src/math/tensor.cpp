@@ -11,9 +11,7 @@
 #include "runtime.h"
 #include "tensor_operations_on_device.cuh"
 #include "tensor_operations_on_host.h"
-#include <exceptions/different_data_location_exception.h>
-#include <exceptions/size_mismatch_exception.h>
-#include <exceptions/unsupported_operation_exception.h>
+#include <exceptions.h>
 #include <functions.h>
 #include <memory>
 #include <queue>

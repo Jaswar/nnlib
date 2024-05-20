@@ -12,7 +12,7 @@
 #include <chrono>
 #include <cmath>
 #include <ctime>
-#include <exceptions/size_mismatch_exception.h>
+#include <exceptions.h>
 #include <iomanip>
 #include <iostream>
 #include <map>

@@ -5,7 +5,7 @@
  * @date 24 December 2022
  */
 
-#include <exceptions/unsupported_operation_exception.h>
+#include <exceptions.h>
 #include <loss.h>
 
 /**

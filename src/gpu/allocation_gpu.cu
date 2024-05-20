@@ -8,7 +8,7 @@
 #include "allocation_gpu.cuh"
 #include "assert.cuh"
 #include "verify.cuh"
-#include <exceptions/unexpected_cuda_call_exception.h>
+#include <exceptions.h>
 
 #ifdef __CUDA__
 

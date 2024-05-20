@@ -13,6 +13,7 @@ set(INCLUDE_FILES
         functions.h
         tuple_utils.h
         runtime.h
+        exceptions.h
 
         PARENT_SCOPE)
 
