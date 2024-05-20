@@ -5,9 +5,10 @@
  * @date 03 March 2022
  */
 
-#include "../../include/network.h"
+#include <network.h>
 #include "allocation_gpu.cuh"
 #include "runtime.h"
+#include <functions.h>
 #include <algorithm>
 #include <chrono>
 #include <cmath>

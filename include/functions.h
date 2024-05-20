@@ -12,10 +12,10 @@
 
 #include <typeinfo>
 #include <utility>
-#include <runtime.h>
+#include "runtime.h"
 #include "tensor.h"
 #include "tuple_utils.h"
-#include <exceptions.h>
+#include "exceptions.h"
 #include "location_verifiers.h"
 #include "tensor_operations_on_device.cuh"
 #include "tensor_operations_on_host.h"
