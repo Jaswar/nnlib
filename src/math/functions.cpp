@@ -8,12 +8,12 @@
  */
 
 #include "functions.h"
-#include <exceptions.h>
+#include <location_verifiers.h>
 #include "runtime.h"
 #include "tensor.h"
-#include "tensor_operations_on_device.cuh"
-#include "tensor_operations_on_host.h"
-#include "utils/location_verifiers.h"
+#include <exceptions.h>
+#include <tensor_operations_on_device.cuh>
+#include <tensor_operations_on_host.h>
 
 
 template<typename T>

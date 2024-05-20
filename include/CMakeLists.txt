@@ -14,6 +14,9 @@ set(INCLUDE_FILES
         tuple_utils.h
         runtime.h
         exceptions.h
+        tensor_operations_on_device.cuh
+        tensor_operations_on_host.h
+        location_verifiers.h
 
         PARENT_SCOPE)
 

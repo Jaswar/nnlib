@@ -8,6 +8,7 @@
 #include "tensor.h"
 #include "../gpu/allocation_gpu.cuh"
 #include "cache.h"
+#include "location_verifiers.h"
 #include "runtime.h"
 #include "tensor_operations_on_device.cuh"
 #include "tensor_operations_on_host.h"
@@ -16,7 +17,6 @@
 #include <memory>
 #include <queue>
 #include <string>
-#include <utils/location_verifiers.h>
 
 template<typename T>
 Tensor<T>::Tensor() : shape(), size(0), location(HOST), data(), requiresGrad(false), gradFunction(), grad() {

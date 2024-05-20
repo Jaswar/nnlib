@@ -13,7 +13,7 @@
 #ifndef NNLIB_TENSOR_OPERATIONS_ON_HOST_H
 #define NNLIB_TENSOR_OPERATIONS_ON_HOST_H
 
-#include <tensor.h>
+#include "tensor.h"
 
 /**
  * @brief Sum all values of a tensor.

@@ -13,7 +13,7 @@
 #ifndef NNLIB_TENSOR_OPERATIONS_ON_DEVICE_CUH
 #define NNLIB_TENSOR_OPERATIONS_ON_DEVICE_CUH
 
-#include <tensor.h>
+#include "tensor.h"
 
 void sumTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& destination);
 
