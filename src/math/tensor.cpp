@@ -8,10 +8,6 @@
 #include "tensor.h"
 #include "../gpu/allocation_gpu.cuh"
 #include "cache.h"
-#include "location_verifiers.h"
-#include "runtime.h"
-#include "tensor_operations_on_device.cuh"
-#include "tensor_operations_on_host.h"
 #include <exceptions.h>
 #include <functions.h>
 #include <memory>

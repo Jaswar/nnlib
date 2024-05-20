@@ -9,6 +9,7 @@
 #include "onehot_encode.h"
 #include <exceptions.h>
 #include <set>
+#include <functions.h>
 
 /**
  * @brief Return the index of a value in a set.
@@ -42,7 +43,7 @@ sfTensor oneHotEncode(const sfTensor& vector) {
     auto m = unique.size();
 
     sfTensor result = std::make_shared<Tensor<float>>(n, m);
-    fill(0, result);
+    fill(0.0f, result);
 
     for (int i = 0; i < vector->shape[0]; i++) {
         float value = vector->data[i];

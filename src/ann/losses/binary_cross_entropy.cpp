@@ -7,6 +7,7 @@
 
 #include <exceptions.h>
 #include <loss.h>
+#include <functions.h>
 
 /**
  * @brief Check if the shape is valid for Binary Cross Entropy.

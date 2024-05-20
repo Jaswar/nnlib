@@ -9,6 +9,7 @@
 #include "../gpu/allocation_gpu.cuh"
 #include "runtime.h"
 #include "verify.cuh"
+#include <functions.h>
 #include <utility>
 
 /**

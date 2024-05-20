@@ -368,7 +368,6 @@ __global__ void sigmoidKernel(float* input, float* result, size_t size) {
 }
 
 // NOLINTEND(readability-static-accessed-through-instance)
-
 void sumTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& destination) {
     auto grid = 1;
     auto block = tensor.session.threadsPerBlock;

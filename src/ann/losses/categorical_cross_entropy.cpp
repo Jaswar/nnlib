@@ -6,6 +6,7 @@
  */
 
 #include <loss.h>
+#include <functions.h>
 
 std::string CategoricalCrossEntropy::getShortName() const {
     return "categorical_cross_entropy";

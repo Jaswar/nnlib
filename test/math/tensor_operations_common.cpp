@@ -15,6 +15,7 @@
 #include <limits>
 #include <algorithm>
 #include "tensor_operations_common.h"
+#include <functions.h>
 
 void tensorSumPBT(bool testDevice) {
     const auto size = *NO_SHRINK(rc::gen::inRange<size_t>(1, 1e5));

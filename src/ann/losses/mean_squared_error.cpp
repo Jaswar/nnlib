@@ -6,6 +6,7 @@
  */
 
 #include <loss.h>
+#include <functions.h>
 
 std::string MeanSquaredError::getShortName() const {
     return "mean_squared_error";
