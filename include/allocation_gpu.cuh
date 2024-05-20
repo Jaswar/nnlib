@@ -123,12 +123,12 @@ void copy1DFromDeviceToHost(T* device, T* host, size_t n) {
 }
 
 template<typename T>
-T* copy1DArrayDevice(size_t n, T* old) {
+T* copy1DArrayDevice(T* old, size_t n) {
     throw UnexpectedCUDACallException();
 }
 
 template<typename T>
-void copy1DArrayDevice(size_t n, T* old, T* copy) {
+void copy1DArrayDevice(T* old, T* copy, size_t n) {
     throw UnexpectedCUDACallException();
 }
 
