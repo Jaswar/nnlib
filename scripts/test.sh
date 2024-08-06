@@ -34,7 +34,7 @@ mkdir build && cd build
 
 # Build the library with testing enabled
 echo ">>> Building the library for testing"
-cmake -DCMAKE_TEST_NNLIB=ON -DCMAKE_FORCE_ARCHITECTURE=$architecture ..
+cmake -DCMAKE_TEST_NNLIB=ON -DCMAKE_FORCE_ARCHITECTURE=$architecture -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
 
 # Execute the tests using ctest

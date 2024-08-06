@@ -57,4 +57,37 @@ void reluDerivativeTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& de
 
 void sigmoidTensorOnDevice(const Tensor<float>& tensor, Tensor<float>& destination);
 
+void castTensorOnDevice(const Tensor<float>& tensor, Tensor<double>& destination);
+void castTensorOnDevice(const Tensor<double>& tensor, Tensor<float>& destination);
+
+#ifdef __CUDA__
+
+template<typename S, typename D>
+__global__ void castTensorKernel(const S* tensor, D* destination, size_t size) {
+    auto index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= size) {
+        return;
+    }
+
+    destination[index] = static_cast<D>(tensor[index]);
+}
+
+template<typename S, typename D>
+void castTensorOnDevice(const Tensor<S>& tensor, Tensor<D>& destination) {
+    auto grid = tensor.size / tensor.session.threadsPerBlock + 1;
+    auto block = tensor.session.threadsPerBlock;
+    castTensorKernel<<<grid, block>>>(tensor.data, destination.data, tensor.size);
+    GPU_CHECK_ERROR(cudaGetLastError());
+}
+
+#else
+
+template<typename S, typename D>
+void castTensorOnDevice(const Tensor<S>& tensor, Tensor<D>& destination) {
+    throw UnexpectedCUDACallException();
+}
+
+#endif
+
 #endif //NNLIB_TENSOR_OPERATIONS_ON_DEVICE_CUH

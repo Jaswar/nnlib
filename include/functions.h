@@ -294,19 +294,29 @@ namespace no_grad {
 
         return result;
     }
+
+    template<typename S, typename D>
+    std::shared_ptr<Tensor<D>> cast(const std::shared_ptr<Tensor<S>>& a) {
+        auto result = std::make_shared<Tensor<D>>(a->shape, a->location);
+
+        std::initializer_list<DataLocation> locations = {a->locations};
+        if (allLocationsAreHost(locations)) {
+            castTensorOnDevice(*a, *result);
+        }
+    }
 } // namespace no_grad
 
 
 
 
-
-template<typename T, typename... Types>
-class Function : public BackwardFunction<T> {
+// S for the source type, D for the output type
+template<typename S, typename D, typename... Types>
+class Function : public BackwardFunction<S> {
 public:
     Function() = default;
 
-    std::shared_ptr<Tensor<T>> forward(const Types&... args) {
-        auto tup = getType<std::shared_ptr<Tensor<T>>>(std::make_tuple(args...));
+    std::shared_ptr<Tensor<D>> forward(const Types&... args) {
+        auto tup = getType<std::shared_ptr<Tensor<S>>>(std::make_tuple(args...));
         this->parents = toVector(tup);
 
         auto result = forwardFn(args...);
@@ -319,19 +329,19 @@ public:
         return result;
     }
 
-    std::vector<std::shared_ptr<Tensor<T>>> backward(std::shared_ptr<Tensor<T>> grad) override {
+    std::vector<std::shared_ptr<Tensor<S>>> backward(std::shared_ptr<Tensor<D>> grad) override {
         return backwardFn(std::move(grad));
     }
 
-    virtual std::shared_ptr<Tensor<T>> forwardFn(const Types&... args) = 0;
+    virtual std::shared_ptr<Tensor<D>> forwardFn(const Types&... args) = 0;
 
-    virtual std::vector<std::shared_ptr<Tensor<T>>> backwardFn(std::shared_ptr<Tensor<T>> grad) = 0;
+    virtual std::vector<std::shared_ptr<Tensor<S>>> backwardFn(std::shared_ptr<Tensor<D>> grad) = 0;
 
     ~Function() override = default;
 };
 
 template<typename T>
-class SumReduce : public Function<T, std::shared_ptr<Tensor<T>>> {
+class SumReduce : public Function<T, T, std::shared_ptr<Tensor<T>>> {
     std::vector<size_t> shapeCache;
 
 public:
@@ -353,7 +363,7 @@ public:
 };
 
 template<typename T>
-class Add : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
+class Add : public Function<T, T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
 public:
     std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) override {
         return no_grad::addTensors(a, b);
@@ -367,7 +377,7 @@ public:
 };
 
 template<typename T>
-class AddBroadcast : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
+class AddBroadcast : public Function<T, T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
 public:
     std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) override {
         return no_grad::addBroadcast(a, b);
@@ -388,7 +398,7 @@ public:
 };
 
 template<typename T>
-class Subtract : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
+class Subtract : public Function<T, T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
 public:
     std::shared_ptr<Tensor<T>> forwardFn(const std::shared_ptr<Tensor<T>>& a, const std::shared_ptr<Tensor<T>>& b) override {
         return no_grad::subtract(a, b);
@@ -402,7 +412,7 @@ public:
 };
 
 template<typename T>
-class Hadamard : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
+class Hadamard : public Function<T, T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
     std::shared_ptr<Tensor<T>> cacheA;
     std::shared_ptr<Tensor<T>> cacheB;
 
@@ -426,7 +436,7 @@ public:
 };
 
 template<typename T>
-class Divide : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
+class Divide : public Function<T, T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
     std::shared_ptr<Tensor<T>> cacheA;
     std::shared_ptr<Tensor<T>> cacheB;
 
@@ -454,7 +464,7 @@ public:
 };
 
 template<typename T>
-class Log : public Function<T, std::shared_ptr<Tensor<T>>> {
+class Log : public Function<T, T, std::shared_ptr<Tensor<T>>> {
     std::shared_ptr<Tensor<T>> cacheA;
 
 public:
@@ -472,7 +482,7 @@ public:
 };
 
 template<typename T>
-class MulConstant : public Function<T, std::shared_ptr<Tensor<T>>, float> {
+class MulConstant : public Function<T, T, std::shared_ptr<Tensor<T>>, float> {
     float constantCache;
 
 public:
@@ -488,7 +498,7 @@ public:
 };
 
 template<typename T>
-class MatVecMul : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
+class MatVecMul : public Function<T, T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
     std::shared_ptr<Tensor<T>> cacheA;
     std::shared_ptr<Tensor<T>> cacheB;
 
@@ -519,7 +529,7 @@ public:
 };
 
 template<typename T>
-class Matmul : public Function<T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
+class Matmul : public Function<T, T, std::shared_ptr<Tensor<T>>, std::shared_ptr<Tensor<T>>> {
     std::shared_ptr<Tensor<T>> cacheA;
     std::shared_ptr<Tensor<T>> cacheB;
 
@@ -545,7 +555,7 @@ public:
 };
 
 template<typename T>
-class Transpose : public Function<T, std::shared_ptr<Tensor<T>>> {
+class Transpose : public Function<T, T, std::shared_ptr<Tensor<T>>> {
     std::shared_ptr<Tensor<T>> cacheA;
 
 public:
@@ -563,7 +573,7 @@ public:
 };
 
 template<typename T>
-class ReLU : public Function<T, std::shared_ptr<Tensor<T>>> {
+class ReLU : public Function<T, T, std::shared_ptr<Tensor<T>>> {
     std::shared_ptr<Tensor<T>> cacheA;
 
 public:
@@ -595,7 +605,7 @@ public:
 };
 
 template<typename T>
-class Sigmoid : public Function<T, std::shared_ptr<Tensor<T>>> {
+class Sigmoid : public Function<T, T, std::shared_ptr<Tensor<T>>> {
     std::shared_ptr<Tensor<T>> cacheA;
 
 public:
@@ -618,6 +628,12 @@ public:
         auto gradA = no_grad::hadamard(grad, no_grad::hadamard(cacheA, no_grad::subtract(ones, cacheA)));
         return {gradA};
     }
+};
+
+template<typename S, typename D>
+class Cast : public Function<S, D, std::shared_ptr<Tensor<S>>> {
+public:
+
 };
 
 template<typename T>
